@@ -17,6 +17,6 @@ services:
       args:
         - VITE_API_ROOT=${HOST_API_ROOT:-http://localhost:5173}
     ports:
-      - '3000:80'
+      - '3333:80'
     depends_on:
       - backend
