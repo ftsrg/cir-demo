@@ -2,7 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import Split from 'react-split'
 import Editor from './components/Editor'
 import OutputTabs from './components/OutputTabs'
-import { AppBar, Toolbar, Button, Select, MenuItem, Box, Typography } from '@mui/material'
+import { AppBar, Toolbar, Button, Box, Typography, Popover } from '@mui/material'
+import FolderOpenIcon from '@mui/icons-material/FolderOpen'
+import ExampleTree from './components/ExampleTree'
 import axios from 'axios'
 
 const API_ROOT = import.meta.env.VITE_API_ROOT || 'http://localhost:5173'
@@ -26,6 +28,12 @@ export default function App() {
     }
   }, [selectedExample])
 
+  const [examplesAnchor, setExamplesAnchor] = useState(null)
+  const openExamples = Boolean(examplesAnchor)
+  const onOpenExamples = (e) => setExamplesAnchor(e.currentTarget)
+  const onCloseExamples = () => setExamplesAnchor(null)
+  const onSelectExample = (path) => { setSelectedExample(path); onCloseExamples(); }
+
   const onGenerate = async () => {
     const resp = await axios.post(`${API_ROOT}/api/generate`, { code })
     setOutputs(resp.data || {})
@@ -37,10 +45,20 @@ export default function App() {
         <Toolbar>
           <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="h6" sx={{ fontSize: 16 }}>CIR Demo</Typography>
-            <Select value={selectedExample} onChange={e => setSelectedExample(e.target.value)} displayEmpty size="small">
-              <MenuItem value="">Examples</MenuItem>
-              {examples.map(ex => <MenuItem key={ex} value={ex}>{ex}</MenuItem>)}
-            </Select>
+            <Button
+              size="small"
+              color="inherit"
+              startIcon={<FolderOpenIcon />}
+              onClick={onOpenExamples}
+              aria-label="examples"
+            >
+              Examples
+            </Button>
+            <Popover open={openExamples} anchorEl={examplesAnchor} onClose={onCloseExamples} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
+              <Box sx={{ width: 360 }}>
+                <ExampleTree examples={examples} onSelect={onSelectExample} />
+              </Box>
+            </Popover>
           </Box>
           <Button color="inherit" onClick={onGenerate}>Generate</Button>
         </Toolbar>
