@@ -11,6 +11,11 @@ COPY backend/bin ./bin
 
 RUN npm install --production
 
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates libstdc++6
+
+
 EXPOSE 5173
 
 CMD ["node", "src/index.js"]
