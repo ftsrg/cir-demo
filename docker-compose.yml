@@ -14,7 +14,11 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+      args:
+        - VITE_API_ROOT=${HOST_API_ROOT:-http://localhost:5173}
     ports:
       - '3000:3000'
+    environment:
+      - VITE_API_ROOT=${HOST_API_ROOT:-http://localhost:5173}
     depends_on:
       - backend

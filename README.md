@@ -7,3 +7,8 @@ This workspace contains three projects:
 - `xcfa-mapper` - A minimal C++ project that will eventually convert clang IR elements to "xcfa". Currently prints "work in progress".
 
 See the README in each subfolder for usage details.
+
+```
+HOST_API_ROOT=http://benchcloud.mit.bme.hu:5173 docker compose build --no-cache frontend
+docker compose up -d
+```
