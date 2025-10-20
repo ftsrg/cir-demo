@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    volumes:
+      - ./backend/examples:/app/examples:ro
+      - ./backend/bin:/app/bin:ro
+    ports:
+      - '5173:5173'
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    environment:
+      - VITE_API_ROOT=http://backend:5173
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
