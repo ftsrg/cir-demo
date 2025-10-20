@@ -14,8 +14,6 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-    environment:
-      - VITE_API_ROOT=http://benchcloud.mit.bme.hu/:5173
     ports:
       - '3000:3000'
     depends_on:
