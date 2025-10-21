@@ -37,7 +37,7 @@ and HTTP Basic authentication.
 
 4) Build and start the stack:
 
-    `HOST_API_ROOT=http://benchcloud.mit.bme.hu:5173 docker compose build --no-cache`
+    `HOST_API_ROOT=https://benchcloud.mit.bme.hu:3333 docker compose build --no-cache`
 	`docker compose up -d`
 
 5) Visit the site at [https://benchcloud.mit.bme.hu:3000](https://benchcloud.mit.bme.hu:3333) (your browser will warn about the self-signed cert). Use the username/password from step 2.
