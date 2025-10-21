@@ -4,19 +4,24 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
+    environment:
+      - BASIC_AUTH_FILE=/app/config/credentials.json
     volumes:
       - ./backend/examples:/app/examples:ro
       - ./backend/bin:/app/bin:ro
-    ports:
-      - '5173:5173'
+      - ./backend/config:/app/config:ro
 
   frontend:
     build:
       context: .
       dockerfile: frontend/Dockerfile
       args:
-        - VITE_API_ROOT=${HOST_API_ROOT:-http://localhost:5173}
+    - VITE_API_ROOT=${HOST_API_ROOT:-https://localhost}
     ports:
-      - '3333:80'
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./docker/certs:/etc/ssl:ro
+      - ./docker/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
     depends_on:
       - backend

@@ -7,8 +7,41 @@ This workspace contains three projects:
 - `xcfa-mapper` - A minimal C++ project that will eventually convert clang IR elements to "xcfa". Currently prints "work in progress".
 
 See the README in each subfolder for usage details.
+See the README in each subfolder for usage details.
 
-```
-HOST_API_ROOT=http://benchcloud.mit.bme.hu:5173 docker compose build --no-cache frontend
-docker compose up -d
-```
+Deployment (Docker + TLS + Basic auth)
+-------------------------------------
+
+We provide simple helper scripts to run this workspace in Docker with TLS (self-signed)
+and HTTP Basic authentication.
+
+1) Generate a self-signed certificate (default CN=localhost):
+
+	./docker/generate-cert.sh
+
+	Optionally set subject CN:
+
+	SUBJ="/CN=your.host.name" ./docker/generate-cert.sh
+
+2) Generate credentials (username + password):
+
+	./docker/generate-credentials.sh alice s3cr3t
+
+	This writes:
+	- docker/nginx/.htpasswd  (used by nginx)
+	- backend/config/credentials.json (used by backend Express middleware)
+
+3) Make helper scripts executable (optional):
+
+	./docker/setup-perms.sh
+
+4) Build and start the stack:
+
+	docker compose build --no-cache
+	docker compose up -d
+
+5) Visit the site at https://localhost (your browser will warn about the self-signed cert). Use the username/password from step 2.
+
+Notes
+- The backend credentials file is stored as plaintext JSON for simplicity in this demo. For production, use Docker secrets or a secrets manager and store only password hashes.
+- For production use a CA-signed certificate (Let's Encrypt / internal CA) instead of the self-signed cert.

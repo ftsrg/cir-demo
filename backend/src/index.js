@@ -1,11 +1,47 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
+const fsSync = require('fs');
 const cors = require('cors');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Basic auth middleware: read credentials from a JSON file (BASIC_AUTH_FILE env or backend/config/credentials.json)
+const BASIC_AUTH_FILE = process.env.BASIC_AUTH_FILE || path.join(__dirname, '..', 'config', 'credentials.json');
+function loadCredsSync() {
+  try {
+    const raw = fsSync.readFileSync(BASIC_AUTH_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    return { username: String(parsed.username || ''), password: String(parsed.password || '') };
+  } catch (e) {
+    return null;
+  }
+}
+
+function expressBasicAuth(req, res, next) {
+  const creds = loadCredsSync();
+  if (!creds || !creds.username) {
+    // no credentials configured: deny by default
+    res.setHeader('WWW-Authenticate', 'Basic realm="CIR Demo"');
+    return res.status(401).send('Unauthorized');
+  }
+  const auth = req.headers['authorization'];
+  if (!auth || !auth.startsWith('Basic ')) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="CIR Demo"');
+    return res.status(401).send('Unauthorized');
+  }
+  const token = auth.slice('Basic '.length);
+  const decoded = Buffer.from(token, 'base64').toString('utf8');
+  const [u, p] = decoded.split(':');
+  if (u === creds.username && p === creds.password) return next();
+  res.setHeader('WWW-Authenticate', 'Basic realm="CIR Demo"');
+  return res.status(401).send('Unauthorized');
+}
+
+// apply to API routes
+app.use('/api', expressBasicAuth);
 
 const EXAMPLES_DIR = path.join(__dirname, '..', 'examples');
 
