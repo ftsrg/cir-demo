@@ -10,6 +10,8 @@ services:
       - ./backend/examples:/app/examples:ro
       - ./backend/bin:/app/bin:ro
       - ./backend/config:/app/config:ro
+    ports:
+      - 5173:5173
 
   frontend:
     build:
@@ -18,7 +20,7 @@ services:
       args:
       - VITE_API_ROOT=${HOST_API_ROOT:-https://localhost}
     ports:
-      - '3333:443'
+      - 3333:443
     volumes:
       - ./docker/certs:/etc/ssl:ro
       - ./docker/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
