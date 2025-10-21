@@ -17,15 +17,15 @@ and HTTP Basic authentication.
 
 1) Generate a self-signed certificate (default CN=localhost):
 
-	./docker/generate-cert.sh
+	`./docker/generate-cert.sh`
 
 	Optionally set subject CN:
 
-	SUBJ="/CN=your.host.name" ./docker/generate-cert.sh
+	`SUBJ="/CN=your.host.name" ./docker/generate-cert.sh`
 
 2) Generate credentials (username + password):
 
-	./docker/generate-credentials.sh alice s3cr3t
+    `./docker/generate-credentials.sh alice s3cr3t`
 
 	This writes:
 	- docker/nginx/.htpasswd  (used by nginx)
@@ -33,14 +33,14 @@ and HTTP Basic authentication.
 
 3) Make helper scripts executable (optional):
 
-	./docker/setup-perms.sh
+	`./docker/setup-perms.sh`
 
 4) Build and start the stack:
 
-	docker compose build --no-cache
-	docker compose up -d
+    `HOST_API_ROOT=http://benchcloud.mit.bme.hu:5173 docker compose build --no-cache`
+	`docker compose up -d`
 
-5) Visit the site at https://localhost (your browser will warn about the self-signed cert). Use the username/password from step 2.
+5) Visit the site at [https://benchcloud.mit.bme.hu:3000](https://benchcloud.mit.bme.hu:3000) (your browser will warn about the self-signed cert). Use the username/password from step 2.
 
 Notes
 - The backend credentials file is stored as plaintext JSON for simplicity in this demo. For production, use Docker secrets or a secrets manager and store only password hashes.
