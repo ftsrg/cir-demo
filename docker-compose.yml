@@ -19,9 +19,5 @@ services:
       - VITE_API_ROOT=${HOST_API_ROOT:-https://localhost}
     ports:
       - 3333:443
-    volumes:
-      - ./docker/certs/selfsigned.crt:/etc/ssl/certs/selfsigned.crt:ro
-      - ./docker/certs/selfsigned.key:/etc/ssl/private/selfsigned.key:ro
-      - ./docker/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
     depends_on:
       - backend
