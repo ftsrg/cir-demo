@@ -13,7 +13,7 @@ export default function App() {
   const [examples, setExamples] = useState([])
   const [selectedExample, setSelectedExample] = useState('')
   const [code, setCode] = useState('// select an example or start typing...')
-  const [outputs, setOutputs] = useState({ llvm: '', clang: '', flat_clang: '', xcfa: '' })
+  const [outputs, setOutputs] = useState({ llvm: '', clang: '', flat_clang: '', xcfa: '', c: '', c_best: '' })
   const [clangVersion, setClangVersion] = useState('')
   const [position, setPosition] = useState({ line: 1, column: 1 })
 
@@ -36,7 +36,16 @@ export default function App() {
 
   const onGenerate = async () => {
     const resp = await axios.post(`${API_ROOT}/api/generate`, { code })
-    setOutputs(resp.data || {})
+    // Ensure missing keys are present to avoid undefined in OutputTabs
+    const data = resp.data || {}
+    setOutputs({
+      llvm: data.llvm || '',
+      clang: data.clang || '',
+      flat_clang: data.flat_clang || '',
+      xcfa: data.xcfa || '',
+      c: data.c || '',
+      c_best: data.c_best || ''
+    })
   }
 
   return (

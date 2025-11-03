@@ -189,6 +189,38 @@ app.post('/api/generate', async (req, res) => {
     }
 
     const xcfa = `// xcfa output placeholder - work in progress\n`;
+      // If CIR was produced, try running the xcfa-mapper (strict and best-effort)
+      const xcfaMapperBin = path.join(__dirname, '..', '..', 'xcfa-mapper', 'build', 'xcfa-mapper');
+      const cOutputs = { c: '', c_best: '' };
+      try {
+        // If clangOut.stdout contains the CIR text, write it to a temp file and run mapper.
+        if (clangOut && clangOut.stdout && clangOut.stdout.length > 0) {
+          const mlirPath = path.join(tmpDir, `${base}.mlir`);
+          await fs.writeFile(mlirPath, clangOut.stdout, 'utf8');
+          filesToCleanup.push(mlirPath);
+
+          const outC = path.join(tmpDir, `${base}.c`);
+          const outCBest = path.join(tmpDir, `${base}.best.c`);
+          // Run strict mapper
+          const mapStrict = await execFileAsync(xcfaMapperBin, [mlirPath, outC]);
+          if (mapStrict && mapStrict.code === 0) {
+            try { cOutputs.c = await fs.readFile(outC, 'utf8'); filesToCleanup.push(outC); } catch (_) { cOutputs.c = ''; }
+          } else {
+            // If mapper failed, include stderr text in the c output field for visibility
+            cOutputs.c = (mapStrict && mapStrict.stderr) ? mapStrict.stderr : '';
+          }
+
+          // Run best-effort mapper
+          const mapBest = await execFileAsync(xcfaMapperBin, ['--best-effort', mlirPath, outCBest]);
+          if (mapBest && mapBest.code === 0) {
+            try { cOutputs.c_best = await fs.readFile(outCBest, 'utf8'); filesToCleanup.push(outCBest); } catch (_) { cOutputs.c_best = ''; }
+          } else {
+            cOutputs.c_best = (mapBest && mapBest.stderr) ? mapBest.stderr : '';
+          }
+        }
+      } catch (err) {
+        console.debug('xcfa-mapper run failed:', String(err));
+      }
     // log short summaries for debugging
     console.debug('generate results:', {
       llvm: { code: llvmOut.code, stderrLength: (llvmOut.stderr || '').length, stdoutLength: (llvmOut.stdout || '').length },

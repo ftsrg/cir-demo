@@ -6,7 +6,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore'
 export default function OutputTabs({ outputs = {} }) {
   const [tab, setTab] = useState(0)
   const [stderrOpen, setStderrOpen] = useState(true)
-  const keys = ['llvm', 'clang', 'flat_clang', 'xcfa']
+  const keys = ['llvm', 'clang', 'flat_clang', 'xcfa', 'c', 'c_best']
   const active = outputs[keys[tab]]
 
   // helper to extract stdout/stderr for structured outputs
@@ -26,10 +26,12 @@ export default function OutputTabs({ outputs = {} }) {
           '& .MuiTab-root.Mui-selected': { color: '#ffffff' }
         }}
       >
-        <Tab label="LLVM IR" />
-        <Tab label="Clang IR" />
-        <Tab label="Flat Clang IR" />
-        <Tab label="XCFA" />
+          <Tab label="LLVM IR" />
+          <Tab label="Clang IR" />
+          <Tab label="Flat Clang IR" />
+          <Tab label="XCFA" />
+          <Tab label="C" />
+          <Tab label="C (best effort)" />
       </Tabs>
 
   <Box sx={{ p: 1, flex: 1, display: 'flex', flexDirection: 'column', bgcolor: '#0f1115', color: '#ddd', fontFamily: 'monospace', fontSize: 12, minHeight: 0 }}>
