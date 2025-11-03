@@ -233,18 +233,23 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       }
       continue;
     }
-    for (Value res : bbop.getResults()) {
-      std::string nm = getOrCreateName(res);
-      out << "  // %" << nm << "  (produced by: " << bbop.getName().getStringRef().str() << ")\n";
-    }
-    if (!bbop.getAttrs().empty()) {
-      out << "  // attrs:\n";
-      for (NamedAttribute attr : bbop.getAttrs()) {
-      llvm::SmallString<64> buf;
-      llvm::raw_svector_ostream ros(buf);
-      attr.getValue().print(ros);
-      out << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
+    if(isBestEffort) {
+      for (Value res : bbop.getResults()) {
+        std::string nm = getOrCreateName(res);
+        out << "  // %" << nm << "  (produced by: " << bbop.getName().getStringRef().str() << ")\n";
       }
+      if (!bbop.getAttrs().empty()) {
+        out << "  // attrs:\n";
+        for (NamedAttribute attr : bbop.getAttrs()) {
+        llvm::SmallString<64> buf;
+        llvm::raw_svector_ostream ros(buf);
+        attr.getValue().print(ros);
+        out << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
+        }
+      }
+    } else {
+      llvm::errs() << ERR_NO_HANDLER_PREFIX << bbop.getName().getStringRef().str() << "\n";
+      return false;
     }
     }
   }

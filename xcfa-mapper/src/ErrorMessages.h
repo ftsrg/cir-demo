@@ -11,3 +11,4 @@
 #define ERR_HANDLER_FAILED_PREFIX "Handler failed for op: "
 #define ERR_CIRFUNC_NO_SYMBOL "cir.func without symbol - skipping"
 #define ERR_MAPPING_FAILED "Mapping failed."
+#define ERR_NO_HANDLER_PREFIX "No handler registered for op: "
