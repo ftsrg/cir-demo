@@ -6,7 +6,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore'
 export default function OutputTabs({ outputs = {} }) {
   const [tab, setTab] = useState(0)
   const [stderrOpen, setStderrOpen] = useState(true)
-  const keys = ['llvm', 'clang', 'flat_clang', 'xcfa', 'c', 'c_best']
+  const keys = ['llvm', 'clang', 'flat_clang', 'c', 'c_best', 'xcfa']
   const active = outputs[keys[tab]]
 
   // helper to extract stdout/stderr for structured outputs
@@ -29,9 +29,9 @@ export default function OutputTabs({ outputs = {} }) {
           <Tab label="LLVM IR" />
           <Tab label="Clang IR" />
           <Tab label="Flat Clang IR" />
-          <Tab label="XCFA" />
           <Tab label="C" />
           <Tab label="C (best effort)" />
+          <Tab label="XCFA" />
       </Tabs>
 
   <Box sx={{ p: 1, flex: 1, display: 'flex', flexDirection: 'column', bgcolor: '#0f1115', color: '#ddd', fontFamily: 'monospace', fontSize: 12, minHeight: 0 }}>
@@ -50,7 +50,7 @@ export default function OutputTabs({ outputs = {} }) {
             </Box>
           ) : null}
 
-          <pre className="output-pre">{getStdout(active) || (keys[tab] === 'xcfa' ? (active || 'no xcfa generated yet') : `no ${keys[tab]} generated yet`)}</pre>
+          <pre className="output-pre">{getStdout(active) || `no ${keys[tab]} generated yet`}</pre>
         </Box>
       </Box>
     </Box>
