@@ -2,6 +2,10 @@ FROM node:25-trixie
 
 WORKDIR /app
 
+RUN wget 'https://github.com/ftsrg/theta/releases/latest/download/Theta.zip' -O /app/Theta.zip \
+ && unzip /app/Theta.zip \
+ && rm /app/Theta.zip
+
 # copy package and source
 COPY backend /app/backend
 
@@ -11,7 +15,8 @@ RUN npm install --production
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates libstdc++6 \
-	build-essential cmake ninja-build pkg-config python3 git
+	build-essential cmake ninja-build pkg-config python3 git \
+    openjdk-17-jre-headless libgomp1 libmpfr-dev
 
 # Build the xcfa-mapper C++ tool so the backend can call it. We copy the
 # source tree and invoke CMake to produce the binary at xcfa-mapper/build/xcfa-mapper

@@ -56,7 +56,7 @@ app.get('/api/examples', async (req, res) => {
         const rel = base ? path.join(base, ent.name) : ent.name;
         if (ent.isDirectory()) {
           await walk(full, rel);
-        } else if (ent.isFile() && ent.name.endsWith('.cpp')) {
+        } else if (ent.isFile() && (ent.name.endsWith('.cpp') || ent.name.endsWith('.c'))) {
           results.push(rel);
         }
       }
@@ -188,51 +188,77 @@ app.post('/api/generate', async (req, res) => {
       } catch (_) {}
     }
 
-    const xcfa = `// xcfa output placeholder - work in progress\n`;
-      // If CIR was produced, try running the xcfa-mapper (strict and best-effort)
   const xcfaMapperBin = path.join(__dirname, '..', '..', 'xcfa-mapper', 'build', 'xcfa-mapper');
   // Structured outputs matching other tasks: { stdout, stderr, code }
   const cOutputs = { c: { stdout: '', stderr: '', code: 0 }, c_best: { stdout: '', stderr: '', code: 0 } };
-    try {
-      // If flatOut.stdout contains the CIR text, write it to a temp file and run mapper.
-      if (flatOut && flatOut.stdout && flatOut.stdout.length > 0) {
-        const mlirPath = path.join(tmpDir, `${base}.mlir`);
-        await fs.writeFile(mlirPath, flatOut.stdout, 'utf8');
-        filesToCleanup.push(mlirPath);
+  try {
+    // If flatOut.stdout contains the CIR text, write it to a temp file and run mapper.
+    if (flatOut && flatOut.stdout && flatOut.stdout.length > 0) {
+      const mlirPath = path.join(tmpDir, `${base}.mlir`);
+      await fs.writeFile(mlirPath, flatOut.stdout, 'utf8');
+      filesToCleanup.push(mlirPath);
 
-        const outC = path.join(tmpDir, `${base}.c`);
-        const outCBest = path.join(tmpDir, `${base}.best.c`);
-        // Run strict mapper
-        const mapStrict = await execFileAsync(xcfaMapperBin, [mlirPath, outC]);
-        cOutputs.c.code = (mapStrict && typeof mapStrict.code !== 'undefined') ? mapStrict.code : 1;
-        cOutputs.c.stderr = (mapStrict && mapStrict.stderr) ? mapStrict.stderr : '';
-        if (mapStrict && mapStrict.code === 0) {
-          try { cOutputs.c.stdout = await fs.readFile(outC, 'utf8'); filesToCleanup.push(outC); } catch (_) { cOutputs.c.stdout = ''; }
-        }
-
-        // Run best-effort mapper
-        const mapBest = await execFileAsync(xcfaMapperBin, ['--best-effort', mlirPath, outCBest]);
-        cOutputs.c_best.code = (mapBest && typeof mapBest.code !== 'undefined') ? mapBest.code : 1;
-        cOutputs.c_best.stderr = (mapBest && mapBest.stderr) ? mapBest.stderr : '';
-        if (mapBest && mapBest.code === 0) {
-          try { cOutputs.c_best.stdout = await fs.readFile(outCBest, 'utf8'); filesToCleanup.push(outCBest); } catch (_) { cOutputs.c_best.stdout = ''; }
-        }
-      } else {
-        console.debug('Skipping xcfa-mapper: no flat clang CIR output available');
+      const outC = path.join(tmpDir, `${base}.c`);
+      const outCBest = path.join(tmpDir, `${base}.best.c`);
+      // Run strict mapper
+      const mapStrict = await execFileAsync(xcfaMapperBin, [mlirPath, outC]);
+      cOutputs.c.code = (mapStrict && typeof mapStrict.code !== 'undefined') ? mapStrict.code : 1;
+      cOutputs.c.stderr = (mapStrict && mapStrict.stderr) ? mapStrict.stderr : '';
+      if (mapStrict && mapStrict.code === 0) {
+        try { cOutputs.c.stdout = await fs.readFile(outC, 'utf8'); filesToCleanup.push(outC); } catch (_) { cOutputs.c.stdout = ''; }
       }
-    } catch (err) {
-      console.debug('xcfa-mapper run failed:', String(err));
-    }
-    // log short summaries for debugging
-    console.debug('generate results:', {
-      llvm: { code: llvmOut.code, stderrLength: (llvmOut.stderr || '').length, stdoutLength: (llvmOut.stdout || '').length },
-      clang: { code: clangOut.code, stderrLength: (clangOut.stderr || '').length, stdoutLength: (clangOut.stdout || '').length },
-      flat_clang: { code: flatOut.code, stderrLength: (flatOut.stderr || '').length, stdoutLength: (flatOut.stdout || '').length },
-      c: { code: cOutputs.c.code, stderrLength: (cOutputs.c.stderr || '').length, stdoutLength: (cOutputs.c.stdout || '').length },
-      c_best: { code: cOutputs.c_best.code, stderrLength: (cOutputs.c_best.stderr || '').length, stdoutLength: (cOutputs.c_best.stdout || '').length },
-    });
 
-  res.json({ llvm: llvmOut, clang: clangOut, flat_clang: flatOut, xcfa, c: cOutputs.c, c_best: cOutputs.c_best });
+      // Run best-effort mapper
+      const mapBest = await execFileAsync(xcfaMapperBin, ['--best-effort', mlirPath, outCBest]);
+      cOutputs.c_best.code = (mapBest && typeof mapBest.code !== 'undefined') ? mapBest.code : 1;
+      cOutputs.c_best.stderr = (mapBest && mapBest.stderr) ? mapBest.stderr : '';
+      if (mapBest && mapBest.code === 0) {
+        try { cOutputs.c_best.stdout = await fs.readFile(outCBest, 'utf8'); filesToCleanup.push(outCBest); } catch (_) { cOutputs.c_best.stdout = ''; }
+      }
+    } else {
+      console.debug('Skipping xcfa-mapper: no flat clang CIR output available');
+    }
+  } catch (err) {
+    console.debug('xcfa-mapper run failed:', String(err));
+  }
+
+  const thetaBin = path.join(__dirname, '..', '..', 'Theta', 'theta-start.sh');
+  const xcfa = { stdout: '', stderr: '', code: 0 };
+  try {
+    // If flatOut.stdout contains the CIR text, write it to a temp file and run mapper.
+    if (cOutputs.c_best && cOutputs.c_best.stdout && cOutputs.c_best.stdout.length > 0) {
+      const cPath = path.join(tmpDir, `${base}_theta-input.c`);
+      await fs.writeFile(cPath, cOutputs.c_best.stdout, 'utf8');
+      filesToCleanup.push(cPath);
+
+      const outXCFA = path.join(tmpDir, `xcfa.dot`);
+      // Run Theta mapper
+      const thetaArgs = [cPath, '--output-dir', tmpDir, '--enable-output', outXCFA];
+      const thetaRun = await execFileAsync(thetaBin, thetaArgs);
+      xcfa.code = (thetaRun && typeof thetaRun.code !== 'undefined') ? thetaRun.code : 1;
+      xcfa.stderr = ((thetaRun && thetaRun.stderr) ? thetaRun.stderr : '') + ((thetaRun && thetaRun.stderr) ? thetaRun.stderr : '');
+      if (thetaRun && thetaRun.code === 0) {
+        try { xcfa.stdout = await fs.readFile(outXCFA, 'utf8'); } catch (_) { xcfa.stdout = ''; }
+      }
+
+    } else {
+      console.debug('Skipping xcfa-mapper: no flat clang CIR output available');
+    }
+  } catch (err) {
+    console.debug('Theta run failed:', String(err));
+  }
+
+  // log short summaries for debugging
+  console.debug('generate results:', {
+    llvm: { code: llvmOut.code, stderrLength: (llvmOut.stderr || '').length, stdoutLength: (llvmOut.stdout || '').length },
+    clang: { code: clangOut.code, stderrLength: (clangOut.stderr || '').length, stdoutLength: (clangOut.stdout || '').length },
+    flat_clang: { code: flatOut.code, stderrLength: (flatOut.stderr || '').length, stdoutLength: (flatOut.stdout || '').length },
+    c: { code: cOutputs.c.code, stderrLength: (cOutputs.c.stderr || '').length, stdoutLength: (cOutputs.c.stdout || '').length },
+    c_best: { code: cOutputs.c_best.code, stderrLength: (cOutputs.c_best.stderr || '').length, stdoutLength: (cOutputs.c_best.stdout || '').length },
+    xcfa: { code: xcfa.code, stderrLength: (xcfa.stderr || '').length, stdoutLength: (xcfa.stdout || '').length }
+  });
+
+  res.json({ llvm: llvmOut, clang: clangOut, flat_clang: flatOut, xcfa: xcfa, c: cOutputs.c, c_best: cOutputs.c_best });
   } finally {
     // best-effort cleanup of temp and generated files
     for (const file of filesToCleanup) {

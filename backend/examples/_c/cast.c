@@ -1,5 +1,5 @@
 extern void reach_error();
-extern int __VERIFIER_nondet_int();
+extern double __VERIFIER_nondet_int();
 int main() {
     int i = __VERIFIER_nondet_int();
     if(i < 0) {
