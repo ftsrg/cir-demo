@@ -3,11 +3,7 @@ FROM node:25-trixie
 WORKDIR /app
 
 # copy package and source
-COPY backend/package.json ./
-COPY backend/package-lock.json* ./
-COPY backend/src ./src
-COPY backend/examples ./examples
-COPY backend/bin ./bin
+COPY backend /app/backend
 
 RUN npm install --production
 
@@ -18,14 +14,14 @@ RUN apt-get update \
 
 # Build the xcfa-mapper C++ tool so the backend can call it. We copy the
 # source tree and invoke CMake to produce the binary at xcfa-mapper/build/xcfa-mapper
-COPY xcfa-mapper /xcfa-mapper
-WORKDIR /xcfa-mapper
+COPY xcfa-mapper /app/xcfa-mapper
+WORKDIR /app/xcfa-mapper
 RUN mkdir -p build \
  && cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
  && cmake --build build --target xcfa-mapper -j $(nproc)
 
-WORKDIR /app
 
+WORKDIR /app/backend
 
 EXPOSE 5173
 
