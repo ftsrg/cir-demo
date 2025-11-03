@@ -13,6 +13,7 @@
 // Include generated CIR op declarations and dialect to get full op classes
 
 #include <clang/CIR/Dialect/IR/CIRDialect.h>
+#include <clang/CIR/Dialect/IR/CIROpsAttributes.h.inc>
 #include "ErrorMessages.h"
 
 using namespace mlir;
@@ -54,9 +55,7 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   std::string ctype = "int";
   if (o->getNumResults() > 0) {
     Type t = o->getResult(0).getType();
-    if (auto it = llvm::dyn_cast<IntegerType>(t)) {
-      if (it.getWidth() == 32) ctype = "int";
-    }
+    ctype = m.mapTypeToC(t);
   }
   out << "  " << ctype << " " << varName << ";\n";
   for (Value res : o->getResults()) m.setName(res, varName);
@@ -66,8 +65,18 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
 bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   std::optional<int64_t> litVal;
+  // Try to find an integer literal. CIR uses its own IntAttr (#cir.int<...>),
+  // so check both MLIR IntegerAttr and CIR IntAttr.
   for (NamedAttribute a : o->getAttrs()) {
-    if (auto ia = llvm::dyn_cast<IntegerAttr>(a.getValue())) { litVal = ia.getValue().getSExtValue(); break; }
+    if (auto ia = llvm::dyn_cast<mlir::IntegerAttr>(a.getValue())) {
+      litVal = ia.getValue().getSExtValue();
+      break;
+    }
+    if (auto cia = llvm::dyn_cast<cir::IntAttr>(a.getValue())) {
+      // cir::IntAttr wraps an APInt
+      litVal = static_cast<int64_t>(cia.getValue().getSExtValue());
+      break;
+    }
   }
   if (!litVal.has_value()) {
     if (!m.isBestEffort()) {
@@ -76,9 +85,12 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
     }
     out << "  // " << ERR_CONSTANT_NO_LITERAL << "\n";
   }
+  // Choose a C type based on the op result type if available.
   std::string tmp = m.freshName("c");
   std::string literal = litVal.has_value() ? std::to_string(litVal.value()) : std::string("0");
-  out << "  int " << tmp << " = " << literal << ";\n";
+  std::string ctype = "int";
+  if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
+  out << "  " << ctype << " " << tmp << " = " << literal << ";\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
@@ -114,17 +126,16 @@ bool handleCmp(cir::CmpOp op, Mapper &m, std::ostream &out) {
   std::string r = m.getOrCreateName(rhs);
   std::string pred;
   bool predFound = false;
-  for (NamedAttribute a : o->getAttrs()) {
-    if (auto sa = llvm::dyn_cast<StringAttr>(a.getValue())) {
-      auto s = sa.getValue();
-      predFound = true;
-      if (s == "lt") pred = "<";
-      else if (s == "gt") pred = ">";
-      else if (s == "le") pred = "<=";
-      else if (s == "ge") pred = ">=";
-      else if (s == "ne") pred = "!=";
-      else if (s == "eq") pred = "==";
-      else predFound = false; // unknown string -> treat as not found
+  // CIR encodes the comparison kind as a CmpOpKindAttr named "kind".
+  if (auto kindAttr = o->getAttrOfType<cir::CmpOpKindAttr>("kind")) {
+    switch (kindAttr.getValue()) {
+      case cir::CmpOpKind::lt: pred = "<"; predFound = true; break;
+      case cir::CmpOpKind::le: pred = "<="; predFound = true; break;
+      case cir::CmpOpKind::gt: pred = ">"; predFound = true; break;
+      case cir::CmpOpKind::ge: pred = ">="; predFound = true; break;
+      case cir::CmpOpKind::eq: pred = "=="; predFound = true; break;
+      case cir::CmpOpKind::ne: pred = "!="; predFound = true; break;
+      default: predFound = false; break;
     }
   }
   if (!predFound) {

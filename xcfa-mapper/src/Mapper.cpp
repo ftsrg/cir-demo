@@ -56,6 +56,29 @@ void Mapper::setName(mlir::Value v, const std::string &name) {
   valueNames[v] = name;
 }
 
+std::string Mapper::mapTypeToC(mlir::Type t) const {
+  if (auto it = mlir::dyn_cast<mlir::IntegerType>(t)) {
+    unsigned w = it.getWidth();
+    switch (w) {
+    case 8:
+      return "int8_t";
+    case 16:
+      return "int16_t";
+    case 32:
+      return "int";
+    case 64:
+      return "long long";
+    default:
+      return "long";
+    }
+  }
+  if (mlir::isa<mlir::FloatType>(t)) {
+    return "double";
+  }
+  // conservative default for unknown types
+  return "int";
+}
+
 bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   // Symbol (function name) is required to emit anything useful.
   auto sym = fop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());

@@ -72,6 +72,11 @@ public:
   /// Force-set the C identifier for a Value.
   void setName(mlir::Value v, const std::string &name);
 
+  /// Map an MLIR type to a C type string. This provides a central place for
+  /// converting common MLIR types (e.g., integer widths and floats) into
+  /// simple C declarations used by handlers.
+  std::string mapTypeToC(mlir::Type t) const;
+
 private:
   bool bestEffort;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
