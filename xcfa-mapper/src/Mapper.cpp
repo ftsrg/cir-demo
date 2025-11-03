@@ -5,6 +5,9 @@
 #include <mlir/IR/Attributes.h>
 #include <mlir/IR/Types.h>
 
+#include <cxxabi.h>
+#include <cstdlib>
+
 #include <llvm/ADT/SmallString.h>
 #include <llvm/ADT/StringRef.h>
 #include <llvm/Support/raw_ostream.h>
@@ -25,7 +28,66 @@ static std::string mangleLabel(const std::string &s) {
   return out;
 }
 
+static std::string demangleSymbol(const std::string &sym) {
+  int status = 0;
+  char *res = abi::__cxa_demangle(sym.c_str(), nullptr, nullptr, &status);
+  std::string out;
+  if (status == 0 && res) {
+    out = std::string(res);
+    std::free(res);
+  } else {
+    // Not a mangled name or demangle failed: return the original
+    out = sym;
+  }
+  return out;
+}
+
+// If a demangled symbol ends with an empty-parameter list '()' (commonly
+// produced for function names with no parameters), strip that suffix so the
+// sanitized identifier does not carry the parentheses.
+static std::string stripEmptyArgList(const std::string &s) {
+  if (s.size() >= 2 && s.substr(s.size() - 2) == "()") return s.substr(0, s.size() - 2);
+  return s;
+}
+
 Mapper::Mapper(bool bestEffort) : counter(0), bestEffort(bestEffort) {}
+
+void Mapper::prepareFunctionNames(mlir::ModuleOp module) {
+  functionOutputNames.clear();
+  // Collect candidate pairs (mangled -> demangled-sanitized)
+  std::vector<std::pair<std::string,std::string>> list;
+  for (auto &op : module.getOps()) {
+    if (op.getName().getStringRef() == "cir.func") {
+      if (auto sym = op.getAttrOfType<mlir::StringAttr>(mlir::SymbolTable::getSymbolAttrName())) {
+        std::string mangled = sym.getValue().str();
+        std::string dem = demangleSymbol(mangled);
+        dem = stripEmptyArgList(dem);
+        std::string san = mangleLabel(dem);
+        list.emplace_back(mangled, san);
+      }
+    }
+  }
+  // Count usages of each demangled/sanitized name
+  std::unordered_map<std::string,int> counts;
+  for (auto &p : list) counts[p.second]++;
+  // Decide final output name: if demangled name is unique use it, otherwise
+  // keep the mangled name to avoid collisions.
+  for (auto &p : list) {
+    const auto &mangled = p.first;
+    const auto &demSan = p.second;
+    if (counts[demSan] == 1) functionOutputNames[mangled] = demSan;
+    else functionOutputNames[mangled] = mangled;
+  }
+}
+
+std::string Mapper::getFunctionOutputName(llvm::StringRef mangled) const {
+  auto it = functionOutputNames.find(mangled.str());
+  if (it != functionOutputNames.end()) return it->second;
+  // Fallback: attempt to demangle and sanitize on the fly
+  std::string dem = demangleSymbol(mangled.str());
+  dem = stripEmptyArgList(dem);
+  return mangleLabel(dem);
+}
 
 void Mapper::registerHandler(llvm::StringRef opName, std::unique_ptr<OpHandler> handler) {
   handlers[opName.str()] = std::move(handler);
@@ -133,7 +195,9 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   }
 
   out << "// function: " << sym.getValue().str() << "\n";
-  out << retType << " " << sym.getValue().str() << "()";
+  // Use the chosen output name (demangled when unique, otherwise mangled).
+  std::string outName = getFunctionOutputName(sym.getValue().str());
+  out << retType << " " << outName << "()";
 
   // If there is no region/body then emit a declaration (prototype).
   if (fop->getNumRegions() == 0 || fop->getRegion(0).empty()) {
@@ -182,6 +246,10 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
 }
 
 bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
+  // Prepare function names (demangle where possible and unique) before
+  // emitting any function declarations/definitions so we can avoid name
+  // collisions when demangling.
+  prepareFunctionNames(module);
   for (auto &op : module.getOps()) {
     if (llvm::isa<mlir::ModuleOp>(op)) {
       mlir::ModuleOp inner = mlir::cast<mlir::ModuleOp>(op);

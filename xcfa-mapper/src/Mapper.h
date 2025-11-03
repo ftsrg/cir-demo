@@ -77,12 +77,23 @@ public:
   /// simple C declarations used by handlers.
   std::string mapTypeToC(mlir::Type t) const;
 
+  /// Prepare function output names for the module: attempt to demangle
+  /// symbol names and pick a demangled name when it is unique. If multiple
+  /// symbols demangle to the same identifier, the mangled names are kept to
+  /// avoid collisions.
+  void prepareFunctionNames(mlir::ModuleOp module);
+
+  /// Get the chosen output name for a mangled symbol (after prepareFunctionNames).
+  std::string getFunctionOutputName(llvm::StringRef mangled) const;
+
 private:
   bool bestEffort;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
   llvm::DenseMap<mlir::Value, std::string> valueNames;
   llvm::DenseMap<mlir::Block *, std::string> blockLabels;
   unsigned counter;
+  // Mapping from original (mangled) symbol -> chosen output name
+  std::unordered_map<std::string, std::string> functionOutputNames;
 
 public:
   /// Get or create a label name for a block.

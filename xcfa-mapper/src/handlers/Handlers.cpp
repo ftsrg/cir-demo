@@ -199,6 +199,8 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
     out << "  // " << ERR_CALL_NO_CALLEE << "\n";
     callee = "unknown_fn";
   }
+  // Map the callee to the chosen output name (demangled when unique).
+  std::string outCallee = m.getFunctionOutputName(callee);
   std::string args;
   for (unsigned i = 0; i < o->getNumOperands(); ++i) {
     if (i) args += ", ";
@@ -206,10 +208,10 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
   }
   if (o->getNumResults() > 0) {
     std::string tmp = m.freshName("r");
-    out << "  int " << tmp << " = " << callee << "(" << args << ");\n";
+    out << "  int " << tmp << " = " << outCallee << "(" << args << ");\n";
     m.setName(o->getResult(0), tmp);
   } else {
-    out << "  " << callee << "(" << args << ");\n";
+    out << "  " << outCallee << "(" << args << ");\n";
   }
   return true;
 }
