@@ -46,7 +46,15 @@ static std::string demangleSymbol(const std::string &sym) {
 // produced for function names with no parameters), strip that suffix so the
 // sanitized identifier does not carry the parentheses.
 static std::string stripEmptyArgList(const std::string &s) {
-  if (s.size() >= 2 && s.substr(s.size() - 2) == "()") return s.substr(0, s.size() - 2);
+  // If the demangled symbol ends with a parenthesized parameter list,
+  // remove that trailing list so the remaining string is just the
+  // function name (possibly with namespaces). For example:
+  //   "foo()" -> "foo"
+  //   "ns::bar(int, double)" -> "ns::bar"
+  if (!s.empty() && s.back() == ')') {
+    auto pos = s.rfind('(');
+    if (pos != std::string::npos) return s.substr(0, pos);
+  }
   return s;
 }
 
