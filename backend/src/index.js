@@ -237,7 +237,7 @@ app.post('/api/generate', async (req, res) => {
       const thetaRun = await execFileAsync(thetaBin, thetaArgs);
       xcfa.code = (thetaRun && typeof thetaRun.code !== 'undefined') ? thetaRun.code : 1;
       xcfa.stderr = ((thetaRun && thetaRun.stderr) ? thetaRun.stderr : '') + ((thetaRun && thetaRun.stdout) ? thetaRun.stdout : '');
-      if (thetaRun && thetaRun.code === 0) {
+      if (thetaRun) {
         try { xcfa.stdout = await fs.readFile(outXCFA, 'utf8'); } catch (_) { xcfa.stdout = ''; }
       }
 
