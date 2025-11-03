@@ -176,6 +176,7 @@ app.post('/api/generate', async (req, res) => {
       } catch (_) {}
     }
 
+    let mlirPath = "";
     for (const cand of flatCandidates) {
       try {
         const exists = await fs.stat(cand).then(s => s.isFile()).catch(() => false);
@@ -183,6 +184,7 @@ app.post('/api/generate', async (req, res) => {
           const data = await fs.readFile(cand, 'utf8').catch(() => '');
           if (flatOut && typeof flatOut === 'object') flatOut.stdout = (data || '') + (flatOut.stdout || '');
           filesToCleanup.push(cand);
+          mlirPath = cand;
           break;
         }
       } catch (_) {}
@@ -195,10 +197,6 @@ app.post('/api/generate', async (req, res) => {
       try {
         // If clangOut.stdout contains the CIR text, write it to a temp file and run mapper.
         if (clangOut && clangOut.stdout && clangOut.stdout.length > 0) {
-          const mlirPath = path.join(tmpDir, `${base}.mlir`);
-          await fs.writeFile(mlirPath, clangOut.stdout, 'utf8');
-          filesToCleanup.push(mlirPath);
-
           const outC = path.join(tmpDir, `${base}.c`);
           const outCBest = path.join(tmpDir, `${base}.best.c`);
           // Run strict mapper
