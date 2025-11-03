@@ -233,7 +233,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       }
       continue;
     }
-    if(isBestEffort) {
+    if(isBestEffort()) {
       for (Value res : bbop.getResults()) {
         std::string nm = getOrCreateName(res);
         out << "  // %" << nm << "  (produced by: " << bbop.getName().getStringRef().str() << ")\n";
