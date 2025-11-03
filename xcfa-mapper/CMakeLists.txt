@@ -44,6 +44,18 @@ target_link_libraries(xcfa-mapper PRIVATE
   LLVMSupport
 )
 
+# If a compiled CIR dialect runtime exists in the workspace, link it by
+# absolute path so the dialect's static initialization runs at program
+# startup and registers the CIR dialect with MLIR. This helps the parser
+# recognize `cir.*` ops at parse time.
+file(GLOB MLIRCIR_LIBS "${CMAKE_SOURCE_DIR}/../backend/bin/lib/libMLIRCIR.so*")
+if(MLIRCIR_LIBS)
+  message(STATUS "Found MLIRCIR libs: ${MLIRCIR_LIBS}")
+  target_link_libraries(xcfa-mapper PRIVATE ${MLIRCIR_LIBS})
+else()
+  message(STATUS "libMLIRCIR.so not found in ../backend/bin/lib; continuing without linking CIR runtime.")
+endif()
+
 install(TARGETS xcfa-mapper RUNTIME DESTINATION bin)
 
 enable_testing()

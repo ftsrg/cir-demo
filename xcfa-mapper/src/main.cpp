@@ -12,6 +12,8 @@
 #include <mlir/IR/ExtensibleDialect.h>
 #include <mlir/Support/LogicalResult.h>
 
+#include <clang/CIR/Dialect/IR/CIROpsDialect.h.inc>
+
 #include <fstream>
 #include <iostream>
 
@@ -27,11 +29,9 @@ int main(int argc, char **argv) {
   const char *inFile = argv[1];
   const char *outFile = argv[2];
 
-  // Construct an MLIRContext and allow unregistered dialects. This lets the
-  // parser accept `cir.*` ops as generic operations even if the real CIR
-  // dialect implementation is not available in this build.
   MLIRContext context;
   context.allowUnregisteredDialects(true);
+  (void)context.getOrLoadDialect<cir::CIRDialect>();
 
   // Read input file
   std::string input;
@@ -55,9 +55,6 @@ int main(int argc, char **argv) {
     return 4;
   }
 
-  (void)module; // module is valid if parsing succeeded above
-
-  // Instantiate mapper and register builtin op handlers.
   Mapper mapper;
   // Register the built-in CIR handlers (alloca, load, store, const, cmp, br, brcond, call, return)
   registerBuiltinHandlers(mapper);
