@@ -55,65 +55,109 @@ void Mapper::setName(mlir::Value v, const std::string &name) {
   valueNames[v] = name;
 }
 
-bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
-  auto emitCirFunc = [&](Operation *fop) {
-    if (auto sym = fop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName())) {
-      out << "// function: " << sym.getValue().str() << "\n";
-      out << "// NOTE: mapping is partial; expand handlers for full translation.\n";
-      out << "int " << sym.getValue().str() << "() {\n";
-
-      if (fop->getNumRegions() > 0) {
-        Region &r = fop->getRegion(0);
-        for (Block &b : r.getBlocks()) getOrCreateLabel(&b);
-        for (Block &b : r.getBlocks()) {
-          out << mangleLabel(getOrCreateLabel(&b)) << ":\n";
-          for (Operation &bbop : b.getOperations()) {
-            auto it = handlers.find(bbop.getName().getStringRef().str());
-            if (it != handlers.end()) {
-              it->second->handle(&bbop, *this, out);
-              continue;
-            }
-            for (Value res : bbop.getResults()) {
-              std::string nm = getOrCreateName(res);
-              out << "  // %" << nm << "  (produced by: " << bbop.getName().getStringRef().str() << ")\n";
-            }
-            if (!bbop.getAttrs().empty()) {
-              out << "  // attrs:\n";
-              for (NamedAttribute attr : bbop.getAttrs()) {
-                llvm::SmallString<64> buf;
-                llvm::raw_svector_ostream ros(buf);
-                attr.getValue().print(ros);
-                out << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
-              }
-            }
-          }
-        }
-      }
-
-      out << "  return 0;\n";
-      out << "}\n\n";
-    } else {
+void Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
+  // Symbol (function name) is required to emit anything useful.
+  auto sym = fop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
+  if (!sym) {
       out << "// cir.func without symbol - skipping\n";
-    }
-  };
+      return;
+  }
 
+  // Determine function return type if available. CIR's func may encode a
+  // function type as a TypeAttr; try to read it and map common MLIR types
+  // to simple C types. Fall back to "int" when unknown but the function
+  // returns an integer-like type, or to "void" when no result.
+  std::string retType = "int";
+  // Try common attribute names that may hold a function type.
+  if (auto tattr = fop->getAttrOfType<TypeAttr>("type")) {
+      mlir::Type t = tattr.getValue();
+      if (auto fty = mlir::dyn_cast<mlir::FunctionType>(t)) {
+      if (fty.getNumResults() == 0) retType = "void";
+      else {
+          mlir::Type rty = fty.getResult(0);
+          if (auto it = mlir::dyn_cast<mlir::IntegerType>(rty)) {
+          if (it.getWidth() == 32) retType = "int";
+          else retType = "long"; // conservative fallback for other widths
+          } else {
+          // If not integer, prefer int as a conservative default.
+          retType = "int";
+          }
+      }
+      }
+  } else {
+      // As a heuristic, examine attributes for an explicit result type attr
+      // printed in the MLIR (e.g., a trailing TypeAttr). Try to find any
+      // TypeAttr on the op and treat its first result as the return type.
+      for (NamedAttribute na : fop->getAttrs()) {
+      if (auto ta = mlir::dyn_cast<mlir::TypeAttr>(na.getValue())) {
+          mlir::Type t = ta.getValue();
+          if (auto fty = mlir::dyn_cast<mlir::FunctionType>(t)) {
+          if (fty.getNumResults() == 0) retType = "void";
+          else {
+              mlir::Type rty = fty.getResult(0);
+              if (auto it = mlir::dyn_cast<mlir::IntegerType>(rty)) {
+              if (it.getWidth() == 32) retType = "int";
+              else retType = "long";
+              } else {
+              retType = "int";
+              }
+          }
+          break;
+          }
+      }
+      }
+  }
+
+  out << "// function: " << sym.getValue().str() << "\n";
+  out << retType << " " << sym.getValue().str() << "()";
+
+  // If there is no region/body then emit a declaration (prototype).
+  if (fop->getNumRegions() == 0 || fop->getRegion(0).empty()) {
+      out << ";\n\n";
+      return;
+  }
+
+  out << " {\n";
+
+  Region &r = fop->getRegion(0);
+  for (Block &b : r.getBlocks()) getOrCreateLabel(&b);
+  for (Block &b : r.getBlocks()) {
+      out << mangleLabel(getOrCreateLabel(&b)) << ":\n";
+      for (Operation &bbop : b.getOperations()) {
+      auto it = handlers.find(bbop.getName().getStringRef().str());
+      if (it != handlers.end()) {
+          it->second->handle(&bbop, *this, out);
+          continue;
+      }
+      for (Value res : bbop.getResults()) {
+          std::string nm = getOrCreateName(res);
+          out << "  // %" << nm << "  (produced by: " << bbop.getName().getStringRef().str() << ")\n";
+      }
+      if (!bbop.getAttrs().empty()) {
+          out << "  // attrs:\n";
+          for (NamedAttribute attr : bbop.getAttrs()) {
+          llvm::SmallString<64> buf;
+          llvm::raw_svector_ostream ros(buf);
+          attr.getValue().print(ros);
+          out << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
+          }
+      }
+      }
+  }
+
+  out << "}\n\n";
+}
+
+bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   for (auto &op : module.getOps()) {
-    // If the parser produced a nested `builtin.module` inside the provided
-    // ModuleOp, descend into it and handle its contents.
     if (llvm::isa<mlir::ModuleOp>(op)) {
       mlir::ModuleOp inner = mlir::cast<mlir::ModuleOp>(op);
-      for (auto &innerOp : inner.getOps()) {
-        if (innerOp.getName().getStringRef() == "cir.func") {
-          emitCirFunc(&innerOp);
-        } else {
-          out << "// top-level op: " << innerOp.getName().getStringRef().str() << " -- not mapped yet\n";
-        }
-      }
+      mapModule(inner, out);
       continue;
     }
 
     if (op.getName().getStringRef() == "cir.func") {
-      emitCirFunc(&op);
+      mapFunc(&op, out);
     } else {
       out << "// top-level op: " << op.getName().getStringRef().str() << " -- not mapped yet\n";
     }

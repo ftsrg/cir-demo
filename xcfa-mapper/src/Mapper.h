@@ -58,6 +58,8 @@ public:
     registerHandler(opName, std::make_unique<Wrapper>(std::move(wrapperFn)));
   }
 
+  void mapFunc(mlir::Operation *fop, std::ostream &out);
+
   /// Map an MLIR module to a C program written to `out`.
   bool mapModule(mlir::ModuleOp module, std::ostream &out);
 
