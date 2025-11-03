@@ -7,10 +7,13 @@
 #include <llvm/Support/Casting.h>
 
 #include <llvm/ADT/StringRef.h>
+#include <optional>
 #include <llvm/Support/raw_ostream.h>
 
 // Include generated CIR op declarations and dialect to get full op classes
+
 #include <clang/CIR/Dialect/IR/CIRDialect.h>
+#include "ErrorMessages.h"
 
 using namespace mlir;
 
@@ -38,7 +41,15 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
       }
     }
   }
-  if (varName.empty()) varName = m.freshName("a");
+  if (varName.empty()) {
+    if (!m.isBestEffort()) {
+      llvm::errs() << ERR_ALLOCA_NO_NAME << "\n";
+      return false;
+    }
+    // In best-effort mode, also annotate the generated C with the error.
+    out << "  // " << ERR_ALLOCA_NO_NAME << "\n";
+    varName = m.freshName("a");
+  }
 
   std::string ctype = "int";
   if (o->getNumResults() > 0) {
@@ -47,18 +58,26 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
       if (it.getWidth() == 32) ctype = "int";
     }
   }
-  out << "  " << ctype << " " << varName << "\n" << ";\n";
+  out << "  " << ctype << " " << varName << ";\n";
   for (Value res : o->getResults()) m.setName(res, varName);
   return true;
 }
 
 bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
-  std::string literal = "0";
+  std::optional<int64_t> litVal;
   for (NamedAttribute a : o->getAttrs()) {
-    if (auto ia = llvm::dyn_cast<IntegerAttr>(a.getValue())) { literal = std::to_string(ia.getValue().getSExtValue()); break; }
+    if (auto ia = llvm::dyn_cast<IntegerAttr>(a.getValue())) { litVal = ia.getValue().getSExtValue(); break; }
+  }
+  if (!litVal.has_value()) {
+    if (!m.isBestEffort()) {
+      llvm::errs() << ERR_CONSTANT_NO_LITERAL << "\n";
+      return false;
+    }
+    out << "  // " << ERR_CONSTANT_NO_LITERAL << "\n";
   }
   std::string tmp = m.freshName("c");
+  std::string literal = litVal.has_value() ? std::to_string(litVal.value()) : std::string("0");
   out << "  int " << tmp << " = " << literal << ";\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
@@ -93,17 +112,28 @@ bool handleCmp(cir::CmpOp op, Mapper &m, std::ostream &out) {
   Value rhs = o->getOperand(1);
   std::string l = m.getOrCreateName(lhs);
   std::string r = m.getOrCreateName(rhs);
-  std::string pred = "==";
+  std::string pred;
+  bool predFound = false;
   for (NamedAttribute a : o->getAttrs()) {
     if (auto sa = llvm::dyn_cast<StringAttr>(a.getValue())) {
       auto s = sa.getValue();
+      predFound = true;
       if (s == "lt") pred = "<";
       else if (s == "gt") pred = ">";
       else if (s == "le") pred = "<=";
       else if (s == "ge") pred = ">=";
       else if (s == "ne") pred = "!=";
       else if (s == "eq") pred = "==";
+      else predFound = false; // unknown string -> treat as not found
     }
+  }
+  if (!predFound) {
+    if (!m.isBestEffort()) {
+      llvm::errs() << ERR_CMP_NO_PRED << "\n";
+      return false;
+    }
+    out << "  // " << ERR_CMP_NO_PRED << "\n";
+    pred = "==";
   }
   std::string tmp = m.freshName("c");
   out << "  int " << tmp << " = (" << l << " " << pred << " " << r << ") ? 1 : 0;\n";
@@ -127,11 +157,19 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   std::string cond = "0";
   if (o->getNumOperands() >= 1) cond = m.getOrCreateName(o->getOperand(0));
-  std::string tlabel = "bb_true";
-  std::string flabel = "bb_false";
+  std::string tlabel;
+  std::string flabel;
   if (o->getNumSuccessors() >= 2) {
     tlabel = m.getOrCreateLabel(o->getSuccessors()[0]);
     flabel = m.getOrCreateLabel(o->getSuccessors()[1]);
+  } else {
+    if (!m.isBestEffort()) {
+      llvm::errs() << ERR_BRCOND_NO_SUCCESSORS << "\n";
+      return false;
+    }
+    out << "  // " << ERR_BRCOND_NO_SUCCESSORS << "\n";
+    tlabel = "bb_true";
+    flabel = "bb_false";
   }
   out << "  if (" << cond << ") goto " << tlabel << "; else goto " << flabel << ";\n";
   return true;
@@ -139,9 +177,17 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
 
 bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
-  std::string callee = "unknown_fn";
+  std::string callee;
   if (auto sa = o->getAttrOfType<StringAttr>("callee")) callee = sa.getValue().str();
   else if (auto sa2 = o->getAttrOfType<SymbolRefAttr>("callee")) callee = sa2.getRootReference().str();
+  if (callee.empty()) {
+    if (!m.isBestEffort()) {
+      llvm::errs() << ERR_CALL_NO_CALLEE << "\n";
+      return false;
+    }
+    out << "  // " << ERR_CALL_NO_CALLEE << "\n";
+    callee = "unknown_fn";
+  }
   std::string args;
   for (unsigned i = 0; i < o->getNumOperands(); ++i) {
     if (i) args += ", ";

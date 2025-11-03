@@ -31,7 +31,7 @@ public:
 /// The central Mapper: holds mapping state and dispatches ops to handlers.
 class Mapper {
 public:
-  Mapper();
+  Mapper(bool bestEffort = false);
 
   /// Register a handler for an operation name, e.g. "cir.alloca".
   void registerHandler(llvm::StringRef opName, std::unique_ptr<OpHandler> handler);
@@ -58,7 +58,8 @@ public:
     registerHandler(opName, std::make_unique<Wrapper>(std::move(wrapperFn)));
   }
 
-  void mapFunc(mlir::Operation *fop, std::ostream &out);
+  /// Map a single function. Returns true on success, false on unrecoverable error.
+  bool mapFunc(mlir::Operation *fop, std::ostream &out);
 
   /// Map an MLIR module to a C program written to `out`.
   bool mapModule(mlir::ModuleOp module, std::ostream &out);
@@ -72,6 +73,7 @@ public:
   void setName(mlir::Value v, const std::string &name);
 
 private:
+  bool bestEffort;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
   llvm::DenseMap<mlir::Value, std::string> valueNames;
   llvm::DenseMap<mlir::Block *, std::string> blockLabels;
@@ -80,6 +82,12 @@ private:
 public:
   /// Get or create a label name for a block.
   std::string getOrCreateLabel(mlir::Block *b);
+  
+  /// When true, tolerate missing/exact matches and continue mapping with
+  /// generated fallbacks; when false mapping will fail on missing exact data.
+  bool isBestEffort() const { return bestEffort; }
+
+  void setBestEffort(bool v) { bestEffort = v; }
 };
 
 } // namespace xcfa

@@ -16,18 +16,29 @@
 
 #include <fstream>
 #include <iostream>
+#include "ErrorMessages.h"
 
 using namespace mlir;
 using namespace xcfa;
 
 int main(int argc, char **argv) {
+  bool bestEffort = false;
+  int argi = 1;
   if (argc < 3) {
-    llvm::errs() << "Usage: xcfa-mapper <input.mlir> <output.c>\n";
+    llvm::errs() << "Usage: xcfa-mapper [--best-effort] <input.mlir> <output.c>\n";
+    return 2;
+  }
+  if (std::string(argv[1]) == "--best-effort") {
+    bestEffort = true;
+    argi = 2;
+  }
+  if (argc - argi < 2) {
+    llvm::errs() << "Usage: xcfa-mapper [--best-effort] <input.mlir> <output.c>\n";
     return 2;
   }
 
-  const char *inFile = argv[1];
-  const char *outFile = argv[2];
+  const char *inFile = argv[argi];
+  const char *outFile = argv[argi+1];
 
   MLIRContext context;
   context.allowUnregisteredDialects(true);
@@ -55,8 +66,7 @@ int main(int argc, char **argv) {
     return 4;
   }
 
-  Mapper mapper;
-  // Register the built-in CIR handlers (alloca, load, store, const, cmp, br, brcond, call, return)
+  Mapper mapper(bestEffort);
   registerBuiltinHandlers(mapper);
 
   std::ofstream ofs(outFile);
@@ -66,7 +76,7 @@ int main(int argc, char **argv) {
   }
 
   if (!mapper.mapModule(module, ofs)) {
-    llvm::errs() << "Mapping failed.\n";
+    llvm::errs() << ERR_MAPPING_FAILED << "\n";
     return 6;
   }
 
