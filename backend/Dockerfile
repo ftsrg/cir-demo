@@ -5,6 +5,7 @@ WORKDIR /app
 # copy package and source
 COPY backend /app/backend
 
+WORKDIR /app/backend
 RUN npm install --production
 
 ENV DEBIAN_FRONTEND=noninteractive
