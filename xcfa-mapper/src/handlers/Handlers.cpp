@@ -20,14 +20,31 @@ namespace {
 // Basic Alloca handler: declare a local variable and map the result to its name.
 struct AllocaHandler : OpHandler {
   bool handle(Operation *op, Mapper &m, std::ostream &out) override {
-    // Try to infer a name from attributes (array of strings) if present.
+    // Try to infer a name from known attribute slots (try several common
+    // attribute names produced by CIR emission).
     std::string varName;
-    for (NamedAttribute an : op->getAttrs()) {
-      if (auto aa = llvm::dyn_cast<ArrayAttr>(an.getValue())) {
-        if (!aa.empty()) {
-          if (auto sa = llvm::dyn_cast<StringAttr>(aa[0])) {
-            varName = sa.getValue().str();
-            break;
+    if (auto aa = op->getAttrOfType<ArrayAttr>("names")) {
+      if (!aa.getValue().empty()) {
+        if (auto sa = llvm::dyn_cast<StringAttr>(aa.getValue()[0]))
+          varName = sa.getValue().str();
+      }
+    }
+    if (varName.empty()) if (auto aa = op->getAttrOfType<ArrayAttr>("sym_names")) {
+      if (!aa.getValue().empty()) {
+        if (auto sa = llvm::dyn_cast<StringAttr>(aa.getValue()[0]))
+          varName = sa.getValue().str();
+      }
+    }
+    if (varName.empty()) if (auto sa = op->getAttrOfType<StringAttr>("name")) varName = sa.getValue().str();
+    // Fallback: scan any ArrayAttr on the op and take its first string element.
+    if (varName.empty()) {
+      for (NamedAttribute an : op->getAttrs()) {
+        if (auto aa = llvm::dyn_cast<ArrayAttr>(an.getValue())) {
+          if (!aa.getValue().empty()) {
+            if (auto sa = llvm::dyn_cast<StringAttr>(aa.getValue()[0])) {
+              varName = sa.getValue().str();
+              break;
+            }
           }
         }
       }
