@@ -7,6 +7,7 @@
 #include <ostream>
 #include <memory>
 #include <string>
+#include <functional>
 
 #include <llvm/ADT/DenseMap.h>
 #include <llvm/ADT/StringRef.h>
@@ -34,6 +35,28 @@ public:
 
   /// Register a handler for an operation name, e.g. "cir.alloca".
   void registerHandler(llvm::StringRef opName, std::unique_ptr<OpHandler> handler);
+
+  /// Register a typed handler for a generated op class. The provided callable
+  /// should accept (OpTy op, Mapper &m, std::ostream &out) and return bool.
+  /// This convenience wraps the typed handler into an OpHandler that performs
+  /// a dyn_cast and forwards the call.
+  template <typename OpTy, typename Fn>
+  void registerTypedHandler(llvm::StringRef opName, Fn &&fn) {
+    struct Wrapper : OpHandler {
+      std::function<bool(mlir::Operation *, Mapper &, std::ostream &)> f;
+      Wrapper(std::function<bool(mlir::Operation *, Mapper &, std::ostream &)> &&f) : f(std::move(f)) {}
+      bool handle(mlir::Operation *op, Mapper &m, std::ostream &out) override { return f(op, m, out); }
+    };
+
+    auto wrapperFn = [fn = std::forward<Fn>(fn)](mlir::Operation *op, Mapper &m, std::ostream &out) -> bool {
+      if (auto specific = llvm::dyn_cast<OpTy>(op)) {
+        return fn(specific, m, out);
+      }
+      return false;
+    };
+
+    registerHandler(opName, std::make_unique<Wrapper>(std::move(wrapperFn)));
+  }
 
   /// Map an MLIR module to a C program written to `out`.
   bool mapModule(mlir::ModuleOp module, std::ostream &out);
