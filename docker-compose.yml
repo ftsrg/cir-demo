@@ -1,8 +1,6 @@
 services:
   backend:
     image: ghcr.io/ftsrg/cir-demo-backend:latest
-    environment:
-      - BASIC_AUTH_FILE=/app/config/credentials.json
 
   frontend:
     image: ghcr.io/ftsrg/cir-demo-frontend:latest
