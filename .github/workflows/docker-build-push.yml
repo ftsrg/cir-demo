@@ -78,6 +78,8 @@ jobs:
         run: |
           chmod +x ./docker/generate-cert.sh
           ./docker/generate-cert.sh
+          chmod +x ./docker/generate-credentials.sh
+          ./docker/generate-credentials.sh ${{ secrets.FRONTEND_BASIC_AUTH_USERNAME }} ${{ secrets.FRONTEND_BASIC_AUTH_PASSWORD }}
           chmod +x ./docker/setup-perms.sh
           ./docker/setup-perms.sh
 
