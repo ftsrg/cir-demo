@@ -1,6 +1,15 @@
+ARG LLVM_IMAGE=ghcr.io/ftsrg/cir-demo-llvm:latest
+
+# Allow copying LLVM from the prebuilt llvm image into this image. This way you
+# can build the LLVM image locally (tag it with the same name) and then build
+# the backend image on your machine without running the costly LLVM build in CI.
+FROM ${LLVM_IMAGE} AS llvm
+
 FROM node:25-trixie
 
 WORKDIR /app
+
+# Copy LLVM installation from the llvm image
 
 RUN wget 'https://github.com/ftsrg/theta/releases/latest/download/Theta.zip' -O /app/Theta.zip \
  && unzip /app/Theta.zip \
@@ -9,6 +18,7 @@ RUN wget 'https://github.com/ftsrg/theta/releases/latest/download/Theta.zip' -O 
 
 # copy package and source
 COPY backend /app/backend
+COPY --from=llvm /opt/cir /app/backend/bin
 
 WORKDIR /app/backend
 RUN npm install --production
@@ -16,30 +26,9 @@ RUN npm install --production
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates libstdc++6 \
-	build-essential cmake ninja-build pkg-config python3 git \
+    build-essential cmake ninja-build pkg-config python3 git \
     openjdk-21-jdk-headless libgomp1 libmpfr-dev \
-    clang lld
-
-# Build LLVM/ClangIR if backend/bin doesn't exist
-# This checks if bin directory exists in the COPY context, and if not, builds LLVM
-RUN if [ ! -d /app/backend/bin ]; then \
-    cd /tmp && \
-    git clone --depth=1 https://github.com/llvm/clangir.git && \
-    cmake -S clangir/llvm -B build -GNinja \
-        -DCLANG_ENABLE_CIR=ON \
-        -DLLVM_ENABLE_PROJECTS="clang;mlir" \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DLLVM_TARGETS_TO_BUILD=host \
-        -DCMAKE_CXX_COMPILER=clang++ \
-        -DCMAKE_C_COMPILER=clang \
-        -DLLVM_USE_LINKER=lld \
-        -DBUILD_SHARED_LIBS=ON \
-        -DCMAKE_INSTALL_PREFIX=/app/backend/bin \
-        -DLLVM_FORCE_VC_REVISION=$(head -c7 /tmp/clangir/.git/refs/heads/main)-zorn && \
-    cmake --build build -j$(nproc) && \
-    cmake --install build && \
-    cd / && rm -rf /tmp/clangir /tmp/build; \
-    fi
+ && rm -rf /var/lib/apt/lists/*
 
 # Build the xcfa-mapper C++ tool so the backend can call it. We copy the
 # source tree and invoke CMake to produce the binary at xcfa-mapper/build/xcfa-mapper
