@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   backend:
     image: ghcr.io/ftsrg/cir-demo-backend:latest
