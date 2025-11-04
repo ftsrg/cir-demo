@@ -4,10 +4,6 @@ services:
     image: ghcr.io/ftsrg/cir-demo-backend:latest
     environment:
       - BASIC_AUTH_FILE=/app/config/credentials.json
-    volumes:
-      - ./backend/examples:/app/examples:ro
-      - ./backend/bin:/app/bin:ro
-      - ./backend/config:/app/config:ro
 
   frontend:
     image: ghcr.io/ftsrg/cir-demo-frontend:latest
