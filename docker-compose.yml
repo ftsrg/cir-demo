@@ -1,9 +1,7 @@
 version: '3.8'
 services:
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
+    image: ghcr.io/ftsrg/cir-demo-backend:latest
     environment:
       - BASIC_AUTH_FILE=/app/config/credentials.json
     volumes:
@@ -12,11 +10,7 @@ services:
       - ./backend/config:/app/config:ro
 
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-      args:
-      - VITE_API_ROOT=${HOST_API_ROOT:-https://localhost}
+    image: ghcr.io/ftsrg/cir-demo-frontend:latest
     ports:
       - 3333:443
     depends_on:
