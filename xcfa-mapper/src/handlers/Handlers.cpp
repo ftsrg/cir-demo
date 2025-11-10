@@ -242,13 +242,32 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
   std::string vname = m.getOrCreateName(val);
   std::string pname = m.getOrCreateName(ptr);
   
-  // Check if val is a direct access value being used as a pointer
-  // Never take address of direct access values
-  // Only take address if not direct access and mapped C type is pointer
+  // Determine if we need to take the address of val when storing
+  // We need & if:
+  // 1. val is a direct access lvalue (variable from alloca, array element from get_element)
+  // 2. ptr expects a pointer value (ptr's pointed-to type is a pointer)
   bool needAddressOf = false;
-  if (!m.isDirectAccess(val) && val.getType()) {
-    std::string valCType = m.mapTypeToC(val.getType());
-    needAddressOf = !valCType.empty() && valCType.back() == '*';
+  if (m.isDirectAccess(val) && ptr.getType()) {
+    // val is direct access (a variable or lvalue)
+    // Check if we're storing into a pointer variable
+    Type ptrType = ptr.getType();
+    if (auto ptrTy = llvm::dyn_cast<cir::PointerType>(ptrType)) {
+      Type pointee = ptrTy.getPointee();
+      std::string pointeeCType = m.mapTypeToC(pointee);
+      bool pointeeIsPointer = !pointeeCType.empty() && pointeeCType.back() == '*';
+      if (pointeeIsPointer) {
+        // Storing into a pointer variable
+        // Exception: if val is already a pointer expression (like from ptr_stride)
+        // we don't need &. Check if vname contains operators like + or - at top level
+        // or if it's a cast result (contains "cast")
+        bool isPointerExpr = (vname.find(" + ") != std::string::npos || 
+                              vname.find(" - ") != std::string::npos ||
+                              vname.find("cast") != std::string::npos);
+        if (!isPointerExpr) {
+          needAddressOf = true;
+        }
+      }
+    }
   }
   if (needAddressOf) {
     vname = "&" + vname;
@@ -830,6 +849,10 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
   // For arrays, don't use & because array names decay to pointers
   if (isArrayPointer) {
     out << "  " << ctype << " " << tmp << " = " << globalName << ";\n";
+    // Mark the result as direct access since it's an array
+    if (o->getNumResults() > 0) {
+      m.markAsDirectAccess(o->getResult(0));
+    }
   } else {
     out << "  " << ctype << " " << tmp << " = &" << globalName << ";\n";
   }

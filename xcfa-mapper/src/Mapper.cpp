@@ -268,9 +268,33 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
       return "int"; // C89 compatible, or "bool" for C99+
     }
     
-    // Check for CIR integer types
+    // Check for CIR integer types with size and signedness
     if (typeStr.find("!cir.int") != std::string::npos) {
+      // Format: !cir.int<s, 8>, !cir.int<s, 32>, !cir.int<s, 64>, etc.
+      if (typeStr.find("int<s, 8>") != std::string::npos || typeStr.find("int<u, 8>") != std::string::npos) {
+        return "char";
+      } else if (typeStr.find("int<s, 16>") != std::string::npos || typeStr.find("int<u, 16>") != std::string::npos) {
+        return "short";
+      } else if (typeStr.find("int<s, 32>") != std::string::npos || typeStr.find("int<u, 32>") != std::string::npos) {
+        return "int";
+      } else if (typeStr.find("int<s, 64>") != std::string::npos || typeStr.find("int<u, 64>") != std::string::npos) {
+        return "long long";
+      }
+      return "int"; // fallback
+    }
+    
+    // Check for old-style CIR integer types: !s8i, !s16i, !s32i, !s64i, etc.
+    if (typeStr.find("!s8i") != std::string::npos || typeStr.find("!u8i") != std::string::npos) {
+      return "char";
+    }
+    if (typeStr.find("!s16i") != std::string::npos || typeStr.find("!u16i") != std::string::npos) {
+      return "short";
+    }
+    if (typeStr.find("!s32i") != std::string::npos || typeStr.find("!u32i") != std::string::npos) {
       return "int";
+    }
+    if (typeStr.find("!s64i") != std::string::npos || typeStr.find("!u64i") != std::string::npos) {
+      return "long long";
     }
     
     // Check for CIR float types
@@ -586,17 +610,37 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         }
         // Parse nested arrays
         while (inner.find("!cir.array<") == 0) {
-          size_t xPos = inner.find(" x ");
-            size_t endPos = inner.find(">", xPos);
-            if (xPos != std::string::npos && endPos != std::string::npos) {
-              std::string sizeStr = inner.substr(xPos + 3, endPos - xPos - 3);
-              info.dims.push_back(sizeStr);
-              // Next inner base type (between '!cir.array<' and ' x ')
-              inner = inner.substr(11, xPos - 11); // 11 = strlen("!cir.array<")
-              // If the extracted inner is another !cir.array< it will loop again
-            } else {
-              break; // malformed; stop parsing further
+          // Find the matching closing '>' for this array level
+          // We need to count nested < and > to find the right one
+          int depth = 0;
+          size_t pos = 11; // start after "!cir.array<"
+          size_t xPos = std::string::npos;
+          size_t endPos = std::string::npos;
+          
+          for (; pos < inner.size(); ++pos) {
+            if (inner[pos] == '<') {
+              depth++;
+            } else if (inner[pos] == '>') {
+              if (depth == 0) {
+                endPos = pos;
+                break;
+              }
+              depth--;
+            } else if (depth == 0 && pos + 2 < inner.size() && 
+                       inner[pos] == ' ' && inner[pos+1] == 'x' && inner[pos+2] == ' ') {
+              xPos = pos;
             }
+          }
+          
+          if (xPos != std::string::npos && endPos != std::string::npos) {
+            std::string sizeStr = inner.substr(xPos + 3, endPos - xPos - 3);
+            info.dims.push_back(sizeStr);
+            // Next inner base type (between '!cir.array<' and ' x ')
+            inner = inner.substr(11, xPos - 11); // 11 = strlen("!cir.array<")
+            // If the extracted inner is another !cir.array< it will loop again
+          } else {
+            break; // malformed; stop parsing further
+          }
         }
         // inner now holds final base token like !s32i, !cir.int<s, 8>, or !rec_StructName
         // Check for struct type
