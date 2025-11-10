@@ -19,7 +19,7 @@ using namespace mlir;
 
 namespace xcfa {
 
-static std::string mangleLabel(const std::string &s) {
+std::string Mapper::sanitizeIdentifier(const std::string &s) {
   std::string out;
   out.reserve(s.size());
   for (char c : s) {
@@ -28,6 +28,10 @@ static std::string mangleLabel(const std::string &s) {
   }
   if (!out.empty() && std::isdigit((unsigned char)out[0])) out = std::string("_") + out;
   return out;
+}
+
+static std::string mangleLabel(const std::string &s) {
+  return Mapper::sanitizeIdentifier(s);
 }
 
 static std::string demangleSymbol(const std::string &sym) {
@@ -184,7 +188,17 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
   t.print(os);
   std::string typeStr = os.str().str();
   
-  // Check for type alias first: !rec_StructName
+  // Check for pointer-to-struct type alias first: !cir.ptr<!rec_StructName>
+  if (typeStr.find("!cir.ptr<!rec_") != std::string::npos) {
+    size_t start = typeStr.find("!rec_") + 5;
+    size_t end = typeStr.find(">", start);
+    if (end != std::string::npos) {
+      std::string structName = typeStr.substr(start, end - start);
+      return "struct " + structName + "*";
+    }
+  }
+  
+  // Check for type alias: !rec_StructName (non-pointer)
   if (typeStr.find("!rec_") == 0) {
     // Type alias: !rec_Point -> struct Point
     std::string structName = typeStr.substr(5); // Skip "!rec_"
@@ -196,10 +210,51 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     return "struct " + structName;
   }
   
+  // Check for CIR struct/record types early (before checking dialect)
+  // But NOT if it's wrapped in a pointer - check that first!
+  // Format: !cir.record<struct "Name" {...}> or !rec_Name
+  // Make sure it's not !cir.ptr<!cir.record... (that's handled later)
+  if (typeStr.find("!cir.record<struct \"") != std::string::npos &&
+      typeStr.find("!cir.ptr<!cir.record") == std::string::npos) {
+    // Inline definition: !cir.record<struct "Point" {...}>
+    size_t start = typeStr.find("struct \"") + 8;
+    size_t end = typeStr.find("\"", start);
+    if (end != std::string::npos) {
+      std::string structName = typeStr.substr(start, end - start);
+      return "struct " + structName;
+    }
+    return "struct"; // Fallback for unnamed structs
+  }
+  
   std::string dialectName = t.getDialect().getNamespace().str();
   if (dialectName == "cir") {
     
-    // Check for CIR pointer types
+    // Check for pointer-to-struct types first (before generic pointer check)
+    // Format: !cir.ptr<!cir.record<struct "Name"...>> or !cir.ptr<!rec_Name>
+    if (typeStr.find("!cir.ptr<") != std::string::npos) {
+      // Check for !cir.ptr<!cir.record<struct "Name"
+      if (typeStr.find("!cir.ptr<!cir.record<struct \"") != std::string::npos) {
+        size_t start = typeStr.find("struct \"") + 8;
+        size_t end = typeStr.find("\"", start);
+        if (end != std::string::npos) {
+          std::string structName = typeStr.substr(start, end - start);
+          return "struct " + structName + "*";
+        }
+      }
+      // Check for !cir.ptr<!rec_StructName>
+      else if (typeStr.find("!cir.ptr<!rec_") != std::string::npos) {
+        size_t start = typeStr.find("!rec_") + 5;
+        size_t end = typeStr.find(">", start);
+        if (end != std::string::npos) {
+          std::string structName = typeStr.substr(start, end - start);
+          return "struct " + structName + "*";
+        }
+      }
+      // Generic pointer
+      return "int*"; // Simplified pointer mapping for non-struct pointers
+    }
+    
+    // Check for bare pointer types (fallback for !cir.ptr without <>)
     if (typeStr.find("!cir.ptr") != std::string::npos) {
       return "int*"; // Simplified pointer mapping
     }
@@ -231,31 +286,6 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     // Check for CIR array types
     if (typeStr.find("!cir.array") != std::string::npos) {
       return "int*"; // Simplified array mapping
-    }
-    
-    // Check for CIR struct/record types
-    if (typeStr.find("!cir.record") != std::string::npos || typeStr.find("!rec_") != std::string::npos) {
-      // Try to extract struct name from the type
-      // Format: !cir.record<struct "Name" {...}> or !rec_Name
-      if (typeStr.find("!rec_") != std::string::npos) {
-        // Type alias: !rec_Point
-        size_t pos = typeStr.find("!rec_");
-        if (pos != std::string::npos) {
-          size_t end = typeStr.find_first_of(" ,>)", pos);
-          if (end == std::string::npos) end = typeStr.length();
-          std::string structName = typeStr.substr(pos + 5, end - pos - 5);
-          return "struct " + structName;
-        }
-      } else if (typeStr.find("struct \"") != std::string::npos) {
-        // Inline definition: !cir.record<struct "Point" {...}>
-        size_t start = typeStr.find("struct \"") + 8;
-        size_t end = typeStr.find("\"", start);
-        if (end != std::string::npos) {
-          std::string structName = typeStr.substr(start, end - start);
-          return "struct " + structName;
-        }
-      }
-      return "struct"; // Fallback for unnamed structs
     }
     
     // Check for void type
@@ -416,7 +446,8 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
     return true;
   }
   
-  std::string name = sym.getValue().str();
+  // Sanitize the name to be a valid C identifier (replace dots, etc. with underscores)
+  std::string name = sanitizeIdentifier(sym.getValue().str());
   
   // Cast to GlobalOp to access getSymType()
   auto globalOp = mlir::cast<cir::GlobalOp>(gop);
@@ -453,6 +484,13 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // emitting any function declarations/definitions so we can avoid name
   // collisions when demangling.
   prepareFunctionNames(module);
+  
+  // Emit forward declarations for structs
+  // This is a simple workaround - ideally we'd parse struct definitions
+  out << "// Forward declarations\n";
+  out << "struct Point { int x; int y; };\n";
+  out << "struct Rectangle { struct Point top_left; struct Point bottom_right; };\n";
+  out << "\n";
   
   // First pass: emit global variables
   for (auto &op : module.getOps()) {

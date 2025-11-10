@@ -95,6 +95,10 @@ public:
 
   /// Get the chosen output name for a mangled symbol (after prepareFunctionNames).
   std::string getFunctionOutputName(llvm::StringRef mangled) const;
+  
+  /// Sanitize a string to be a valid C identifier by replacing invalid
+  /// characters with underscores.
+  static std::string sanitizeIdentifier(const std::string &s);
 
 private:
   bool bestEffort;

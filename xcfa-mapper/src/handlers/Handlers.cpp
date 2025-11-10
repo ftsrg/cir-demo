@@ -244,6 +244,21 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
   std::string vname = m.getOrCreateName(val);
   std::string pname = m.getOrCreateName(ptr);
   
+  // Check if val is a direct access value being used as a pointer
+  // If val is direct access (alloca/param) AND its type is a pointer, we need &
+  bool needAddressOf = false;
+  if (m.isDirectAccess(val) && val.getType()) {
+    llvm::SmallString<64> buf;
+    llvm::raw_svector_ostream os(buf);
+    val.getType().print(os);
+    std::string valTypeStr = os.str().str();
+    needAddressOf = (valTypeStr.find("!cir.ptr") != std::string::npos);
+  }
+  
+  if (needAddressOf) {
+    vname = "&" + vname;
+  }
+  
   // Check if ptr is a direct access value (from alloca) or a real pointer
   if (m.isDirectAccess(ptr)) {
     // Direct access - no dereference needed
@@ -299,6 +314,21 @@ bool handleBr(cir::BrOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (!o->getSuccessors().empty()) {
     mlir::Block *succ = o->getSuccessors()[0];
+    
+    // Handle block arguments (phi nodes in SSA form)
+    // If the branch passes operands, map them to the successor block's arguments
+    if (o->getNumOperands() > 0 && succ->getNumArguments() > 0) {
+      unsigned numArgs = std::min(o->getNumOperands(), (unsigned)succ->getNumArguments());
+      for (unsigned i = 0; i < numArgs; ++i) {
+        Value branchArg = o->getOperand(i);
+        BlockArgument blockArg = succ->getArgument(i);
+        
+        // Map the block argument to the same name as the branch argument
+        std::string argName = m.getOrCreateName(branchArg);
+        m.setName(blockArg, argName);
+      }
+    }
+    
     std::string lbl = m.getOrCreateLabel(succ);
     out << "  goto " << lbl << ";\n";
     return true;
@@ -621,12 +651,21 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
   
   // cir.get_member returns a pointer to the member, so we need to generate &base.member
   // However, if base is already a pointer (common case), we need ->
-  // For now, assume base is not a pointer (struct by value)
+  // Check if base is marked as direct access (alloca, function param) - use .
+  // Otherwise it's an indirect pointer - use ->
+  bool useArrow = !m.isDirectAccess(base);
+  
   std::string tmp = m.freshName("mem");
   std::string ctype = "int*";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
   
-  out << "  " << ctype << " " << tmp << " = &" << baseName << "." << memberName << ";\n";
+  if (useArrow) {
+    // Base is an indirect pointer (e.g., result of get_member), use -> to access member
+    out << "  " << ctype << " " << tmp << " = &" << baseName << "->" << memberName << ";\n";
+  } else {
+    // Base is direct access (e.g., alloca, param), use . to access member
+    out << "  " << ctype << " " << tmp << " = &" << baseName << "." << memberName << ";\n";
+  }
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
@@ -765,6 +804,9 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
     out << "  // " << ERR_GET_GLOBAL_NO_NAME << "\n";
     globalName = "global_var";
   }
+  
+  // Sanitize the global name to be a valid C identifier
+  globalName = Mapper::sanitizeIdentifier(globalName);
   
   std::string tmp = m.freshName("g");
   std::string ctype = "int*";
