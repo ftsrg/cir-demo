@@ -127,9 +127,12 @@ void Mapper::setName(mlir::Value v, const std::string &name) {
 }
 
 std::string Mapper::mapTypeToC(mlir::Type t) const {
+  // Handle MLIR built-in integer types
   if (auto it = mlir::dyn_cast<mlir::IntegerType>(t)) {
     unsigned w = it.getWidth();
     switch (w) {
+    case 1:
+      return "bool";
     case 8:
       return "int8_t";
     case 16:
@@ -142,10 +145,88 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
       return "long";
     }
   }
-  if (mlir::isa<mlir::FloatType>(t)) {
-    return "double";
+  
+  // Handle MLIR built-in float types
+  if (auto ft = mlir::dyn_cast<mlir::FloatType>(t)) {
+    unsigned w = ft.getWidth();
+    switch (w) {
+    case 16:
+      return "float"; // half precision, approximate as float
+    case 32:
+      return "float";
+    case 64:
+      return "double";
+    case 80:
+      return "long double"; // x87 extended precision
+    case 128:
+      return "long double"; // quad precision, approximate as long double
+    default:
+      return "double";
+    }
   }
-  // conservative default for unknown types
+  
+  // Handle CIR-specific types (need to check dialect)
+  std::string dialectName = t.getDialect().getNamespace().str();
+  if (dialectName == "cir") {
+    std::string typeName = t.getAsOpaquePointer() ? "" : "";
+    
+    // Try to extract type name from the type string representation
+    llvm::SmallString<64> buf;
+    llvm::raw_svector_ostream os(buf);
+    t.print(os);
+    std::string typeStr = os.str().str();
+    
+    // Check for CIR pointer types
+    if (typeStr.find("!cir.ptr") != std::string::npos) {
+      return "int*"; // Simplified pointer mapping
+    }
+    
+    // Check for CIR bool type
+    if (typeStr.find("!cir.bool") != std::string::npos) {
+      return "int"; // C89 compatible, or "bool" for C99+
+    }
+    
+    // Check for CIR integer types
+    if (typeStr.find("!cir.int") != std::string::npos) {
+      return "int";
+    }
+    
+    // Check for CIR float types
+    if (typeStr.find("!cir.float") != std::string::npos) {
+      return "float";
+    }
+    if (typeStr.find("!cir.double") != std::string::npos) {
+      return "double";
+    }
+    if (typeStr.find("!cir.long_double") != std::string::npos) {
+      return "long double";
+    }
+    if (typeStr.find("!cir.f80") != std::string::npos) {
+      return "long double";
+    }
+    
+    // Check for CIR array types
+    if (typeStr.find("!cir.array") != std::string::npos) {
+      return "int*"; // Simplified array mapping
+    }
+    
+    // Check for CIR struct/record types
+    if (typeStr.find("!cir.record") != std::string::npos) {
+      return "struct"; // Incomplete, but shows intent
+    }
+    
+    // Check for void type
+    if (typeStr.find("!cir.void") != std::string::npos) {
+      return "void";
+    }
+  }
+  
+  // Check for MLIR NoneType (sometimes used for void)
+  if (mlir::isa<mlir::NoneType>(t)) {
+    return "void";
+  }
+  
+  // Conservative default for unknown types
   return "int";
 }
 
