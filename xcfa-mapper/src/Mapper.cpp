@@ -10,6 +10,10 @@
 #include <cxxabi.h>
 #include <cstdlib>
 
+#include <map>
+#include <set>
+#include <vector>
+
 #include <llvm/ADT/SmallString.h>
 #include <llvm/ADT/StringRef.h>
 #include <llvm/Support/raw_ostream.h>
@@ -485,12 +489,111 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // collisions when demangling.
   prepareFunctionNames(module);
   
-  // Emit forward declarations for structs
-  // This is a simple workaround - ideally we'd parse struct definitions
-  out << "// Forward declarations\n";
-  out << "struct Point { int x; int y; };\n";
-  out << "struct Rectangle { struct Point top_left; struct Point bottom_right; };\n";
-  out << "\n";
+  // Auto-parse struct definitions by scanning member accesses.
+  struct FieldInfo { std::string name; std::string ctype; };
+  std::map<std::string, std::vector<FieldInfo>> structFields; // structName -> fields
+
+  // Helper to recursively collect from operations
+  std::function<void(mlir::Operation &)> collectFromOp;
+  collectFromOp = [&](mlir::Operation &genericOp) {
+    // Recurse into nested regions/blocks/ops
+    for (auto &region : genericOp.getRegions()) {
+      for (auto &block : region.getBlocks()) {
+        for (auto &op : block.getOperations()) collectFromOp(op);
+      }
+    }
+
+    // Collect struct/field info from cir.get_member
+    if (auto gm = llvm::dyn_cast<cir::GetMemberOp>(genericOp)) {
+      // Base is pointer to struct; extract struct name from base type string
+      mlir::Type baseType = gm.getOperation()->getOperand(0).getType();
+      llvm::SmallString<64> bbuf; llvm::raw_svector_ostream bos(bbuf); baseType.print(bos);
+      std::string baseTypeStr = bos.str().str();
+      std::string structName;
+      if (baseTypeStr.find("!cir.ptr<!cir.record<struct ") != std::string::npos) {
+        size_t start = baseTypeStr.find("struct \"") + 8;
+        size_t end = baseTypeStr.find("\"", start);
+        if (end != std::string::npos) structName = baseTypeStr.substr(start, end - start);
+      } else if (baseTypeStr.find("!cir.ptr<!rec_") != std::string::npos) {
+        size_t start = baseTypeStr.find("!rec_") + 5;
+        size_t end = baseTypeStr.find(">", start);
+        if (end != std::string::npos) structName = baseTypeStr.substr(start, end - start);
+      }
+      if (structName.empty()) return; // Not a struct base
+
+      // Result type is pointer to field type. We can reuse mapTypeToC and drop '*'
+  mlir::Type resType = gm.getOperation()->getResult(0).getType();
+      std::string fieldCType = mapTypeToC(resType);
+      if (!fieldCType.empty() && fieldCType.back() == '*') fieldCType.pop_back();
+
+      // Field name from attribute (fallback to synthetic)
+      std::string fname;
+  if (auto sa = gm.getOperation()->getAttrOfType<StringAttr>("name")) fname = sa.getValue().str();
+      if (fname.empty()) {
+        size_t idx = structFields[structName].size();
+        fname = "field" + std::to_string(idx);
+      }
+
+      // Avoid duplicate entries for the same field name
+      auto &vec = structFields[structName];
+      bool exists = false;
+      for (auto &fi : vec) if (fi.name == fname) { exists = true; break; }
+      if (!exists) vec.push_back({fname, fieldCType});
+    }
+  };
+
+  // Kick off collection for top-level operations
+  for (auto &op : module.getOps()) collectFromOp(op);
+
+  // Order structs to satisfy dependencies: if a struct references another
+  // struct in its fields, emit the dependency first. Simple fixed-point topo.
+  auto getDeps = [&](const std::string &sname){
+    std::set<std::string> deps;
+    auto it = structFields.find(sname);
+    if (it != structFields.end()) {
+      for (auto &fi : it->second) {
+        if (fi.ctype.rfind("struct ", 0) == 0) {
+          std::string dep = fi.ctype.substr(7);
+          if (dep != sname) deps.insert(dep);
+        }
+      }
+    }
+    return deps;
+  };
+
+  std::vector<std::string> order;
+  std::set<std::string> remaining;
+  for (auto &kv : structFields) remaining.insert(kv.first);
+  bool progressed = true;
+  while (progressed && !remaining.empty()) {
+    progressed = false;
+    for (auto it = remaining.begin(); it != remaining.end();) {
+      auto deps = getDeps(*it);
+      bool ok = true;
+      for (auto &d : deps) if (structFields.count(d) && std::find(order.begin(), order.end(), d) == order.end()) { ok = false; break; }
+      if (ok) {
+        order.push_back(*it);
+        it = remaining.erase(it);
+        progressed = true;
+      } else {
+        ++it;
+      }
+    }
+  }
+  // Append any leftovers (cycles/self-deps) deterministically
+  for (auto &s : remaining) order.push_back(s);
+
+  if (!order.empty()) out << "// Struct definitions (auto-parsed)\n";
+  for (auto &sname : order) {
+    out << "struct " << sname << " { ";
+    auto &vec = structFields[sname];
+    for (size_t i = 0; i < vec.size(); ++i) {
+      out << vec[i].ctype << " " << vec[i].name << ";";
+      if (i + 1 < vec.size()) out << " ";
+    }
+    out << " };\n";
+  }
+  if (!order.empty()) out << "\n";
   
   // First pass: emit global variables
   for (auto &op : module.getOps()) {
