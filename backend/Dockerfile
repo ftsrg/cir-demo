@@ -1,15 +1,19 @@
 ARG LLVM_IMAGE=ghcr.io/ftsrg/cir-demo-llvm:latest
 
-# Allow copying LLVM from the prebuilt llvm image into this image. This way you
-# can build the LLVM image locally (tag it with the same name) and then build
-# the backend image on your machine without running the costly LLVM build in CI.
-FROM ${LLVM_IMAGE} AS llvm
-
-FROM node:25-trixie
+FROM ${LLVM_IMAGE}
 
 WORKDIR /app
 
-# Copy LLVM installation from the llvm image
+# Install Node.js and required dependencies
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates libstdc++6 \
+    build-essential cmake ninja-build pkg-config python3 git \
+    openjdk-21-jdk-headless libgomp1 libmpfr-dev \
+    curl wget unzip \
+ && curl -fsSL https://deb.nodesource.com/setup_21.x | bash - \
+ && apt-get install -y nodejs \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN wget 'https://github.com/ftsrg/theta/releases/latest/download/Theta.zip' -O /app/Theta.zip \
  && unzip /app/Theta.zip \
@@ -18,17 +22,12 @@ RUN wget 'https://github.com/ftsrg/theta/releases/latest/download/Theta.zip' -O 
 
 # copy package and source
 COPY backend /app/backend
-COPY --from=llvm /opt/cir /app/backend/bin
+
+# Link /opt/cir to /app/backend/bin instead of copying
+RUN ln -s /opt/cir /app/backend/bin
 
 WORKDIR /app/backend
 RUN npm install --production
-
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates libstdc++6 \
-    build-essential cmake ninja-build pkg-config python3 git \
-    openjdk-21-jdk-headless libgomp1 libmpfr-dev \
- && rm -rf /var/lib/apt/lists/*
 
 # Build the xcfa-mapper C++ tool so the backend can call it. We copy the
 # source tree and invoke CMake to produce the binary at xcfa-mapper/build/xcfa-mapper
