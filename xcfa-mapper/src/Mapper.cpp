@@ -5,6 +5,8 @@
 #include <mlir/IR/Attributes.h>
 #include <mlir/IR/Types.h>
 
+#include <clang/CIR/Dialect/IR/CIRDialect.h>
+
 #include <cxxabi.h>
 #include <cstdlib>
 
@@ -126,6 +128,14 @@ void Mapper::setName(mlir::Value v, const std::string &name) {
   valueNames[v] = name;
 }
 
+void Mapper::markAsDirectAccess(mlir::Value v) {
+  directAccessValues.insert(v);
+}
+
+bool Mapper::isDirectAccess(mlir::Value v) const {
+  return directAccessValues.count(v) > 0;
+}
+
 std::string Mapper::mapTypeToC(mlir::Type t) const {
   // Handle MLIR built-in integer types
   if (auto it = mlir::dyn_cast<mlir::IntegerType>(t)) {
@@ -166,15 +176,28 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
   }
   
   // Handle CIR-specific types (need to check dialect)
+  // Note: Type aliases like !rec_Point may not have a dialect, so check string first
+  
+  // Try to extract type name from the type string representation
+  llvm::SmallString<64> buf;
+  llvm::raw_svector_ostream os(buf);
+  t.print(os);
+  std::string typeStr = os.str().str();
+  
+  // Check for type alias first: !rec_StructName
+  if (typeStr.find("!rec_") == 0) {
+    // Type alias: !rec_Point -> struct Point
+    std::string structName = typeStr.substr(5); // Skip "!rec_"
+    // Remove any trailing characters that aren't part of the name
+    size_t end = structName.find_first_of(" ,>)");
+    if (end != std::string::npos) {
+      structName = structName.substr(0, end);
+    }
+    return "struct " + structName;
+  }
+  
   std::string dialectName = t.getDialect().getNamespace().str();
   if (dialectName == "cir") {
-    std::string typeName = t.getAsOpaquePointer() ? "" : "";
-    
-    // Try to extract type name from the type string representation
-    llvm::SmallString<64> buf;
-    llvm::raw_svector_ostream os(buf);
-    t.print(os);
-    std::string typeStr = os.str().str();
     
     // Check for CIR pointer types
     if (typeStr.find("!cir.ptr") != std::string::npos) {
@@ -211,8 +234,28 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     }
     
     // Check for CIR struct/record types
-    if (typeStr.find("!cir.record") != std::string::npos) {
-      return "struct"; // Incomplete, but shows intent
+    if (typeStr.find("!cir.record") != std::string::npos || typeStr.find("!rec_") != std::string::npos) {
+      // Try to extract struct name from the type
+      // Format: !cir.record<struct "Name" {...}> or !rec_Name
+      if (typeStr.find("!rec_") != std::string::npos) {
+        // Type alias: !rec_Point
+        size_t pos = typeStr.find("!rec_");
+        if (pos != std::string::npos) {
+          size_t end = typeStr.find_first_of(" ,>)", pos);
+          if (end == std::string::npos) end = typeStr.length();
+          std::string structName = typeStr.substr(pos + 5, end - pos - 5);
+          return "struct " + structName;
+        }
+      } else if (typeStr.find("struct \"") != std::string::npos) {
+        // Inline definition: !cir.record<struct "Point" {...}>
+        size_t start = typeStr.find("struct \"") + 8;
+        size_t end = typeStr.find("\"", start);
+        if (end != std::string::npos) {
+          std::string structName = typeStr.substr(start, end - start);
+          return "struct " + structName;
+        }
+      }
+      return "struct"; // Fallback for unnamed structs
     }
     
     // Check for void type
@@ -286,7 +329,29 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   out << "// function: " << sym.getValue().str() << "\n";
   // Use the chosen output name (demangled when unique, otherwise mangled).
   std::string outName = getFunctionOutputName(sym.getValue().str());
-  out << retType << " " << outName << "()";
+  
+  // Extract function parameters from the entry block arguments
+  std::string params = "";
+  if (fop->getNumRegions() > 0 && !fop->getRegion(0).empty()) {
+    Block &entryBlock = fop->getRegion(0).front();
+    bool first = true;
+    for (BlockArgument arg : entryBlock.getArguments()) {
+      if (!first) params += ", ";
+      first = false;
+      
+      // Map parameter type to C type
+      std::string paramType = mapTypeToC(arg.getType());
+      
+      // Generate parameter name
+      std::string paramName = freshName("v");
+      setName(arg, paramName);
+      markAsDirectAccess(arg); // Function parameters are direct access like alloca
+      
+      params += paramType + " " + paramName;
+    }
+  }
+  
+  out << retType << " " << outName << "(" << params << ")";
 
   // If there is no region/body then emit a declaration (prototype).
   if (fop->getNumRegions() == 0 || fop->getRegion(0).empty()) {
@@ -339,11 +404,64 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   return true;
 }
 
+bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
+  // Extract global variable name
+  auto sym = gop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
+  if (!sym) {
+    if (!isBestEffort()) {
+      llvm::errs() << "Global op missing symbol name\n";
+      return false;
+    }
+    out << "// Global variable with missing name\n";
+    return true;
+  }
+  
+  std::string name = sym.getValue().str();
+  
+  // Cast to GlobalOp to access getSymType()
+  auto globalOp = mlir::cast<cir::GlobalOp>(gop);
+  mlir::Type symType = globalOp.getSymType();
+  
+  // Get type string
+  std::string typeStr;
+  llvm::raw_string_ostream rso(typeStr);
+  symType.print(rso);
+  rso.flush();
+  
+  std::string ctype = mapTypeToC(symType);
+  
+  // Check if it's an array type
+  if (typeStr.find("!cir.array<") != std::string::npos) {
+    // Extract array size from type string like "!cir.array<!s32i x 5>"
+    size_t xPos = typeStr.find(" x ");
+    size_t endPos = typeStr.find(">", xPos);
+    
+    if (xPos != std::string::npos && endPos != std::string::npos) {
+      std::string sizeStr = typeStr.substr(xPos + 3, endPos - xPos - 3);
+      out << ctype << " " << name << "[" << sizeStr << "];\n";
+      return true;
+    }
+  }
+  
+  // For non-array types
+  out << ctype << " " << name << ";\n";
+  return true;
+}
+
 bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // Prepare function names (demangle where possible and unique) before
   // emitting any function declarations/definitions so we can avoid name
   // collisions when demangling.
   prepareFunctionNames(module);
+  
+  // First pass: emit global variables
+  for (auto &op : module.getOps()) {
+    if (op.getName().getStringRef() == "cir.global") {
+      if (!mapGlobal(&op, out) && !isBestEffort()) return false;
+    }
+  }
+  
+  // Second pass: emit functions
   for (auto &op : module.getOps()) {
     if (llvm::isa<mlir::ModuleOp>(op)) {
       mlir::ModuleOp inner = mlir::cast<mlir::ModuleOp>(op);
@@ -353,9 +471,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
     if (op.getName().getStringRef() == "cir.func") {
       if (!mapFunc(&op, out) && !isBestEffort()) return false;
-    } else {
-      out << "// top-level op: " << op.getName().getStringRef().str() << " -- not mapped yet\n";
     }
+    // Skip cir.global (already processed)
   }
 
   return true;

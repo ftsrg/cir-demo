@@ -10,6 +10,7 @@
 #include <functional>
 
 #include <llvm/ADT/DenseMap.h>
+#include <llvm/ADT/DenseSet.h>
 #include <llvm/ADT/StringRef.h>
 
 namespace mlir {
@@ -61,6 +62,9 @@ public:
   /// Map a single function. Returns true on success, false on unrecoverable error.
   bool mapFunc(mlir::Operation *fop, std::ostream &out);
 
+  /// Map a global variable. Returns true on success, false on unrecoverable error.
+  bool mapGlobal(mlir::Operation *gop, std::ostream &out);
+
   /// Map an MLIR module to a C program written to `out`.
   bool mapModule(mlir::ModuleOp module, std::ostream &out);
 
@@ -71,6 +75,12 @@ public:
   std::string getOrCreateName(mlir::Value v);
   /// Force-set the C identifier for a Value.
   void setName(mlir::Value v, const std::string &name);
+  
+  /// Mark a value as being a "direct access" pointer (from alloca).
+  /// These don't need dereferencing in load/store.
+  void markAsDirectAccess(mlir::Value v);
+  /// Check if a value is marked as direct access.
+  bool isDirectAccess(mlir::Value v) const;
 
   /// Map an MLIR type to a C type string. This provides a central place for
   /// converting common MLIR types (e.g., integer widths and floats) into
@@ -91,6 +101,7 @@ private:
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
   llvm::DenseMap<mlir::Value, std::string> valueNames;
   llvm::DenseMap<mlir::Block *, std::string> blockLabels;
+  llvm::DenseSet<mlir::Value> directAccessValues;
   unsigned counter;
   // Mapping from original (mangled) symbol -> chosen output name
   std::unordered_map<std::string, std::string> functionOutputNames;

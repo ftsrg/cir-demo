@@ -78,13 +78,72 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
     varName = m.freshName("a");
   }
 
-  std::string ctype = "int";
-  if (o->getNumResults() > 0) {
-    Type t = o->getResult(0).getType();
-    ctype = m.mapTypeToC(t);
+  // Get the allocated type (first operand type in the operation signature)
+  // cir.alloca returns a pointer, but we want to declare the variable as the pointed-to type
+  Type allocaTy = op.getAllocaType();
+  
+  // Check if this is an array or struct type by examining type string
+  llvm::SmallString<128> buf;
+  llvm::raw_svector_ostream os(buf);
+  allocaTy.print(os);
+  std::string typeStr = os.str().str();
+  
+  // Handle struct types first: !rec_Point or !cir.record<struct "Point" {...}>
+  // This needs to come before array check since some struct names might contain "array"
+  if (typeStr.find("!rec_") == 0 || typeStr.find("!cir.record") == 0) {
+    std::string ctype = m.mapTypeToC(allocaTy);
+    out << "  " << ctype << " " << varName << ";\n";
+    for (Value res : o->getResults()) {
+      m.setName(res, varName);
+      m.markAsDirectAccess(res);
+    }
+    return true;
   }
+  
+  // Handle array types specially: !cir.array<!s32i x 5> -> int arr[5]
+  if (typeStr.find("!cir.array<") != std::string::npos) {
+    // Extract element type and size from array type
+    // Format: !cir.array<element_type x size>
+    size_t startPos = typeStr.find("<");
+    size_t xPos = typeStr.find(" x ", startPos);
+    size_t endPos = typeStr.find(">", xPos);
+    
+    if (startPos != std::string::npos && xPos != std::string::npos && endPos != std::string::npos) {
+      std::string elementTypeStr = typeStr.substr(startPos + 1, xPos - startPos - 1);
+      std::string sizeStr = typeStr.substr(xPos + 3, endPos - xPos - 3);
+      
+      // Map element type to C type
+      std::string ctype = "int"; // default
+      if (elementTypeStr.find("!s32i") != std::string::npos || elementTypeStr.find("!cir.int<s, 32>") != std::string::npos) {
+        ctype = "int";
+      } else if (elementTypeStr.find("!s64i") != std::string::npos || elementTypeStr.find("!cir.int<s, 64>") != std::string::npos) {
+        ctype = "long long";
+      } else if (elementTypeStr.find("!cir.float") != std::string::npos) {
+        ctype = "float";
+      } else if (elementTypeStr.find("!cir.double") != std::string::npos) {
+        ctype = "double";
+      }
+      
+      out << "  " << ctype << " " << varName << "[" << sizeStr << "];\n";
+      for (Value res : o->getResults()) {
+        m.setName(res, varName);
+        m.markAsDirectAccess(res);
+      }
+      return true;
+    }
+  }
+  
+  // For non-array, non-struct types, use regular type mapping
+  std::string ctype = "int";
+  if (allocaTy) {
+    ctype = m.mapTypeToC(allocaTy);
+  }
+  
   out << "  " << ctype << " " << varName << ";\n";
-  for (Value res : o->getResults()) m.setName(res, varName);
+  for (Value res : o->getResults()) {
+    m.setName(res, varName);
+    m.markAsDirectAccess(res); // Mark alloca results as direct access
+  }
   return true;
 }
 
@@ -163,7 +222,16 @@ bool handleLoad(cir::LoadOp op, Mapper &m, std::ostream &out) {
   std::string tmp = m.freshName("t");
   std::string ctype = "int";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  out << "  " << ctype << " " << tmp << " = " << src << ";\n";
+  
+  // Check if ptr is a direct access value (from alloca) or a real pointer
+  if (m.isDirectAccess(ptr)) {
+    // Direct access - no dereference needed
+    out << "  " << ctype << " " << tmp << " = " << src << ";\n";
+  } else {
+    // Pointer - need to dereference
+    out << "  " << ctype << " " << tmp << " = *" << src << ";\n";
+  }
+  
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
@@ -175,7 +243,16 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
   Value ptr = o->getOperand(1);
   std::string vname = m.getOrCreateName(val);
   std::string pname = m.getOrCreateName(ptr);
-  out << "  " << pname << " = " << vname << ";\n";
+  
+  // Check if ptr is a direct access value (from alloca) or a real pointer
+  if (m.isDirectAccess(ptr)) {
+    // Direct access - no dereference needed
+    out << "  " << pname << " = " << vname << ";\n";
+  } else {
+    // Pointer - need to dereference
+    out << "  *" << pname << " = " << vname << ";\n";
+  }
+  
   return true;
 }
 
@@ -542,11 +619,14 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
     memberName = "field";
   }
   
+  // cir.get_member returns a pointer to the member, so we need to generate &base.member
+  // However, if base is already a pointer (common case), we need ->
+  // For now, assume base is not a pointer (struct by value)
   std::string tmp = m.freshName("mem");
-  std::string ctype = "int";
+  std::string ctype = "int*";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
   
-  out << "  " << ctype << " " << tmp << " = " << baseName << "." << memberName << ";\n";
+  out << "  " << ctype << " " << tmp << " = &" << baseName << "." << memberName << ";\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
@@ -559,11 +639,13 @@ bool handleGetElement(cir::GetElementOp op, Mapper &m, std::ostream &out) {
   std::string baseName = m.getOrCreateName(base);
   std::string indexName = m.getOrCreateName(index);
   
+  // cir.get_element returns a pointer to the element, so we need to generate &base[index]
+  // The result will be used by load/store operations
   std::string tmp = m.freshName("elem");
-  std::string ctype = "int";
+  std::string ctype = "int*";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
   
-  out << "  " << ctype << " " << tmp << " = " << baseName << "[" << indexName << "];\n";
+  out << "  " << ctype << " " << tmp << " = &" << baseName << "[" << indexName << "];\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
@@ -688,7 +770,28 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
   std::string ctype = "int*";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
   
-  out << "  " << ctype << " " << tmp << " = &" << globalName << ";\n";
+  // Check if the result type is a pointer to an array
+  // Format: !cir.ptr<!cir.array<...>>
+  bool isArrayPointer = false;
+  if (o->getNumResults() > 0) {
+    mlir::Type resType = o->getResult(0).getType();
+    llvm::SmallString<64> typeBuf;
+    llvm::raw_svector_ostream typeOS(typeBuf);
+    resType.print(typeOS);
+    std::string typeStr = typeOS.str().str();
+    
+    if (typeStr.find("!cir.ptr<!cir.array<") != std::string::npos) {
+      isArrayPointer = true;
+    }
+  }
+  
+  // For arrays, don't use & because array names decay to pointers
+  if (isArrayPointer) {
+    out << "  " << ctype << " " << tmp << " = " << globalName << ";\n";
+  } else {
+    out << "  " << ctype << " " << tmp << " = &" << globalName << ";\n";
+  }
+  
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
@@ -713,9 +816,25 @@ bool handleGlobal(cir::GlobalOp op, Mapper &m, std::ostream &out) {
     name = "global_var";
   }
   
-  std::string ctype = "int";
-  if (auto ta = o->getAttrOfType<mlir::TypeAttr>("type")) {
-    ctype = m.mapTypeToC(ta.getValue());
+  // Get the type using getSymType() instead of a "type" attribute
+  mlir::Type symType = op.getSymType();
+  std::string ctype = m.mapTypeToC(symType);
+  
+  // Check if it's an array type
+  std::string typeStr;
+  llvm::raw_string_ostream rso(typeStr);
+  symType.print(rso);
+  rso.flush();
+  
+  if (typeStr.find("!cir.array<") != std::string::npos) {
+    // Extract array size
+    size_t xPos = typeStr.find(" x ");
+    size_t endPos = typeStr.find(">", xPos);
+    if (xPos != std::string::npos && endPos != std::string::npos) {
+      std::string sizeStr = typeStr.substr(xPos + 3, endPos - xPos - 3);
+      out << "// Global variable: " << ctype << " " << name << "[" << sizeStr << "];\n";
+      return true;
+    }
   }
   
   out << "// Global variable: " << ctype << " " << name << ";\n";
