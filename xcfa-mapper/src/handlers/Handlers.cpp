@@ -222,16 +222,14 @@ bool handleLoad(cir::LoadOp op, Mapper &m, std::ostream &out) {
   std::string tmp = m.freshName("t");
   std::string ctype = "int";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  
-  // Check if ptr is a direct access value (from alloca) or a real pointer
-  if (m.isDirectAccess(ptr)) {
-    // Direct access - no dereference needed
-    out << "  " << ctype << " " << tmp << " = " << src << ";\n";
-  } else {
-    // Pointer - need to dereference
+  // Check if source is marked as direct access (alloca, array, struct)
+  // Never dereference direct access values
+  bool shouldDereference = !m.isDirectAccess(ptr);
+  if (shouldDereference) {
     out << "  " << ctype << " " << tmp << " = *" << src << ";\n";
+  } else {
+    out << "  " << ctype << " " << tmp << " = " << src << ";\n";
   }
-  
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
@@ -245,29 +243,24 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
   std::string pname = m.getOrCreateName(ptr);
   
   // Check if val is a direct access value being used as a pointer
-  // If val is direct access (alloca/param) AND its type is a pointer, we need &
+  // Never take address of direct access values
+  // Only take address if not direct access and mapped C type is pointer
   bool needAddressOf = false;
-  if (m.isDirectAccess(val) && val.getType()) {
-    llvm::SmallString<64> buf;
-    llvm::raw_svector_ostream os(buf);
-    val.getType().print(os);
-    std::string valTypeStr = os.str().str();
-    needAddressOf = (valTypeStr.find("!cir.ptr") != std::string::npos);
+  if (!m.isDirectAccess(val) && val.getType()) {
+    std::string valCType = m.mapTypeToC(val.getType());
+    needAddressOf = !valCType.empty() && valCType.back() == '*';
   }
-  
   if (needAddressOf) {
     vname = "&" + vname;
   }
-  
-  // Check if ptr is a direct access value (from alloca) or a real pointer
-  if (m.isDirectAccess(ptr)) {
-    // Direct access - no dereference needed
-    out << "  " << pname << " = " << vname << ";\n";
-  } else {
-    // Pointer - need to dereference
+  // Check if destination is marked as direct access (alloca, array, struct)
+  // Never dereference direct access destinations
+  bool shouldDereference = !m.isDirectAccess(ptr);
+  if (shouldDereference) {
     out << "  *" << pname << " = " << vname << ";\n";
+  } else {
+    out << "  " << pname << " = " << vname << ";\n";
   }
-  
   return true;
 }
 
@@ -649,24 +642,28 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
     memberName = "field";
   }
   
-  // cir.get_member returns a pointer to the member, so we need to generate &base.member
-  // However, if base is already a pointer (common case), we need ->
-  // Check if base is marked as direct access (alloca, function param) - use .
-  // Otherwise it's an indirect pointer - use ->
-  bool useArrow = !m.isDirectAccess(base);
+  // cir.get_member returns a pointer to the member, so we need to generate base.member or base->member
+  // Check if base is marked as direct access (alloca, struct field) - use .
+  // Check if baseName contains '->' anywhere - if so, the entire chain uses .
+  // Otherwise check if base itself is direct access
+  bool baseIsDirectAccess = m.isDirectAccess(base);
+  bool baseNameHasArrow = baseName.find("->") != std::string::npos;
+  bool useArrow = !baseIsDirectAccess && !baseNameHasArrow;
   
-  std::string tmp = m.freshName("mem");
-  std::string ctype = "int*";
-  if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  
+  // For get_member, set the name mapping to the chained expression
+  std::string expr;
   if (useArrow) {
-    // Base is an indirect pointer (e.g., result of get_member), use -> to access member
-    out << "  " << ctype << " " << tmp << " = &" << baseName << "->" << memberName << ";\n";
+    expr = baseName + "->" + memberName;
   } else {
-    // Base is direct access (e.g., alloca, param), use . to access member
-    out << "  " << ctype << " " << tmp << " = &" << baseName << "." << memberName << ";\n";
+    expr = baseName + "." + memberName;
   }
-  if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+  if (o->getNumResults() > 0) {
+    m.setName(o->getResult(0), expr);
+    // Mark the result as direct access if base is direct access
+    if (baseIsDirectAccess || baseNameHasArrow) {
+      m.markAsDirectAccess(o->getResult(0));
+    }
+  }
   return true;
 }
 
@@ -678,14 +675,17 @@ bool handleGetElement(cir::GetElementOp op, Mapper &m, std::ostream &out) {
   std::string baseName = m.getOrCreateName(base);
   std::string indexName = m.getOrCreateName(index);
   
-  // cir.get_element returns a pointer to the element, so we need to generate &base[index]
+  // cir.get_element returns a pointer to the element, so we need to generate base[index]
   // The result will be used by load/store operations
-  std::string tmp = m.freshName("elem");
-  std::string ctype = "int*";
-  if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  
-  out << "  " << ctype << " " << tmp << " = &" << baseName << "[" << indexName << "];\n";
-  if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+  // For get_element, build up chained array access expression
+  std::string expr = baseName + "[" + indexName + "]";
+  if (o->getNumResults() > 0) {
+    m.setName(o->getResult(0), expr);
+    // Mark the result as direct access if base is direct access (array element)
+    if (m.isDirectAccess(base)) {
+      m.markAsDirectAccess(o->getResult(0));
+    }
+  }
   return true;
 }
 

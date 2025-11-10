@@ -288,8 +288,30 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     }
     
     // Check for CIR array types
-    if (typeStr.find("!cir.array") != std::string::npos) {
-      return "int*"; // Simplified array mapping
+    if (typeStr.find("!cir.array<") != std::string::npos) {
+      // Format: !cir.array<element_type x size>
+      size_t startPos = typeStr.find("<");
+      size_t xPos = typeStr.find(" x ", startPos);
+      size_t endPos = typeStr.find(">", xPos);
+      if (startPos != std::string::npos && xPos != std::string::npos && endPos != std::string::npos) {
+        std::string elementTypeStr = typeStr.substr(startPos + 1, xPos - startPos - 1);
+        std::string sizeStr = typeStr.substr(xPos + 3, endPos - xPos - 3);
+        std::string ctype = "int";
+        if (elementTypeStr.find("!s32i") != std::string::npos || elementTypeStr.find("!cir.int<s, 32>") != std::string::npos) {
+          ctype = "int";
+        } else if (elementTypeStr.find("!s64i") != std::string::npos || elementTypeStr.find("!cir.int<s, 64>") != std::string::npos) {
+          ctype = "long long";
+        } else if (elementTypeStr.find("!cir.float") != std::string::npos) {
+          ctype = "float";
+        } else if (elementTypeStr.find("!cir.double") != std::string::npos) {
+          ctype = "double";
+        } else if (elementTypeStr.find("!cir.bool") != std::string::npos) {
+          ctype = "int";
+        }
+        return ctype + "[" + sizeStr + "]";
+      }
+      // Fallback for malformed array type
+      return "int";
     }
     
     // Check for void type
@@ -490,7 +512,13 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   prepareFunctionNames(module);
   
   // Auto-parse struct definitions by scanning member accesses.
-  struct FieldInfo { std::string name; std::string ctype; };
+  struct FieldInfo {
+    std::string name;        // field name
+    std::string baseType;    // base C type (without array declarators or struct keyword repetition)
+    bool isStruct = false;   // whether baseType already includes 'struct X'
+    bool isArray = false;    // whether field is an array
+    std::vector<std::string> dims; // array dimensions outer->inner
+  };
   std::map<std::string, std::vector<FieldInfo>> structFields; // structName -> fields
 
   // Helper to recursively collect from operations
@@ -504,7 +532,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     }
 
     // Collect struct/field info from cir.get_member
-    if (auto gm = llvm::dyn_cast<cir::GetMemberOp>(genericOp)) {
+  if (auto gm = llvm::dyn_cast<cir::GetMemberOp>(genericOp)) {
       // Base is pointer to struct; extract struct name from base type string
       mlir::Type baseType = gm.getOperation()->getOperand(0).getType();
       llvm::SmallString<64> bbuf; llvm::raw_svector_ostream bos(bbuf); baseType.print(bos);
@@ -522,23 +550,104 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       if (structName.empty()) return; // Not a struct base
 
       // Result type is pointer to field type. We can reuse mapTypeToC and drop '*'
-  mlir::Type resType = gm.getOperation()->getResult(0).getType();
-      std::string fieldCType = mapTypeToC(resType);
-      if (!fieldCType.empty() && fieldCType.back() == '*') fieldCType.pop_back();
+      mlir::Type resType = gm.getOperation()->getResult(0).getType();
+      llvm::SmallString<64> rbuf; llvm::raw_svector_ostream ros(rbuf); resType.print(ros);
+      std::string resTypeStr = ros.str().str();
+
+      FieldInfo info; // we'll populate name later
+
+      // Detect pointer-to-struct (already handled by mapTypeToC but we want base type without *)
+      if (resTypeStr.find("!cir.ptr<!cir.record<struct ") != std::string::npos) {
+        size_t s = resTypeStr.find("struct \"") + 8;
+        size_t e = resTypeStr.find("\"", s);
+        if (e != std::string::npos) {
+          info.baseType = "struct " + resTypeStr.substr(s, e - s);
+          info.isStruct = true;
+        }
+      } else if (resTypeStr.find("!cir.ptr<!rec_") != std::string::npos) {
+        size_t s = resTypeStr.find("!rec_") + 5;
+        size_t e = resTypeStr.find(">", s);
+        if (e != std::string::npos) {
+          info.baseType = "struct " + resTypeStr.substr(s, e - s);
+          info.isStruct = true;
+        }
+      }
+
+      // Array field detection: pointer to array(s)
+      if (resTypeStr.find("!cir.ptr<!cir.array<") != std::string::npos) {
+        info.isArray = true;
+        // Strip leading !cir.ptr< and trailing >
+        std::string inner = resTypeStr;
+        // remove leading !cir.ptr<
+        size_t ptrStart = inner.find("!cir.ptr<");
+        if (ptrStart != std::string::npos) {
+          inner = inner.substr(ptrStart + 9); // after !cir.ptr<
+          if (!inner.empty() && inner.back() == '>') inner.pop_back();
+        }
+        // Parse nested arrays
+        while (inner.find("!cir.array<") == 0) {
+          size_t xPos = inner.find(" x ");
+            size_t endPos = inner.find(">", xPos);
+            if (xPos != std::string::npos && endPos != std::string::npos) {
+              std::string sizeStr = inner.substr(xPos + 3, endPos - xPos - 3);
+              info.dims.push_back(sizeStr);
+              // Next inner base type (between '!cir.array<' and ' x ')
+              inner = inner.substr(11, xPos - 11); // 11 = strlen("!cir.array<")
+              // If the extracted inner is another !cir.array< it will loop again
+            } else {
+              break; // malformed; stop parsing further
+            }
+        }
+        // inner now holds final base token like !s32i, !cir.int<s, 8>, or !rec_StructName
+        // Check for struct type
+        if (inner.find("!rec_") == 0) {
+          info.baseType = "struct " + inner.substr(5);
+          info.isStruct = true;
+        } else if (inner.find("!cir.record<struct \"") != std::string::npos) {
+          size_t s = inner.find("struct \"") + 8;
+          size_t e = inner.find("\"", s);
+          if (e != std::string::npos) {
+            info.baseType = "struct " + inner.substr(s, e - s);
+            info.isStruct = true;
+          }
+        } else if (inner.find("int<s, 8>") != std::string::npos) {
+          info.baseType = "char";
+        } else if (inner.find("int<s, 32>") != std::string::npos) {
+          info.baseType = "int";
+        } else if (inner.find("int<s, 64>") != std::string::npos) {
+          info.baseType = "long long";
+        } else if (inner.find("float") != std::string::npos) {
+          info.baseType = "float";
+        } else if (inner.find("double") != std::string::npos) {
+          info.baseType = "double";
+        } else if (inner.find("long_double") != std::string::npos) {
+          info.baseType = "long double";
+        } else if (info.baseType.empty()) {
+          info.baseType = "int"; // fallback
+        }
+      }
+
+      // Primitive types (non-array, non-struct) fallback
+      if (info.baseType.empty() && !info.isArray) {
+        std::string mapped = mapTypeToC(resType);
+        if (!mapped.empty() && mapped.back() == '*') mapped.pop_back();
+        info.baseType = mapped.empty() ? "int" : mapped;
+      }
 
       // Field name from attribute (fallback to synthetic)
       std::string fname;
-  if (auto sa = gm.getOperation()->getAttrOfType<StringAttr>("name")) fname = sa.getValue().str();
+      if (auto sa = gm.getOperation()->getAttrOfType<StringAttr>("name")) fname = sa.getValue().str();
       if (fname.empty()) {
         size_t idx = structFields[structName].size();
         fname = "field" + std::to_string(idx);
       }
+      info.name = fname;
 
       // Avoid duplicate entries for the same field name
-      auto &vec = structFields[structName];
-      bool exists = false;
-      for (auto &fi : vec) if (fi.name == fname) { exists = true; break; }
-      if (!exists) vec.push_back({fname, fieldCType});
+  auto &vec = structFields[structName];
+  bool exists = false;
+  for (auto &fi : vec) if (fi.name == info.name) { exists = true; break; }
+  if (!exists) vec.push_back(info);
     }
   };
 
@@ -552,8 +661,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     auto it = structFields.find(sname);
     if (it != structFields.end()) {
       for (auto &fi : it->second) {
-        if (fi.ctype.rfind("struct ", 0) == 0) {
-          std::string dep = fi.ctype.substr(7);
+        if (fi.baseType.rfind("struct ", 0) == 0) {
+          std::string dep = fi.baseType.substr(7);
           if (dep != sname) deps.insert(dep);
         }
       }
@@ -588,7 +697,12 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     out << "struct " << sname << " { ";
     auto &vec = structFields[sname];
     for (size_t i = 0; i < vec.size(); ++i) {
-      out << vec[i].ctype << " " << vec[i].name << ";";
+      const FieldInfo &fi = vec[i];
+      out << fi.baseType << " " << fi.name;
+      if (fi.isArray) {
+        for (auto &dim : fi.dims) out << "[" << dim << "]";
+      }
+      out << ";";
       if (i + 1 < vec.size()) out << " ";
     }
     out << " };\n";
