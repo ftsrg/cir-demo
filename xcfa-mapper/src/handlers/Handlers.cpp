@@ -469,6 +469,35 @@ bool handleSwitch(cir::SwitchOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+bool handleSwitchFlat(cir::SwitchFlatOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1) return false;
+  Value cond = o->getOperand(0);
+  std::string condName = m.getOrCreateName(cond);
+  
+  out << "  switch (" << condName << ") {\n";
+  
+  // Extract case values and destinations from attributes
+  if (auto caseVals = o->getAttrOfType<mlir::ArrayAttr>("case_values")) {
+    unsigned numCases = caseVals.size();
+    for (unsigned i = 0; i < numCases && i + 1 < o->getNumSuccessors(); ++i) {
+      if (auto intAttr = llvm::dyn_cast<mlir::IntegerAttr>(caseVals[i])) {
+        std::string label = m.getOrCreateLabel(o->getSuccessors()[i + 1]);
+        out << "    case " << intAttr.getValue().getSExtValue() << ": goto " << label << ";\n";
+      }
+    }
+  }
+  
+  // Default case
+  if (o->getNumSuccessors() > 0) {
+    std::string defLabel = m.getOrCreateLabel(o->getSuccessors()[0]);
+    out << "    default: goto " << defLabel << ";\n";
+  }
+  
+  out << "  }\n";
+  return true;
+}
+
 bool handleSelect(cir::SelectOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (o->getNumOperands() < 3) return false;
@@ -717,6 +746,7 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::BrOp>("cir.br", handleBr);
   m.registerTypedHandler<cir::BrCondOp>("cir.brcond", handleBrCond);
   m.registerTypedHandler<cir::SwitchOp>("cir.switch", handleSwitch);
+  m.registerTypedHandler<cir::SwitchFlatOp>("cir.switch.flat", handleSwitchFlat);
   m.registerTypedHandler<cir::SelectOp>("cir.select", handleSelect);
   
   // Function calls
