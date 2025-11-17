@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Build static binaries using Docker Buildx (BuildKit)
+# This script mirrors the GitHub Actions workflow using the Dockerfile in docker/static-build.Dockerfile
+
+echo "Building static binaries with Docker Buildx…"
+echo "This may take a while (1-2 hours depending on your hardware)."
+echo
+
+# Ensure docker is available
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Error: docker is not installed or not on PATH." >&2
+  exit 1
+fi
+
+# Ensure buildx is available
+if ! docker buildx version >/dev/null 2>&1; then
+  echo "Docker Buildx is not installed/enabled."
+  echo "Please install/enable Buildx: https://docs.docker.com/build/buildx/install/" >&2
+  exit 1
+fi
+
+# Create and use a local builder if none is active
+ACTIVE_BUILDER=$(docker buildx ls | awk '/\*/ {print $1}' || true)
+if [[ -z "${ACTIVE_BUILDER}" ]]; then
+  echo "No active buildx builder found. Creating 'cir-static-builder'…"
+  docker buildx create --use --name cir-static-builder >/dev/null
+fi
+
+# Build and export only the final binaries using the `export` stage
+rm -rf ./output
+docker buildx build \
+  -f docker/static-build.Dockerfile \
+  --target=export \
+  --output type=local,dest=./output \
+  .
+
+# The export stage places the stripped binaries at the root of ./output
+if [[ ! -f ./output/clang || ! -f ./output/xcfa-mapper ]]; then
+  echo "Error: Expected binaries not found in ./output."
+  echo "Contents of ./output:" >&2
+  ls -lah ./output || true
+  exit 1
+fi
+
+echo
+echo "✓ Build complete!"
+echo
+echo "Binaries are available in ./output/"
+echo "  - clang:        ./output/clang"
+echo "  - xcfa-mapper:  ./output/xcfa-mapper"
+echo
+echo "Binary information:"
+file ./output/clang || true
+file ./output/xcfa-mapper || true
+echo
+ls -lh ./output/

@@ -1,0 +1,71 @@
+name: Build Static Binaries
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-static-binaries:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build static binaries with Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/static-build.Dockerfile
+          target: export
+          outputs: type=local,dest=./binaries
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Verify binaries
+        run: |
+          echo "=== Clang binary info ==="
+          file binaries/clang || true
+          ls -lh binaries/clang
+          
+          echo "=== xcfa-mapper binary info ==="
+          file binaries/xcfa-mapper || true
+          ls -lh binaries/xcfa-mapper
+
+      - name: Get ClangIR commit hash
+        id: clangir-commit
+        run: |
+          # Extract from docker image or use current date as fallback
+          echo "hash=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Upload clang binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: clang-static-${{ steps.clangir-commit.outputs.hash }}
+          path: binaries/clang
+          retention-days: 90
+
+      - name: Upload xcfa-mapper binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcfa-mapper-static-${{ github.sha }}
+          path: binaries/xcfa-mapper
+          retention-days: 90
+
+      - name: Create release on tag
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            binaries/clang
+            binaries/xcfa-mapper
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

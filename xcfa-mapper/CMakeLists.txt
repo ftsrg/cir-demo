@@ -48,12 +48,54 @@ target_link_libraries(xcfa-mapper PRIVATE
 # absolute path so the dialect's static initialization runs at program
 # startup and registers the CIR dialect with MLIR. This helps the parser
 # recognize `cir.*` ops at parse time.
-file(GLOB MLIRCIR_LIBS "${CMAKE_SOURCE_DIR}/../backend/bin/lib/libMLIRCIR.so*")
-if(MLIRCIR_LIBS)
-  message(STATUS "Found MLIRCIR libs: ${MLIRCIR_LIBS}")
-  target_link_libraries(xcfa-mapper PRIVATE ${MLIRCIR_LIBS})
+# Try both shared (.so) and static (.a) libraries
+
+# Determine the lib directory to search based on LLVM_DIR
+if(DEFINED LLVM_DIR)
+  # Extract the lib directory from LLVM_DIR (which points to lib/cmake/llvm)
+  get_filename_component(LLVM_LIB_DIR "${LLVM_DIR}/../../" ABSOLUTE)
 else()
-  message(STATUS "libMLIRCIR.so not found in ../backend/bin/lib; continuing without linking CIR runtime.")
+  # Fall back to the default backend location
+  set(LLVM_LIB_DIR "${CMAKE_SOURCE_DIR}/../backend/bin/lib")
+endif()
+
+message(STATUS "Looking for MLIRCIR libraries in: ${LLVM_LIB_DIR}")
+
+# Verify the directory exists
+if(EXISTS "${LLVM_LIB_DIR}")
+  message(STATUS "  Directory exists: ${LLVM_LIB_DIR}")
+else()
+  message(WARNING "  Directory does NOT exist: ${LLVM_LIB_DIR}")
+endif()
+
+file(GLOB MLIRCIR_SHARED_LIBS "${LLVM_LIB_DIR}/libMLIRCIR.so*")
+file(GLOB MLIRCIR_STATIC_LIBS "${LLVM_LIB_DIR}/libMLIRCIR.a")
+
+if(MLIRCIR_SHARED_LIBS)
+  message(STATUS "Found MLIRCIR shared libs: ${MLIRCIR_SHARED_LIBS}")
+  target_link_libraries(xcfa-mapper PRIVATE ${MLIRCIR_SHARED_LIBS})
+elseif(MLIRCIR_STATIC_LIBS)
+  message(STATUS "Found MLIRCIR static libs: ${MLIRCIR_STATIC_LIBS}")
+  
+  # When linking statically, link ALL static libraries to resolve all symbols
+  file(GLOB ALL_STATIC_LIBS "${LLVM_LIB_DIR}/*.a")
+  list(LENGTH ALL_STATIC_LIBS NUM_STATIC_LIBS)
+  message(STATUS "Linking all static libraries from ${LLVM_LIB_DIR}")
+  message(STATUS "Found ${NUM_STATIC_LIBS} static libraries")
+  
+  if(NUM_STATIC_LIBS GREATER 0)
+    # Use linker groups to handle circular dependencies in static libraries
+    target_link_libraries(xcfa-mapper PRIVATE
+      -Wl,--start-group
+      ${ALL_STATIC_LIBS}
+      -Wl,--end-group
+    )
+  else()
+    message(WARNING "No static libraries found in ${LLVM_LIB_DIR}, linking may fail")
+    target_link_libraries(xcfa-mapper PRIVATE ${MLIRCIR_STATIC_LIBS})
+  endif()
+else()
+  message(STATUS "libMLIRCIR not found in ${LLVM_LIB_DIR}; continuing without linking CIR runtime.")
 endif()
 
 install(TARGETS xcfa-mapper RUNTIME DESTINATION bin)
