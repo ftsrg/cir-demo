@@ -480,7 +480,7 @@ bool handleUnaryOp(cir::UnaryOp op, Mapper &m, std::ostream &out) {
       case cir::UnaryOpKind::Dec: opStr = "--"; opFound = true; isPrefix = true; break;
       case cir::UnaryOpKind::Plus: opStr = "+"; opFound = true; isPrefix = true; break;
       case cir::UnaryOpKind::Minus: opStr = "-"; opFound = true; isPrefix = true; break;
-      case cir::UnaryOpKind::Not: opStr = "~"; opFound = true; isPrefix = true; break;
+      case cir::UnaryOpKind::Not: opStr = "!"; opFound = true; isPrefix = true; break;
       default: opFound = false; break;
     }
   }
