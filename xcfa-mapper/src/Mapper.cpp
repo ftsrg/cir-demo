@@ -254,8 +254,66 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
           return "struct " + structName + "*";
         }
       }
-      // Generic pointer
-      return "int*"; // Simplified pointer mapping for non-struct pointers
+      // Check for pointer to array types: !cir.ptr<!cir.array<...>>
+      // In C, pointer to array decays to pointer to element type
+      else if (typeStr.find("!cir.ptr<!cir.array<") != std::string::npos) {
+        // Extract element type from array
+        size_t arrayStart = typeStr.find("!cir.array<") + 11;
+        size_t xPos = typeStr.find(" x ", arrayStart);
+        if (xPos != std::string::npos) {
+          std::string elementTypeStr = typeStr.substr(arrayStart, xPos - arrayStart);
+          // Map the element type (e.g., !s8i -> char)
+          if (elementTypeStr == "!s8i") return "char*";
+          else if (elementTypeStr == "!u8i") return "unsigned char*";
+          else if (elementTypeStr == "!s16i") return "short*";
+          else if (elementTypeStr == "!u16i") return "unsigned short*";
+          else if (elementTypeStr == "!s32i") return "int*";
+          else if (elementTypeStr == "!u32i") return "unsigned int*";
+          else if (elementTypeStr == "!s64i") return "long long*";
+          else if (elementTypeStr == "!u64i") return "unsigned long long*";
+          else if (elementTypeStr.find("!cir.int<s, 8>") != std::string::npos) return "char*";
+          else if (elementTypeStr.find("!cir.int<u, 8>") != std::string::npos) return "unsigned char*";
+          else if (elementTypeStr.find("!cir.int<s, 16>") != std::string::npos) return "short*";
+          else if (elementTypeStr.find("!cir.int<u, 16>") != std::string::npos) return "unsigned short*";
+          else if (elementTypeStr.find("!cir.int<s, 32>") != std::string::npos) return "int*";
+          else if (elementTypeStr.find("!cir.int<u, 32>") != std::string::npos) return "unsigned int*";
+          else if (elementTypeStr.find("!cir.int<s, 64>") != std::string::npos) return "long long*";
+          else if (elementTypeStr.find("!cir.int<u, 64>") != std::string::npos) return "unsigned long long*";
+        }
+        return "int*"; // Fallback for arrays
+      }
+      // Check for pointer to integer types: !cir.ptr<!s8i>, !cir.ptr<!cir.int<...>>
+      else if (typeStr.find("!cir.ptr<!s8i>") != std::string::npos || 
+               typeStr.find("!cir.ptr<!u8i>") != std::string::npos ||
+               typeStr.find("!cir.ptr<!cir.int<s, 8>>") != std::string::npos ||
+               typeStr.find("!cir.ptr<!cir.int<u, 8>>") != std::string::npos) {
+        return "char*";
+      }
+      else if (typeStr.find("!cir.ptr<!s16i>") != std::string::npos || 
+               typeStr.find("!cir.ptr<!u16i>") != std::string::npos ||
+               typeStr.find("!cir.ptr<!cir.int<s, 16>>") != std::string::npos ||
+               typeStr.find("!cir.ptr<!cir.int<u, 16>>") != std::string::npos) {
+        return "short*";
+      }
+      else if (typeStr.find("!cir.ptr<!s32i>") != std::string::npos || 
+               typeStr.find("!cir.ptr<!u32i>") != std::string::npos ||
+               typeStr.find("!cir.ptr<!cir.int<s, 32>>") != std::string::npos ||
+               typeStr.find("!cir.ptr<!cir.int<u, 32>>") != std::string::npos) {
+        return "int*";
+      }
+      else if (typeStr.find("!cir.ptr<!s64i>") != std::string::npos || 
+               typeStr.find("!cir.ptr<!u64i>") != std::string::npos ||
+               typeStr.find("!cir.ptr<!cir.int<s, 64>>") != std::string::npos ||
+               typeStr.find("!cir.ptr<!cir.int<u, 64>>") != std::string::npos) {
+        return "long long*";
+      }
+      // Check for pointer to function types: !cir.ptr<!cir.func<...>>
+      else if (typeStr.find("!cir.ptr<!cir.func<") != std::string::npos) {
+        // For function pointers, we simplify to void*
+        return "void*";
+      }
+      // Generic pointer fallback
+      return "int*"; // Simplified pointer mapping for other pointer types
     }
     
     // Check for bare pointer types (fallback for !cir.ptr without <>)
@@ -284,17 +342,29 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     }
     
     // Check for old-style CIR integer types: !s8i, !s16i, !s32i, !s64i, etc.
-    if (typeStr.find("!s8i") != std::string::npos || typeStr.find("!u8i") != std::string::npos) {
+    if (typeStr.find("!s8i") != std::string::npos) {
       return "char";
     }
-    if (typeStr.find("!s16i") != std::string::npos || typeStr.find("!u16i") != std::string::npos) {
+    if (typeStr.find("!u8i") != std::string::npos) {
+      return "unsigned char";
+    }
+    if (typeStr.find("!s16i") != std::string::npos) {
       return "short";
     }
-    if (typeStr.find("!s32i") != std::string::npos || typeStr.find("!u32i") != std::string::npos) {
+    if (typeStr.find("!u16i") != std::string::npos) {
+      return "unsigned short";
+    }
+    if (typeStr.find("!s32i") != std::string::npos) {
       return "int";
     }
-    if (typeStr.find("!s64i") != std::string::npos || typeStr.find("!u64i") != std::string::npos) {
+    if (typeStr.find("!u32i") != std::string::npos) {
+      return "unsigned int";
+    }
+    if (typeStr.find("!s64i") != std::string::npos) {
       return "long long";
+    }
+    if (typeStr.find("!u64i") != std::string::npos) {
+      return "unsigned long long";
     }
     
     // Check for CIR float types
@@ -361,58 +431,29 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       return true;
     }
 
-  // Determine function return type if available. CIR's func may encode a
-  // function type as a TypeAttr; try to read it and map common MLIR types
-  // to simple C types. Fall back to "int" when unknown but the function
-  // returns an integer-like type, or to "void" when no result.
-  std::string retType = "int";
-  // Try common attribute names that may hold a function type.
-  if (auto tattr = fop->getAttrOfType<TypeAttr>("type")) {
-      mlir::Type t = tattr.getValue();
-      if (auto fty = mlir::dyn_cast<mlir::FunctionType>(t)) {
-      if (fty.getNumResults() == 0) retType = "void";
-      else {
-          mlir::Type rty = fty.getResult(0);
-          if (auto it = mlir::dyn_cast<mlir::IntegerType>(rty)) {
-          if (it.getWidth() == 32) retType = "int";
-          else retType = "long"; // conservative fallback for other widths
-          } else {
-          // If not integer, prefer int as a conservative default.
-          retType = "int";
-          }
-      }
-      }
+  // Get function return type from cir::FuncOp
+  auto cirFuncOp = mlir::cast<cir::FuncOp>(fop);
+  cir::FuncType fty = cirFuncOp.getFunctionType();
+  mlir::Type rty = fty.getReturnType();
+  
+  std::string retType;
+  if (mlir::isa<mlir::NoneType>(rty) || mlir::isa<cir::VoidType>(rty)) {
+    retType = "void";
   } else {
-      // As a heuristic, examine attributes for an explicit result type attr
-      // printed in the MLIR (e.g., a trailing TypeAttr). Try to find any
-      // TypeAttr on the op and treat its first result as the return type.
-      for (NamedAttribute na : fop->getAttrs()) {
-      if (auto ta = mlir::dyn_cast<mlir::TypeAttr>(na.getValue())) {
-          mlir::Type t = ta.getValue();
-          if (auto fty = mlir::dyn_cast<mlir::FunctionType>(t)) {
-          if (fty.getNumResults() == 0) retType = "void";
-          else {
-              mlir::Type rty = fty.getResult(0);
-              if (auto it = mlir::dyn_cast<mlir::IntegerType>(rty)) {
-              if (it.getWidth() == 32) retType = "int";
-              else retType = "long";
-              } else {
-              retType = "int";
-              }
-          }
-          break;
-          }
-      }
-      }
+    retType = mapTypeToC(rty);
   }
 
   out << "// function: " << sym.getValue().str() << "\n";
   // Use the chosen output name (demangled when unique, otherwise mangled).
   std::string outName = getFunctionOutputName(sym.getValue().str());
   
-  // Extract function parameters from the entry block arguments
+  // Extract function parameters from cir::FuncOp
   std::string params = "";
-  if (fop->getNumRegions() > 0 && !fop->getRegion(0).empty()) {
+  bool hasBody = (fop->getNumRegions() > 0 && !fop->getRegion(0).empty());
+  llvm::ArrayRef<mlir::Type> inputs = fty.getInputs();
+  
+  if (hasBody) {
+    // If function has a body, use block arguments to get parameter names
     Block &entryBlock = fop->getRegion(0).front();
     bool first = true;
     for (BlockArgument arg : entryBlock.getArguments()) {
@@ -428,6 +469,17 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       markAsDirectAccess(arg); // Function parameters are direct access like alloca
       
       params += paramType + " " + paramName;
+    }
+  } else {
+    // For declarations without body, use types from function signature
+    bool first = true;
+    for (mlir::Type paramType : inputs) {
+      if (!first) params += ", ";
+      first = false;
+      
+      // Map parameter type to C type  
+      std::string cParamType = mapTypeToC(paramType);
+      params += cParamType;
     }
   }
   
