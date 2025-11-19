@@ -983,23 +983,25 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
   std::string ctype = "int*";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
   
-  // Check if the result type is a pointer to an array
-  // Format: !cir.ptr<!cir.array<...>>
-  bool isArrayPointer = false;
+    // Determine if we should use & or direct access
+    // For arrays: array names decay to pointers, so no &
+    // For pointer-type globals: the variable IS the pointer value, so no &
+    bool useDirectAccess = false;
   if (o->getNumResults() > 0) {
     mlir::Type resType = o->getResult(0).getType();
-    llvm::SmallString<64> typeBuf;
-    llvm::raw_svector_ostream typeOS(typeBuf);
-    resType.print(typeOS);
-    std::string typeStr = typeOS.str().str();
-    
-    if (typeStr.find("!cir.ptr<!cir.array<") != std::string::npos) {
-      isArrayPointer = true;
+      // Check if this is a pointer to an array or a pointer to a pointer
+      if (auto ptrType = mlir::dyn_cast<cir::PointerType>(resType)) {
+        mlir::Type pointeeType = ptrType.getPointee();
+        // If pointee is an array or another pointer, use direct access
+        if (mlir::isa<cir::ArrayType>(pointeeType) || 
+            mlir::isa<cir::PointerType>(pointeeType)) {
+          useDirectAccess = true;
+        }
     }
   }
   
-  // For arrays, don't use & because array names decay to pointers
-  if (isArrayPointer) {
+    // For arrays and pointer-type globals, use direct access
+    if (useDirectAccess) {
     out << "  " << ctype << " " << tmp << " = " << globalName << ";\n";
     // Mark the result as direct access since it's an array
     if (o->getNumResults() > 0) {

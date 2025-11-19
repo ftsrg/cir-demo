@@ -238,6 +238,25 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
       return "void*"; // Simplify function pointers to void*
     }
     
+    // Handle pointer to record (struct/union)
+    if (auto recordTy = mlir::dyn_cast<cir::RecordType>(pointee)) {
+      llvm::StringRef typeName = recordTy.getName().getValue();
+      std::string name = typeName.str();
+      std::replace(name.begin(), name.end(), '.', '_');
+      
+      if (recordTy.isUnion()) {
+        return "union " + name + "*";
+      }
+      return "struct " + name + "*";
+    }
+    
+    // Handle pointer to array (decays to pointer to element)
+    if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(pointee)) {
+      mlir::Type elemType = arrayTy.getElementType();
+      std::string elemCType = mapTypeToC(elemType);
+      return elemCType + "*";
+    }
+    
     // For other pointer types, recursively map the pointee and add *
     std::string pointeeType = mapTypeToC(pointee);
     if (!pointeeType.empty() && pointeeType.back() == '*') {
@@ -247,43 +266,26 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     return pointeeType + "*";
   }
   
-  // For complex types (structs, arrays, etc.), we need to use string representation
-  // since the CIR dialect may not expose all necessary API methods
-  llvm::SmallString<128> buf;
-  llvm::raw_svector_ostream os(buf);
-  t.print(os);
-  std::string typeStr = os.str().str();
-  
-  // Handle struct/record types
-  // Check for inline struct definition: !cir.struct<struct "Name" ...>
-  if (typeStr.find("!cir.struct<struct \"") != std::string::npos) {
-    size_t start = typeStr.find("struct \"") + 8;
-    size_t end = typeStr.find("\"", start);
-    if (end != std::string::npos) {
-      std::string structName = typeStr.substr(start, end - start);
-      std::replace(structName.begin(), structName.end(), '.', '_');
-      return "struct " + structName;
+  // Handle CIR record types (struct/union)
+  if (auto recordTy = mlir::dyn_cast<cir::RecordType>(t)) {
+    llvm::StringRef typeName = recordTy.getName().getValue();
+    std::string name = typeName.str();
+    std::replace(name.begin(), name.end(), '.', '_');
+    
+    if (recordTy.isUnion()) {
+      return "union " + name;
     }
+    return "struct " + name;
   }
   
-  // Check for inline union definition: !cir.struct<union "Name" ...>
-  if (typeStr.find("!cir.struct<union \"") != std::string::npos) {
-    size_t start = typeStr.find("union \"") + 7;
-    size_t end = typeStr.find("\"", start);
-    if (end != std::string::npos) {
-      std::string unionName = typeStr.substr(start, end - start);
-      std::replace(unionName.begin(), unionName.end(), '.', '_');
-      return "union " + unionName;
-    }
-  }
-  
-  // Handle array types: !cir.array<element_type x size>
-  // Arrays in C declarations require the element type, not the full array type
-  // This should only be called when we need the base element type
-  if (typeStr.find("!cir.array<") != std::string::npos) {
-    // For now, return int as a fallback - proper array handling should be done
-    // at the declaration site where we can properly format "type name[size]"
-    return "int";
+  // Handle CIR array types
+  if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(t)) {
+    // Arrays in C declarations require the element type, not the full array type
+    // This should only be called when we need the base element type
+    // Proper array handling should be done at the declaration site where we can
+    // properly format "type name[size]"
+    mlir::Type elemType = arrayTy.getElementType();
+    return mapTypeToC(elemType);
   }
   
   // Conservative default for unknown types
@@ -333,7 +335,11 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       // Generate parameter name
       std::string paramName = freshName("v");
       setName(arg, paramName);
-      markAsDirectAccess(arg); // Function parameters are direct access like alloca
+        // Only mark non-pointer parameters as direct access
+        // Pointer parameters are already pointer values, not lvalues that need &
+        if (!mlir::isa<cir::PointerType>(arg.getType())) {
+          markAsDirectAccess(arg);
+        }
       
       params += paramType + " " + paramName;
     }
@@ -439,28 +445,17 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   auto globalOp = mlir::cast<cir::GlobalOp>(gop);
   mlir::Type symType = globalOp.getSymType();
   
-  // Get type string
-  std::string typeStr;
-  llvm::raw_string_ostream rso(typeStr);
-  symType.print(rso);
-  rso.flush();
-  
-  std::string ctype = mapTypeToC(symType);
-  
-  // Check if it's an array type
-  if (typeStr.find("!cir.array<") != std::string::npos) {
-    // Extract array size from type string like "!cir.array<!s32i x 5>"
-    size_t xPos = typeStr.find(" x ");
-    size_t endPos = typeStr.find(">", xPos);
-    
-    if (xPos != std::string::npos && endPos != std::string::npos) {
-      std::string sizeStr = typeStr.substr(xPos + 3, endPos - xPos - 3);
-      out << ctype << " " << name << "[" << sizeStr << "];\n";
-      return true;
-    }
+  // Check if it's an array type using API
+  if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(symType)) {
+    mlir::Type elemType = arrayTy.getElementType();
+    uint64_t size = arrayTy.getSize();
+    std::string elemCType = mapTypeToC(elemType);
+    out << elemCType << " " << name << "[" << size << "];\n";
+    return true;
   }
   
   // For non-array types
+  std::string ctype = mapTypeToC(symType);
   out << ctype << " " << name << ";\n";
   return true;
 }
@@ -518,133 +513,71 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
     // Collect struct/union field info from cir.get_member
   if (auto gm = llvm::dyn_cast<cir::GetMemberOp>(genericOp)) {
-      // Base is pointer to struct; extract struct name from base type string
+      // Base is pointer to struct; extract struct name using API
       mlir::Type baseType = gm.getOperation()->getOperand(0).getType();
-      llvm::SmallString<64> bbuf; llvm::raw_svector_ostream bos(bbuf); baseType.print(bos);
-      std::string baseTypeStr = bos.str().str();
-      std::string structName;
-      if (baseTypeStr.find("!cir.ptr<!cir.record<struct ") != std::string::npos) {
-        size_t start = baseTypeStr.find("struct \"") + 8;
-        size_t end = baseTypeStr.find("\"", start);
-        if (end != std::string::npos) structName = baseTypeStr.substr(start, end - start);
-      } else if (baseTypeStr.find("!cir.ptr<!rec_") != std::string::npos) {
-        size_t start = baseTypeStr.find("!rec_") + 5;
-        size_t end = baseTypeStr.find(">", start);
-        if (end != std::string::npos) structName = baseTypeStr.substr(start, end - start);
-      } else if (baseTypeStr.find("!cir.ptr<!cir.record<union ") != std::string::npos) {
-        size_t start = baseTypeStr.find("union \"") + 7;
-        size_t end = baseTypeStr.find("\"", start);
-        if (end != std::string::npos) structName = baseTypeStr.substr(start, end - start);
-        if (!structName.empty()) isUnionContainer[structName] = true;
-      }
-      if (structName.empty()) return; // Not a struct base
       
-      // Sanitize struct name: replace dots with underscores (e.g., anon.0 -> anon_0)
+      // Check if base is a pointer type
+      auto ptrType = mlir::dyn_cast<cir::PointerType>(baseType);
+      if (!ptrType) return; // Not a pointer, skip
+      
+      // Check if pointee is a record type
+      auto recordType = mlir::dyn_cast<cir::RecordType>(ptrType.getPointee());
+      if (!recordType) return; // Not pointing to a record, skip
+      
+      // Get struct name using API
+      std::string structName = recordType.getName().getValue().str();
       std::replace(structName.begin(), structName.end(), '.', '_');
-
-      // Result type is pointer to field type. We can reuse mapTypeToC and drop '*'
-      mlir::Type resType = gm.getOperation()->getResult(0).getType();
-      llvm::SmallString<64> rbuf; llvm::raw_svector_ostream ros(rbuf); resType.print(ros);
-      std::string resTypeStr = ros.str().str();
-
-      FieldInfo info; // we'll populate name later
-
-      // Detect pointer-to-struct (already handled by mapTypeToC but we want base type without *)
-      if (resTypeStr.find("!cir.ptr<!cir.record<struct ") != std::string::npos) {
-        size_t s = resTypeStr.find("struct \"") + 8;
-        size_t e = resTypeStr.find("\"", s);
-        if (e != std::string::npos) {
-          std::string fieldStructName = resTypeStr.substr(s, e - s);
-          std::replace(fieldStructName.begin(), fieldStructName.end(), '.', '_');
-          info.baseType = "struct " + fieldStructName;
-          info.isStruct = true;
-        }
-      } else if (resTypeStr.find("!cir.ptr<!rec_") != std::string::npos) {
-        size_t s = resTypeStr.find("!rec_") + 5;
-        size_t e = resTypeStr.find(">", s);
-        if (e != std::string::npos) {
-          std::string fieldStructName = resTypeStr.substr(s, e - s);
-          std::replace(fieldStructName.begin(), fieldStructName.end(), '.', '_');
-          info.baseType = "struct " + fieldStructName;
-          info.isStruct = true;
-        }
+      
+      // Track unions
+      if (recordType.isUnion()) {
+        isUnionContainer[structName] = true;
       }
 
-      // Array field detection: pointer to array(s)
-      if (resTypeStr.find("!cir.ptr<!cir.array<") != std::string::npos) {
-        info.isArray = true;
-        // Strip leading !cir.ptr< and trailing >
-        std::string inner = resTypeStr;
-        // remove leading !cir.ptr<
-        size_t ptrStart = inner.find("!cir.ptr<");
-        if (ptrStart != std::string::npos) {
-          inner = inner.substr(ptrStart + 9); // after !cir.ptr<
-          if (!inner.empty() && inner.back() == '>') inner.pop_back();
-        }
-        // Parse nested arrays
-        while (inner.find("!cir.array<") == 0) {
-          // Find the matching closing '>' for this array level
-          // We need to count nested < and > to find the right one
-          int depth = 0;
-          size_t pos = 11; // start after "!cir.array<"
-          size_t xPos = std::string::npos;
-          size_t endPos = std::string::npos;
+      // Result type is pointer to field type
+      mlir::Type resType = gm.getOperation()->getResult(0).getType();
+      FieldInfo info;
+
+      // Check if result is pointer to struct
+      if (auto resPtrType = mlir::dyn_cast<cir::PointerType>(resType)) {
+        mlir::Type resPointee = resPtrType.getPointee();
+        
+        if (auto resRecordType = mlir::dyn_cast<cir::RecordType>(resPointee)) {
+          std::string fieldStructName = resRecordType.getName().getValue().str();
+          std::replace(fieldStructName.begin(), fieldStructName.end(), '.', '_');
           
-          for (; pos < inner.size(); ++pos) {
-            if (inner[pos] == '<') {
-              depth++;
-            } else if (inner[pos] == '>') {
-              if (depth == 0) {
-                endPos = pos;
-                break;
-              }
-              depth--;
-            } else if (depth == 0 && pos + 2 < inner.size() && 
-                       inner[pos] == ' ' && inner[pos+1] == 'x' && inner[pos+2] == ' ') {
-              xPos = pos;
-            }
-          }
-          
-          if (xPos != std::string::npos && endPos != std::string::npos) {
-            std::string sizeStr = inner.substr(xPos + 3, endPos - xPos - 3);
-            info.dims.push_back(sizeStr);
-            // Next inner base type (between '!cir.array<' and ' x ')
-            inner = inner.substr(11, xPos - 11); // 11 = strlen("!cir.array<")
-            // If the extracted inner is another !cir.array< it will loop again
+          if (resRecordType.isUnion()) {
+            info.baseType = "union " + fieldStructName;
           } else {
-            break; // malformed; stop parsing further
+            info.baseType = "struct " + fieldStructName;
           }
-        }
-        // inner now holds final base token like !s32i, !cir.int<s, 8>, or !rec_StructName
-        // Check for struct type
-        if (inner.find("!rec_") == 0) {
-          std::string arrayStructName = inner.substr(5);
-          std::replace(arrayStructName.begin(), arrayStructName.end(), '.', '_');
-          info.baseType = "struct " + arrayStructName;
           info.isStruct = true;
-        } else if (inner.find("!cir.record<struct \"") != std::string::npos) {
-          size_t s = inner.find("struct \"") + 8;
-          size_t e = inner.find("\"", s);
-          if (e != std::string::npos) {
-            std::string arrayStructName = inner.substr(s, e - s);
-            std::replace(arrayStructName.begin(), arrayStructName.end(), '.', '_');
-            info.baseType = "struct " + arrayStructName;
-            info.isStruct = true;
+        }
+        // Check if result is pointer to array(s)
+        else if (auto resArrayType = mlir::dyn_cast<cir::ArrayType>(resPointee)) {
+          info.isArray = true;
+          
+          // Handle nested arrays
+          mlir::Type currentType = resPointee;
+          while (auto arrayType = mlir::dyn_cast<cir::ArrayType>(currentType)) {
+            info.dims.push_back(std::to_string(arrayType.getSize()));
+            currentType = arrayType.getElementType();
           }
-        } else if (inner.find("int<s, 8>") != std::string::npos) {
-          info.baseType = "char";
-        } else if (inner.find("int<s, 32>") != std::string::npos) {
-          info.baseType = "int";
-        } else if (inner.find("int<s, 64>") != std::string::npos) {
-          info.baseType = "long long";
-        } else if (inner.find("float") != std::string::npos) {
-          info.baseType = "float";
-        } else if (inner.find("double") != std::string::npos) {
-          info.baseType = "double";
-        } else if (inner.find("long_double") != std::string::npos) {
-          info.baseType = "long double";
-        } else if (info.baseType.empty()) {
-          info.baseType = "int"; // fallback
+          
+          // Get the final element type
+          if (auto elemRecordType = mlir::dyn_cast<cir::RecordType>(currentType)) {
+            std::string arrayStructName = elemRecordType.getName().getValue().str();
+            std::replace(arrayStructName.begin(), arrayStructName.end(), '.', '_');
+            
+            if (elemRecordType.isUnion()) {
+              info.baseType = "union " + arrayStructName;
+            } else {
+              info.baseType = "struct " + arrayStructName;
+            }
+            info.isStruct = true;
+          } else {
+            // Use mapTypeToC for primitive types
+            info.baseType = mapTypeToC(currentType);
+          }
         }
       }
 
