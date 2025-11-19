@@ -77,6 +77,10 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
     out << "  // " << ERR_ALLOCA_NO_NAME << "\n";
     varName = m.freshName("a");
   }
+  
+  // Make variable name unique by appending suffix if it's already been used
+  // This handles cases where MLIR has multiple allocas with the same name (e.g., in nested scopes)
+  std::string uniqueVarName = m.freshName(varName);
 
   // Get the allocated type (first operand type in the operation signature)
   // cir.alloca returns a pointer, but we want to declare the variable as the pointed-to type
@@ -92,9 +96,9 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   // This needs to come before array check since some struct names might contain "array"
   if (typeStr.find("!rec_") == 0 || typeStr.find("!cir.record") == 0) {
     std::string ctype = m.mapTypeToC(allocaTy);
-    out << "  " << ctype << " " << varName << ";\n";
+    out << "  " << ctype << " " << uniqueVarName << ";\n";
     for (Value res : o->getResults()) {
-      m.setName(res, varName);
+      m.setName(res, uniqueVarName);
       m.markAsDirectAccess(res);
     }
     return true;
@@ -124,9 +128,9 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
         ctype = "double";
       }
       
-      out << "  " << ctype << " " << varName << "[" << sizeStr << "];\n";
+      out << "  " << ctype << " " << uniqueVarName << "[" << sizeStr << "];\n";
       for (Value res : o->getResults()) {
-        m.setName(res, varName);
+        m.setName(res, uniqueVarName);
         m.markAsDirectAccess(res);
       }
       return true;
@@ -139,9 +143,9 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
     ctype = m.mapTypeToC(allocaTy);
   }
   
-  out << "  " << ctype << " " << varName << ";\n";
+  out << "  " << ctype << " " << uniqueVarName << ";\n";
   for (Value res : o->getResults()) {
-    m.setName(res, varName);
+    m.setName(res, uniqueVarName);
     m.markAsDirectAccess(res); // Mark alloca results as direct access
   }
   return true;
@@ -453,8 +457,27 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
 bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   std::string callee;
-  if (auto sa = o->getAttrOfType<StringAttr>("callee")) callee = sa.getValue().str();
-  else if (auto sa2 = o->getAttrOfType<SymbolRefAttr>("callee")) callee = sa2.getRootReference().str();
+  bool isIndirectCall = false;
+  
+  // Try to get callee from attributes (direct call)
+  if (auto sa = o->getAttrOfType<StringAttr>("callee")) {
+    callee = sa.getValue().str();
+  } else if (auto sa2 = o->getAttrOfType<SymbolRefAttr>("callee")) {
+    callee = sa2.getRootReference().str();
+  }
+  
+  // Check if this is an indirect call (callee is an operand, typically a function pointer)
+  if (callee.empty() && o->getNumOperands() > 0) {
+    // First operand might be the function pointer for indirect calls
+    Value firstOperand = o->getOperand(0);
+    if (auto funcPtrType = llvm::dyn_cast<cir::PointerType>(firstOperand.getType())) {
+      if (llvm::isa<cir::FuncType>(funcPtrType.getPointee())) {
+        // This is an indirect call through a function pointer
+        isIndirectCall = true;
+        callee = m.getOrCreateName(firstOperand);
+      }
+    }
+  }
   
   if (callee.empty()) {
     if (!m.isBestEffort()) {
@@ -465,21 +488,39 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
     callee = "unknown_fn";
   }
   
-  // Map the callee to the chosen output name (demangled when unique).
-  std::string outCallee = m.getFunctionOutputName(callee);
+  // Map the callee to the chosen output name (demangled when unique) for direct calls
+  std::string outCallee = isIndirectCall ? callee : m.getFunctionOutputName(callee);
+  
+  // Build argument list
   std::string args;
-  for (unsigned i = 0; i < o->getNumOperands(); ++i) {
-    if (i) args += ", ";
+  unsigned startIdx = isIndirectCall ? 1 : 0; // Skip first operand if it's the function pointer
+  for (unsigned i = startIdx; i < o->getNumOperands(); ++i) {
+    if (i > startIdx) args += ", ";
     args += m.getOrCreateName(o->getOperand(i));
+  }
+  
+  // For indirect calls, we need to cast the void* back to a function pointer
+  // Use a typedef-style cast for function pointers
+  std::string callExpr;
+  if (isIndirectCall) {
+    // Generate return type for function pointer cast
+    std::string retType = "void";
+    if (o->getNumResults() > 0) {
+      retType = m.mapTypeToC(o->getResult(0).getType());
+    }
+    // Cast void* to function pointer and call: ((retType (*)())ptr)()
+    callExpr = "((" + retType + " (*)())" + outCallee + ")";
+  } else {
+    callExpr = outCallee;
   }
   
   if (o->getNumResults() > 0) {
     std::string tmp = m.freshName("r");
     std::string ctype = m.mapTypeToC(o->getResult(0).getType());
-    out << "  " << ctype << " " << tmp << " = " << outCallee << "(" << args << ");\n";
+    out << "  " << ctype << " " << tmp << " = " << callExpr << "(" << args << ");\n";
     m.setName(o->getResult(0), tmp);
   } else {
-    out << "  " << outCallee << "(" << args << ");\n";
+    out << "  " << callExpr << "(" << args << ");\n";
   }
   return true;
 }

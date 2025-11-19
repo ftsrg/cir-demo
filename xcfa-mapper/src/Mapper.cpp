@@ -217,7 +217,20 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
   // Check for CIR struct/record types early (before checking dialect)
   // But NOT if it's wrapped in a pointer - check that first!
   // Format: !cir.record<struct "Name" {...}> or !rec_Name
+  // Also handle unions: !cir.record<union "Name" {...}>
   // Make sure it's not !cir.ptr<!cir.record... (that's handled later)
+  if (typeStr.find("!cir.record<union \"") != std::string::npos &&
+      typeStr.find("!cir.ptr<!cir.record") == std::string::npos) {
+    // Inline definition: !cir.record<union "ieee_double_shape_type" {...}>
+    size_t start = typeStr.find("union \"") + 7;
+    size_t end = typeStr.find("\"", start);
+    if (end != std::string::npos) {
+      std::string unionName = typeStr.substr(start, end - start);
+      std::replace(unionName.begin(), unionName.end(), '.', '_');
+      return "union " + unionName;
+    }
+    return "union"; // Fallback for unnamed unions
+  }
   if (typeStr.find("!cir.record<struct \"") != std::string::npos &&
       typeStr.find("!cir.ptr<!cir.record") == std::string::npos) {
     // Inline definition: !cir.record<struct "Point" {...}>
@@ -225,6 +238,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     size_t end = typeStr.find("\"", start);
     if (end != std::string::npos) {
       std::string structName = typeStr.substr(start, end - start);
+      std::replace(structName.begin(), structName.end(), '.', '_');
       return "struct " + structName;
     }
     return "struct"; // Fallback for unnamed structs
@@ -242,6 +256,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
         size_t end = typeStr.find("\"", start);
         if (end != std::string::npos) {
           std::string structName = typeStr.substr(start, end - start);
+          std::replace(structName.begin(), structName.end(), '.', '_');
           return "struct " + structName + "*";
         }
       }
@@ -621,6 +636,9 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     std::vector<std::string> dims; // array dimensions outer->inner
   };
   std::map<std::string, std::vector<FieldInfo>> structFields; // structName -> fields
+  
+  // Use static flag to only emit struct definitions once (for top-level module)
+  static bool structsEmitted = false;
 
   // Helper to recursively collect from operations
   std::function<void(mlir::Operation &)> collectFromOp;
@@ -649,6 +667,9 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         if (end != std::string::npos) structName = baseTypeStr.substr(start, end - start);
       }
       if (structName.empty()) return; // Not a struct base
+      
+      // Sanitize struct name: replace dots with underscores (e.g., anon.0 -> anon_0)
+      std::replace(structName.begin(), structName.end(), '.', '_');
 
       // Result type is pointer to field type. We can reuse mapTypeToC and drop '*'
       mlir::Type resType = gm.getOperation()->getResult(0).getType();
@@ -662,14 +683,18 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         size_t s = resTypeStr.find("struct \"") + 8;
         size_t e = resTypeStr.find("\"", s);
         if (e != std::string::npos) {
-          info.baseType = "struct " + resTypeStr.substr(s, e - s);
+          std::string fieldStructName = resTypeStr.substr(s, e - s);
+          std::replace(fieldStructName.begin(), fieldStructName.end(), '.', '_');
+          info.baseType = "struct " + fieldStructName;
           info.isStruct = true;
         }
       } else if (resTypeStr.find("!cir.ptr<!rec_") != std::string::npos) {
         size_t s = resTypeStr.find("!rec_") + 5;
         size_t e = resTypeStr.find(">", s);
         if (e != std::string::npos) {
-          info.baseType = "struct " + resTypeStr.substr(s, e - s);
+          std::string fieldStructName = resTypeStr.substr(s, e - s);
+          std::replace(fieldStructName.begin(), fieldStructName.end(), '.', '_');
+          info.baseType = "struct " + fieldStructName;
           info.isStruct = true;
         }
       }
@@ -722,13 +747,17 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         // inner now holds final base token like !s32i, !cir.int<s, 8>, or !rec_StructName
         // Check for struct type
         if (inner.find("!rec_") == 0) {
-          info.baseType = "struct " + inner.substr(5);
+          std::string arrayStructName = inner.substr(5);
+          std::replace(arrayStructName.begin(), arrayStructName.end(), '.', '_');
+          info.baseType = "struct " + arrayStructName;
           info.isStruct = true;
         } else if (inner.find("!cir.record<struct \"") != std::string::npos) {
           size_t s = inner.find("struct \"") + 8;
           size_t e = inner.find("\"", s);
           if (e != std::string::npos) {
-            info.baseType = "struct " + inner.substr(s, e - s);
+            std::string arrayStructName = inner.substr(s, e - s);
+            std::replace(arrayStructName.begin(), arrayStructName.end(), '.', '_');
+            info.baseType = "struct " + arrayStructName;
             info.isStruct = true;
           }
         } else if (inner.find("int<s, 8>") != std::string::npos) {
@@ -813,22 +842,26 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // Append any leftovers (cycles/self-deps) deterministically
   for (auto &s : remaining) order.push_back(s);
 
-  if (!order.empty()) out << "// Struct definitions (auto-parsed)\n";
-  for (auto &sname : order) {
-    out << "struct " << sname << " { ";
-    auto &vec = structFields[sname];
-    for (size_t i = 0; i < vec.size(); ++i) {
-      const FieldInfo &fi = vec[i];
-      out << fi.baseType << " " << fi.name;
-      if (fi.isArray) {
-        for (auto &dim : fi.dims) out << "[" << dim << "]";
+  // Only emit struct definitions once (for top-level module call)
+  if (!structsEmitted && !order.empty()) {
+    out << "// Struct definitions (auto-parsed)\n";
+    for (auto &sname : order) {
+      out << "struct " << sname << " { ";
+      auto &vec = structFields[sname];
+      for (size_t i = 0; i < vec.size(); ++i) {
+        const FieldInfo &fi = vec[i];
+        out << fi.baseType << " " << fi.name;
+        if (fi.isArray) {
+          for (auto &dim : fi.dims) out << "[" << dim << "]";
+        }
+        out << ";";
+        if (i + 1 < vec.size()) out << " ";
       }
-      out << ";";
-      if (i + 1 < vec.size()) out << " ";
+      out << " };\n";
     }
-    out << " };\n";
+    out << "\n";
+    structsEmitted = true;
   }
-  if (!order.empty()) out << "\n";
   
   // First pass: emit global variables
   for (auto &op : module.getOps()) {
