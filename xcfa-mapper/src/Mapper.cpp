@@ -183,57 +183,80 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     }
   }
   
-  // Handle CIR-specific types (need to check dialect)
-  // Note: Type aliases like !rec_Point may not have a dialect, so check string first
+  // Handle MLIR NoneType (sometimes used for void)
+  if (mlir::isa<mlir::NoneType>(t)) {
+    return "void";
+  }
   
-  // Try to extract type name from the type string representation
-  llvm::SmallString<64> buf;
+  // Handle CIR void type
+  if (mlir::isa<cir::VoidType>(t)) {
+    return "void";
+  }
+  
+  // Handle CIR bool type
+  if (mlir::isa<cir::BoolType>(t)) {
+    return "_Bool";
+  }
+  
+  // Handle CIR integer types
+  if (auto intTy = mlir::dyn_cast<cir::IntType>(t)) {
+    unsigned width = intTy.getWidth();
+    bool isSigned = intTy.isSigned();
+    
+    if (width == 8) {
+      return isSigned ? "char" : "unsigned char";
+    } else if (width == 16) {
+      return isSigned ? "short" : "unsigned short";
+    } else if (width == 32) {
+      return isSigned ? "int" : "unsigned int";
+    } else if (width == 64) {
+      return isSigned ? "long long" : "unsigned long long";
+    }
+    return "int"; // fallback
+  }
+  
+  // Handle CIR floating-point types
+  if (mlir::isa<cir::SingleType>(t)) {
+    return "float";
+  }
+  if (mlir::isa<cir::DoubleType>(t)) {
+    return "double";
+  }
+  if (mlir::isa<cir::LongDoubleType>(t)) {
+    return "long double";
+  }
+  if (mlir::isa<cir::FP80Type>(t)) {
+    return "long double";
+  }
+  
+  // Handle CIR pointer types
+  if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(t)) {
+    mlir::Type pointee = ptrTy.getPointee();
+    
+    // Handle pointer to function
+    if (mlir::isa<cir::FuncType>(pointee)) {
+      return "void*"; // Simplify function pointers to void*
+    }
+    
+    // For other pointer types, recursively map the pointee and add *
+    std::string pointeeType = mapTypeToC(pointee);
+    if (!pointeeType.empty() && pointeeType.back() == '*') {
+      // Already a pointer type, just return it
+      return pointeeType;
+    }
+    return pointeeType + "*";
+  }
+  
+  // For complex types (structs, arrays, etc.), we need to use string representation
+  // since the CIR dialect may not expose all necessary API methods
+  llvm::SmallString<128> buf;
   llvm::raw_svector_ostream os(buf);
   t.print(os);
   std::string typeStr = os.str().str();
   
-  // Check for pointer-to-struct type alias first: !cir.ptr<!rec_StructName>
-  if (typeStr.find("!cir.ptr<!rec_") != std::string::npos) {
-    size_t start = typeStr.find("!rec_") + 5;
-    size_t end = typeStr.find(">", start);
-    if (end != std::string::npos) {
-      std::string structName = typeStr.substr(start, end - start);
-      return "struct " + structName + "*";
-    }
-  }
-  
-  // Check for type alias: !rec_StructName (non-pointer)
-  if (typeStr.find("!rec_") == 0) {
-    // Type alias: !rec_Point -> struct Point
-    std::string structName = typeStr.substr(5); // Skip "!rec_"
-    // Remove any trailing characters that aren't part of the name
-    size_t end = structName.find_first_of(" ,>)");
-    if (end != std::string::npos) {
-      structName = structName.substr(0, end);
-    }
-    return "struct " + structName;
-  }
-  
-  // Check for CIR struct/record types early (before checking dialect)
-  // But NOT if it's wrapped in a pointer - check that first!
-  // Format: !cir.record<struct "Name" {...}> or !rec_Name
-  // Also handle unions: !cir.record<union "Name" {...}>
-  // Make sure it's not !cir.ptr<!cir.record... (that's handled later)
-  if (typeStr.find("!cir.record<union \"") != std::string::npos &&
-      typeStr.find("!cir.ptr<!cir.record") == std::string::npos) {
-    // Inline definition: !cir.record<union "ieee_double_shape_type" {...}>
-    size_t start = typeStr.find("union \"") + 7;
-    size_t end = typeStr.find("\"", start);
-    if (end != std::string::npos) {
-      std::string unionName = typeStr.substr(start, end - start);
-      std::replace(unionName.begin(), unionName.end(), '.', '_');
-      return "union " + unionName;
-    }
-    return "union"; // Fallback for unnamed unions
-  }
-  if (typeStr.find("!cir.record<struct \"") != std::string::npos &&
-      typeStr.find("!cir.ptr<!cir.record") == std::string::npos) {
-    // Inline definition: !cir.record<struct "Point" {...}>
+  // Handle struct/record types
+  // Check for inline struct definition: !cir.struct<struct "Name" ...>
+  if (typeStr.find("!cir.struct<struct \"") != std::string::npos) {
     size_t start = typeStr.find("struct \"") + 8;
     size_t end = typeStr.find("\"", start);
     if (end != std::string::npos) {
@@ -241,207 +264,26 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
       std::replace(structName.begin(), structName.end(), '.', '_');
       return "struct " + structName;
     }
-    return "struct"; // Fallback for unnamed structs
   }
   
-  std::string dialectName = t.getDialect().getNamespace().str();
-  if (dialectName == "cir") {
-    
-    // Check for pointer-to-struct types first (before generic pointer check)
-    // Format: !cir.ptr<!cir.record<struct "Name"...>> or !cir.ptr<!rec_Name>
-    if (typeStr.find("!cir.ptr<") != std::string::npos) {
-      // Check for !cir.ptr<!cir.record<struct "Name"
-      if (typeStr.find("!cir.ptr<!cir.record<struct \"") != std::string::npos) {
-        size_t start = typeStr.find("struct \"") + 8;
-        size_t end = typeStr.find("\"", start);
-        if (end != std::string::npos) {
-          std::string structName = typeStr.substr(start, end - start);
-          std::replace(structName.begin(), structName.end(), '.', '_');
-          return "struct " + structName + "*";
-        }
-      }
-      // Check for !cir.ptr<!rec_StructName>
-      else if (typeStr.find("!cir.ptr<!rec_") != std::string::npos) {
-        size_t start = typeStr.find("!rec_") + 5;
-        size_t end = typeStr.find(">", start);
-        if (end != std::string::npos) {
-          std::string structName = typeStr.substr(start, end - start);
-          return "struct " + structName + "*";
-        }
-      }
-      // Check for pointer to array types: !cir.ptr<!cir.array<...>>
-      // In C, pointer to array decays to pointer to element type
-      else if (typeStr.find("!cir.ptr<!cir.array<") != std::string::npos) {
-        // Extract element type from array
-        size_t arrayStart = typeStr.find("!cir.array<") + 11;
-        size_t xPos = typeStr.find(" x ", arrayStart);
-        if (xPos != std::string::npos) {
-          std::string elementTypeStr = typeStr.substr(arrayStart, xPos - arrayStart);
-          // Map the element type (e.g., !s8i -> char)
-          if (elementTypeStr == "!s8i") return "char*";
-          else if (elementTypeStr == "!u8i") return "unsigned char*";
-          else if (elementTypeStr == "!s16i") return "short*";
-          else if (elementTypeStr == "!u16i") return "unsigned short*";
-          else if (elementTypeStr == "!s32i") return "int*";
-          else if (elementTypeStr == "!u32i") return "unsigned int*";
-          else if (elementTypeStr == "!s64i") return "long long*";
-          else if (elementTypeStr == "!u64i") return "unsigned long long*";
-          else if (elementTypeStr.find("!cir.float") != std::string::npos) return "float*";
-          else if (elementTypeStr.find("!cir.double") != std::string::npos) return "double*";
-          else if (elementTypeStr.find("!cir.int<s, 8>") != std::string::npos) return "char*";
-          else if (elementTypeStr.find("!cir.int<u, 8>") != std::string::npos) return "unsigned char*";
-          else if (elementTypeStr.find("!cir.int<s, 16>") != std::string::npos) return "short*";
-          else if (elementTypeStr.find("!cir.int<u, 16>") != std::string::npos) return "unsigned short*";
-          else if (elementTypeStr.find("!cir.int<s, 32>") != std::string::npos) return "int*";
-          else if (elementTypeStr.find("!cir.int<u, 32>") != std::string::npos) return "unsigned int*";
-          else if (elementTypeStr.find("!cir.int<s, 64>") != std::string::npos) return "long long*";
-          else if (elementTypeStr.find("!cir.int<u, 64>") != std::string::npos) return "unsigned long long*";
-        }
-        return "int*"; // Fallback for arrays
-      }
-      // Check for pointer to integer types: !cir.ptr<!s8i>, !cir.ptr<!cir.int<...>>
-      else if (typeStr.find("!cir.ptr<!s8i>") != std::string::npos || 
-               typeStr.find("!cir.ptr<!u8i>") != std::string::npos ||
-               typeStr.find("!cir.ptr<!cir.int<s, 8>>") != std::string::npos ||
-               typeStr.find("!cir.ptr<!cir.int<u, 8>>") != std::string::npos) {
-        return "char*";
-      }
-      else if (typeStr.find("!cir.ptr<!s16i>") != std::string::npos || 
-               typeStr.find("!cir.ptr<!u16i>") != std::string::npos ||
-               typeStr.find("!cir.ptr<!cir.int<s, 16>>") != std::string::npos ||
-               typeStr.find("!cir.ptr<!cir.int<u, 16>>") != std::string::npos) {
-        return "short*";
-      }
-      else if (typeStr.find("!cir.ptr<!s32i>") != std::string::npos || 
-               typeStr.find("!cir.ptr<!u32i>") != std::string::npos ||
-               typeStr.find("!cir.ptr<!cir.int<s, 32>>") != std::string::npos ||
-               typeStr.find("!cir.ptr<!cir.int<u, 32>>") != std::string::npos) {
-        return "int*";
-      }
-      else if (typeStr.find("!cir.ptr<!s64i>") != std::string::npos || 
-               typeStr.find("!cir.ptr<!u64i>") != std::string::npos ||
-               typeStr.find("!cir.ptr<!cir.int<s, 64>>") != std::string::npos ||
-               typeStr.find("!cir.ptr<!cir.int<u, 64>>") != std::string::npos) {
-        return "long long*";
-      }
-      // Check for pointer to function types: !cir.ptr<!cir.func<...>>
-      else if (typeStr.find("!cir.ptr<!cir.func<") != std::string::npos) {
-        // For function pointers, we simplify to void*
-        return "void*";
-      }
-      // Generic pointer fallback
-      return "int*"; // Simplified pointer mapping for other pointer types
-    }
-    
-    // Check for bare pointer types (fallback for !cir.ptr without <>)
-    if (typeStr.find("!cir.ptr") != std::string::npos) {
-      return "int*"; // Simplified pointer mapping
-    }
-    
-    // Check for CIR bool type
-    if (typeStr.find("!cir.bool") != std::string::npos) {
-      return "_Bool"; // Emit C99 _Bool for true boolean values
-    }
-    
-    // Check for CIR integer types with size and signedness
-    if (typeStr.find("!cir.int") != std::string::npos) {
-      // Format: !cir.int<s, 8>, !cir.int<s, 32>, !cir.int<s, 64>, etc.
-      if (typeStr.find("int<u, 8>") != std::string::npos) {
-        return "unsigned char";
-      } else if (typeStr.find("int<s, 8>") != std::string::npos) {
-        return "char";
-      } else if (typeStr.find("int<u, 16>") != std::string::npos) {
-        return "unsigned short";
-      } else if (typeStr.find("int<s, 16>") != std::string::npos) {
-        return "short";
-      } else if (typeStr.find("int<u, 32>") != std::string::npos) {
-        return "unsigned int";
-      } else if (typeStr.find("int<s, 32>") != std::string::npos) {
-        return "int";
-      } else if (typeStr.find("int<u, 64>") != std::string::npos) {
-        return "unsigned long long";
-      } else if (typeStr.find("int<s, 64>") != std::string::npos) {
-        return "long long";
-      }
-      return "int"; // fallback
-    }
-    
-    // Check for old-style CIR integer types: !s8i, !s16i, !s32i, !s64i, etc.
-    if (typeStr.find("!s8i") != std::string::npos) {
-      return "char";
-    }
-    if (typeStr.find("!u8i") != std::string::npos) {
-      return "unsigned char";
-    }
-    if (typeStr.find("!s16i") != std::string::npos) {
-      return "short";
-    }
-    if (typeStr.find("!u16i") != std::string::npos) {
-      return "unsigned short";
-    }
-    if (typeStr.find("!s32i") != std::string::npos) {
-      return "int";
-    }
-    if (typeStr.find("!u32i") != std::string::npos) {
-      return "unsigned int";
-    }
-    if (typeStr.find("!s64i") != std::string::npos) {
-      return "long long";
-    }
-    if (typeStr.find("!u64i") != std::string::npos) {
-      return "unsigned long long";
-    }
-    
-    // Check for CIR float types
-    if (typeStr.find("!cir.float") != std::string::npos) {
-      return "float";
-    }
-    if (typeStr.find("!cir.double") != std::string::npos) {
-      return "double";
-    }
-    if (typeStr.find("!cir.long_double") != std::string::npos) {
-      return "long double";
-    }
-    if (typeStr.find("!cir.f80") != std::string::npos) {
-      return "long double";
-    }
-    
-    // Check for CIR array types
-    if (typeStr.find("!cir.array<") != std::string::npos) {
-      // Format: !cir.array<element_type x size>
-      size_t startPos = typeStr.find("<");
-      size_t xPos = typeStr.find(" x ", startPos);
-      size_t endPos = typeStr.find(">", xPos);
-      if (startPos != std::string::npos && xPos != std::string::npos && endPos != std::string::npos) {
-        std::string elementTypeStr = typeStr.substr(startPos + 1, xPos - startPos - 1);
-        std::string sizeStr = typeStr.substr(xPos + 3, endPos - xPos - 3);
-        std::string ctype = "int";
-        if (elementTypeStr.find("!s32i") != std::string::npos || elementTypeStr.find("!cir.int<s, 32>") != std::string::npos) {
-          ctype = "int";
-        } else if (elementTypeStr.find("!s64i") != std::string::npos || elementTypeStr.find("!cir.int<s, 64>") != std::string::npos) {
-          ctype = "long long";
-        } else if (elementTypeStr.find("!cir.float") != std::string::npos) {
-          ctype = "float";
-        } else if (elementTypeStr.find("!cir.double") != std::string::npos) {
-          ctype = "double";
-        } else if (elementTypeStr.find("!cir.bool") != std::string::npos) {
-          ctype = "_Bool";
-        }
-        return ctype + "[" + sizeStr + "]";
-      }
-      // Fallback for malformed array type
-      return "int";
-    }
-    
-    // Check for void type
-    if (typeStr.find("!cir.void") != std::string::npos) {
-      return "void";
+  // Check for inline union definition: !cir.struct<union "Name" ...>
+  if (typeStr.find("!cir.struct<union \"") != std::string::npos) {
+    size_t start = typeStr.find("union \"") + 7;
+    size_t end = typeStr.find("\"", start);
+    if (end != std::string::npos) {
+      std::string unionName = typeStr.substr(start, end - start);
+      std::replace(unionName.begin(), unionName.end(), '.', '_');
+      return "union " + unionName;
     }
   }
   
-  // Check for MLIR NoneType (sometimes used for void)
-  if (mlir::isa<mlir::NoneType>(t)) {
-    return "void";
+  // Handle array types: !cir.array<element_type x size>
+  // Arrays in C declarations require the element type, not the full array type
+  // This should only be called when we need the base element type
+  if (typeStr.find("!cir.array<") != std::string::npos) {
+    // For now, return int as a fallback - proper array handling should be done
+    // at the declaration site where we can properly format "type name[size]"
+    return "int";
   }
   
   // Conservative default for unknown types
