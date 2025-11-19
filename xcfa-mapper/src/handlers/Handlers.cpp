@@ -491,12 +491,24 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
   // Map the callee to the chosen output name (demangled when unique) for direct calls
   std::string outCallee = isIndirectCall ? callee : m.getFunctionOutputName(callee);
   
-  // Build argument list
+  // Build argument list with address-of adjustment for direct access allocas
   std::string args;
   unsigned startIdx = isIndirectCall ? 1 : 0; // Skip first operand if it's the function pointer
   for (unsigned i = startIdx; i < o->getNumOperands(); ++i) {
     if (i > startIdx) args += ", ";
-    args += m.getOrCreateName(o->getOperand(i));
+    Value argV = o->getOperand(i);
+    std::string argName = m.getOrCreateName(argV);
+    // If argument type is a pointer AND the value is a direct-access variable representing
+    // the memory cell (alloca of base type, struct, or pointer), we must take its address
+    // unless the pointee is an array (which decays automatically).
+    if (auto ptrTy = llvm::dyn_cast<cir::PointerType>(argV.getType())) {
+      mlir::Type pointee = ptrTy.getPointee();
+      bool pointeeIsArray = llvm::isa<cir::ArrayType>(pointee);
+      if (m.isDirectAccess(argV) && !pointeeIsArray) {
+        argName = "&" + argName;
+      }
+    }
+    args += argName;
   }
   
   // For indirect calls, we need to cast the void* back to a function pointer
@@ -892,8 +904,20 @@ bool handleCopy(cir::CopyOp op, Mapper &m, std::ostream &out) {
   Value dst = o->getOperand(1);
   std::string srcName = m.getOrCreateName(src);
   std::string dstName = m.getOrCreateName(dst);
-  
-  // Assume copy of entire structure/array - use assignment
+  // Determine if this is an array copy (both operands pointer to array)
+  auto srcPtrTy = llvm::dyn_cast<cir::PointerType>(src.getType());
+  auto dstPtrTy = llvm::dyn_cast<cir::PointerType>(dst.getType());
+  if (srcPtrTy && dstPtrTy) {
+    auto srcArrTy = llvm::dyn_cast<cir::ArrayType>(srcPtrTy.getPointee());
+    auto dstArrTy = llvm::dyn_cast<cir::ArrayType>(dstPtrTy.getPointee());
+    if (srcArrTy && dstArrTy && srcArrTy.getSize() == dstArrTy.getSize() && srcArrTy.getElementType() == dstArrTy.getElementType()) {
+      uint64_t size = srcArrTy.getSize();
+      out << "  // array copy\n";
+      out << "  for (int i = 0; i < " << size << "; ++i) { " << dstName << "[i] = " << srcName << "[i]; }\n";
+      return true;
+    }
+  }
+  // Fallback: simple assignment (structs / scalars)
   out << "  " << dstName << " = " << srcName << "; // copy\n";
   return true;
 }
@@ -979,39 +1003,48 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
     }
   }
 
-  std::string tmp = m.freshName("g");
-  std::string ctype = "int*";
-  if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  
-    // Determine if we should use & or direct access
-    // For arrays: array names decay to pointers, so no &
-    // For pointer-type globals: the variable IS the pointer value, so no &
-    bool useDirectAccess = false;
-  if (o->getNumResults() > 0) {
-    mlir::Type resType = o->getResult(0).getType();
-      // Check if this is a pointer to an array or a pointer to a pointer
-      if (auto ptrType = mlir::dyn_cast<cir::PointerType>(resType)) {
-        mlir::Type pointeeType = ptrType.getPointee();
-        // If pointee is an array or another pointer, use direct access
-        if (mlir::isa<cir::ArrayType>(pointeeType) || 
-            mlir::isa<cir::PointerType>(pointeeType)) {
-          useDirectAccess = true;
-        }
+  // If no results, nothing to bind.
+  if (o->getNumResults() == 0) return true;
+
+  mlir::Type resType = o->getResult(0).getType();
+  std::string ctype = m.mapTypeToC(resType);
+
+  // Pointer global special case:
+  // get_global of a pointer variable returns a pointer-to-pointer (int** for int*).
+  // We do not want to introduce a temporary; we want subsequent stores to write
+  // directly 'pa = value' and loads to read 'pa'. So we simply bind the SSA value
+  // to the global name without emitting a declaration.
+  if (auto ptrType = mlir::dyn_cast<cir::PointerType>(resType)) {
+    mlir::Type pointeeType = ptrType.getPointee();
+    if (mlir::isa<cir::PointerType>(pointeeType)) {
+      // Pointer-to-pointer from global pointer variable.
+      m.setName(o->getResult(0), globalName);
+      m.markAsDirectAccess(o->getResult(0)); // treat as lvalue for assignment
+      return true;
+    }
+    if (mlir::isa<cir::ArrayType>(pointeeType)) {
+      // Array decay: bind directly, mark direct access
+      m.setName(o->getResult(0), globalName);
+      m.markAsDirectAccess(o->getResult(0));
+      return true;
     }
   }
-  
-    // For arrays and pointer-type globals, use direct access
-    if (useDirectAccess) {
+
+  // Non-pointer-global cases: emit a temporary holding address-of global.
+  std::string tmp = m.freshName("g");
+  // For arrays (pointer to array), we want decay: tmp = globalName;
+  bool isPtrToArray = false;
+  if (auto ptrT = mlir::dyn_cast<cir::PointerType>(resType)) {
+    isPtrToArray = mlir::isa<cir::ArrayType>(ptrT.getPointee());
+  }
+  if (isPtrToArray) {
     out << "  " << ctype << " " << tmp << " = " << globalName << ";\n";
-    // Mark the result as direct access since it's an array
-    if (o->getNumResults() > 0) {
-      m.markAsDirectAccess(o->getResult(0));
-    }
+    m.setName(o->getResult(0), tmp);
+    // Do NOT mark as direct access; we want loads/stores to treat it as pointer value
   } else {
     out << "  " << ctype << " " << tmp << " = &" << globalName << ";\n";
+    m.setName(o->getResult(0), tmp);
   }
-  
-  if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
 

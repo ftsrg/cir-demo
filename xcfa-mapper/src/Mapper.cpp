@@ -259,10 +259,6 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     
     // For other pointer types, recursively map the pointee and add *
     std::string pointeeType = mapTypeToC(pointee);
-    if (!pointeeType.empty() && pointeeType.back() == '*') {
-      // Already a pointer type, just return it
-      return pointeeType;
-    }
     return pointeeType + "*";
   }
   
@@ -445,18 +441,91 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   auto globalOp = mlir::cast<cir::GlobalOp>(gop);
   mlir::Type symType = globalOp.getSymType();
   
-  // Check if it's an array type using API
+  // Try to recover initializer by printing op (no string-based type recognition, only value patterns)
+  std::string initExpr; // empty means no initializer
+  {
+    std::string printed;
+    llvm::raw_string_ostream rso(printed);
+    gop->print(rso);
+    rso.flush();
+    // Find '=' up to ':' (before type)
+    size_t eqPos = printed.find('=');
+    if (eqPos != std::string::npos) {
+      size_t colonPos = printed.find(':', eqPos + 1);
+      if (colonPos != std::string::npos) {
+        std::string rawInit = printed.substr(eqPos + 1, colonPos - (eqPos + 1));
+        // Trim whitespace
+        auto trim = [](std::string s){ size_t a=s.find_first_not_of(" \t\n"); size_t b=s.find_last_not_of(" \t\n"); return (a==std::string::npos)?std::string():s.substr(a,b-a+1); };        
+        rawInit = trim(rawInit);
+        if (!rawInit.empty()) {
+          // Integer constant: #cir.int<42>
+          if (rawInit.rfind("#cir.int<", 0) == 0) {
+            size_t lt = rawInit.find('<');
+            size_t gt = rawInit.find('>');
+            if (lt != std::string::npos && gt != std::string::npos && gt > lt+1) {
+              initExpr = rawInit.substr(lt+1, gt-lt-1); // number
+            }
+          }
+          // Global view: #cir.global_view<@a>
+          else if (rawInit.rfind("#cir.global_view<@", 0) == 0) {
+            size_t at = rawInit.find('@');
+            size_t gt = rawInit.find('>');
+            if (at != std::string::npos && gt != std::string::npos && gt > at+1) {
+              std::string target = rawInit.substr(at+1, gt-at-1);
+              initExpr = "&" + sanitizeIdentifier(target);
+            }
+          }
+          // Const char array: #cir.const_array<"..." : !cir.array<!s8i x N>>
+          else if (rawInit.rfind("#cir.const_array<", 0) == 0) {
+            size_t q1 = rawInit.find('"');
+            if (q1 != std::string::npos) {
+              size_t q2 = rawInit.find('"', q1+1);
+              if (q2 != std::string::npos) {
+                std::string inner = rawInit.substr(q1+1, q2 - (q1+1));
+                // Remove trailing \00 if present (C string literal implicit)
+                // Replace escaped sequence \00 occurrences at end
+                if (inner.size() >= 3 && inner.substr(inner.size()-3) == "\\00") {
+                  inner = inner.substr(0, inner.size()-3);
+                }
+                // Escape embedded quotes/backslashes minimally
+                std::string escaped; escaped.reserve(inner.size()+4);
+                for (char c : inner) {
+                  if (c == '"' || c == '\\') escaped.push_back('\\');
+                  escaped.push_back(c);
+                }
+                initExpr = '"' + escaped + '"';
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Array type
   if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(symType)) {
     mlir::Type elemType = arrayTy.getElementType();
     uint64_t size = arrayTy.getSize();
     std::string elemCType = mapTypeToC(elemType);
-    out << elemCType << " " << name << "[" << size << "];\n";
+    out << elemCType << " " << name << "[" << size << "]";
+    if (!initExpr.empty()) {
+      // If string literal for char array
+      if (!elemCType.empty() && elemCType == "char" && initExpr.size() > 0 && initExpr.front()=='"') {
+        out << " = " << initExpr;        
+      }
+      // Could extend for brace-enclosed initializers later
+    }
+    out << ";\n";
     return true;
   }
-  
-  // For non-array types
+
+  // Non-array types
   std::string ctype = mapTypeToC(symType);
-  out << ctype << " " << name << ";\n";
+  out << ctype << " " << name;
+  if (!initExpr.empty()) {
+    out << " = " << initExpr;
+  }
+  out << ";\n";
   return true;
 }
 
