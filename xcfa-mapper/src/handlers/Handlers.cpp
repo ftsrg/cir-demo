@@ -328,16 +328,23 @@ bool handleBr(cir::BrOp op, Mapper &m, std::ostream &out) {
     mlir::Block *succ = o->getSuccessors()[0];
     
     // Handle block arguments (phi nodes in SSA form)
-    // If the branch passes operands, map them to the successor block's arguments
+    // If the branch passes operands, emit assignments to successor block's arguments
     if (o->getNumOperands() > 0 && succ->getNumArguments() > 0) {
       unsigned numArgs = std::min(o->getNumOperands(), (unsigned)succ->getNumArguments());
       for (unsigned i = 0; i < numArgs; ++i) {
         Value branchArg = o->getOperand(i);
         BlockArgument blockArg = succ->getArgument(i);
         
-        // Map the block argument to the same name as the branch argument
-        std::string argName = m.getOrCreateName(branchArg);
-        m.setName(blockArg, argName);
+        // Get or create name for the block argument (destination)
+        std::string blockArgName = m.getOrCreateName(blockArg);
+        // Get the value being passed (source)
+        std::string branchArgName = m.getOrCreateName(branchArg);
+        
+        // Get the type for proper C declaration
+        std::string ctype = m.mapTypeToC(blockArg.getType());
+        
+        // Emit assignment: block_arg = branch_arg;
+        out << "  " << blockArgName << " = " << branchArgName << ";\n";
       }
     }
     
@@ -355,19 +362,91 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
   if (o->getNumOperands() >= 1) cond = m.getOrCreateName(o->getOperand(0));
   std::string tlabel;
   std::string flabel;
-  if (o->getNumSuccessors() >= 2) {
-    tlabel = m.getOrCreateLabel(o->getSuccessors()[0]);
-    flabel = m.getOrCreateLabel(o->getSuccessors()[1]);
-  } else {
+  
+  if (o->getNumSuccessors() < 2) {
     if (!m.isBestEffort()) {
       llvm::errs() << ERR_BRCOND_NO_SUCCESSORS << "\n";
       return false;
     }
     out << "  // " << ERR_BRCOND_NO_SUCCESSORS << "\n";
-    tlabel = "bb_true";
-    flabel = "bb_false";
+    out << "  if (" << cond << ") goto bb_true; else goto bb_false;\n";
+    return true;
   }
-  out << "  if (" << cond << ") goto " << tlabel << "; else goto " << flabel << ";\n";
+  
+  mlir::Block *trueSucc = o->getSuccessors()[0];
+  mlir::Block *falseSucc = o->getSuccessors()[1];
+  tlabel = m.getOrCreateLabel(trueSucc);
+  flabel = m.getOrCreateLabel(falseSucc);
+  
+  // Check if we need to handle block arguments
+  // BrCondOp can pass different arguments to true and false successors
+  // Operand 0 is the condition, operands 1+ go to true branch, then false branch operands
+  
+  // Get the number of arguments for each successor
+  unsigned trueNumArgs = trueSucc->getNumArguments();
+  unsigned falseNumArgs = falseSucc->getNumArguments();
+  
+  // Simple case: no block arguments
+  if (trueNumArgs == 0 && falseNumArgs == 0) {
+    out << "  if (" << cond << ") goto " << tlabel << "; else goto " << flabel << ";\n";
+    return true;
+  }
+  
+  // Complex case: need to handle block arguments
+  // We need to emit assignments before the goto, but we can't do both branches inline
+  // Solution: use a temporary variable or emit the branches separately with assignments
+  
+  // For conditional branches with block arguments, we need to:
+  // 1. Declare all block argument variables at the start of the block (if not already)
+  // 2. Emit if-else with assignments before goto
+  
+  // Check if true branch has arguments
+  bool hasTrueArgs = (trueNumArgs > 0);
+  // The operands after the condition are split: first trueNumArgs go to true branch
+  unsigned trueArgStartIdx = 1; // After condition
+  
+  // Check if false branch has arguments  
+  bool hasFalseArgs = (falseNumArgs > 0);
+  unsigned falseArgStartIdx = 1 + trueNumArgs; // After condition and true args
+  
+  if (hasTrueArgs || hasFalseArgs) {
+    out << "  if (" << cond << ") {\n";
+    
+    // Emit assignments for true branch
+    if (hasTrueArgs) {
+      for (unsigned i = 0; i < trueNumArgs; ++i) {
+        if (trueArgStartIdx + i < o->getNumOperands()) {
+          Value branchArg = o->getOperand(trueArgStartIdx + i);
+          BlockArgument blockArg = trueSucc->getArgument(i);
+          std::string blockArgName = m.getOrCreateName(blockArg);
+          std::string branchArgName = m.getOrCreateName(branchArg);
+          out << "    " << blockArgName << " = " << branchArgName << ";\n";
+        }
+      }
+    }
+    
+    out << "    goto " << tlabel << ";\n";
+    out << "  } else {\n";
+    
+    // Emit assignments for false branch
+    if (hasFalseArgs) {
+      for (unsigned i = 0; i < falseNumArgs; ++i) {
+        if (falseArgStartIdx + i < o->getNumOperands()) {
+          Value branchArg = o->getOperand(falseArgStartIdx + i);
+          BlockArgument blockArg = falseSucc->getArgument(i);
+          std::string blockArgName = m.getOrCreateName(blockArg);
+          std::string branchArgName = m.getOrCreateName(branchArg);
+          out << "    " << blockArgName << " = " << branchArgName << ";\n";
+        }
+      }
+    }
+    
+    out << "    goto " << flabel << ";\n";
+    out << "  }\n";
+  } else {
+    out << "  if (" << cond << ") goto " << tlabel << "; else goto " << flabel << ";\n";
+  }
+  
   return true;
 }
 

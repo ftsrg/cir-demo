@@ -494,6 +494,23 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   out << " {\n";
 
   Region &r = fop->getRegion(0);
+  
+  // Declare all block arguments upfront (these act like phi nodes in SSA form)
+  // We need to collect all block arguments from all blocks (except entry block which uses function params)
+  bool isFirstBlock = true;
+  for (Block &b : r.getBlocks()) {
+    if (isFirstBlock) {
+      isFirstBlock = false;
+      continue; // Skip entry block - its arguments are function parameters
+    }
+    
+    for (BlockArgument arg : b.getArguments()) {
+      std::string argName = getOrCreateName(arg);
+      std::string ctype = mapTypeToC(arg.getType());
+      out << "  " << ctype << " " << argName << ";\n";
+    }
+  }
+  
   for (Block &b : r.getBlocks()) getOrCreateLabel(&b);
   for (Block &b : r.getBlocks()) {
     out << mangleLabel(getOrCreateLabel(&b)) << ":\n";
