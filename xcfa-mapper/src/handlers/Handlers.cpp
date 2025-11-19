@@ -600,7 +600,19 @@ bool handleUnaryOp(cir::UnaryOp op, Mapper &m, std::ostream &out) {
       case cir::UnaryOpKind::Dec: opStr = "--"; opFound = true; isPrefix = true; break;
       case cir::UnaryOpKind::Plus: opStr = "+"; opFound = true; isPrefix = true; break;
       case cir::UnaryOpKind::Minus: opStr = "-"; opFound = true; isPrefix = true; break;
-      case cir::UnaryOpKind::Not: opStr = "!"; opFound = true; isPrefix = true; break;
+      case cir::UnaryOpKind::Not: {
+        // CIR 'not' may represent logical not when applied to !cir.bool,
+        // and bitwise complement otherwise. Inspect operand type.
+        std::string ty;
+        if (o->getNumOperands() > 0) {
+          llvm::SmallString<64> tbuf; llvm::raw_svector_ostream tos(tbuf);
+          o->getOperand(0).getType().print(tos);
+          ty = tos.str().str();
+        }
+        if (ty.find("!cir.bool") != std::string::npos) opStr = "!";
+        else opStr = "~";
+        opFound = true; isPrefix = true; break;
+      }
       default: opFound = false; break;
     }
   }
@@ -640,11 +652,22 @@ bool handleShiftOp(cir::ShiftOp op, Mapper &m, std::ostream &out) {
   std::string l = m.getOrCreateName(lhs);
   std::string r = m.getOrCreateName(rhs);
   
-  // ShiftOp doesn't have a kind attribute in the current CIR - it uses
-  // the 'is_left_shift' boolean attribute instead
-  std::string opStr = "<<"; // default to left shift
-  if (auto isLeftAttr = o->getAttrOfType<mlir::BoolAttr>("is_left_shift")) {
-    opStr = isLeftAttr.getValue() ? "<<" : ">>";
+  // Determine direction from textual form (left/right) to avoid relying on
+  // generated enum types across CIR versions.
+  std::string opStr = "<<"; // default to left
+  {
+    llvm::SmallString<128> sbuf;
+    llvm::raw_svector_ostream sos(sbuf);
+    o->print(sos);
+    std::string os = sos.str().str();
+    if (os.find("shift(right,") != std::string::npos) opStr = ">>";
+    else if (os.find("shift(left,") != std::string::npos) opStr = "<<";
+    else {
+      // Fallback: some older dumps may encode a boolean direction
+      if (auto isLeftAttr = o->getAttrOfType<mlir::BoolAttr>("is_left_shift")) {
+        opStr = isLeftAttr.getValue() ? "<<" : ">>";
+      }
+    }
   }
   
   std::string tmp = m.freshName("s");
@@ -947,6 +970,15 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
   // Sanitize the global name to be a valid C identifier
   globalName = Mapper::sanitizeIdentifier(globalName);
   
+  // If the result of get_global isn't used, don't emit a temporary.
+  if (o->getNumResults() > 0) {
+    mlir::Value res = o->getResult(0);
+    if (res.use_empty()) {
+      // No side effects, safe to elide.
+      return true;
+    }
+  }
+
   std::string tmp = m.freshName("g");
   std::string ctype = "int*";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());

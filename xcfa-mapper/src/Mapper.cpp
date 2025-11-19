@@ -340,7 +340,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     
     // Check for CIR bool type
     if (typeStr.find("!cir.bool") != std::string::npos) {
-      return "int"; // C89 compatible, or "bool" for C99+
+      return "_Bool"; // Emit C99 _Bool for true boolean values
     }
     
     // Check for CIR integer types with size and signedness
@@ -425,7 +425,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
         } else if (elementTypeStr.find("!cir.double") != std::string::npos) {
           ctype = "double";
         } else if (elementTypeStr.find("!cir.bool") != std::string::npos) {
-          ctype = "int";
+          ctype = "_Bool";
         }
         return ctype + "[" + sizeStr + "]";
       }
@@ -629,6 +629,27 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // collisions when demangling.
   prepareFunctionNames(module);
   
+  // Discover union record names from the textual IR so aliases (!rec_*)
+  // that denote unions can be recognized without heuristics.
+  std::set<std::string> unionRecordNames;
+  {
+    std::string irText;
+    llvm::raw_string_ostream rso(irText);
+    module.print(rso);
+    rso.flush();
+    const std::string needle = "!cir.record<union \"";
+    std::size_t pos = 0;
+    while ((pos = irText.find(needle, pos)) != std::string::npos) {
+      pos += needle.size();
+      auto end = irText.find("\"", pos);
+      if (end == std::string::npos) break;
+      std::string name = irText.substr(pos, end - pos);
+      std::replace(name.begin(), name.end(), '.', '_');
+      unionRecordNames.insert(name);
+      pos = end + 1;
+    }
+  }
+  
   // Auto-parse struct definitions by scanning member accesses.
   struct FieldInfo {
     std::string name;        // field name
@@ -801,10 +822,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       }
       info.name = fname;
 
-      // Heuristic: if we see a field named 'value' on a record, it's likely a union
-      if (fname == "value") {
-        isUnionContainer[structName] = true;
-      }
+      // Note: union detection is driven by IR-declared unions, not field names.
 
       // Avoid duplicate entries for the same field name
   auto &vec = structFields[structName];
@@ -816,6 +834,14 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
   // Kick off collection for top-level operations
   for (auto &op : module.getOps()) collectFromOp(op);
+
+  // Mark union containers based on discovered union record names.
+  for (auto &kv : structFields) {
+    const auto &recName = kv.first;
+    if (unionRecordNames.count(recName)) {
+      isUnionContainer[recName] = true;
+    }
+  }
 
   // Order structs to satisfy dependencies: if a struct references another
   // struct in its fields, emit the dependency first. Simple fixed-point topo.
