@@ -329,13 +329,21 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     // Check for CIR integer types with size and signedness
     if (typeStr.find("!cir.int") != std::string::npos) {
       // Format: !cir.int<s, 8>, !cir.int<s, 32>, !cir.int<s, 64>, etc.
-      if (typeStr.find("int<s, 8>") != std::string::npos || typeStr.find("int<u, 8>") != std::string::npos) {
+      if (typeStr.find("int<u, 8>") != std::string::npos) {
+        return "unsigned char";
+      } else if (typeStr.find("int<s, 8>") != std::string::npos) {
         return "char";
-      } else if (typeStr.find("int<s, 16>") != std::string::npos || typeStr.find("int<u, 16>") != std::string::npos) {
+      } else if (typeStr.find("int<u, 16>") != std::string::npos) {
+        return "unsigned short";
+      } else if (typeStr.find("int<s, 16>") != std::string::npos) {
         return "short";
-      } else if (typeStr.find("int<s, 32>") != std::string::npos || typeStr.find("int<u, 32>") != std::string::npos) {
+      } else if (typeStr.find("int<u, 32>") != std::string::npos) {
+        return "unsigned int";
+      } else if (typeStr.find("int<s, 32>") != std::string::npos) {
         return "int";
-      } else if (typeStr.find("int<s, 64>") != std::string::npos || typeStr.find("int<u, 64>") != std::string::npos) {
+      } else if (typeStr.find("int<u, 64>") != std::string::npos) {
+        return "unsigned long long";
+      } else if (typeStr.find("int<s, 64>") != std::string::npos) {
         return "long long";
       }
       return "int"; // fallback
