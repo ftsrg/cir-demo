@@ -286,6 +286,8 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
           else if (elementTypeStr == "!u32i") return "unsigned int*";
           else if (elementTypeStr == "!s64i") return "long long*";
           else if (elementTypeStr == "!u64i") return "unsigned long long*";
+          else if (elementTypeStr.find("!cir.float") != std::string::npos) return "float*";
+          else if (elementTypeStr.find("!cir.double") != std::string::npos) return "double*";
           else if (elementTypeStr.find("!cir.int<s, 8>") != std::string::npos) return "char*";
           else if (elementTypeStr.find("!cir.int<u, 8>") != std::string::npos) return "unsigned char*";
           else if (elementTypeStr.find("!cir.int<s, 16>") != std::string::npos) return "short*";
@@ -635,7 +637,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     bool isArray = false;    // whether field is an array
     std::vector<std::string> dims; // array dimensions outer->inner
   };
-  std::map<std::string, std::vector<FieldInfo>> structFields; // structName -> fields
+  std::map<std::string, std::vector<FieldInfo>> structFields; // recordName -> fields
+  std::map<std::string, bool> isUnionContainer; // recordName -> isUnion
   
   // Use static flag to only emit struct definitions once (for top-level module)
   static bool structsEmitted = false;
@@ -650,7 +653,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       }
     }
 
-    // Collect struct/field info from cir.get_member
+    // Collect struct/union field info from cir.get_member
   if (auto gm = llvm::dyn_cast<cir::GetMemberOp>(genericOp)) {
       // Base is pointer to struct; extract struct name from base type string
       mlir::Type baseType = gm.getOperation()->getOperand(0).getType();
@@ -665,6 +668,11 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         size_t start = baseTypeStr.find("!rec_") + 5;
         size_t end = baseTypeStr.find(">", start);
         if (end != std::string::npos) structName = baseTypeStr.substr(start, end - start);
+      } else if (baseTypeStr.find("!cir.ptr<!cir.record<union ") != std::string::npos) {
+        size_t start = baseTypeStr.find("union \"") + 7;
+        size_t end = baseTypeStr.find("\"", start);
+        if (end != std::string::npos) structName = baseTypeStr.substr(start, end - start);
+        if (!structName.empty()) isUnionContainer[structName] = true;
       }
       if (structName.empty()) return; // Not a struct base
       
@@ -793,6 +801,11 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       }
       info.name = fname;
 
+      // Heuristic: if we see a field named 'value' on a record, it's likely a union
+      if (fname == "value") {
+        isUnionContainer[structName] = true;
+      }
+
       // Avoid duplicate entries for the same field name
   auto &vec = structFields[structName];
   bool exists = false;
@@ -846,7 +859,10 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   if (!structsEmitted && !order.empty()) {
     out << "// Struct definitions (auto-parsed)\n";
     for (auto &sname : order) {
-      out << "struct " << sname << " { ";
+      bool isU = false;
+      auto itk = isUnionContainer.find(sname);
+      if (itk != isUnionContainer.end()) isU = itk->second;
+      out << (isU ? "union " : "struct ") << sname << " { ";
       auto &vec = structFields[sname];
       for (size_t i = 0; i < vec.size(); ++i) {
         const FieldInfo &fi = vec[i];
