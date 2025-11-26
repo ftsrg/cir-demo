@@ -1,3 +1,10 @@
+/*
+ * Source: https://doi.org/10.5281/zenodo.14824495
+ *
+ * This work is licensed under Creative Commons Attribution 4.0 International.
+ * To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+ */
+
 // Fig. 21.35: fig21_35.cpp
 // Standard library algorithms includes, set_difference, 
 // set_intersection, set_symmetric_difference and set_union.

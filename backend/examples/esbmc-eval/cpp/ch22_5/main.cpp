@@ -1,3 +1,10 @@
+/*
+ * Source: https://doi.org/10.5281/zenodo.14824495
+ *
+ * This work is licensed under Creative Commons Attribution 4.0 International.
+ * To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+ */
+
 // Fig. 22.20: fig22_20.cpp
 // Attempting to polymorphically call a function that is
 // multiply inherited from two base classes.

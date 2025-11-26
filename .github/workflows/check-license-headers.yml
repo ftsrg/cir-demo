@@ -42,12 +42,12 @@ jobs:
           
           # Run license header script (adds headers to files)
           python .github/scripts/add-license-header.py \
-            .github/scripts/license-header-apache.txt
+            .github/scripts/license-header-apache
           
           git restore backend/examples/esbmc-eval
 
           python .github/scripts/add-license-header.py \
-            .github/scripts/license-header-cc.txt \
+            .github/scripts/license-header-cc \
             backend/examples/esbmc-eval/
           
           # Check if any files were modified using git diff

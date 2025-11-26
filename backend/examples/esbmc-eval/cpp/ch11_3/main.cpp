@@ -1,3 +1,10 @@
+/*
+ * Source: https://doi.org/10.5281/zenodo.14824495
+ *
+ * This work is licensed under Creative Commons Attribution 4.0 International.
+ * To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+ */
+
 // Fig. 11.4: fig11_04.cpp
 // Stack class template test program. Function main uses a 
 // function template to manipulate objects of type Stack< T >.
