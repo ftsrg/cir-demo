@@ -1,47 +1,47 @@
-# CIR Demo Workspace
+# CIR Demo
 
-This workspace contains three projects:
+An interactive web-based platform for exploring C/C++ code analysis using Clang IR. This demo provides a syntax-highlighted code editor where you can write or load C++ examples, analyze them with [Theta](https://github.com/ftsrg/theta) via Clang-based tools, and visualize the results.
 
-- `backend` - Node.js Express server that serves example C++ files and exposes endpoints to run clang-related commands (placeholders provided).
-- `frontend` - React + Vite web UI with a syntax-highlighted C++ editor (Monaco), resizable panes, tabs for outputs, and Material-like UI.
-- `xcfa-mapper` - A minimal C++ project that will eventually convert clang IR elements to "xcfa". Currently prints "work in progress".
+## What's Inside
 
-See the README in each subfolder for usage details.
-See the README in each subfolder for usage details.
+- **Web Interface**: React-based UI with Monaco editor for C++ code editing
+- **Analysis Backend**: Node.js server that processes code using Clang/LLVM toolchain and Theta
+- **XCFA Mapper**: Converts Clang IR to extended control flow automata (XCFA) format (in C syntax currently)
+- **Example Library**: Pre-loaded C++ examples demonstrating various language features (templates, inheritance, STL containers, etc.)
 
-Deployment (Docker + TLS + Basic auth)
--------------------------------------
+## Getting Started
 
-We provide simple helper scripts to run this workspace in Docker with TLS (self-signed)
-and HTTP Basic authentication.
+### Prerequisites
 
-1) Generate a self-signed certificate (default CN=localhost):
+- Docker and Docker Compose installed on your system
 
-	`./docker/generate-cert.sh`
+### Quick Start
 
-	Optionally set subject CN:
+1. **Start the application**:
+   ```bash
+   docker compose up -d
+   ```
 
-	`SUBJ="/CN=your.host.name" ./docker/generate-cert.sh`
+2. **Access the web interface**:
+   - Open your browser and navigate to `https://localhost:3333`
+   - Your browser will warn about the self-signed certificate—accept it to proceed
+   - Login with the default credentials:
+     - **Username**: `admin`
+     - **Password**: `admin`
 
-2) Generate credentials (username + password):
+3. **Start exploring**:
+   - Load example C++ files from the library
+   - Write your own C++ code in the editor
+   - Run analysis tools and view the results
 
-    `./docker/generate-credentials.sh alice s3cr3t`
+### Stopping the Application
 
-	This writes:
-	- docker/nginx/.htpasswd  (used by nginx)
-	- backend/config/credentials.json (used by backend Express middleware)
+```bash
+docker compose down
+```
 
-3) Make helper scripts executable (optional):
+## Notes
 
-	`./docker/setup-perms.sh`
-
-4) Build and start the stack:
-
-    `docker compose build --no-cache`
-	`docker compose up -d`
-
-5) Visit the site at https://localhost:3333 (your browser will warn about the self-signed cert). Use the username/password from step 2.
-
-Notes
-- The backend credentials file is stored as plaintext JSON for simplicity in this demo. For production, use Docker secrets or a secrets manager and store only password hashes.
-- For production use a CA-signed certificate (Let's Encrypt / internal CA) instead of the self-signed cert.
+- The application uses a self-signed TLS certificate for HTTPS
+- Default credentials are for demonstration purposes only
+- All container images are pre-built and pulled automatically
