@@ -7,7 +7,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import ExampleTree from './components/ExampleTree'
 import axios from 'axios'
 
-const API_ROOT = import.meta.env.VITE_API_ROOT || 'http://localhost:5173'
+const API_ROOT = import.meta.env.VITE_API_ROOT + '/' || ''
 
 export default function App() {
   const [examples, setExamples] = useState([])
@@ -18,13 +18,13 @@ export default function App() {
   const [position, setPosition] = useState({ line: 1, column: 1 })
 
   useEffect(() => {
-    axios.get(`${API_ROOT}/api/examples`).then(r => setExamples(r.data || []))
-    axios.get(`${API_ROOT}/api/clang-version`).then(r => setClangVersion(r.data.version || 'unknown'))
+    axios.get(`${API_ROOT}api/examples`).then(r => setExamples(r.data || []))
+    axios.get(`${API_ROOT}api/clang-version`).then(r => setClangVersion(r.data.version || 'unknown'))
   }, [])
 
   useEffect(() => {
     if (selectedExample) {
-      axios.get(`${API_ROOT}/api/examples/${selectedExample}`).then(r => setCode(r.data.content || ''))
+      axios.get(`${API_ROOT}api/examples/${selectedExample}`).then(r => setCode(r.data.content || ''))
     }
   }, [selectedExample])
 
@@ -35,7 +35,7 @@ export default function App() {
   const onSelectExample = (path) => { setSelectedExample(path); onCloseExamples(); }
 
   const onGenerate = async () => {
-    const resp = await axios.post(`${API_ROOT}/api/generate`, { code })
+    const resp = await axios.post(`${API_ROOT}api/generate`, { code })
     // Ensure missing keys are present to avoid undefined in OutputTabs
     const data = resp.data || {}
     setOutputs({
