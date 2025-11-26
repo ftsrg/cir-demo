@@ -1,0 +1,68 @@
+name: Check License Headers
+
+on:
+  pull_request:
+    branches: [main, master, develop]
+  push:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+jobs:
+  check-licenses:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Check for missing license headers
+        id: check
+        run: |
+          cd ${{ github.workspace }}
+          python .github/scripts/add-license-header.py \
+            .github/scripts/license-header-apache.txt
+          
+
+          python .github/scripts/add-license-header.py \
+            .github/scripts/license-header-cc.txt \
+            backend/examples/esbmc-eval/
+          
+          # Extract the summary from the output
+          cat license-check.log
+          
+          # Check if any files would be modified
+          MODIFIED=$(grep "Files that would be modified:" license-check.log | awk '{print $NF}')
+          echo "modified_count=$MODIFIED" >> $GITHUB_OUTPUT
+          
+          if [ "$MODIFIED" -gt 0 ]; then
+            echo "❌ Found $MODIFIED file(s) missing license headers" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "## Files Missing License Headers" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            grep "Would add license to:" license-check.log | sed 's/  Would add license to: //' >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### How to fix" >> $GITHUB_STEP_SUMMARY
+            echo "Run the following command to add license headers:" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+            echo "python .github/scripts/add-license-header.py .github/scripts/license-header.txt ." >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ All files have proper license headers" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+      
+      - name: Upload check log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-check-log
+          path: license-check.log
+          retention-days: 7
