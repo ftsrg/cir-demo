@@ -55,7 +55,7 @@ echo ""
 # Check if xcfa-mapper exists
 if [ ! -f "$XCFA_MAPPER" ]; then
     echo -e "${RED}ERROR: xcfa-mapper not found at $XCFA_MAPPER${NC}"
-    echo "Please build the project first: cd build && make"
+    echo "Please build the project first: cmake -S .. -B ../build && cmake --build ../build --target xcfa-mapper"
     exit 1
 fi
 

@@ -32,6 +32,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
 #include "ErrorMessages.h"
 
 using namespace mlir;
@@ -39,22 +40,33 @@ using namespace xcfa;
 
 int main(int argc, char **argv) {
   bool bestEffort = false;
-  int argi = 1;
-  if (argc < 3) {
-    llvm::errs() << "Usage: xcfa-mapper [--best-effort] <input.mlir> <output.c>\n";
-    return 2;
+  const char *monitorJsonFile = nullptr;
+  std::vector<std::string> positional;
+
+  for (int i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if (arg == "--best-effort") {
+      bestEffort = true;
+      continue;
+    }
+    if (arg == "--monitor-json") {
+      if (i + 1 >= argc) {
+        llvm::errs() << "Usage: xcfa-mapper [--best-effort] [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
+        return 2;
+      }
+      monitorJsonFile = argv[++i];
+      continue;
+    }
+    positional.push_back(arg);
   }
-  if (std::string(argv[1]) == "--best-effort") {
-    bestEffort = true;
-    argi = 2;
-  }
-  if (argc - argi < 2) {
-    llvm::errs() << "Usage: xcfa-mapper [--best-effort] <input.mlir> <output.c>\n";
+
+  if (positional.size() != 2) {
+    llvm::errs() << "Usage: xcfa-mapper [--best-effort] [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
     return 2;
   }
 
-  const char *inFile = argv[argi];
-  const char *outFile = argv[argi+1];
+  const char *inFile = positional[0].c_str();
+  const char *outFile = positional[1].c_str();
 
   MLIRContext context;
   context.allowUnregisteredDialects(true);
@@ -95,6 +107,27 @@ int main(int argc, char **argv) {
     llvm::errs() << ERR_MAPPING_FAILED << "\n";
     return 6;
   }
+
+  ofs.flush();
+  std::string generatedC;
+  {
+    std::ifstream cifs(outFile);
+    if (cifs) {
+      generatedC.assign((std::istreambuf_iterator<char>(cifs)), std::istreambuf_iterator<char>());
+    }
+  }
+  mapper.computeTraceLineMappings(input, generatedC);
+
+  if (monitorJsonFile) {
+    std::ofstream mofs(monitorJsonFile);
+    if (!mofs) {
+      llvm::errs() << "Unable to open monitor json file: " << monitorJsonFile << "\n";
+      return 7;
+    }
+    mapper.writeMonitorJson(mofs);
+  }
+
+  mapper.printMonitorReport(std::cout);
 
   llvm::outs() << "Wrote C output to " << outFile << "\n";
   return 0;

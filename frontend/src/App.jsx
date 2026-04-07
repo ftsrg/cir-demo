@@ -24,23 +24,42 @@ import ExampleTree from './components/ExampleTree'
 import axios from 'axios'
 
 const API_ROOT = import.meta.env.VITE_API_ROOT ? import.meta.env.VITE_API_ROOT + '/' : ''
+const API_USER = import.meta.env.VITE_API_USER || ''
+const API_PASSWORD = import.meta.env.VITE_API_PASSWORD || ''
+
+const api = axios.create({
+  baseURL: API_ROOT,
+  ...(API_USER ? { auth: { username: API_USER, password: API_PASSWORD } } : {})
+})
+
+api.interceptors.response.use(
+  (resp) => resp,
+  (err) => {
+    console.error('API error', {
+      url: err?.config?.url,
+      method: err?.config?.method,
+      status: err?.response?.status
+    })
+    return Promise.reject(err)
+  }
+)
 
 export default function App() {
   const [examples, setExamples] = useState([])
   const [selectedExample, setSelectedExample] = useState('')
   const [code, setCode] = useState('// select an example or start typing...')
-  const [outputs, setOutputs] = useState({ llvm: '', clang: '', flat_clang: '', xcfa: '', c: '', c_best: '' })
+  const [outputs, setOutputs] = useState({ llvm: '', clang: '', flat_clang: '', xcfa: '', c: '', c_best: '', comparison: {} })
   const [clangVersion, setClangVersion] = useState('')
   const [position, setPosition] = useState({ line: 1, column: 1 })
 
   useEffect(() => {
-    axios.get(`${API_ROOT}api/examples`).then(r => setExamples(r.data || []))
-    axios.get(`${API_ROOT}api/clang-version`).then(r => setClangVersion(r.data.version || 'unknown'))
+    api.get('api/examples').then(r => setExamples(r.data || [])).catch(() => {})
+    api.get('api/clang-version').then(r => setClangVersion(r.data.version || 'unknown')).catch(() => {})
   }, [])
 
   useEffect(() => {
     if (selectedExample) {
-      axios.get(`${API_ROOT}api/examples/${selectedExample}`).then(r => setCode(r.data.content || ''))
+      api.get(`api/examples/${selectedExample}`).then(r => setCode(r.data.content || '')).catch(() => {})
     }
   }, [selectedExample])
 
@@ -51,7 +70,7 @@ export default function App() {
   const onSelectExample = (path) => { setSelectedExample(path); onCloseExamples(); }
 
   const onGenerate = async () => {
-    const resp = await axios.post(`${API_ROOT}api/generate`, { code })
+    const resp = await api.post('api/generate', { code })
     // Ensure missing keys are present to avoid undefined in OutputTabs
     const data = resp.data || {}
     setOutputs({
@@ -60,7 +79,8 @@ export default function App() {
       flat_clang: data.flat_clang || '',
       xcfa: data.xcfa || '',
       c: data.c || '',
-      c_best: data.c_best || ''
+      c_best: data.c_best || '',
+      comparison: data.comparison || {}
     })
   }
 

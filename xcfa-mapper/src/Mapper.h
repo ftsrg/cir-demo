@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include "Traceability.h"
+
 #include <mlir/IR/Operation.h>
 #include <mlir/IR/BuiltinOps.h>
 #include <mlir/IR/Builders.h>
@@ -24,6 +26,7 @@
 #include <memory>
 #include <string>
 #include <functional>
+#include <unordered_map>
 
 #include <llvm/ADT/DenseMap.h>
 #include <llvm/ADT/DenseSet.h>
@@ -84,6 +87,17 @@ public:
   /// Map an MLIR module to a C program written to `out`.
   bool mapModule(mlir::ModuleOp module, std::ostream &out);
 
+  /// Print operation monitoring report.
+  /// "Ignored" means the operation was not handled during mapping,
+  /// or it was registered but never visited.
+  void printMonitorReport(std::ostream &out) const;
+
+  /// Emit operation trace as JSON for machine consumption.
+  void writeMonitorJson(std::ostream &out) const;
+
+  /// Compute per-entry MLIR/C line mappings using generated texts.
+  void computeTraceLineMappings(llvm::StringRef mlirText, llvm::StringRef cText);
+
   /// Helpers for handlers
   std::string freshName(llvm::StringRef base = "v");
 
@@ -119,6 +133,7 @@ public:
 private:
   bool bestEffort;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
+  TraceabilityTracker traceability;
   llvm::DenseMap<mlir::Value, std::string> valueNames;
   llvm::DenseMap<mlir::Block *, std::string> blockLabels;
   llvm::DenseSet<mlir::Value> directAccessValues;

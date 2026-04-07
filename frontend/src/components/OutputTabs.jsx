@@ -18,11 +18,12 @@ import React, { useState } from 'react'
 import { Tabs, Tab, Box, Typography, IconButton, Collapse } from '@mui/material'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
+import ComparisonView from './ComparisonView'
 
 export default function OutputTabs({ outputs = {} }) {
   const [tab, setTab] = useState(0)
   const [stderrOpen, setStderrOpen] = useState(true)
-  const keys = ['llvm', 'clang', 'flat_clang', 'c', 'c_best', 'xcfa']
+  const keys = ['llvm', 'clang', 'flat_clang', 'c', 'c_best', 'xcfa', 'comparison']
   const active = outputs[keys[tab]]
 
   // helper to extract stdout/stderr for structured outputs
@@ -48,9 +49,13 @@ export default function OutputTabs({ outputs = {} }) {
           <Tab label="C" />
           <Tab label="C (best effort)" />
           <Tab label="XCFA" />
+          <Tab label="Comparison" />
       </Tabs>
 
   <Box sx={{ p: 1, flex: 1, display: 'flex', flexDirection: 'column', bgcolor: '#0f1115', color: '#ddd', fontFamily: 'monospace', fontSize: 12, minHeight: 0 }}>
+        {keys[tab] === 'comparison' ? (
+          <ComparisonView data={active} />
+        ) : (
         <Box sx={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
           {getStderr(active) ? (
             <Box sx={{ mb: 1, p: 1, backgroundColor: '#2b0000', border: '1px solid #550000', borderRadius: 1 }}>
@@ -68,6 +73,7 @@ export default function OutputTabs({ outputs = {} }) {
 
           <pre className="output-pre">{getStdout(active) || `no ${keys[tab]} generated yet`}</pre>
         </Box>
+        )}
       </Box>
     </Box>
   )

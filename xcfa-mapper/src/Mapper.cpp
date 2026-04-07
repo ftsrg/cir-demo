@@ -24,9 +24,12 @@
 #include <clang/CIR/Dialect/IR/CIRDialect.h>
 
 #include <cxxabi.h>
+#include <cctype>
 #include <cstdlib>
 
+#include <algorithm>
 #include <map>
+#include <sstream>
 #include <set>
 #include <vector>
 
@@ -86,6 +89,48 @@ static std::string stripEmptyArgList(const std::string &s) {
 
 Mapper::Mapper(bool bestEffort) : counter(0), bestEffort(bestEffort) {}
 
+static std::string oneLineOperationText(mlir::Operation &op) {
+  std::string text;
+  llvm::raw_string_ostream rso(text);
+  op.print(rso);
+  rso.flush();
+
+  std::replace(text.begin(), text.end(), '\n', ' ');
+  std::replace(text.begin(), text.end(), '\r', ' ');
+
+  // collapse repeated spaces
+  std::string compact;
+  compact.reserve(text.size());
+  bool prevSpace = false;
+  for (char c : text) {
+    bool isSpace = std::isspace(static_cast<unsigned char>(c));
+    if (isSpace) {
+      if (!prevSpace) compact.push_back(' ');
+    } else {
+      compact.push_back(c);
+    }
+    prevSpace = isSpace;
+  }
+
+  // trim
+  size_t start = compact.find_first_not_of(' ');
+  if (start == std::string::npos) return std::string();
+  size_t end = compact.find_last_not_of(' ');
+  return compact.substr(start, end - start + 1);
+}
+
+void Mapper::printMonitorReport(std::ostream &out) const {
+  traceability.printReport(out);
+}
+
+void Mapper::writeMonitorJson(std::ostream &out) const {
+  traceability.writeJson(out);
+}
+
+void Mapper::computeTraceLineMappings(llvm::StringRef mlirText, llvm::StringRef cText) {
+  traceability.computeLineMappings(mlirText, cText);
+}
+
 void Mapper::prepareFunctionNames(mlir::ModuleOp module) {
   functionOutputNames.clear();
   // Collect candidate pairs (mangled -> demangled-sanitized)
@@ -125,6 +170,7 @@ std::string Mapper::getFunctionOutputName(llvm::StringRef mangled) const {
 
 void Mapper::registerHandler(llvm::StringRef opName, std::unique_ptr<OpHandler> handler) {
   handlers[opName.str()] = std::move(handler);
+  traceability.registerOperation(opName);
 }
 
 std::string Mapper::freshName(llvm::StringRef base) {
@@ -305,6 +351,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
 }
 
 bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
+  std::string funcInputText = oneLineOperationText(*fop);
   // Symbol (function name) is required to emit anything useful.
   auto sym = fop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
     if (!sym) {
@@ -369,14 +416,17 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   }
   
   out << retType << " " << outName << "(" << params << ")";
+  std::string funcHeaderText = retType + " " + outName + "(" + params + ")";
 
   // If there is no region/body then emit a declaration (prototype).
   if (fop->getNumRegions() == 0 || fop->getRegion(0).empty()) {
     out << ";\n\n";
+    traceability.recordOperationTrace(fop->getName().getStringRef(), funcInputText, funcHeaderText + ";\n", true);
     return true;
   }
 
   out << " {\n";
+  traceability.recordOperationTrace(fop->getName().getStringRef(), funcInputText, funcHeaderText + " {\n", true);
 
   Region &r = fop->getRegion(0);
   
@@ -400,35 +450,48 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   for (Block &b : r.getBlocks()) {
     out << mangleLabel(getOrCreateLabel(&b)) << ":\n";
     for (Operation &bbop : b.getOperations()) {
-    auto it = handlers.find(bbop.getName().getStringRef().str());
+    auto opName = bbop.getName().getStringRef();
+    std::string inputText = oneLineOperationText(bbop);
+    traceability.recordOperationVisit(opName);
+    auto it = handlers.find(opName.str());
+    std::ostringstream opOut;
+    bool mapped = false;
     if (it != handlers.end()) {
-      bool handled = it->second->handle(&bbop, *this, out);
+      bool handled = it->second->handle(&bbop, *this, opOut);
+      if (handled) {
+        traceability.recordOperationHandled(opName);
+        mapped = true;
+      }
       if (!handled) {
       if (!isBestEffort()) {
-        llvm::errs() << ERR_HANDLER_FAILED_PREFIX << bbop.getName().getStringRef().str() << "\n";
+        llvm::errs() << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
         return false;
       }
       // In best-effort mode annotate the C output with the handler failure.
-      out << "  // " << ERR_HANDLER_FAILED_PREFIX << bbop.getName().getStringRef().str() << "\n";
+      opOut << "  // " << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
       }
+      out << opOut.str();
+      traceability.recordOperationTrace(opName, inputText, opOut.str(), mapped);
       continue;
     }
     if(isBestEffort()) {
       for (Value res : bbop.getResults()) {
         std::string nm = getOrCreateName(res);
-        out << "  // %" << nm << "  (produced by: " << bbop.getName().getStringRef().str() << ")\n";
+        opOut << "  // %" << nm << "  (produced by: " << opName.str() << ")\n";
       }
       if (!bbop.getAttrs().empty()) {
-        out << "  // attrs:\n";
+        opOut << "  // attrs:\n";
         for (NamedAttribute attr : bbop.getAttrs()) {
         llvm::SmallString<64> buf;
         llvm::raw_svector_ostream ros(buf);
         attr.getValue().print(ros);
-        out << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
+        opOut << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
         }
       }
+      out << opOut.str();
+      traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
     } else {
-      llvm::errs() << ERR_NO_HANDLER_PREFIX << bbop.getName().getStringRef().str() << "\n";
+      llvm::errs() << ERR_NO_HANDLER_PREFIX << opName.str() << "\n";
       return false;
     }
     }
@@ -586,12 +649,54 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // Use static flag to only emit struct definitions once (for top-level module)
   static bool structsEmitted = false;
 
+  // Ensure every referenced record type is tracked, even when there are no
+  // explicit cir.get_member operations (e.g. empty/simple classes).
+  std::function<void(mlir::Type)> collectRecordTypesFromType;
+  collectRecordTypesFromType = [&](mlir::Type t) {
+    if (!t) return;
+
+    if (auto recordType = mlir::dyn_cast<cir::RecordType>(t)) {
+      std::string recordName = recordType.getName().getValue().str();
+      std::replace(recordName.begin(), recordName.end(), '.', '_');
+
+      // Keep an entry even if there are no discovered fields yet.
+      (void)structFields[recordName];
+
+      if (recordType.isUnion() || unionRecordNames.count(recordName)) {
+        isUnionContainer[recordName] = true;
+      }
+      return;
+    }
+
+    if (auto ptrType = mlir::dyn_cast<cir::PointerType>(t)) {
+      collectRecordTypesFromType(ptrType.getPointee());
+      return;
+    }
+
+    if (auto arrayType = mlir::dyn_cast<cir::ArrayType>(t)) {
+      collectRecordTypesFromType(arrayType.getElementType());
+      return;
+    }
+  };
+
   // Helper to recursively collect from operations
   std::function<void(mlir::Operation &)> collectFromOp;
   collectFromOp = [&](mlir::Operation &genericOp) {
+    // Track record types from operands/results so we also emit records that
+    // are allocated/passed around but never accessed via get_member.
+    for (mlir::Value operand : genericOp.getOperands()) {
+      collectRecordTypesFromType(operand.getType());
+    }
+    for (mlir::Value result : genericOp.getResults()) {
+      collectRecordTypesFromType(result.getType());
+    }
+
     // Recurse into nested regions/blocks/ops
     for (auto &region : genericOp.getRegions()) {
       for (auto &block : region.getBlocks()) {
+        for (mlir::BlockArgument arg : block.getArguments()) {
+          collectRecordTypesFromType(arg.getType());
+        }
         for (auto &op : block.getOperations()) collectFromOp(op);
       }
     }
@@ -750,6 +855,11 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       if (itk != isUnionContainer.end()) isU = itk->second;
       out << (isU ? "union " : "struct ") << sname << " { ";
       auto &vec = structFields[sname];
+      if (vec.empty()) {
+        // Keep records complete in C even when CIR does not expose fields.
+        // This avoids "incomplete type" errors for local object allocations.
+        out << "unsigned char __placeholder;";
+      }
       for (size_t i = 0; i < vec.size(); ++i) {
         const FieldInfo &fi = vec[i];
         out << fi.baseType << " " << fi.name;

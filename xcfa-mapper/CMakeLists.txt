@@ -39,6 +39,7 @@ include(AddLLVM)
 add_executable(xcfa-mapper
   src/main.cpp
   src/Mapper.cpp
+  src/Traceability.cpp
   src/handlers/Handlers.cpp
 )
 
