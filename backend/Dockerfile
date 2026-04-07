@@ -15,10 +15,9 @@ RUN apt-get update \
  && apt-get install -y nodejs \
  && rm -rf /var/lib/apt/lists/*
 
-RUN wget 'https://github.com/ftsrg/theta/releases/latest/download/Theta.zip' -O /app/Theta.zip \
+RUN wget 'https://github.com/ftsrg/theta/releases/latest/download/Theta-svcomp.zip' -O /app/Theta.zip \
  && unzip /app/Theta.zip \
- && rm /app/Theta.zip \
- && sed -i 's/export JAVA_VERSION=17/export JAVA_VERSION=21/g' /app/Theta/theta-start.sh
+ && rm /app/Theta.zip
 
 # copy package and source
 COPY backend /app/backend
