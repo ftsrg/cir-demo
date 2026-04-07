@@ -25,6 +25,7 @@
 #include <llvm/ADT/StringRef.h>
 #include <llvm/ADT/APFloat.h>
 #include <optional>
+#include <algorithm>
 #include <llvm/Support/raw_ostream.h>
 
 // Include generated CIR op declarations and dialect to get full op classes
@@ -38,6 +39,19 @@ using namespace mlir;
 namespace xcfa {
 
 namespace {
+
+class LambdaOpHandler : public OpHandler {
+public:
+  explicit LambdaOpHandler(std::function<bool(Operation *, Mapper &, std::ostream &)> fn)
+      : fn(std::move(fn)) {}
+
+  bool handle(Operation *op, Mapper &m, std::ostream &out) override {
+    return fn(op, m, out);
+  }
+
+private:
+  std::function<bool(Operation *, Mapper &, std::ostream &)> fn;
+};
 
 // ============================================================================
 // Helper functions
@@ -568,8 +582,31 @@ bool handleReturn(cir::ReturnOp op, Mapper &m, std::ostream &out) {
 // Binary operations
 // ============================================================================
 
-bool handleBinOp(cir::BinOp op, Mapper &m, std::ostream &out) {
-  Operation *o = op.getOperation();
+static std::string toLowerCopy(std::string s) {
+  std::transform(s.begin(), s.end(), s.begin(),
+                 [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+  return s;
+}
+
+static std::string opToString(Operation *o) {
+  llvm::SmallString<256> buf;
+  llvm::raw_svector_ostream os(buf);
+  o->print(os);
+  return toLowerCopy(os.str().str());
+}
+
+static bool containsAny(llvm::StringRef s, std::initializer_list<llvm::StringRef> keys,
+                        llvm::StringRef &matched) {
+  for (auto key : keys) {
+    if (s.contains(key)) {
+      matched = key;
+      return true;
+    }
+  }
+  return false;
+}
+
+bool handleBinOp(Operation *o, Mapper &m, std::ostream &out) {
   if (o->getNumOperands() < 2) return false;
   Value lhs = o->getOperand(0);
   Value rhs = o->getOperand(1);
@@ -577,19 +614,49 @@ bool handleBinOp(cir::BinOp op, Mapper &m, std::ostream &out) {
   std::string r = m.getOrCreateName(rhs);
   std::string opStr;
   bool opFound = false;
-  
-  if (auto kindAttr = o->getAttrOfType<cir::BinOpKindAttr>("kind")) {
-    switch (kindAttr.getValue()) {
-      case cir::BinOpKind::Add: opStr = "+"; opFound = true; break;
-      case cir::BinOpKind::Sub: opStr = "-"; opFound = true; break;
-      case cir::BinOpKind::Mul: opStr = "*"; opFound = true; break;
-      case cir::BinOpKind::Div: opStr = "/"; opFound = true; break;
-      case cir::BinOpKind::Rem: opStr = "%"; opFound = true; break;
-      case cir::BinOpKind::And: opStr = "&"; opFound = true; break;
-      case cir::BinOpKind::Or: opStr = "|"; opFound = true; break;
-      case cir::BinOpKind::Xor: opStr = "^"; opFound = true; break;
-      default: opFound = false; break;
-    }
+
+  llvm::StringRef matched;
+  std::string opText = opToString(o);
+  if (containsAny(opText,
+                  {"binop(add", " add", "binop(add,", "kind = #cir.binopkind<add>"},
+                  matched)) {
+    opStr = "+";
+    opFound = true;
+  } else if (containsAny(opText,
+                         {"binop(sub", " sub", "binop(sub,", "kind = #cir.binopkind<sub>"},
+                         matched)) {
+    opStr = "-";
+    opFound = true;
+  } else if (containsAny(opText,
+                         {"binop(mul", " mul", "binop(mul,", "kind = #cir.binopkind<mul>"},
+                         matched)) {
+    opStr = "*";
+    opFound = true;
+  } else if (containsAny(opText,
+                         {"binop(div", " div", "binop(div,", "kind = #cir.binopkind<div>"},
+                         matched)) {
+    opStr = "/";
+    opFound = true;
+  } else if (containsAny(opText,
+                         {"binop(rem", " rem", "binop(rem,", "kind = #cir.binopkind<rem>"},
+                         matched)) {
+    opStr = "%";
+    opFound = true;
+  } else if (containsAny(opText,
+                         {"binop(and", " and", "binop(and,", "kind = #cir.binopkind<and>"},
+                         matched)) {
+    opStr = "&";
+    opFound = true;
+  } else if (containsAny(opText,
+                         {"binop(or", " or", "binop(or,", "kind = #cir.binopkind<or>"},
+                         matched)) {
+    opStr = "|";
+    opFound = true;
+  } else if (containsAny(opText,
+                         {"binop(xor", " xor", "binop(xor,", "kind = #cir.binopkind<xor>"},
+                         matched)) {
+    opStr = "^";
+    opFound = true;
   }
   
   if (!opFound) {
@@ -613,36 +680,48 @@ bool handleBinOp(cir::BinOp op, Mapper &m, std::ostream &out) {
 // Unary operations
 // ============================================================================
 
-bool handleUnaryOp(cir::UnaryOp op, Mapper &m, std::ostream &out) {
-  Operation *o = op.getOperation();
+bool handleUnaryOp(Operation *o, Mapper &m, std::ostream &out) {
   if (o->getNumOperands() < 1) return false;
   Value operand = o->getOperand(0);
   std::string opnd = m.getOrCreateName(operand);
   std::string opStr;
   bool opFound = false;
   bool isPrefix = true;
-  
-  if (auto kindAttr = o->getAttrOfType<cir::UnaryOpKindAttr>("kind")) {
-    switch (kindAttr.getValue()) {
-      case cir::UnaryOpKind::Inc: opStr = "++"; opFound = true; isPrefix = true; break;
-      case cir::UnaryOpKind::Dec: opStr = "--"; opFound = true; isPrefix = true; break;
-      case cir::UnaryOpKind::Plus: opStr = "+"; opFound = true; isPrefix = true; break;
-      case cir::UnaryOpKind::Minus: opStr = "-"; opFound = true; isPrefix = true; break;
-      case cir::UnaryOpKind::Not: {
-        // CIR 'not' may represent logical not when applied to !cir.bool,
-        // and bitwise complement otherwise. Inspect operand type.
-        std::string ty;
-        if (o->getNumOperands() > 0) {
-          llvm::SmallString<64> tbuf; llvm::raw_svector_ostream tos(tbuf);
-          o->getOperand(0).getType().print(tos);
-          ty = tos.str().str();
-        }
-        if (ty.find("!cir.bool") != std::string::npos) opStr = "!";
-        else opStr = "~";
-        opFound = true; isPrefix = true; break;
-      }
-      default: opFound = false; break;
+
+  std::string opText = opToString(o);
+  if (opText.find("unary(inc") != std::string::npos ||
+      opText.find("kind = #cir.unaryopkind<inc>") != std::string::npos) {
+    opStr = "++";
+    opFound = true;
+  } else if (opText.find("unary(dec") != std::string::npos ||
+             opText.find("kind = #cir.unaryopkind<dec>") != std::string::npos) {
+    opStr = "--";
+    opFound = true;
+  } else if (opText.find("unary(plus") != std::string::npos ||
+             opText.find("kind = #cir.unaryopkind<plus>") != std::string::npos) {
+    opStr = "+";
+    opFound = true;
+  } else if (opText.find("unary(minus") != std::string::npos ||
+             opText.find("kind = #cir.unaryopkind<minus>") != std::string::npos) {
+    opStr = "-";
+    opFound = true;
+  } else if (opText.find("unary(not") != std::string::npos ||
+             opText.find("kind = #cir.unaryopkind<not>") != std::string::npos ||
+             opText.find("cir.not") != std::string::npos) {
+    // CIR 'not' may represent logical not when applied to !cir.bool,
+    // and bitwise complement otherwise. Inspect operand type.
+    std::string ty;
+    if (o->getNumOperands() > 0) {
+      llvm::SmallString<64> tbuf;
+      llvm::raw_svector_ostream tos(tbuf);
+      o->getOperand(0).getType().print(tos);
+      ty = tos.str().str();
     }
+    if (ty.find("!cir.bool") != std::string::npos)
+      opStr = "!";
+    else
+      opStr = "~";
+    opFound = true;
   }
   
   if (!opFound) {
@@ -1122,8 +1201,8 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::CmpOp>("cir.cmp", handleCmp);
   
   // Arithmetic and logic
-  m.registerTypedHandler<cir::BinOp>("cir.binop", handleBinOp);
-  m.registerTypedHandler<cir::UnaryOp>("cir.unary", handleUnaryOp);
+  m.registerHandler("cir.binop", std::make_unique<LambdaOpHandler>(handleBinOp));
+  m.registerHandler("cir.unary", std::make_unique<LambdaOpHandler>(handleUnaryOp));
   m.registerTypedHandler<cir::ShiftOp>("cir.shift", handleShiftOp);
   
   // Type conversions

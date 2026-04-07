@@ -23,7 +23,7 @@ RUN apt-get update \
 WORKDIR /build
 
 # Clone ClangIR (shallow) for LLVM with CIR support
-RUN git clone --depth=1 https://github.com/llvm/clangir.git
+RUN git clone --depth=1 https://github.com/llvm/llvm-project.git clangir
 
 # Find zlib for static linking
 RUN ZLIB_LIBRARY=$(find /usr/lib /lib -name libz.a | head -n 1) && \
@@ -90,19 +90,22 @@ RUN rm -rf /build/xcfa-mapper/build && \
     make -j$(nproc)
 
 # Strip binaries
-RUN strip /build/llvm-install/bin/clang-22 && \
+RUN CLANG_BIN="$(find /build/llvm-install/bin -maxdepth 1 -type f \( -name 'clang-[0-9]*' -o -name clang \) | sort -V | tail -n 1)" && \
+    test -n "$CLANG_BIN" && \
+    strip "$CLANG_BIN" && \
+    ln -sf "$(basename "$CLANG_BIN")" /build/llvm-install/bin/clang-static && \
     strip /build/xcfa-mapper/build/xcfa-mapper
 
 # Verify binaries
 RUN echo "=== Clang binary info ===" && \
-    ls -lh /build/llvm-install/bin/clang-22 && \
-    /build/llvm-install/bin/clang-22 --version && \
+    ls -lh /build/llvm-install/bin/clang-static && \
+    /build/llvm-install/bin/clang-static --version && \
     echo "\n=== xcfa-mapper binary info ===" && \
     ls -lh /build/xcfa-mapper/build/xcfa-mapper
 
 # Final stage - copy only the binaries
 FROM scratch AS export
-COPY --from=builder /build/llvm-install/bin/clang-22 /clang
+COPY --from=builder /build/llvm-install/bin/clang-static /clang
 COPY --from=builder /build/xcfa-mapper/build/xcfa-mapper /xcfa-mapper
 
 # Runtime stage for testing (optional)

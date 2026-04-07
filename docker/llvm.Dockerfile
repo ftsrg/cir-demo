@@ -12,8 +12,8 @@ RUN apt-get update \
 WORKDIR /tmp
 
 # Clone ClangIR (shallow) and build LLVM with CLANG_ENABLE_CIR
-RUN git clone --depth=1 https://github.com/llvm/clangir.git && \
-    cmake -S clangir/llvm -B build -GNinja \
+RUN git clone --depth=1 https://github.com/llvm/llvm-project.git && \
+    cmake -S llvm-project/llvm -B build -GNinja \
         -DCLANG_ENABLE_CIR=ON \
         -DLLVM_ENABLE_PROJECTS="clang;mlir" \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -23,10 +23,10 @@ RUN git clone --depth=1 https://github.com/llvm/clangir.git && \
         -DLLVM_USE_LINKER=lld \
         -DBUILD_SHARED_LIBS=ON \
         -DCMAKE_INSTALL_PREFIX=/opt/cir \
-        -DLLVM_FORCE_VC_REVISION=$(head -c7 clangir/.git/refs/heads/main)-zorn && \
+        -DLLVM_FORCE_VC_REVISION=$(head -c7 llvm-project/.git/refs/heads/main)-zorn && \
     cmake --build build -j$(nproc) && \
     cmake --install build && \
-    rm -rf /tmp/clangir /tmp/build
+    rm -rf /tmp/llvm-project /tmp/build
 
 ENV PATH="/opt/cir/bin:${PATH}"
 
