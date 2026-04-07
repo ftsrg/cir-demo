@@ -33,7 +33,7 @@ npm run dev
 The frontend uses an environment variable `VITE_API_ROOT` to know where to call the backend API. When running locally in dev mode, set it as follows:
 
 ```bash
-VITE_API_ROOT=http://localhost:5180 npm run dev
+VITE_API_ROOT=http://localhost:5173 npm run dev
 ```
 
 Building for production
