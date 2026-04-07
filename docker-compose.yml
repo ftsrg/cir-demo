@@ -16,6 +16,9 @@
 services:
   backend:
     image: ghcr.io/ftsrg/cir-demo-backend:latest
+    labels:
+      com.centurylinklabs.watchtower.scope: cir-demo
+
 
   frontend:
     image: ghcr.io/ftsrg/cir-demo-frontend:latest
@@ -23,3 +26,17 @@ services:
       - 3333:443
     depends_on:
       - backend
+    labels:
+      com.centurylinklabs.watchtower.scope: cir-demo
+
+  watchtower:
+    image: ghcr.io/containrrr/watchtower:latest
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      WATCHTOWER_SCOPE: cir-demo
+      WATCHTOWER_CLEANUP: 1
+      WATCHTOWER_INCLUDE_RESTARTING: 1
+    labels:
+      com.centurylinklabs.watchtower.scope: cir-demo
