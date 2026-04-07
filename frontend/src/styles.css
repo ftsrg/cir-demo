@@ -59,4 +59,15 @@ footer { background: #08090a; color: #cfd8e3; padding: 6px 12px; font-size: 12px
 .MuiTabs-root .MuiButtonBase-root:focus { outline: none; }
 .MuiTabs-flexContainer { gap: 6px; }
 
+/* Comparison view highlights */
+.cmp-highlight-mlir {
+	background: rgba(66, 165, 245, 0.22);
+	border-left: 2px solid rgba(66, 165, 245, 0.9);
+}
+
+.cmp-highlight-c {
+	background: rgba(255, 193, 7, 0.2);
+	border-left: 2px solid rgba(255, 193, 7, 0.9);
+}
+
 

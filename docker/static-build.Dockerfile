@@ -76,7 +76,8 @@ RUN echo "=== Checking for CIR dialect libraries ===" && \
      find /build/llvm-build -name "libMLIRCIR*")
 
 # Configure and build xcfa-mapper statically
-RUN cd /build/xcfa-mapper && \
+RUN rm -rf /build/xcfa-mapper/build && \
+    cd /build/xcfa-mapper && \
     mkdir -p build && \
     cd build && \
     cmake .. \

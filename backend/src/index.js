@@ -120,6 +120,25 @@ const execFileAsync = (file, args, opts = {}) => new Promise((resolve) => {
   });
 });
 
+function buildComparisonPayload(mlirText, cText, traceEntries) {
+  const mlir = String(mlirText || '');
+  const c = String(cText || '');
+  const entries = Array.isArray(traceEntries) ? traceEntries : [];
+  const mappings = entries.map((entry, idx) => ({
+    index: typeof entry.index === 'number' ? entry.index : idx,
+    opName: entry.opName || '',
+    mapped: Boolean(entry.mapped),
+    inputText: entry.inputText || '',
+    outputText: entry.outputText || '',
+    mlirStartLine: Number.isInteger(entry.mlirStartLine) ? entry.mlirStartLine : null,
+    mlirEndLine: Number.isInteger(entry.mlirEndLine) ? entry.mlirEndLine : null,
+    cStartLine: Number.isInteger(entry.cStartLine) ? entry.cStartLine : null,
+    cEndLine: Number.isInteger(entry.cEndLine) ? entry.cEndLine : null
+  }));
+
+  return { mlir, c, mappings };
+}
+
 // clang version endpoint: execute the local clang binary --version
 app.get('/api/clang-version', async (req, res) => {
   try {
@@ -207,6 +226,8 @@ app.post('/api/generate', async (req, res) => {
   const xcfaMapperBin = path.join(__dirname, '..', '..', 'xcfa-mapper', 'build', 'xcfa-mapper');
   // Structured outputs matching other tasks: { stdout, stderr, code }
   const cOutputs = { c: { stdout: '', stderr: '', code: 0 }, c_best: { stdout: '', stderr: '', code: 0 } };
+  let strictTrace = [];
+  let bestTrace = [];
   try {
     // If flatOut.stdout contains the CIR text, write it to a temp file and run mapper.
     if (flatOut && flatOut.stdout && flatOut.stdout.length > 0) {
@@ -216,21 +237,35 @@ app.post('/api/generate', async (req, res) => {
 
       const outC = path.join(tmpDir, `${base}.c`);
       const outCBest = path.join(tmpDir, `${base}.best.c`);
+      const outTrace = path.join(tmpDir, `${base}.trace.json`);
+      const outTraceBest = path.join(tmpDir, `${base}.best.trace.json`);
       // Run strict mapper
-      const mapStrict = await execFileAsync(xcfaMapperBin, [mlirPath, outC]);
+      const mapStrict = await execFileAsync(xcfaMapperBin, ['--monitor-json', outTrace, mlirPath, outC]);
       cOutputs.c.code = (mapStrict && typeof mapStrict.code !== 'undefined') ? mapStrict.code : 1;
       cOutputs.c.stderr = (mapStrict && mapStrict.stderr) ? mapStrict.stderr : '';
       if (mapStrict && mapStrict.code === 0) {
         try { cOutputs.c.stdout = await fs.readFile(outC, 'utf8'); filesToCleanup.push(outC); } catch (_) { cOutputs.c.stdout = ''; }
       }
+      try {
+        const strictJson = await fs.readFile(outTrace, 'utf8');
+        const parsed = JSON.parse(strictJson);
+        strictTrace = Array.isArray(parsed.operationTrace) ? parsed.operationTrace : [];
+        filesToCleanup.push(outTrace);
+      } catch (_) {}
 
       // Run best-effort mapper
-      const mapBest = await execFileAsync(xcfaMapperBin, ['--best-effort', mlirPath, outCBest]);
+      const mapBest = await execFileAsync(xcfaMapperBin, ['--best-effort', '--monitor-json', outTraceBest, mlirPath, outCBest]);
       cOutputs.c_best.code = (mapBest && typeof mapBest.code !== 'undefined') ? mapBest.code : 1;
       cOutputs.c_best.stderr = (mapBest && mapBest.stderr) ? mapBest.stderr : '';
       if (mapBest && mapBest.code === 0) {
         try { cOutputs.c_best.stdout = await fs.readFile(outCBest, 'utf8'); filesToCleanup.push(outCBest); } catch (_) { cOutputs.c_best.stdout = ''; }
       }
+      try {
+        const bestJson = await fs.readFile(outTraceBest, 'utf8');
+        const parsed = JSON.parse(bestJson);
+        bestTrace = Array.isArray(parsed.operationTrace) ? parsed.operationTrace : [];
+        filesToCleanup.push(outTraceBest);
+      } catch (_) {}
     } else {
       console.debug('Skipping xcfa-mapper: no flat clang CIR output available');
     }
@@ -274,7 +309,14 @@ app.post('/api/generate', async (req, res) => {
     xcfa: { code: xcfa.code, stderrLength: (xcfa.stderr || '').length, stdoutLength: (xcfa.stdout || '').length }
   });
 
-  res.json({ llvm: llvmOut, clang: clangOut, flat_clang: flatOut, xcfa: xcfa, c: cOutputs.c, c_best: cOutputs.c_best });
+  let comparison = { mlir: flatOut?.stdout || '', c: '', mappings: [] };
+  if (cOutputs.c && cOutputs.c.code === 0 && cOutputs.c.stdout) {
+    comparison = buildComparisonPayload(flatOut?.stdout || '', cOutputs.c.stdout, strictTrace);
+  } else if (cOutputs.c_best && cOutputs.c_best.code === 0 && cOutputs.c_best.stdout) {
+    comparison = buildComparisonPayload(flatOut?.stdout || '', cOutputs.c_best.stdout, bestTrace);
+  }
+
+  res.json({ llvm: llvmOut, clang: clangOut, flat_clang: flatOut, xcfa: xcfa, c: cOutputs.c, c_best: cOutputs.c_best, comparison });
   } finally {
     // best-effort cleanup of temp and generated files
     for (const file of filesToCleanup) {
