@@ -177,17 +177,23 @@ def add_license_to_file(file_path: Path, license_header: str, license_snippet: s
 
 
 def find_files(directory: Path, extensions: set) -> List[Path]:
-    """Find all files with specified extensions."""
-    files = []
-    for ext in extensions:
-        # Find files with extension
-        files.extend(directory.rglob(f"*.{ext}"))
-        # Also check for files without extension that match
-        if ext in ['sample', 'set', 'prp', 'pack', 'idx', 'rev']:
-            for file in directory.rglob(f"*.{ext}"):
-                files.append(file)
-    
-    # Remove duplicates and sort
+    """Find all files with specified extensions, skipping VCS / generated dirs."""
+    ignored_dirs = {'.git', '.venv', 'venv', '__pycache__', '.mypy_cache', '.pytest_cache', 'node_modules'}
+
+    files: List[Path] = []
+    for root, dirs, filenames in os.walk(directory):
+        # prune traversal
+        dirs[:] = [d for d in dirs if d not in ignored_dirs]
+
+        root_path = Path(root)
+        for filename in filenames:
+            p = root_path / filename
+            ext = p.suffix.lstrip('.')
+            if not ext:
+                continue
+            if ext in extensions:
+                files.append(p)
+
     return sorted(set(files))
 
 
