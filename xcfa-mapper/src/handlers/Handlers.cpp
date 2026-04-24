@@ -184,6 +184,7 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
 bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   std::optional<std::string> litVal;
+  bool isZeroInit = false;
   
   // Try to find literals: integers, floats, or bools
   for (NamedAttribute a : o->getAttrs()) {
@@ -221,6 +222,7 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
     // Zero attribute (for zero-initialization)
     if (auto za = llvm::dyn_cast<cir::ZeroAttr>(a.getValue())) {
       litVal = "0";
+      isZeroInit = true;
       break;
     }
     // Null/constant pointer
@@ -242,7 +244,17 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
   std::string tmp = m.freshName("c");
   std::string literal = litVal.value();
   std::string ctype = "int";
-  if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
+  mlir::Type resultType;
+  if (o->getNumResults() > 0) {
+    resultType = o->getResult(0).getType();
+    ctype = m.mapTypeToC(resultType);
+  }
+
+  if (isZeroInit && resultType &&
+      (mlir::isa<cir::RecordType>(resultType) || mlir::isa<cir::ArrayType>(resultType))) {
+    literal = "{0}";
+  }
+
   out << "  " << ctype << " " << tmp << " = " << literal << ";\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;

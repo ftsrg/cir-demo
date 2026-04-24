@@ -1,5 +1,5 @@
-// Limitation example: record type referenced but fields not member-accessed.
-// Mapper may emit a placeholder-only struct when field discovery is incomplete.
+// Record return/value-flow example.
+// This exercises struct reconstruction, zero-initialization, and return-by-value.
 
 struct S {
   int a;
