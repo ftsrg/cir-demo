@@ -75,6 +75,21 @@ cd test
 ../build/xcfa-mapper output.mlir > output.c
 ```
 
+### Inventory ESBMC Benchmarks
+
+Use the ESBMC inventory helper to quickly identify which benchmark cases are not yet supported by the current `xcfa-mapper` pipeline:
+
+```bash
+/usr/bin/python esbmc_inventory.py --set cpp.set
+```
+
+The script runs each benchmark through:
+- CIR generation with the bundled `clang`
+- `xcfa-mapper` with trace JSON enabled
+- syntax-only compilation of the generated C with `gcc`
+
+It writes summary reports under `test/esbmc_inventory_output/` in Markdown, CSV, and JSON.
+
 ## Test Coverage
 
 The test suite covers all major CIR operations found in c-counts.txt:

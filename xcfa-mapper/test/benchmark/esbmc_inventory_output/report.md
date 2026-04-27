@@ -1,0 +1,392 @@
+# ESBMC benchmark inventory
+
+- Benchmarks processed: 375
+- Sets: cpp.set
+- Status counts: clang_failed=39, compile_failed=168, mapper_failed=162, success=6
+
+## Top unsupported reasons
+
+- 164 × C++ name leakage into emitted C
+- 46 × inheritance / virtual dispatch
+- 44 × inheritance / virtual dispatch, exceptions / try-catch
+- 32 × unsupported constant literal lowering
+- 31 × inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- 10 × ESBMC builtins / concurrency
+- 4 × exceptions / try-catch
+- 2 × Timed out after 120s
+- 2 × Alloca: unable to determine a precise name for allocation
+- 1 × /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/cast_pointer_to_int/main.cpp:23:10: error: cast from pointer to smaller type 'unsigned int' loses information
+- 1 × /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch10_2/main.cpp:19:16: error: incompatible pointer types assigning to 'Circle *' from 'Point *'
+- 1 × /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch10_3/main.cpp:32:30: error: no member named 'getRadius' in 'Point'
+
+## Unsupported or partial benchmarks
+
+- `cpp/06_trampoline_03/06_trampoline_03` — `clang_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/Method_qualifier1/Method_qualifier1` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/algorithm8_operator++_issue/algorithm8_operator++_issue` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/bicycle/bicycle` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/cast_pointer_to_int/cast_pointer_to_int` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/cast_pointer_to_int/main.cpp:23:10: error: cast from pointer to smaller type 'unsigned int' loses information
+- `cpp/ch10_1/ch10_1` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch10_2/ch10_2` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch10_2/main.cpp:19:16: error: incompatible pointer types assigning to 'Circle *' from 'Point *'
+- `cpp/ch10_3/ch10_3` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch10_3/main.cpp:32:30: error: no member named 'getRadius' in 'Point'
+- `cpp/ch10_4/ch10_4` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch11_1/ch11_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch11_2/ch11_2` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch11_3/ch11_3` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch11_4/ch11_4` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/ch12_1/ch12_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_10/ch12_10` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_11/ch12_11` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_12/ch12_12` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_13/ch12_13` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch12_14/ch12_14` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_15/ch12_15` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_16/ch12_16` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_17/ch12_17` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_18/ch12_18` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch12_19/ch12_19` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch12_2/ch12_2` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch12_3/ch12_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_4/ch12_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_5/ch12_5` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_6/ch12_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch12_7/ch12_7` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch12_8/ch12_8` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch12_9/ch12_9` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch13_10/ch13_10` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/ch13_4/ch13_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch13_6/ch13_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch13_7/ch13_7` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch14_2/ch14_2` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch14_3/ch14_3` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch14_4/ch14_4` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch14_5/ch14_5` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch14_6/ch14_6` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch14_7/ch14_7` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch14_8/ch14_8` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_1/ch15_1` — `clang_failed` — Timed out after 120s
+- `cpp/ch15_10/ch15_10` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_11/ch15_11` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_12/ch15_12` — `clang_failed` — Timed out after 120s
+- `cpp/ch15_13/ch15_13` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch15_13/main.cpp:20:1: error: empty block: expect at least a terminator
+- `cpp/ch15_2/ch15_2` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch15_2/main.cpp:20:1: error: empty block: expect at least a terminator
+- `cpp/ch15_3/ch15_3` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_4/ch15_4` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_5/ch15_5` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_6/ch15_6` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_7/ch15_7` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_8/ch15_8` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch15_9/ch15_9` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_1/ch16_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch16_10/ch16_10` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_11/ch16_11` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_12/ch16_12` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_13/ch16_13` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_2/ch16_2` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_3/ch16_3` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_4/ch16_4` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_5/ch16_5` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_6/ch16_6` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_7/ch16_7` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_8/ch16_8` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch16_9/ch16_9` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch17_1/ch17_1` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch17_2/ch17_2` — `clang_failed` — In file included from /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch17_2/main.cpp:14:
+- `cpp/ch17_3/ch17_3` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch17_4/ch17_4` — `clang_failed` — In file included from /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch17_4/main.cpp:14:
+- `cpp/ch17_5/ch17_5` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch18_1/ch18_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_10/ch18_10` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_11/ch18_11` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_12/ch18_12` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_13/ch18_13` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_14/ch18_14` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_15/ch18_15` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_16/ch18_16` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_17/ch18_17` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_18/ch18_18` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_19/ch18_19` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_2/ch18_2` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_20/ch18_20` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_21/ch18_21` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_22/ch18_22` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_23/ch18_23` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch18_24/ch18_24` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch18_25/ch18_25` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_26/ch18_26` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_27/ch18_27` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch18_29/ch18_29` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch18_3/ch18_3` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch18_30/ch18_30` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch18_31/ch18_31` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch18_4/ch18_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_5/ch18_5` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_6/ch18_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_7/ch18_7` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, bitfields, C++ name leakage into emitted C
+- `cpp/ch18_8/ch18_8` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch18_9/ch18_9` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch19_1/ch19_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch1_0/ch1_0` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/ch1_1/ch1_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch1_2/ch1_2` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch1_3/ch1_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch1_4/ch1_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch1_5/ch1_5` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch1_6/ch1_6` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/ch1_7/ch1_7` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/ch20_1/ch20_1` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch20_2/ch20_2` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch | tags: inheritance / virtual dispatch, anonymous union / aggregate, exceptions / try-catch
+- `cpp/ch20_3/ch20_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch20_4/ch20_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch20_5/ch20_5` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch20_6/ch20_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch20_7/ch20_7` — `mapper_failed` — inheritance / virtual dispatch, anonymous union / aggregate | tags: inheritance / virtual dispatch, anonymous union / aggregate
+- `cpp/ch20_8/ch20_8` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/ch21_1/ch21_1` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch21_11/ch21_11` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_19/ch21_19` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch21_22/ch21_22` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch21_25/ch21_25` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch21_26/ch21_26` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch21_28/ch21_28` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_29/ch21_29` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_30/ch21_30` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_31/ch21_31` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_34/ch21_34` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_35/ch21_35` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_36/ch21_36` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_37/ch21_37` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_38/ch21_38` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_39/ch21_39` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_4/ch21_4` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_41/ch21_41` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_42/ch21_42` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_43/ch21_43` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch21_5/ch21_5` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_6/ch21_6` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_7/ch21_7` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_8/ch21_8` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch21_9/ch21_9` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch22_1/ch22_1` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch22_10/ch22_10` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch22_11/ch22_11` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch22_12/ch22_12` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/ch22_2/ch22_2` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch22_3/ch22_3` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch22_3/main.cpp:25:4: error: no matching function for call to 'outputArray'
+- `cpp/ch22_4/ch22_4` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch22_5/ch22_5` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch22_5/main.cpp:59:17: error: ambiguous conversion from derived class 'Multiple' to base class 'Base':
+- `cpp/ch22_6/ch22_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch22_7/ch22_7` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch22_8/ch22_8` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch22_9/ch22_9` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_1/ch2_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_10/ch2_10` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_11/ch2_11` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_12/ch2_12` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_13/ch2_13` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_14/ch2_14` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_15/ch2_15` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_16/ch2_16` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_17/ch2_17` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_18/ch2_18` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_19/ch2_19` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_2/ch2_2` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_20/ch2_20` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_21/ch2_21` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/ch2_3/ch2_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_4/ch2_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_5/ch2_5` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_6/ch2_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_7/ch2_7` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_8/ch2_8` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch2_9/ch2_9` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_1/ch3_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_10/ch3_10` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_11/ch3_11` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_12/ch3_12` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_13/ch3_13` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch3_14/ch3_14` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch3_15/ch3_15` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_16/ch3_16` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_17/ch3_17` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_18/ch3_18` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_19/ch3_19` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch3_19/main.cpp:18:9: error: declaration of reference variable 'y' requires an initializer
+- `cpp/ch3_2/ch3_2` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch3_20/ch3_20` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_21/ch3_21` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_22/ch3_22` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_23/ch3_23` — `compile_failed` — /home/solarowl/Repositories/cir-demo/xcfa-mapper/test/esbmc_inventory_output/artifacts/cpp__ch3_23__ch3_23/output.c: In function ‘nothing2’:
+- `cpp/ch3_24/ch3_24` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_25/ch3_25` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/ch3_3/ch3_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_4/ch3_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_5/ch3_5` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch3_6/ch3_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_7/ch3_7` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_8/ch3_8` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch3_9/ch3_9` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_1/ch4_1` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch4_10/ch4_10` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_11/ch4_11` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_12/ch4_12` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_13/ch4_13` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_14/ch4_14` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_15/ch4_15` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch4_15/main.cpp:33:11: error: read-only variable is not assignable
+- `cpp/ch4_16/ch4_16` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_17/ch4_17` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_18/ch4_18` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_19/ch4_19` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_2/ch4_2` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_20/ch4_20` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_21/ch4_21` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_3/ch4_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_4/ch4_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_5/ch4_5` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_6/ch4_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_7/ch4_7` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch4_7/main.cpp:13:14: error: default initialization of an object of const type 'const int'
+- `cpp/ch4_8/ch4_8` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch4_9/ch4_9` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_1/ch5_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_10/ch5_10` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch5_10/main.cpp:22:8: error: cannot assign to variable 'ptr' with const-qualified type 'int *const'
+- `cpp/ch5_11/ch5_11` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch5_11/main.cpp:26:9: error: read-only variable is not assignable
+- `cpp/ch5_12/ch5_12` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_13/ch5_13` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_14/ch5_14` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_15/ch5_15` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_16/ch5_16` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_17/ch5_17` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_18/ch5_18` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_19/ch5_19` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_2/ch5_2` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_20/ch5_20` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_21/ch5_21` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch5_22/ch5_22` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_23/ch5_23` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_24/ch5_24` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_3/ch5_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_4/ch5_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_5/ch5_5` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_6/ch5_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_7/ch5_7` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_8/ch5_8` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch5_9/ch5_9` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch5_9/main.cpp:28:9: error: read-only variable is not assignable
+- `cpp/ch6_1/ch6_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch6_10/ch6_10` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch6_11/ch6_11` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch6_12/ch6_12` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch6_12/main.cpp:20:39: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+- `cpp/ch6_2/ch6_2` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch6_3/ch6_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch6_4/ch6_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch6_5/ch6_5` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch6_5/main.cpp:23:6: error: 'hour' is a private member of 'Time'
+- `cpp/ch6_7/ch6_7` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch6_8/ch6_8` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch6_8/main.cpp:22:28: warning: ISO C++11 does not allow conversion from string literal to 'char *' [-Wwritable-strings]
+- `cpp/ch6_9/ch6_9` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch7_1/ch7_1` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch7_1/main.cpp:23:4: error: 'this' argument to member function 'setHour' has type 'const Time', but function is not marked const
+- `cpp/ch7_10/ch7_10` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch7_11/ch7_11` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch7_12/ch7_12` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch7_13/ch7_13` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch7_2/ch7_2` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch7_3/ch7_3` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch7_4/ch7_4` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch7_5/ch7_5` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch7_6/ch7_6` — `compile_failed` — /home/solarowl/Repositories/cir-demo/xcfa-mapper/test/esbmc_inventory_output/artifacts/cpp__ch7_6__ch7_6/output.c: In function ‘cannotSetX’:
+- `cpp/ch7_7/ch7_7` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch7_8/ch7_8` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch7_9/ch7_9` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch8_1/ch8_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch8_10/ch8_10` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch8_11/ch8_11` — `clang_failed` — loc(fused["/home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_11/main.cpp":72:4, "/home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_11/main.cpp":72:35]): error: 'cir.yield' op expects parent op to be one of 'cir.array.ctor, cir.array.dtor, cir.await, cir.call, cir.case, cir.do, cir.for, cir.global, cir.if, cir.scope, cir.switch, cir.ternary, cir.try, cir.while'
+- `cpp/ch8_12/ch8_12` — `clang_failed` — loc(fused["/home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_12/main.cpp":72:4, "/home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_12/main.cpp":72:35]): error: 'cir.yield' op expects parent op to be one of 'cir.array.ctor, cir.array.dtor, cir.await, cir.call, cir.case, cir.do, cir.for, cir.global, cir.if, cir.scope, cir.switch, cir.ternary, cir.try, cir.while'
+- `cpp/ch8_2/ch8_2` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_2/main.cpp:18:1: error: empty block: expect at least a terminator
+- `cpp/ch8_3/ch8_3` — `clang_failed` — loc(fused["/home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_3/main.cpp":70:4, "/home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_3/main.cpp":70:35]): error: 'cir.yield' op expects parent op to be one of 'cir.array.ctor, cir.array.dtor, cir.await, cir.call, cir.case, cir.do, cir.for, cir.global, cir.if, cir.scope, cir.switch, cir.ternary, cir.try, cir.while'
+- `cpp/ch8_4/ch8_4` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch8_5/ch8_5` — `clang_failed` — loc(fused["/home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_5/main.cpp":76:4, "/home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_5/main.cpp":76:35]): error: 'cir.yield' op expects parent op to be one of 'cir.array.ctor, cir.array.dtor, cir.await, cir.call, cir.case, cir.do, cir.for, cir.global, cir.if, cir.scope, cir.switch, cir.ternary, cir.try, cir.while'
+- `cpp/ch8_7/ch8_7` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch8_8/ch8_8` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch8_9/ch8_9` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/ch8_9/main.cpp:18:1: error: empty block: expect at least a terminator
+- `cpp/ch9_1/ch9_1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch9_2/ch9_2` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch9_3/ch9_3` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch9_4/ch9_4` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch9_5/ch9_5` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/ch9_6/ch9_6` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/ch9_7/ch9_7` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/ch9_8/ch9_8` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/ch9_9/ch9_9` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/class-specialization/class-specialization` — `compile_failed` — /home/solarowl/Repositories/cir-demo/xcfa-mapper/test/esbmc_inventory_output/artifacts/cpp__class-specialization__class-specialization/output.c:2:19: error: expected identifier or ‘(’ before ‘<’ token
+- `cpp/cpp_queue_front_bug/cpp_queue_front_bug` — `clang_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/cpp_queue_pop_bug/cpp_queue_pop_bug` — `clang_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/cpp_stack_empty_bug/cpp_stack_empty_bug` — `clang_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/cpp_stack_top_bug/cpp_stack_top_bug` — `clang_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/cpp_sum_class/cpp_sum_class` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/cpp_sum_class_bug/cpp_sum_class_bug` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/cpp_with_pthread_01/cpp_with_pthread_01` — `mapper_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/cpp_with_pthread_01-no-lib/cpp_with_pthread_01-no-lib` — `mapper_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/cpp_with_pthread_02/cpp_with_pthread_02` — `clang_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/cpp_with_pthread_02-no-lib/cpp_with_pthread_02-no-lib` — `clang_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/cstring10_strpbrk/cstring10_strpbrk` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring11_strtok/cstring11_strtok` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring12_strrchr/cstring12_strrchr` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring13_strstr/cstring13_strstr` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring14_memcpy/cstring14_memcpy` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/cstring15_memmove/cstring15_memmove` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/cstring16_memcmp/cstring16_memcmp` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring17_memchr/cstring17_memchr` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring18_memset/cstring18_memset` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/cstring19_strcpy/cstring19_strcpy` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring1_strcpy/cstring1_strcpy` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/cstring20_strncmp_failed/cstring20_strncmp_failed` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/cstring2_strcat/cstring2_strcat` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/cstring3_strncat/cstring3_strncat` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/cstring4_strcmp/cstring4_strcmp` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/cstring5_strncmp/cstring5_strncmp` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring6_strchr/cstring6_strchr` — `compile_failed` — /home/solarowl/Repositories/cir-demo/xcfa-mapper/test/esbmc_inventory_output/artifacts/cpp__cstring6_strchr__cstring6_strchr/output.c: In function ‘main’:
+- `cpp/cstring7_strcspn/cstring7_strcspn` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/cstring8_strcpn/cstring8_strcpn` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `cpp/cstring9_strlen/cstring9_strlen` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/dangling_memleak/dangling_memleak` — `mapper_failed` — exceptions / try-catch | tags: exceptions / try-catch
+- `cpp/dangling_memleak_failed/dangling_memleak_failed` — `mapper_failed` — exceptions / try-catch | tags: exceptions / try-catch
+- `cpp/dangling_ptr/dangling_ptr` — `mapper_failed` — exceptions / try-catch | tags: exceptions / try-catch
+- `cpp/dangling_ptr_fail/dangling_ptr_fail` — `mapper_failed` — exceptions / try-catch | tags: exceptions / try-catch
+- `cpp/double_free/double_free` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/elegant01/elegant01` — `clang_failed` — ESBMC builtins / concurrency | tags: ESBMC builtins / concurrency
+- `cpp/hello_world/hello_world` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/hello_world2/hello_world2` — `compile_failed` — C++ name leakage into emitted C | tags: C++ name leakage into emitted C
+- `cpp/if_declaration/if_declaration` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/list_reference-1/list_reference-1` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/list_reference-2/list_reference-2` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/list_reference-3/list_reference-3` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/llbmc_bitset-test/llbmc_bitset-test` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/llbmc_deque-test/llbmc_deque-test` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/llbmc_invalid_delete/llbmc_invalid_delete` — `clang_failed` — PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace, preprocessed source, and associated run script.
+- `cpp/llbmc_non_type_template/llbmc_non_type_template` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/llbmc_queue-test/llbmc_queue-test` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/llbmc_simple_inheritance/llbmc_simple_inheritance` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/llbmc_sort-test01/llbmc_sort-test01` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/llbmc_sort-test02-c++03/llbmc_sort-test02-c++03` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/llbmc_stack-test/llbmc_stack-test` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/llbmc_template_class/llbmc_template_class` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/llbmc_template_function_01/llbmc_template_function_01` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/llbmc_template_function_02/llbmc_template_function_02` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/llbmc_template_specialization/llbmc_template_specialization` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/llbmc_transform-test/llbmc_transform-test` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/llbmc_v-test/llbmc_v-test` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
+- `cpp/llbmc_virtual_function/llbmc_virtual_function` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `cpp/memcpy/memcpy` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/new/new` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/new2/new2` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/operator_new/operator_new` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/ostream1/ostream1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/string_const/string_const` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/string_const/main.cpp:27:7: error: incompatible integer to pointer conversion assigning to 'char *' from 'char'
+- `cpp/string_const_bug/string_const_bug` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/string_const_bug/main.cpp:27:7: error: incompatible integer to pointer conversion assigning to 'char *' from 'char'
+- `cpp/string_view1/string_view1` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/switch_declaration/switch_declaration` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/switch_declaration_1/switch_declaration_1` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/switch_declaration_2/switch_declaration_2` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/template-specialization/template-specialization` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/cpp/template-specialization/main.cpp:15:25: error: cannot assign to variable 'k' with const-qualified type 'const int'
+- `cpp/template_function_specialization/template_function_specialization` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `cpp/try-catch_08/try-catch_08` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `cpp/unnamed-parameter/unnamed-parameter` — `mapper_failed` — Alloca: unable to determine a precise name for allocation
+- `cpp/unnamed-parameter-fail/unnamed-parameter-fail` — `mapper_failed` — Alloca: unable to determine a precise name for allocation
+- `cpp/while_declaration/while_declaration` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering

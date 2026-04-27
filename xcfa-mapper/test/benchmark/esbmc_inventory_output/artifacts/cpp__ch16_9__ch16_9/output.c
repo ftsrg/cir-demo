@@ -1,0 +1,65 @@
+// Struct definitions (auto-parsed)
+struct _Guard { struct std::__cxx11::basic_string<char>* _M_guarded; };
+union anon_0 { unsigned long long _M_allocated_capacity; char _M_local_buf[16]; };
+struct std::__cxx11::basic_string<char>::_Alloc_hider { char* _M_p; };
+struct std::__new_allocator<char> { unsigned char __placeholder; };
+struct std::allocator<char> { unsigned char __placeholder; };
+struct std::basic_ifstream<char> { unsigned char __placeholder; };
+struct std::basic_ios<char> { unsigned char __placeholder; };
+struct std::basic_istream<char> { unsigned char __placeholder; };
+struct std::basic_ostream<char> { unsigned char __placeholder; };
+struct std::forward_iterator_tag { unsigned char __placeholder; };
+struct std::less<const char *> { unsigned char __placeholder; };
+struct std::random_access_iterator_tag { unsigned char __placeholder; };
+struct std::__cxx11::basic_string<char> { struct std::__cxx11::basic_string<char>::_Alloc_hider _M_dataplus; union anon_0 field1; unsigned long long _M_string_length; union anon_0 field3; union anon_0 field4; union anon_0 field5; union anon_0 field6; union anon_0 field7; union anon_0 field8; union anon_0 field9; union anon_0 field10; union anon_0 field11; union anon_0 field12; union anon_0 field13; union anon_0 field14; union anon_0 field15; };
+
+char _str[1];
+char _str_1[12] = "HTTP_COOKIE";
+char _str_36[25];
+char _str_2[15] = "CONTENT_LENGTH";
+struct std::basic_istream<char> _ZSt3cin;
+char _str_3[5] = "add=";
+char _str_4[6] = "&isbn";
+char _str_5[6] = "isbn=";
+char _str_38[55];
+char _str_37[21];
+char _str_6[31];
+char _str_7[6] = "CART=";
+char _str_40[21];
+char _str_8[2] = ",";
+struct std::basic_ostream<char> _ZSt4cout;
+char _str_9[18];
+char _str_10[11] = "; expires=";
+char _str_11[9] = "; path=\\0A";
+char _str_12[26];
+char _str_13[24] = "<?xml version = \\221.0\\22?>";
+char _str_14[46] = "<!DOCTYPE html PUBLIC \\22-//W3C//DTD XHTML 1.0 ";
+char _str_15[47];
+char _str_16[31] = "/DTD/xhtml1-transitional.dtd\\22>";
+char _str_17[46];
+char _str_18[42] = "<head><title>Shopping Cart</title></head>";
+char _str_19[15] = "<body><center>";
+char _str_20[35];
+char _str_22[12] = "catalog.txt";
+struct std::basic_ostream<char> _ZSt4cerr;
+char _str_23[25] = "Could not open database.";
+char _str_24[39] = "<a href=\\22/cgi-bin/logout.cgi\\22>Sign Out";
+char _str_25[13] = "</a><br><br>";
+char _str_26[36] = "<table border = 1 cellpadding = 7 >";
+char _str_27[5] = "<tr>";
+char _str_28[20] = "<form method=\\22post\\22";
+char _str_29[32] = "action=\\22/cgi-bin/viewcart.cgi\\22>";
+char _str_30[5] = "<td>";
+char _str_31[6] = "</td>";
+char _str_32[13] = "</form></tr>";
+char _str_33[50] = "<a href=\\22/cgi-bin/shop.cgi\\22>Back to book list</a>";
+char _str_21[16] = "</body></html>\\0A";
+char _str_34[50];
+char _str_35[24];
+char _str_39[27];
+// function: _ZNSaIcEC2Ev
+void _ZNSaIcEC2Ev(struct std::allocator<char>* v0) {
+bb1:
+  struct std::allocator<char>* this2;
+  this2 = v0;
+  struct std::allocator<char>* t3 = this2;

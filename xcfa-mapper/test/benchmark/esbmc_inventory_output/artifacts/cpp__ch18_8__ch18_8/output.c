@@ -1,0 +1,220 @@
+// Struct definitions (auto-parsed)
+struct std::basic_ostream<char> { unsigned char __placeholder; };
+
+struct std::basic_ostream<char> _ZSt4cout;
+char _str[23];
+char _str_1[7] = "8 is a";
+char _str_2[11] = "8 is not a";
+char _str_3[8] = " digit\\0A";
+char _str_4[7] = "# is a";
+char _str_5[11] = "# is not a";
+char _str_6[24];
+char _str_7[7] = "A is a";
+char _str_8[11] = "A is not a";
+char _str_9[9] = " letter\\0A";
+char _str_10[7] = "b is a";
+char _str_11[11] = "b is not a";
+char _str_12[7] = "& is a";
+char _str_13[11] = "& is not a";
+char _str_14[7] = "4 is a";
+char _str_15[11] = "4 is not a";
+char _str_16[24];
+char _str_17[20] = " digit or a letter\\0A";
+char _str_18[25];
+char _str_19[7] = "F is a";
+char _str_20[11] = "F is not a";
+char _str_21[20] = " hexadecimal digit\\0A";
+char _str_22[7] = "J is a";
+char _str_23[11] = "J is not a";
+char _str_24[7] = "7 is a";
+char _str_25[11] = "7 is not a";
+char _str_26[7] = "$ is a";
+char _str_27[11] = "$ is not a";
+char _str_28[7] = "f is a";
+char _str_29[11] = "f is not a";
+char _str_30[19] = " hexadecimal digit";
+// function: _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+struct std::basic_ostream<char>* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std::basic_ostream<char>*, char*);
+
+// function: isdigit
+int isdigit(int);
+
+// function: isalpha
+int isalpha(int);
+
+// function: isalnum
+int isalnum(int);
+
+// function: isxdigit
+int isxdigit(int);
+
+// function: _ZNSolsEPFRSoS_E
+struct std::basic_ostream<char>* std__ostream__operator___std__ostream_____(struct std::basic_ostream<char>*, void*);
+
+// function: _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+struct std::basic_ostream<char>* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std::basic_ostream<char>*);
+
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std::basic_ostream<char>* g2 = &_ZSt4cout;
+  char* cast3 = (char*)_str;
+  struct std::basic_ostream<char>* r4 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(g2, cast3);
+  char c5 = 56;
+  int cast6 = (int)c5;
+  int r7 = isdigit(cast6);
+  _Bool cast8 = (_Bool)r7;
+  char* cast9 = (char*)_str_1;
+  char* cast10 = (char*)_str_2;
+  char* sel11 = cast8 ? cast9 : cast10;
+  struct std::basic_ostream<char>* r12 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r4, sel11);
+  char* cast13 = (char*)_str_3;
+  struct std::basic_ostream<char>* r14 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r12, cast13);
+  char c15 = 35;
+  int cast16 = (int)c15;
+  int r17 = isdigit(cast16);
+  _Bool cast18 = (_Bool)r17;
+  char* cast19 = (char*)_str_4;
+  char* cast20 = (char*)_str_5;
+  char* sel21 = cast18 ? cast19 : cast20;
+  struct std::basic_ostream<char>* r22 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r14, sel21);
+  char* cast23 = (char*)_str_3;
+  struct std::basic_ostream<char>* r24 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r22, cast23);
+  struct std::basic_ostream<char>* g25 = &_ZSt4cout;
+  char* cast26 = (char*)_str_6;
+  struct std::basic_ostream<char>* r27 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(g25, cast26);
+  char c28 = 65;
+  int cast29 = (int)c28;
+  int r30 = isalpha(cast29);
+  _Bool cast31 = (_Bool)r30;
+  char* cast32 = (char*)_str_7;
+  char* cast33 = (char*)_str_8;
+  char* sel34 = cast31 ? cast32 : cast33;
+  struct std::basic_ostream<char>* r35 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r27, sel34);
+  char* cast36 = (char*)_str_9;
+  struct std::basic_ostream<char>* r37 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r35, cast36);
+  char c38 = 98;
+  int cast39 = (int)c38;
+  int r40 = isalpha(cast39);
+  _Bool cast41 = (_Bool)r40;
+  char* cast42 = (char*)_str_10;
+  char* cast43 = (char*)_str_11;
+  char* sel44 = cast41 ? cast42 : cast43;
+  struct std::basic_ostream<char>* r45 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r37, sel44);
+  char* cast46 = (char*)_str_9;
+  struct std::basic_ostream<char>* r47 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r45, cast46);
+  char c48 = 38;
+  int cast49 = (int)c48;
+  int r50 = isalpha(cast49);
+  _Bool cast51 = (_Bool)r50;
+  char* cast52 = (char*)_str_12;
+  char* cast53 = (char*)_str_13;
+  char* sel54 = cast51 ? cast52 : cast53;
+  struct std::basic_ostream<char>* r55 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r47, sel54);
+  char* cast56 = (char*)_str_9;
+  struct std::basic_ostream<char>* r57 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r55, cast56);
+  char c58 = 52;
+  int cast59 = (int)c58;
+  int r60 = isalpha(cast59);
+  _Bool cast61 = (_Bool)r60;
+  char* cast62 = (char*)_str_14;
+  char* cast63 = (char*)_str_15;
+  char* sel64 = cast61 ? cast62 : cast63;
+  struct std::basic_ostream<char>* r65 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r57, sel64);
+  char* cast66 = (char*)_str_9;
+  struct std::basic_ostream<char>* r67 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r65, cast66);
+  struct std::basic_ostream<char>* g68 = &_ZSt4cout;
+  char* cast69 = (char*)_str_16;
+  struct std::basic_ostream<char>* r70 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(g68, cast69);
+  char c71 = 65;
+  int cast72 = (int)c71;
+  int r73 = isalnum(cast72);
+  _Bool cast74 = (_Bool)r73;
+  char* cast75 = (char*)_str_7;
+  char* cast76 = (char*)_str_8;
+  char* sel77 = cast74 ? cast75 : cast76;
+  struct std::basic_ostream<char>* r78 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r70, sel77);
+  char* cast79 = (char*)_str_17;
+  struct std::basic_ostream<char>* r80 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r78, cast79);
+  char c81 = 56;
+  int cast82 = (int)c81;
+  int r83 = isalnum(cast82);
+  _Bool cast84 = (_Bool)r83;
+  char* cast85 = (char*)_str_1;
+  char* cast86 = (char*)_str_2;
+  char* sel87 = cast84 ? cast85 : cast86;
+  struct std::basic_ostream<char>* r88 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r80, sel87);
+  char* cast89 = (char*)_str_17;
+  struct std::basic_ostream<char>* r90 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r88, cast89);
+  char c91 = 35;
+  int cast92 = (int)c91;
+  int r93 = isalnum(cast92);
+  _Bool cast94 = (_Bool)r93;
+  char* cast95 = (char*)_str_4;
+  char* cast96 = (char*)_str_5;
+  char* sel97 = cast94 ? cast95 : cast96;
+  struct std::basic_ostream<char>* r98 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r90, sel97);
+  char* cast99 = (char*)_str_17;
+  struct std::basic_ostream<char>* r100 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r98, cast99);
+  struct std::basic_ostream<char>* g101 = &_ZSt4cout;
+  char* cast102 = (char*)_str_18;
+  struct std::basic_ostream<char>* r103 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(g101, cast102);
+  char c104 = 70;
+  int cast105 = (int)c104;
+  int r106 = isxdigit(cast105);
+  _Bool cast107 = (_Bool)r106;
+  char* cast108 = (char*)_str_19;
+  char* cast109 = (char*)_str_20;
+  char* sel110 = cast107 ? cast108 : cast109;
+  struct std::basic_ostream<char>* r111 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r103, sel110);
+  char* cast112 = (char*)_str_21;
+  struct std::basic_ostream<char>* r113 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r111, cast112);
+  char c114 = 74;
+  int cast115 = (int)c114;
+  int r116 = isxdigit(cast115);
+  _Bool cast117 = (_Bool)r116;
+  char* cast118 = (char*)_str_22;
+  char* cast119 = (char*)_str_23;
+  char* sel120 = cast117 ? cast118 : cast119;
+  struct std::basic_ostream<char>* r121 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r113, sel120);
+  char* cast122 = (char*)_str_21;
+  struct std::basic_ostream<char>* r123 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r121, cast122);
+  char c124 = 55;
+  int cast125 = (int)c124;
+  int r126 = isxdigit(cast125);
+  _Bool cast127 = (_Bool)r126;
+  char* cast128 = (char*)_str_24;
+  char* cast129 = (char*)_str_25;
+  char* sel130 = cast127 ? cast128 : cast129;
+  struct std::basic_ostream<char>* r131 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r123, sel130);
+  char* cast132 = (char*)_str_21;
+  struct std::basic_ostream<char>* r133 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r131, cast132);
+  char c134 = 36;
+  int cast135 = (int)c134;
+  int r136 = isxdigit(cast135);
+  _Bool cast137 = (_Bool)r136;
+  char* cast138 = (char*)_str_26;
+  char* cast139 = (char*)_str_27;
+  char* sel140 = cast137 ? cast138 : cast139;
+  struct std::basic_ostream<char>* r141 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r133, sel140);
+  char* cast142 = (char*)_str_21;
+  struct std::basic_ostream<char>* r143 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r141, cast142);
+  char c144 = 102;
+  int cast145 = (int)c144;
+  int r146 = isxdigit(cast145);
+  _Bool cast147 = (_Bool)r146;
+  char* cast148 = (char*)_str_28;
+  char* cast149 = (char*)_str_29;
+  char* sel150 = cast147 ? cast148 : cast149;
+  struct std::basic_ostream<char>* r151 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r143, sel150);
+  char* cast152 = (char*)_str_30;
+  struct std::basic_ostream<char>* r153 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r151, cast152);
+  void* g154 = &_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_;
+  struct std::basic_ostream<char>* r155 = std__ostream__operator___std__ostream_____(r153, g154);
+  int c156 = 0;
+  __retval1 = c156;
+  int t157 = __retval1;
+  return t157;
+}
+
