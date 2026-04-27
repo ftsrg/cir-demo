@@ -157,12 +157,102 @@ static int findLineByNormalized(const std::vector<std::string> &lines,
   for (int i = startIdx; i < static_cast<int>(lines.size()); ++i) {
     std::string lineNorm = normalizeWs(lines[i]);
     if (lineNorm.empty()) continue;
-    if (lineNorm.find(targetNorm) != std::string::npos ||
-        targetNorm.find(lineNorm) != std::string::npos) {
+    if (lineNorm.find(targetNorm) != std::string::npos) {
       return i + 1;
     }
   }
   return 0;
+}
+
+static std::string extractMlirSignature(const std::string &inputText) {
+  std::string norm = normalizeWs(inputText);
+  if (norm.empty()) return norm;
+
+  auto locPos = norm.rfind(" loc(");
+  if (locPos != std::string::npos) norm = norm.substr(0, locPos);
+
+  if (norm.rfind("cir.func", 0) == 0) {
+    auto sigStart = norm.find('@');
+    if (sigStart != std::string::npos) {
+      auto sigEnd = norm.find(')', sigStart);
+      if (sigEnd != std::string::npos) return norm.substr(0, sigEnd + 1);
+    }
+    return norm;
+  }
+
+  if (!norm.empty() && norm.front() == '%') {
+    std::istringstream iss(norm);
+    std::string tok;
+    std::string sig;
+    for (int i = 0; i < 3 && (iss >> tok); ++i) {
+      if (!sig.empty()) sig += ' ';
+      sig += tok;
+    }
+    if (!sig.empty()) return sig;
+  }
+
+  auto typeSep = norm.find(" : ");
+  if (typeSep != std::string::npos) return norm.substr(0, typeSep);
+
+  return norm;
+}
+
+static std::string extractFunctionSymbol(const std::string &inputText) {
+  std::string norm = normalizeWs(inputText);
+  auto atPos = norm.find('@');
+  if (atPos == std::string::npos) return {};
+  auto endPos = norm.find('(', atPos);
+  if (endPos == std::string::npos) return {};
+  return norm.substr(atPos, endPos - atPos);
+}
+
+static std::string extractResultToken(const std::string &inputText) {
+  std::string norm = normalizeWs(inputText);
+  if (norm.empty() || norm.front() != '%') return {};
+  auto spacePos = norm.find(' ');
+  if (spacePos == std::string::npos) return norm;
+  return norm.substr(0, spacePos);
+}
+
+static int findLineByOpName(const std::vector<std::string> &lines,
+                            const std::string &opName,
+                            int startIdx);
+
+static int findMlirLineForEntry(const std::vector<std::string> &lines,
+                                const OperationTraceEntry &entry,
+                                int startIdx) {
+  std::string signatureNorm = extractMlirSignature(entry.inputText);
+
+  if (entry.opName == "cir.func") {
+    std::string symbol = extractFunctionSymbol(entry.inputText);
+    for (int i = startIdx; i < static_cast<int>(lines.size()); ++i) {
+      std::string lineNorm = normalizeWs(lines[i]);
+      if (lineNorm.find("cir.func") != std::string::npos &&
+          (symbol.empty() || lineNorm.find(symbol) != std::string::npos)) {
+        return i + 1;
+      }
+    }
+  }
+
+  std::string resultToken = extractResultToken(entry.inputText);
+  if (!resultToken.empty()) {
+    for (int i = startIdx; i < static_cast<int>(lines.size()); ++i) {
+      std::string lineNorm = normalizeWs(lines[i]);
+      if (lineNorm.find(resultToken) != std::string::npos &&
+          lineNorm.find(entry.opName) != std::string::npos) {
+        return i + 1;
+      }
+    }
+  }
+
+  int mlirLine = findLineByNormalized(lines, signatureNorm, startIdx);
+  if (mlirLine) return mlirLine;
+
+  std::string inputNorm = normalizeWs(entry.inputText);
+  mlirLine = findLineByNormalized(lines, inputNorm, startIdx);
+  if (mlirLine) return mlirLine;
+
+  return findLineByOpName(lines, entry.opName, startIdx);
 }
 
 static int findLineByOpName(const std::vector<std::string> &lines,
@@ -208,9 +298,7 @@ void TraceabilityTracker::computeLineMappings(llvm::StringRef mlirText, llvm::St
   int mlirCursor = 0;
   int cCursor = 0;
   for (auto &entry : operationTrace) {
-    std::string inputNorm = normalizeWs(entry.inputText);
-    int mlirLine = findLineByNormalized(mlirLines, inputNorm, mlirCursor);
-    if (!mlirLine) mlirLine = findLineByOpName(mlirLines, entry.opName, mlirCursor);
+    int mlirLine = findMlirLineForEntry(mlirLines, entry, mlirCursor);
     if (mlirLine) {
       entry.mlirStartLine = mlirLine;
       entry.mlirEndLine = mlirLine;
