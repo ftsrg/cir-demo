@@ -81,6 +81,9 @@ public:
   /// Map a single function. Returns true on success, false on unrecoverable error.
   bool mapFunc(mlir::Operation *fop, std::ostream &out);
 
+  /// Map a single operation using the registered handlers.
+  bool mapOperation(mlir::Operation *op, std::ostream &out);
+
   /// Map a global variable. Returns true on success, false on unrecoverable error.
   bool mapGlobal(mlir::Operation *gop, std::ostream &out);
 

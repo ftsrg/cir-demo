@@ -450,55 +450,62 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   for (Block &b : r.getBlocks()) {
     out << mangleLabel(getOrCreateLabel(&b)) << ":\n";
     for (Operation &bbop : b.getOperations()) {
-    auto opName = bbop.getName().getStringRef();
-    std::string inputText = oneLineOperationText(bbop);
-    traceability.recordOperationVisit(opName);
-    auto it = handlers.find(opName.str());
-    std::ostringstream opOut;
-    bool mapped = false;
-    if (it != handlers.end()) {
-      bool handled = it->second->handle(&bbop, *this, opOut);
-      if (handled) {
-        traceability.recordOperationHandled(opName);
-        mapped = true;
-      }
-      if (!handled) {
-      if (!isBestEffort()) {
-        llvm::errs() << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
-        return false;
-      }
-      // In best-effort mode annotate the C output with the handler failure.
-      opOut << "  // " << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
-      }
-      out << opOut.str();
-      traceability.recordOperationTrace(opName, inputText, opOut.str(), mapped);
-      continue;
-    }
-    if(isBestEffort()) {
-      for (Value res : bbop.getResults()) {
-        std::string nm = getOrCreateName(res);
-        opOut << "  // %" << nm << "  (produced by: " << opName.str() << ")\n";
-      }
-      if (!bbop.getAttrs().empty()) {
-        opOut << "  // attrs:\n";
-        for (NamedAttribute attr : bbop.getAttrs()) {
-        llvm::SmallString<64> buf;
-        llvm::raw_svector_ostream ros(buf);
-        attr.getValue().print(ros);
-        opOut << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
-        }
-      }
-      out << opOut.str();
-      traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
-    } else {
-      llvm::errs() << ERR_NO_HANDLER_PREFIX << opName.str() << "\n";
-      return false;
-    }
+      if (!mapOperation(&bbop, out)) return false;
     }
   }
 
   out << "}\n\n";
   return true;
+}
+
+bool Mapper::mapOperation(mlir::Operation *op, std::ostream &out) {
+  auto opName = op->getName().getStringRef();
+  std::string inputText = oneLineOperationText(*op);
+  traceability.recordOperationVisit(opName);
+
+  auto it = handlers.find(opName.str());
+  std::ostringstream opOut;
+  bool mapped = false;
+
+  if (it != handlers.end()) {
+    bool handled = it->second->handle(op, *this, opOut);
+    if (handled) {
+      traceability.recordOperationHandled(opName);
+      mapped = true;
+    }
+    if (!handled) {
+      if (!isBestEffort()) {
+        llvm::errs() << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
+        return false;
+      }
+      opOut << "  // " << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
+    }
+    out << opOut.str();
+    traceability.recordOperationTrace(opName, inputText, opOut.str(), mapped);
+    return true;
+  }
+
+  if (isBestEffort()) {
+    for (Value res : op->getResults()) {
+      std::string nm = getOrCreateName(res);
+      opOut << "  // %" << nm << "  (produced by: " << opName.str() << ")\n";
+    }
+    if (!op->getAttrs().empty()) {
+      opOut << "  // attrs:\n";
+      for (NamedAttribute attr : op->getAttrs()) {
+        llvm::SmallString<64> buf;
+        llvm::raw_svector_ostream ros(buf);
+        attr.getValue().print(ros);
+        opOut << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
+      }
+    }
+    out << opOut.str();
+    traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
+    return true;
+  }
+
+  llvm::errs() << ERR_NO_HANDLER_PREFIX << opName.str() << "\n";
+  return false;
 }
 
 bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
@@ -613,15 +620,18 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // emitting any function declarations/definitions so we can avoid name
   // collisions when demangling.
   prepareFunctionNames(module);
+
+  std::string irText;
+  {
+    llvm::raw_string_ostream rso(irText);
+    module.print(rso);
+    rso.flush();
+  }
   
   // Discover union record names from the textual IR so aliases (!rec_*)
   // that denote unions can be recognized without heuristics.
   std::set<std::string> unionRecordNames;
   {
-    std::string irText;
-    llvm::raw_string_ostream rso(irText);
-    module.print(rso);
-    rso.flush();
     const std::string needle = "!cir.record<union \"";
     std::size_t pos = 0;
     while ((pos = irText.find(needle, pos)) != std::string::npos) {
@@ -645,6 +655,87 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   };
   std::map<std::string, std::vector<FieldInfo>> structFields; // recordName -> fields
   std::map<std::string, bool> isUnionContainer; // recordName -> isUnion
+
+  auto trim = [](const std::string &text) {
+    size_t start = text.find_first_not_of(" \t\n\r");
+    if (start == std::string::npos) return std::string();
+    size_t end = text.find_last_not_of(" \t\n\r");
+    return text.substr(start, end - start + 1);
+  };
+
+  auto splitTopLevelFields = [&](const std::string &body) {
+    std::vector<std::string> parts;
+    std::string current;
+    int angleDepth = 0;
+    int braceDepth = 0;
+    int parenDepth = 0;
+
+    for (char ch : body) {
+      switch (ch) {
+      case '<':
+        ++angleDepth;
+        current.push_back(ch);
+        break;
+      case '>':
+        if (angleDepth > 0) --angleDepth;
+        current.push_back(ch);
+        break;
+      case '{':
+        ++braceDepth;
+        current.push_back(ch);
+        break;
+      case '}':
+        if (braceDepth > 0) --braceDepth;
+        current.push_back(ch);
+        break;
+      case '(':
+        ++parenDepth;
+        current.push_back(ch);
+        break;
+      case ')':
+        if (parenDepth > 0) --parenDepth;
+        current.push_back(ch);
+        break;
+      case ',':
+        if (angleDepth == 0 && braceDepth == 0 && parenDepth == 0) {
+          std::string piece = trim(current);
+          if (!piece.empty()) parts.push_back(piece);
+          current.clear();
+        } else {
+          current.push_back(ch);
+        }
+        break;
+      default:
+        current.push_back(ch);
+        break;
+      }
+    }
+
+    std::string piece = trim(current);
+    if (!piece.empty()) parts.push_back(piece);
+    return parts;
+  };
+
+  auto mapTextualTypeToC = [&](const std::string &token) {
+    std::string text = trim(token);
+    if (text.rfind("!rec_", 0) == 0) {
+      std::string name = text.substr(5);
+      std::replace(name.begin(), name.end(), '.', '_');
+      return std::string(unionRecordNames.count(name) ? "union " : "struct ") + name;
+    }
+    if (text == "!cir.bool") return std::string("_Bool");
+    if (text == "!s8i") return std::string("char");
+    if (text == "!u8i") return std::string("unsigned char");
+    if (text == "!s16i") return std::string("short");
+    if (text == "!u16i") return std::string("unsigned short");
+    if (text == "!s32i") return std::string("int");
+    if (text == "!u32i") return std::string("unsigned int");
+    if (text == "!s64i") return std::string("long long");
+    if (text == "!u64i") return std::string("unsigned long long");
+    if (text == "!cir.float") return std::string("float");
+    if (text == "!cir.double") return std::string("double");
+    return std::string();
+  };
   
   // Use static flag to only emit struct definitions once (for top-level module)
   static bool structsEmitted = false;
@@ -799,6 +890,51 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
   // Kick off collection for top-level operations
   for (auto &op : module.getOps()) collectFromOp(op);
+
+  // Fall back to textual CIR record layouts when a record has no directly
+  // discovered members of its own (for example, derived records that are only
+  // accessed through cir.base_class_addr casts).
+  {
+    std::istringstream input(irText);
+    std::string line;
+    while (std::getline(input, line)) {
+      if (line.rfind("!rec_", 0) != 0) continue;
+      auto recordMarker = line.find("!cir.record<");
+      if (recordMarker == std::string::npos) continue;
+
+      auto nameStart = line.find('"', recordMarker);
+      if (nameStart == std::string::npos) continue;
+      auto nameEnd = line.find('"', nameStart + 1);
+      if (nameEnd == std::string::npos) continue;
+
+      auto bodyStart = line.find('{', nameEnd + 1);
+      auto bodyEnd = line.rfind('}');
+      if (bodyStart == std::string::npos || bodyEnd == std::string::npos || bodyEnd <= bodyStart) continue;
+
+      std::string recordName = line.substr(nameStart + 1, nameEnd - nameStart - 1);
+      std::replace(recordName.begin(), recordName.end(), '.', '_');
+
+      auto &existingFields = structFields[recordName];
+      if (!existingFields.empty()) continue;
+
+      std::vector<FieldInfo> layoutFields;
+      std::vector<std::string> fieldTokens = splitTopLevelFields(line.substr(bodyStart + 1, bodyEnd - bodyStart - 1));
+      for (size_t index = 0; index < fieldTokens.size(); ++index) {
+        std::string baseType = mapTextualTypeToC(fieldTokens[index]);
+        if (baseType.empty()) continue;
+
+        FieldInfo info;
+        info.name = "__field" + std::to_string(index);
+        info.baseType = baseType;
+        info.isStruct = baseType.rfind("struct ", 0) == 0 || baseType.rfind("union ", 0) == 0;
+        layoutFields.push_back(info);
+      }
+
+      if (!layoutFields.empty()) {
+        existingFields = std::move(layoutFields);
+      }
+    }
+  }
 
   // Mark union containers based on discovered union record names.
   for (auto &kv : structFields) {

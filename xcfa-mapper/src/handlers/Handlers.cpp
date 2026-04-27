@@ -26,6 +26,8 @@
 #include <llvm/ADT/APFloat.h>
 #include <optional>
 #include <algorithm>
+#include <cctype>
+#include <sstream>
 #include <llvm/Support/raw_ostream.h>
 
 // Include generated CIR op declarations and dialect to get full op classes
@@ -87,6 +89,41 @@ std::string extractName(Operation *o, const std::string &fallback = "") {
   }
   if (varName.empty()) varName = fallback;
   return varName;
+}
+
+std::string indentText(const std::string &text, llvm::StringRef indent = "  ") {
+  if (text.empty()) return text;
+
+  std::ostringstream indented;
+  std::istringstream input(text);
+  std::string line;
+  while (std::getline(input, line)) {
+    if (!line.empty()) indented << indent.str();
+    indented << line << "\n";
+  }
+  return indented.str();
+}
+
+bool emitRegionBody(Region &region, Mapper &m, std::ostream &out,
+                    std::vector<Value> *yieldedValues = nullptr) {
+  if (region.empty()) return true;
+
+  Block &block = region.front();
+  std::ostringstream regionOut;
+
+  for (Operation &nestedOp : block.getOperations()) {
+    if (auto yieldOp = llvm::dyn_cast<cir::YieldOp>(&nestedOp)) {
+      if (yieldedValues) {
+        yieldedValues->assign(yieldOp->operand_begin(), yieldOp->operand_end());
+      }
+      break;
+    }
+
+    if (!m.mapOperation(&nestedOp, regionOut)) return false;
+  }
+
+  out << indentText(regionOut.str());
+  return true;
 }
 
 // ============================================================================
@@ -185,6 +222,7 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   std::optional<std::string> litVal;
   bool isZeroInit = false;
+  mlir::Type resultType = o->getNumResults() > 0 ? o->getResult(0).getType() : mlir::Type();
   
   // Try to find literals: integers, floats, or bools
   for (NamedAttribute a : o->getAttrs()) {
@@ -230,6 +268,29 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
       litVal = "NULL";
       break;
     }
+    if (auto gva = llvm::dyn_cast<cir::GlobalViewAttr>(a.getValue())) {
+      std::string symbolName = Mapper::sanitizeIdentifier(gva.getSymbol().getValue().str());
+      std::string expr = "&" + symbolName;
+      auto indices = gva.getIndices();
+      bool hasIndices = indices && !indices.empty();
+
+      if (auto ptrTy = mlir::dyn_cast_if_present<cir::PointerType>(resultType)) {
+        mlir::Type pointee = ptrTy.getPointee();
+        bool isBytePointer = false;
+        if (auto intTy = mlir::dyn_cast<cir::IntType>(pointee)) {
+          isBytePointer = intTy.getWidth() == 8;
+        } else if (auto builtinIntTy = mlir::dyn_cast<mlir::IntegerType>(pointee)) {
+          isBytePointer = builtinIntTy.getWidth() == 8;
+        }
+
+        if (isBytePointer && !hasIndices) {
+          expr = symbolName;
+        }
+      }
+
+      litVal = expr;
+      break;
+    }
   }
   
   if (!litVal.has_value()) {
@@ -244,9 +305,7 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
   std::string tmp = m.freshName("c");
   std::string literal = litVal.value();
   std::string ctype = "int";
-  mlir::Type resultType;
   if (o->getNumResults() > 0) {
-    resultType = o->getResult(0).getType();
     ctype = m.mapTypeToC(resultType);
   }
 
@@ -899,6 +958,50 @@ bool handleSelect(cir::SelectOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+bool handleTernary(cir::TernaryOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1 || o->getNumRegions() != 2) return false;
+
+  std::string condName = m.getOrCreateName(o->getOperand(0));
+  std::vector<std::string> resultNames;
+  resultNames.reserve(o->getNumResults());
+
+  for (Value result : o->getResults()) {
+    std::string tmp = m.freshName("ternary");
+    out << "  " << m.mapTypeToC(result.getType()) << " " << tmp << ";\n";
+    resultNames.push_back(tmp);
+    m.setName(result, tmp);
+  }
+
+  std::vector<Value> trueYieldedValues;
+  std::vector<Value> falseYieldedValues;
+
+  out << "  if (" << condName << ") {\n";
+  if (!emitRegionBody(o->getRegion(0), m, out,
+                      o->getNumResults() > 0 ? &trueYieldedValues : nullptr)) {
+    return false;
+  }
+  if (!resultNames.empty()) {
+    if (trueYieldedValues.size() != resultNames.size()) return false;
+    for (size_t i = 0; i < resultNames.size(); ++i) {
+      out << "    " << resultNames[i] << " = " << m.getOrCreateName(trueYieldedValues[i]) << ";\n";
+    }
+  }
+  out << "  } else {\n";
+  if (!emitRegionBody(o->getRegion(1), m, out,
+                      o->getNumResults() > 0 ? &falseYieldedValues : nullptr)) {
+    return false;
+  }
+  if (!resultNames.empty()) {
+    if (falseYieldedValues.size() != resultNames.size()) return false;
+    for (size_t i = 0; i < resultNames.size(); ++i) {
+      out << "    " << resultNames[i] << " = " << m.getOrCreateName(falseYieldedValues[i]) << ";\n";
+    }
+  }
+  out << "  }\n";
+  return true;
+}
+
 // ============================================================================
 // Memory and pointer operations
 // ============================================================================
@@ -923,10 +1026,10 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
     memberName = "field";
   }
   
-  // cir.get_member returns a pointer to the member, so we need to generate base.member or base->member
-  // Check if base is marked as direct access (alloca, struct field) - use .
-  // Check if baseName contains '->' anywhere - if so, the entire chain uses .
-  // Otherwise check if base itself is direct access
+  // cir.get_member conceptually returns the address of a member, but the C text
+  // we carry forward is already the final lvalue expression (`a.b` or `p->b`).
+  // Later load/store handlers must therefore treat every get_member result as a
+  // direct-access expression and avoid adding an extra dereference.
   bool baseIsDirectAccess = m.isDirectAccess(base);
   bool baseNameHasArrow = baseName.find("->") != std::string::npos;
   bool useArrow = !baseIsDirectAccess && !baseNameHasArrow;
@@ -940,10 +1043,7 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
   }
   if (o->getNumResults() > 0) {
     m.setName(o->getResult(0), expr);
-    // Mark the result as direct access if base is direct access
-    if (baseIsDirectAccess || baseNameHasArrow) {
-      m.markAsDirectAccess(o->getResult(0));
-    }
+    m.markAsDirectAccess(o->getResult(0));
   }
   return true;
 }
@@ -1001,6 +1101,48 @@ bool handlePtrDiff(cir::PtrDiffOp op, Mapper &m, std::ostream &out) {
   
   out << "  " << ctype << " " << tmp << " = " << l << " - " << r << ";\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+bool handleBaseClassAddr(Operation *o, Mapper &m, std::ostream &out) {
+  if (o->getNumOperands() < 1 || o->getNumResults() < 1) return false;
+
+  Value base = o->getOperand(0);
+  std::string baseName = m.getOrCreateName(base);
+  if (m.isDirectAccess(base) && baseName.find('[') == std::string::npos &&
+      baseName.find("->") == std::string::npos && baseName.find('&') != 0) {
+    baseName = "&" + baseName;
+  }
+  std::string resultType = m.mapTypeToC(o->getResult(0).getType());
+
+  std::string opText;
+  llvm::raw_string_ostream rso(opText);
+  o->print(rso);
+  rso.flush();
+
+  bool isNonnull = opText.find(" nonnull ") != std::string::npos;
+  long long offset = 0;
+  size_t openBracket = opText.rfind('[');
+  size_t closeBracket = (openBracket == std::string::npos) ? std::string::npos : opText.find(']', openBracket + 1);
+  if (openBracket != std::string::npos && closeBracket != std::string::npos && closeBracket > openBracket + 1) {
+    std::string offsetText = opText.substr(openBracket + 1, closeBracket - openBracket - 1);
+    size_t start = 0;
+    while (start < offsetText.size() && std::isspace(static_cast<unsigned char>(offsetText[start]))) ++start;
+    size_t end = offsetText.size();
+    while (end > start && std::isspace(static_cast<unsigned char>(offsetText[end - 1]))) --end;
+    if (end > start) {
+      offset = std::stoll(offsetText.substr(start, end - start));
+    }
+  }
+
+  std::string adjustedExpr = "(" + resultType + ")((char *)" + baseName + " + " + std::to_string(offset) + ")";
+  if (!isNonnull) {
+    adjustedExpr = "((" + baseName + ") ? " + adjustedExpr + " : (" + resultType + ")0)";
+  }
+
+  std::string tmp = m.freshName("base");
+  out << "  " << resultType << " " << tmp << " = " << adjustedExpr << ";\n";
+  m.setName(o->getResult(0), tmp);
   return true;
 }
 
@@ -1226,6 +1368,7 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::SwitchOp>("cir.switch", handleSwitch);
   m.registerTypedHandler<cir::SwitchFlatOp>("cir.switch.flat", handleSwitchFlat);
   m.registerTypedHandler<cir::SelectOp>("cir.select", handleSelect);
+  m.registerTypedHandler<cir::TernaryOp>("cir.ternary", handleTernary);
   
   // Function calls
   m.registerTypedHandler<cir::CallOp>("cir.call", handleCall);
@@ -1236,6 +1379,7 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::GetElementOp>("cir.get_element", handleGetElement);
   m.registerTypedHandler<cir::PtrStrideOp>("cir.ptr_stride", handlePtrStride);
   m.registerTypedHandler<cir::PtrDiffOp>("cir.ptr_diff", handlePtrDiff);
+  m.registerHandler("cir.base_class_addr", std::make_unique<LambdaOpHandler>(handleBaseClassAddr));
   m.registerTypedHandler<cir::CopyOp>("cir.copy", handleCopy);
   m.registerTypedHandler<cir::StackSaveOp>("cir.stack_save", handleStackSave);
   m.registerTypedHandler<cir::StackRestoreOp>("cir.stack_restore", handleStackRestore);
