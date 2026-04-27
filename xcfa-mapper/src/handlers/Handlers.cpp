@@ -25,7 +25,6 @@
 #include <llvm/ADT/StringRef.h>
 #include <llvm/ADT/APFloat.h>
 #include <optional>
-#include <algorithm>
 #include <cctype>
 #include <sstream>
 #include <llvm/Support/raw_ostream.h>
@@ -653,92 +652,12 @@ bool handleReturn(cir::ReturnOp op, Mapper &m, std::ostream &out) {
 // Binary operations
 // ============================================================================
 
-static std::string toLowerCopy(std::string s) {
-  std::transform(s.begin(), s.end(), s.begin(),
-                 [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
-  return s;
-}
-
-static std::string opToString(Operation *o) {
-  llvm::SmallString<256> buf;
-  llvm::raw_svector_ostream os(buf);
-  o->print(os);
-  return toLowerCopy(os.str().str());
-}
-
-static bool containsAny(llvm::StringRef s, std::initializer_list<llvm::StringRef> keys,
-                        llvm::StringRef &matched) {
-  for (auto key : keys) {
-    if (s.contains(key)) {
-      matched = key;
-      return true;
-    }
-  }
-  return false;
-}
-
-bool handleBinOp(Operation *o, Mapper &m, std::ostream &out) {
+static bool handleBinaryOpImpl(Operation *o, Mapper &m, std::ostream &out, const char *opStr) {
   if (o->getNumOperands() < 2) return false;
   Value lhs = o->getOperand(0);
   Value rhs = o->getOperand(1);
   std::string l = m.getOrCreateName(lhs);
   std::string r = m.getOrCreateName(rhs);
-  std::string opStr;
-  bool opFound = false;
-
-  llvm::StringRef matched;
-  std::string opText = opToString(o);
-  if (containsAny(opText,
-                  {"binop(add", " add", "binop(add,", "kind = #cir.binopkind<add>"},
-                  matched)) {
-    opStr = "+";
-    opFound = true;
-  } else if (containsAny(opText,
-                         {"binop(sub", " sub", "binop(sub,", "kind = #cir.binopkind<sub>"},
-                         matched)) {
-    opStr = "-";
-    opFound = true;
-  } else if (containsAny(opText,
-                         {"binop(mul", " mul", "binop(mul,", "kind = #cir.binopkind<mul>"},
-                         matched)) {
-    opStr = "*";
-    opFound = true;
-  } else if (containsAny(opText,
-                         {"binop(div", " div", "binop(div,", "kind = #cir.binopkind<div>"},
-                         matched)) {
-    opStr = "/";
-    opFound = true;
-  } else if (containsAny(opText,
-                         {"binop(rem", " rem", "binop(rem,", "kind = #cir.binopkind<rem>"},
-                         matched)) {
-    opStr = "%";
-    opFound = true;
-  } else if (containsAny(opText,
-                         {"binop(and", " and", "binop(and,", "kind = #cir.binopkind<and>"},
-                         matched)) {
-    opStr = "&";
-    opFound = true;
-  } else if (containsAny(opText,
-                         {"binop(or", " or", "binop(or,", "kind = #cir.binopkind<or>"},
-                         matched)) {
-    opStr = "|";
-    opFound = true;
-  } else if (containsAny(opText,
-                         {"binop(xor", " xor", "binop(xor,", "kind = #cir.binopkind<xor>"},
-                         matched)) {
-    opStr = "^";
-    opFound = true;
-  }
-  
-  if (!opFound) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_BINOP_NO_KIND << "\n";
-      return false;
-    }
-    out << "  // " << ERR_BINOP_NO_KIND << "\n";
-    opStr = "+";
-  }
-  
   std::string tmp = m.freshName("b");
   std::string ctype = "int";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
@@ -747,75 +666,46 @@ bool handleBinOp(Operation *o, Mapper &m, std::ostream &out) {
   return true;
 }
 
+bool handleAdd(cir::AddOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "+"); }
+bool handleSub(cir::SubOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "-"); }
+bool handleMul(cir::MulOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "*"); }
+bool handleDiv(cir::DivOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "/"); }
+bool handleRem(cir::RemOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "%"); }
+bool handleAnd(cir::AndOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "&"); }
+bool handleOr(cir::OrOp  op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "|"); }
+bool handleXor(cir::XorOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "^"); }
+
 // ============================================================================
 // Unary operations
 // ============================================================================
 
-bool handleUnaryOp(Operation *o, Mapper &m, std::ostream &out) {
+static bool handleUnaryOpImpl(Operation *o, Mapper &m, std::ostream &out, const char *opStr) {
   if (o->getNumOperands() < 1) return false;
   Value operand = o->getOperand(0);
   std::string opnd = m.getOrCreateName(operand);
-  std::string opStr;
-  bool opFound = false;
-  bool isPrefix = true;
-
-  std::string opText = opToString(o);
-  if (opText.find("unary(inc") != std::string::npos ||
-      opText.find("kind = #cir.unaryopkind<inc>") != std::string::npos) {
-    opStr = "++";
-    opFound = true;
-  } else if (opText.find("unary(dec") != std::string::npos ||
-             opText.find("kind = #cir.unaryopkind<dec>") != std::string::npos) {
-    opStr = "--";
-    opFound = true;
-  } else if (opText.find("unary(plus") != std::string::npos ||
-             opText.find("kind = #cir.unaryopkind<plus>") != std::string::npos) {
-    opStr = "+";
-    opFound = true;
-  } else if (opText.find("unary(minus") != std::string::npos ||
-             opText.find("kind = #cir.unaryopkind<minus>") != std::string::npos) {
-    opStr = "-";
-    opFound = true;
-  } else if (opText.find("unary(not") != std::string::npos ||
-             opText.find("kind = #cir.unaryopkind<not>") != std::string::npos ||
-             opText.find("cir.not") != std::string::npos) {
-    // CIR 'not' may represent logical not when applied to !cir.bool,
-    // and bitwise complement otherwise. Inspect operand type.
-    std::string ty;
-    if (o->getNumOperands() > 0) {
-      llvm::SmallString<64> tbuf;
-      llvm::raw_svector_ostream tos(tbuf);
-      o->getOperand(0).getType().print(tos);
-      ty = tos.str().str();
-    }
-    if (ty.find("!cir.bool") != std::string::npos)
-      opStr = "!";
-    else
-      opStr = "~";
-    opFound = true;
-  }
-  
-  if (!opFound) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_UNARY_NO_KIND << "\n";
-      return false;
-    }
-    out << "  // " << ERR_UNARY_NO_KIND << "\n";
-    opStr = "+";
-  }
-  
   std::string tmp = m.freshName("u");
   std::string ctype = "int";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  
-  if (isPrefix) {
-    out << "  " << ctype << " " << tmp << " = " << opStr << opnd << ";\n";
-  } else {
-    out << "  " << ctype << " " << tmp << " = " << opnd << opStr << ";\n";
-  }
-  
+  out << "  " << ctype << " " << tmp << " = " << opStr << opnd << ";\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
+}
+
+bool handleInc(cir::IncOp op, Mapper &m, std::ostream &out) { return handleUnaryOpImpl(op.getOperation(), m, out, "++"); }
+bool handleDec(cir::DecOp op, Mapper &m, std::ostream &out) { return handleUnaryOpImpl(op.getOperation(), m, out, "--"); }
+bool handleMinus(cir::MinusOp op, Mapper &m, std::ostream &out) { return handleUnaryOpImpl(op.getOperation(), m, out, "-"); }
+
+bool handleNot(cir::NotOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1) return false;
+  Value operand = o->getOperand(0);
+  // CIR 'not' may represent logical not when applied to !cir.bool,
+  // and bitwise complement otherwise. Inspect operand type.
+  llvm::SmallString<64> tbuf;
+  llvm::raw_svector_ostream tos(tbuf);
+  operand.getType().print(tos);
+  const char *opStr = (tos.str().contains("!cir.bool")) ? "!" : "~";
+  return handleUnaryOpImpl(o, m, out, opStr);
 }
 
 // ============================================================================
@@ -829,24 +719,8 @@ bool handleShiftOp(cir::ShiftOp op, Mapper &m, std::ostream &out) {
   Value rhs = o->getOperand(1);
   std::string l = m.getOrCreateName(lhs);
   std::string r = m.getOrCreateName(rhs);
-  
-  // Determine direction from textual form (left/right) to avoid relying on
-  // generated enum types across CIR versions.
-  std::string opStr = "<<"; // default to left
-  {
-    llvm::SmallString<128> sbuf;
-    llvm::raw_svector_ostream sos(sbuf);
-    o->print(sos);
-    std::string os = sos.str().str();
-    if (os.find("shift(right,") != std::string::npos) opStr = ">>";
-    else if (os.find("shift(left,") != std::string::npos) opStr = "<<";
-    else {
-      // Fallback: some older dumps may encode a boolean direction
-      if (auto isLeftAttr = o->getAttrOfType<mlir::BoolAttr>("is_left_shift")) {
-        opStr = isLeftAttr.getValue() ? "<<" : ">>";
-      }
-    }
-  }
+
+  const char *opStr = op.getIsShiftleft() ? "<<" : ">>";
   
   std::string tmp = m.freshName("s");
   std::string ctype = "int";
@@ -1346,49 +1220,59 @@ bool handleGlobal(cir::GlobalOp op, Mapper &m, std::ostream &out) {
 
 void registerBuiltinHandlers(Mapper &m) {
   // Basic operations
-  m.registerTypedHandler<cir::AllocaOp>("cir.alloca", handleAlloca);
-  m.registerTypedHandler<cir::ConstantOp>("cir.const", handleConst);
-  m.registerTypedHandler<cir::LoadOp>("cir.load", handleLoad);
-  m.registerTypedHandler<cir::StoreOp>("cir.store", handleStore);
+  m.registerTypedHandler<cir::AllocaOp>(handleAlloca);
+  m.registerTypedHandler<cir::ConstantOp>(handleConst);
+  m.registerTypedHandler<cir::LoadOp>(handleLoad);
+  m.registerTypedHandler<cir::StoreOp>(handleStore);
   
   // Comparison
-  m.registerTypedHandler<cir::CmpOp>("cir.cmp", handleCmp);
+  m.registerTypedHandler<cir::CmpOp>(handleCmp);
   
   // Arithmetic and logic
-  m.registerHandler("cir.binop", std::make_unique<LambdaOpHandler>(handleBinOp));
-  m.registerHandler("cir.unary", std::make_unique<LambdaOpHandler>(handleUnaryOp));
-  m.registerTypedHandler<cir::ShiftOp>("cir.shift", handleShiftOp);
+  m.registerTypedHandler<cir::AddOp>(handleAdd);
+  m.registerTypedHandler<cir::SubOp>(handleSub);
+  m.registerTypedHandler<cir::MulOp>(handleMul);
+  m.registerTypedHandler<cir::DivOp>(handleDiv);
+  m.registerTypedHandler<cir::RemOp>(handleRem);
+  m.registerTypedHandler<cir::AndOp>(handleAnd);
+  m.registerTypedHandler<cir::OrOp>(handleOr);
+  m.registerTypedHandler<cir::XorOp>(handleXor);
+  m.registerTypedHandler<cir::IncOp>(handleInc);
+  m.registerTypedHandler<cir::DecOp>(handleDec);
+  m.registerTypedHandler<cir::MinusOp>(handleMinus);
+  m.registerTypedHandler<cir::NotOp>(handleNot);
+  m.registerTypedHandler<cir::ShiftOp>(handleShiftOp);
   
   // Type conversions
-  m.registerTypedHandler<cir::CastOp>("cir.cast", handleCast);
+  m.registerTypedHandler<cir::CastOp>(handleCast);
   
   // Control flow
-  m.registerTypedHandler<cir::BrOp>("cir.br", handleBr);
-  m.registerTypedHandler<cir::BrCondOp>("cir.brcond", handleBrCond);
-  m.registerTypedHandler<cir::SwitchOp>("cir.switch", handleSwitch);
-  m.registerTypedHandler<cir::SwitchFlatOp>("cir.switch.flat", handleSwitchFlat);
-  m.registerTypedHandler<cir::SelectOp>("cir.select", handleSelect);
-  m.registerTypedHandler<cir::TernaryOp>("cir.ternary", handleTernary);
+  m.registerTypedHandler<cir::BrOp>(handleBr);
+  m.registerTypedHandler<cir::BrCondOp>(handleBrCond);
+  m.registerTypedHandler<cir::SwitchOp>(handleSwitch);
+  m.registerTypedHandler<cir::SwitchFlatOp>(handleSwitchFlat);
+  m.registerTypedHandler<cir::SelectOp>(handleSelect);
+  m.registerTypedHandler<cir::TernaryOp>(handleTernary);
   
   // Function calls
-  m.registerTypedHandler<cir::CallOp>("cir.call", handleCall);
-  m.registerTypedHandler<cir::ReturnOp>("cir.return", handleReturn);
+  m.registerTypedHandler<cir::CallOp>(handleCall);
+  m.registerTypedHandler<cir::ReturnOp>(handleReturn);
   
   // Memory and pointer operations
-  m.registerTypedHandler<cir::GetMemberOp>("cir.get_member", handleGetMember);
-  m.registerTypedHandler<cir::GetElementOp>("cir.get_element", handleGetElement);
-  m.registerTypedHandler<cir::PtrStrideOp>("cir.ptr_stride", handlePtrStride);
-  m.registerTypedHandler<cir::PtrDiffOp>("cir.ptr_diff", handlePtrDiff);
+  m.registerTypedHandler<cir::GetMemberOp>(handleGetMember);
+  m.registerTypedHandler<cir::GetElementOp>(handleGetElement);
+  m.registerTypedHandler<cir::PtrStrideOp>(handlePtrStride);
+  m.registerTypedHandler<cir::PtrDiffOp>(handlePtrDiff);
   m.registerHandler("cir.base_class_addr", std::make_unique<LambdaOpHandler>(handleBaseClassAddr));
-  m.registerTypedHandler<cir::CopyOp>("cir.copy", handleCopy);
-  m.registerTypedHandler<cir::StackSaveOp>("cir.stack_save", handleStackSave);
-  m.registerTypedHandler<cir::StackRestoreOp>("cir.stack_restore", handleStackRestore);
-  m.registerTypedHandler<cir::GetBitfieldOp>("cir.get_bitfield", handleGetBitfield);
-  m.registerTypedHandler<cir::SetBitfieldOp>("cir.set_bitfield", handleSetBitfield);
+  m.registerTypedHandler<cir::CopyOp>(handleCopy);
+  m.registerTypedHandler<cir::StackSaveOp>(handleStackSave);
+  m.registerTypedHandler<cir::StackRestoreOp>(handleStackRestore);
+  m.registerTypedHandler<cir::GetBitfieldOp>(handleGetBitfield);
+  m.registerTypedHandler<cir::SetBitfieldOp>(handleSetBitfield);
   
   // Global variables
-  m.registerTypedHandler<cir::GetGlobalOp>("cir.get_global", handleGetGlobal);
-  m.registerTypedHandler<cir::GlobalOp>("cir.global", handleGlobal);
+  m.registerTypedHandler<cir::GetGlobalOp>(handleGetGlobal);
+  m.registerTypedHandler<cir::GlobalOp>(handleGlobal);
 }
 
 } // namespace xcfa

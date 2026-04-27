@@ -58,10 +58,9 @@ public:
 
   /// Register a typed handler for a generated op class. The provided callable
   /// should accept (OpTy op, Mapper &m, std::ostream &out) and return bool.
-  /// This convenience wraps the typed handler into an OpHandler that performs
-  /// a dyn_cast and forwards the call.
+  /// The operation name is derived automatically from OpTy::getOperationName().
   template <typename OpTy, typename Fn>
-  void registerTypedHandler(llvm::StringRef opName, Fn &&fn) {
+  void registerTypedHandler(Fn &&fn) {
     struct Wrapper : OpHandler {
       std::function<bool(mlir::Operation *, Mapper &, std::ostream &)> f;
       Wrapper(std::function<bool(mlir::Operation *, Mapper &, std::ostream &)> &&f) : f(std::move(f)) {}
@@ -75,7 +74,7 @@ public:
       return false;
     };
 
-    registerHandler(opName, std::make_unique<Wrapper>(std::move(wrapperFn)));
+    registerHandler(OpTy::getOperationName(), std::make_unique<Wrapper>(std::move(wrapperFn)));
   }
 
   /// Map a single function. Returns true on success, false on unrecoverable error.
