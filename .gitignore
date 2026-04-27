@@ -9,3 +9,4 @@ xcfa-mapper/build/
 *.log
 backend/bin/**
 .vscode
+xcfa-mapper/test/tmp/**
