@@ -184,20 +184,20 @@ app.post('/api/generate', async (req, res) => {
   const base = `input-${Date.now()}`;
   const tmpFile = path.join(tmpDir, `${base}.cpp`);
   const tmpFileCir = path.join(tmpDir, `${base}.cir.cpp`);
+  const cirMlirPath = path.join(tmpDir, `${base}.cir.mlir`);
   await fs.writeFile(tmpFile, code, 'utf8');
-  // write a dedicated CIR copy because clang writes the generated MLIR next to the input file
+  // write a dedicated CIR copy and a dedicated output path for the emitted CIR
   await fs.writeFile(tmpFileCir, code, 'utf8');
 
   // Prepare commands
   // LLVM IR: clang -S -emit-llvm <file> -o -
   const llvmArgs = ['-S', '-emit-llvm', tmpFile, '-o', '-'];
 
-  // Clang IR (CIR): clang <file> -Xclang -emit-cir -fsyntax-only
-  // The CIR frontend writes a .mlir file next to the input file (same basename + .mlir)
-  const clangIrArgs = [tmpFileCir, '-Xclang', '-emit-cir', '-fsyntax-only'];
+  // Clang IR (CIR): clang <file> -Xclang -emit-cir -S -o <file>
+  const clangIrArgs = [tmpFileCir, '-Xclang', '-emit-cir', '-S', '-o', cirMlirPath];
 
   // LLVM IR and CIR generation are independent; flattening depends on the CIR output.
-  const filesToCleanup = [tmpFile, tmpFileCir];
+  const filesToCleanup = [tmpFile, tmpFileCir, cirMlirPath];
   try {
     const [llvmOut, clangOut] = await Promise.all([
       execFileAsync(CLANG_BIN, llvmArgs),
@@ -206,9 +206,9 @@ app.post('/api/generate', async (req, res) => {
 
     let flatOut = { stdout: '', stderr: '', code: 0 };
 
-    // Read generated CIR files (if any). Some frontends append '.mlir', others replace '.cpp' with '.mlir'.
-    const cirCandidates = generatedMlirCandidates(tmpFileCir);
-    let cirMlirPath = null;
+    // Read the generated CIR file. Keep a fallback probe for toolchains that ignore -o.
+    const cirCandidates = [cirMlirPath, ...generatedMlirCandidates(tmpFileCir)];
+    let resolvedCirMlirPath = null;
 
     for (const cand of cirCandidates) {
       try {
@@ -216,19 +216,19 @@ app.post('/api/generate', async (req, res) => {
         if (exists) {
           const data = await fs.readFile(cand, 'utf8').catch(() => '');
           if (clangOut && typeof clangOut === 'object') clangOut.stdout = (data || '') + (clangOut.stdout || '');
-          filesToCleanup.push(cand);
-          cirMlirPath = cand;
+          if (!filesToCleanup.includes(cand)) filesToCleanup.push(cand);
+          resolvedCirMlirPath = cand;
           break;
         }
       } catch (_) {}
     }
 
-    if (cirMlirPath) {
+    if (resolvedCirMlirPath) {
       const flatMlirPath = path.join(tmpDir, `${base}.flat.mlir`);
       filesToCleanup.push(flatMlirPath);
 
       if (statSafeSync(CIR_OPT_BIN)?.isFile()) {
-        flatOut = await execFileAsync(CIR_OPT_BIN, [cirMlirPath, '-cir-flatten-cfg', '-o', flatMlirPath]);
+        flatOut = await execFileAsync(CIR_OPT_BIN, [resolvedCirMlirPath, '-cir-flatten-cfg', '-o', flatMlirPath]);
         try {
           const flatExists = await fs.stat(flatMlirPath).then(s => s.isFile()).catch(() => false);
           if (flatExists) {
