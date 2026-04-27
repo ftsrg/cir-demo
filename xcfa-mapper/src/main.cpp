@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
     mapper.writeMonitorJson(mofs);
   }
 
-  mapper.printMonitorReport(std::cout);
+  // mapper.printMonitorReport(std::cout); // print readable version of json to std::cout
 
   llvm::outs() << "Wrote C output to " << outFile << "\n";
   return 0;
