@@ -1,0 +1,108 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "cir-demo: Start backend (5181)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "start"
+      ],
+      "env": {
+        "LD_LIBRARY_PATH": "${workspaceFolder}/backend/bin/lib:${env:LD_LIBRARY_PATH}",
+        "BASIC_AUTH_FILE": "${workspaceFolder}/backend/config/credentials.json",
+        "PORT": "5181"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "cir-demo: Start frontend (5180)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5180"
+      ],
+      "env": {
+        "VITE_API_ROOT": "http://localhost:5181",
+        "VITE_API_USER": "alice",
+        "VITE_API_PASSWORD": "s3cr3t"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
+    },
+    {
+      "name": "xcfa-mapper: Debug test_class.mlir",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/xcfa-mapper/build/xcfa-mapper",
+      "args": [
+        "--monitor-json", "${workspaceFolder}/xcfa-mapper/build/trace.json",
+        "${workspaceFolder}/xcfa-mapper/test/unit/test_class.mlir",
+        "${workspaceFolder}/xcfa-mapper/build/out.c"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "xcfa-mapper: Debug test_class.mlir (--best-effort)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/xcfa-mapper/build/xcfa-mapper",
+      "args": [
+        "--best-effort",
+        "${workspaceFolder}/xcfa-mapper/test/unit/test_class.mlir",
+        "${workspaceFolder}/xcfa-mapper/build/out-best-effort.c"
+      ],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "cir-demo: Start frontend + backend",
+      "configurations": [
+        "cir-demo: Start backend (5181)",
+        "cir-demo: Start frontend (5180)"
+      ],
+      "stopAll": true
+    }
+  ]
+}

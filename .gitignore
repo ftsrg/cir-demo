@@ -8,5 +8,6 @@ docker/docker/
 xcfa-mapper/build/
 *.log
 backend/bin/**
-.vscode
+.vscode/settings.json
 xcfa-mapper/test/tmp/**
+xcfa-mapper/test/benchmark/**
