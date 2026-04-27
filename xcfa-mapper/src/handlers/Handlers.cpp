@@ -554,6 +554,16 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+bool handleGoto(cir::GotoOp op, Mapper &m, std::ostream &out) {
+  out << "  goto " << op.getLabel().str() << ";\n";
+  return true;
+}
+
+bool handleLabel(cir::LabelOp op, Mapper &m, std::ostream &out) {
+  out << op.getLabel().str() << ": ;\n";
+  return true;
+}
+
 bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   std::string callee;
@@ -1249,6 +1259,8 @@ void registerBuiltinHandlers(Mapper &m) {
   // Control flow
   m.registerTypedHandler<cir::BrOp>(handleBr);
   m.registerTypedHandler<cir::BrCondOp>(handleBrCond);
+  m.registerTypedHandler<cir::GotoOp>(handleGoto);
+  m.registerTypedHandler<cir::LabelOp>(handleLabel);
   m.registerTypedHandler<cir::SwitchOp>(handleSwitch);
   m.registerTypedHandler<cir::SwitchFlatOp>(handleSwitchFlat);
   m.registerTypedHandler<cir::SelectOp>(handleSelect);

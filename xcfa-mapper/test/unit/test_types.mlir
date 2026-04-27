@@ -150,13 +150,13 @@ module {
     %0 = cir.cast integral %arg0 : !s32i -> !s64i
     %1 = cir.cast float_to_int %arg1 : !cir.float -> !s32i
     %2 = cir.cast integral %1 : !s32i -> !s64i
-    %3 = cir.binop(add, %0, %2) : !s64i
+    %3 = cir.add %0, %2 : !s64i
     cir.return %3 : !s64i
   }
   
   // Test 9: Comparison operations (produce bool)
   cir.func @test_comparison(%arg0: !s32i, %arg1: !s32i) -> !cir.bool {
-    %0 = cir.cmp(lt, %arg0, %arg1) : !s32i, !cir.bool
+    %0 = cir.cmp lt %arg0, %arg1 : !s32i
     cir.return %0 : !cir.bool
   }
   

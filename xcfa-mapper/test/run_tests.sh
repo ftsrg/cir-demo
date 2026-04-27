@@ -37,6 +37,7 @@ INTEGRATION_OUTPUT_DIR="$INTEGRATION_TEST_DIR/output"
 # Tools
 XCFA_MAPPER="$BUILD_DIR/xcfa-mapper"
 CLANG="$PROJECT_DIR/../backend/bin/bin/clang"
+CIR_OPT="$PROJECT_DIR/../backend/bin/bin/cir-opt"
 GCC="gcc"  # Use system gcc for compilation checks
 
 # Counters
@@ -66,9 +67,17 @@ if [ ! -f "$CLANG" ]; then
     exit 1
 fi
 
+# Check if cir-opt exists
+if [ ! -f "$CIR_OPT" ]; then
+    echo -e "${RED}ERROR: cir-opt not found at $CIR_OPT${NC}"
+    echo "Please ensure the CIR-enabled toolchain is available"
+    exit 1
+fi
+
 echo "Using tools:"
 echo "  xcfa-mapper: $XCFA_MAPPER"
 echo "  clang: $CLANG"
+echo "  cir-opt: $CIR_OPT"
 echo ""
 
 #######################################
@@ -134,9 +143,10 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
         
         # Step 1: Generate CIR from C file
         mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
+        flat_mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.flat.mlir"
         clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_clang_log.txt"
         
-        if ! "$CLANG" -Xclang -emit-cir-flat -S -o "$mlir_file" "$c_file" > "$clang_log" 2>&1; then
+        if ! "$CLANG" "$c_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
             echo -e "${RED}FAILED${NC} (CIR generation failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
             echo "  Output from clang:"
@@ -145,11 +155,22 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
             continue
         fi
         
+        # Step 1b: Flatten CIR with cir-opt
+        flat_log="$INTEGRATION_OUTPUT_DIR/${test_name}_flat_log.txt"
+        if ! "$CIR_OPT" "$mlir_file" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+            echo -e "${RED}FAILED${NC} (CIR flattening failed)"
+            FAILED_TESTS=$((FAILED_TESTS + 1))
+            echo "  Output from cir-opt:"
+            cat "$flat_log" | sed 's/^/    /'
+            echo ""
+            continue
+        fi
+        
         # Step 2: Convert CIR back to C using xcfa-mapper
         output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
         mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_mapper_log.txt"
         
-        if ! "$XCFA_MAPPER" "$mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+        if ! "$XCFA_MAPPER" "$flat_mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
             echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
             echo "  Output from xcfa-mapper:"

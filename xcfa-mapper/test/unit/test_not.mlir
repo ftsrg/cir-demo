@@ -20,7 +20,7 @@ module {
   cir.func @test_logical_not() -> !cir.int<s, 32> {
     %c1 = cir.const #cir.int<1> : !cir.int<s, 32>
     %b = cir.cast int_to_bool %c1 : !cir.int<s, 32> -> !cir.bool
-    %nb = cir.unary(not, %b) : !cir.bool, !cir.bool
+    %nb = cir.not %b : !cir.bool
     %i = cir.cast bool_to_int %nb : !cir.bool -> !cir.int<s, 32>
     cir.return %i : !cir.int<s, 32>
   }
@@ -28,7 +28,7 @@ module {
   // Bitwise not on int: return ~0xF0
   cir.func @test_bitwise_not() -> !cir.int<s, 32> {
     %c = cir.const #cir.int<240> : !cir.int<s, 32>
-    %r = cir.unary(not, %c) : !cir.int<s, 32>, !cir.int<s, 32>
+    %r = cir.not %c : !cir.int<s, 32>
     cir.return %r : !cir.int<s, 32>
   }
 }

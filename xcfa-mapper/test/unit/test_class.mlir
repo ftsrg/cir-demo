@@ -1,16 +1,15 @@
 !s32i = !cir.int<s, 32>
 !u8i = !cir.int<u, 8>
-#fn_attr = #cir<extra({nothrow = #cir.nothrow, uwtable = #cir.uwtable<async>})>
 #loc3 = loc("/home/solarowl/Repositories/cir-demo/xcfa-mapper/test/unit/test_class.cpp":4:10)
 !rec_Greeter = !cir.record<class "Greeter" padded {!u8i}>
-module @"/home/solarowl/Repositories/cir-demo/xcfa-mapper/test/unit/test_class.cpp" attributes {cir.lang = #cir.lang<cxx>, cir.module_asm = [], cir.sob = #cir.signed_overflow_behavior<undefined>, cir.triple = "x86_64-unknown-linux-gnu", cir.type_size_info = #cir.type_size_info<char = 8, int = 32, size_t = 64>, cir.uwtable = #cir.uwtable<async>, dlti.dl_spec = #dlti.dl_spec<!llvm.ptr<270> = dense<32> : vector<4xi64>, !llvm.ptr<271> = dense<32> : vector<4xi64>, !llvm.ptr<272> = dense<64> : vector<4xi64>, i64 = dense<64> : vector<2xi64>, i128 = dense<128> : vector<2xi64>, f80 = dense<128> : vector<2xi64>, !llvm.ptr = dense<64> : vector<4xi64>, i1 = dense<8> : vector<2xi64>, i8 = dense<8> : vector<2xi64>, i16 = dense<16> : vector<2xi64>, i32 = dense<32> : vector<2xi64>, f16 = dense<16> : vector<2xi64>, f64 = dense<64> : vector<2xi64>, f128 = dense<128> : vector<2xi64>, "dlti.endianness" = "little", "dlti.mangling_mode" = "e", "dlti.legal_int_widths" = array<i32: 8, 16, 32, 64>, "dlti.stack_alignment" = 128 : i64>} {
-  cir.func no_inline optnone linkonce_odr dso_local @_ZN7Greeter8sayHelloEv(%arg0: !cir.ptr<!rec_Greeter> loc("/home/solarowl/Repositories/cir-demo/xcfa-mapper/test/unit/test_class.cpp":4:10)) extra(#fn_attr) {
+module @"/home/solarowl/Repositories/cir-demo/xcfa-mapper/test/unit/test_class.cpp" attributes {cir.lang = #cir.lang<cxx>, cir.module_asm = [], cir.triple = "x86_64-unknown-linux-gnu", dlti.dl_spec = #dlti.dl_spec<!llvm.ptr<270> = dense<32> : vector<4xi64>, !llvm.ptr<271> = dense<32> : vector<4xi64>, !llvm.ptr<272> = dense<64> : vector<4xi64>, i64 = dense<64> : vector<2xi64>, i128 = dense<128> : vector<2xi64>, f80 = dense<128> : vector<2xi64>, !llvm.ptr = dense<64> : vector<4xi64>, i1 = dense<8> : vector<2xi64>, i8 = dense<8> : vector<2xi64>, i16 = dense<16> : vector<2xi64>, i32 = dense<32> : vector<2xi64>, f16 = dense<16> : vector<2xi64>, f64 = dense<64> : vector<2xi64>, f128 = dense<128> : vector<2xi64>, "dlti.endianness" = "little", "dlti.mangling_mode" = "e", "dlti.legal_int_widths" = array<i32: 8, 16, 32, 64>, "dlti.stack_alignment" = 128 : i64>} {
+  cir.func no_inline dso_local @_ZN7Greeter8sayHelloEv(%arg0: !cir.ptr<!rec_Greeter>) {
     %0 = cir.alloca !cir.ptr<!rec_Greeter>, !cir.ptr<!cir.ptr<!rec_Greeter>>, ["this", init] {alignment = 8 : i64} loc(#loc3)
     cir.store %arg0, %0 : !cir.ptr<!rec_Greeter>, !cir.ptr<!cir.ptr<!rec_Greeter>> loc(#loc4)
     %1 = cir.load %0 : !cir.ptr<!cir.ptr<!rec_Greeter>>, !cir.ptr<!rec_Greeter> loc(#loc3)
     cir.return loc(#loc2)
   } loc(#loc12)
-  cir.func no_inline optnone dso_local @main() -> !s32i extra(#fn_attr) {
+  cir.func no_inline dso_local @main() -> !s32i {
     %0 = cir.alloca !s32i, !cir.ptr<!s32i>, ["__retval"] {alignment = 4 : i64} loc(#loc6)
     %1 = cir.alloca !rec_Greeter, !cir.ptr<!rec_Greeter>, ["g"] {alignment = 1 : i64} loc(#loc14)
     cir.call @_ZN7Greeter8sayHelloEv(%1) : (!cir.ptr<!rec_Greeter>) -> () loc(#loc9)
