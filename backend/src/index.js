@@ -104,8 +104,25 @@ app.get('/api/examples/*', async (req, res) => {
   }
 });
 
-// clang binary (the user placed it under backend/bin/bin/clang)
-const CLANG_BIN = path.join(__dirname, '..', 'bin', 'bin', 'clang');
+function generatedMlirCandidates(sourcePath) {
+  return [
+    `${sourcePath}.mlir`,
+    sourcePath.replace(/\.(c|cc|cpp|cxx)$/i, '.mlir')
+  ];
+}
+
+function statSafeSync(candidate) {
+  try {
+    return fsSync.statSync(candidate);
+  } catch (_) {
+    return null;
+  }
+}
+
+const TOOLCHAIN_ROOT = path.join(__dirname, '..', 'bin');
+const CLANG_BIN = path.join(TOOLCHAIN_ROOT, 'bin', 'clang');
+const CIR_OPT_BIN = path.join(TOOLCHAIN_ROOT, 'bin', 'cir-opt');
+console.log(`Using CIR toolchain from ${TOOLCHAIN_ROOT}`);
 const { execFile } = require('child_process');
 const execFileAsync = (file, args, opts = {}) => new Promise((resolve) => {
   execFile(file, args, Object.assign({ timeout: 20000, maxBuffer: 50 * 1024 * 1024 }, opts), (err, stdout, stderr) => {
@@ -159,7 +176,7 @@ app.get('/api/clang-version', async (req, res) => {
   }
 });
 
-// generation endpoint: runs clang to produce LLVM IR, clang IR and flat clang IR
+// generation endpoint: runs clang to produce LLVM IR and CIR, then flattens CIR with cir-opt
 app.post('/api/generate', async (req, res) => {
   const code = req.body.code || '';
   const tmpDir = path.join(__dirname, '..', 'tmp');
@@ -167,11 +184,9 @@ app.post('/api/generate', async (req, res) => {
   const base = `input-${Date.now()}`;
   const tmpFile = path.join(tmpDir, `${base}.cpp`);
   const tmpFileCir = path.join(tmpDir, `${base}.cir.cpp`);
-  const tmpFileFlat = path.join(tmpDir, `${base}.flat.cpp`);
   await fs.writeFile(tmpFile, code, 'utf8');
-  // write two copies for the CIR and flat runs (some clang frontends expect source filename)
+  // write a dedicated CIR copy because clang writes the generated MLIR next to the input file
   await fs.writeFile(tmpFileCir, code, 'utf8');
-  await fs.writeFile(tmpFileFlat, code, 'utf8');
 
   // Prepare commands
   // LLVM IR: clang -S -emit-llvm <file> -o -
@@ -181,23 +196,19 @@ app.post('/api/generate', async (req, res) => {
   // The CIR frontend writes a .mlir file next to the input file (same basename + .mlir)
   const clangIrArgs = [tmpFileCir, '-Xclang', '-emit-cir', '-fsyntax-only'];
 
-  // Flat Clang IR: clang <file> -Xclang -emit-cir-flat -fsyntax-only
-  const clangFlatArgs = [tmpFileFlat, '-Xclang', '-emit-cir-flat', '-fsyntax-only'];
-
-  // Run commands in parallel with guarded promises
-  const tasks = {
-    llvm: execFileAsync(CLANG_BIN, llvmArgs),
-    clang: execFileAsync(CLANG_BIN, clangIrArgs),
-    flat_clang: execFileAsync(CLANG_BIN, clangFlatArgs),
-  };
-
-  const filesToCleanup = [tmpFile, tmpFileCir, tmpFileFlat];
+  // LLVM IR and CIR generation are independent; flattening depends on the CIR output.
+  const filesToCleanup = [tmpFile, tmpFileCir];
   try {
-    const [llvmOut, clangOut, flatOut] = await Promise.all([tasks.llvm, tasks.clang, tasks.flat_clang]);
+    const [llvmOut, clangOut] = await Promise.all([
+      execFileAsync(CLANG_BIN, llvmArgs),
+      execFileAsync(CLANG_BIN, clangIrArgs)
+    ]);
+
+    let flatOut = { stdout: '', stderr: '', code: 0 };
 
     // Read generated CIR files (if any). Some frontends append '.mlir', others replace '.cpp' with '.mlir'.
-    const cirCandidates = [ `${tmpFileCir}.mlir`, tmpFileCir.replace(/\.cpp$/i, '.mlir') ];
-    const flatCandidates = [ `${tmpFileFlat}.mlir`, tmpFileFlat.replace(/\.cpp$/i, '.mlir') ];
+    const cirCandidates = generatedMlirCandidates(tmpFileCir);
+    let cirMlirPath = null;
 
     for (const cand of cirCandidates) {
       try {
@@ -206,21 +217,40 @@ app.post('/api/generate', async (req, res) => {
           const data = await fs.readFile(cand, 'utf8').catch(() => '');
           if (clangOut && typeof clangOut === 'object') clangOut.stdout = (data || '') + (clangOut.stdout || '');
           filesToCleanup.push(cand);
+          cirMlirPath = cand;
           break;
         }
       } catch (_) {}
     }
 
-    for (const cand of flatCandidates) {
-      try {
-        const exists = await fs.stat(cand).then(s => s.isFile()).catch(() => false);
-        if (exists) {
-          const data = await fs.readFile(cand, 'utf8').catch(() => '');
-          if (flatOut && typeof flatOut === 'object') flatOut.stdout = (data || '') + (flatOut.stdout || '');
-          filesToCleanup.push(cand);
-          break;
-        }
-      } catch (_) {}
+    if (cirMlirPath) {
+      const flatMlirPath = path.join(tmpDir, `${base}.flat.mlir`);
+      filesToCleanup.push(flatMlirPath);
+
+      if (statSafeSync(CIR_OPT_BIN)?.isFile()) {
+        flatOut = await execFileAsync(CIR_OPT_BIN, [cirMlirPath, '-cir-flatten-cfg', '-o', flatMlirPath]);
+        try {
+          const flatExists = await fs.stat(flatMlirPath).then(s => s.isFile()).catch(() => false);
+          if (flatExists) {
+            const data = await fs.readFile(flatMlirPath, 'utf8').catch(() => '');
+            flatOut.stdout = (data || '') + (flatOut.stdout || '');
+          }
+        } catch (_) {}
+      } else {
+        flatOut = {
+          stdout: '',
+          stderr: `cir-opt not found at ${CIR_OPT_BIN}`,
+          code: 1,
+          error: `cir-opt not found at ${CIR_OPT_BIN}`
+        };
+      }
+    } else {
+      flatOut = {
+        stdout: '',
+        stderr: 'clang did not produce a CIR .mlir file to flatten',
+        code: clangOut.code === 0 ? 1 : clangOut.code,
+        error: 'missing CIR .mlir output'
+      };
     }
 
   const xcfaMapperBin = path.join(__dirname, '..', '..', 'xcfa-mapper', 'build', 'xcfa-mapper');
@@ -267,7 +297,7 @@ app.post('/api/generate', async (req, res) => {
         filesToCleanup.push(outTraceBest);
       } catch (_) {}
     } else {
-      console.debug('Skipping xcfa-mapper: no flat clang CIR output available');
+      console.debug('Skipping xcfa-mapper: no flattened CIR output available');
     }
   } catch (err) {
     console.debug('xcfa-mapper run failed:', String(err));
@@ -293,7 +323,7 @@ app.post('/api/generate', async (req, res) => {
       }
 
     } else {
-      console.debug('Skipping xcfa-mapper: no flat clang CIR output available');
+      console.debug('Skipping xcfa-mapper: no flattened CIR output available');
     }
   } catch (err) {
     console.debug('Theta run failed:', String(err));
