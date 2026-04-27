@@ -54,6 +54,7 @@ def parse_args() -> argparse.Namespace:
     default_esbmc_root = repo_root / "backend" / "examples" / "esbmc-eval"
     default_mapper = script_dir.parent / "build" / "xcfa-mapper"
     default_clang = repo_root / "backend" / "bin" / "bin" / "clang"
+    default_cir_opt = repo_root / "backend" / "bin" / "bin" / "cir-opt"
     default_output = script_dir / "esbmc_inventory_output"
 
     parser = argparse.ArgumentParser(
@@ -64,6 +65,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--glob", dest="globs", action="append", default=[], help="Additional glob for benchmark yml files, relative to esbmc root.")
     parser.add_argument("--mapper", default=str(default_mapper), help="Path to xcfa-mapper binary")
     parser.add_argument("--clang", default=str(default_clang), help="Path to CIR-enabled clang binary")
+    parser.add_argument("--cir-opt", default=str(default_cir_opt), dest="cir_opt", help="Path to cir-opt binary")
     parser.add_argument("--gcc", default="gcc", help="C compiler used for generated-C syntax checks")
     parser.add_argument("--output-dir", default=str(default_output), help="Directory for artifacts and reports")
     parser.add_argument("--limit", type=int, default=0, help="Max number of benchmarks to process")
@@ -210,6 +212,7 @@ def infer_reason(stage: str, logs: dict[str, str], source_text: str, mlir_text: 
 
     stage_priority = {
         "clang_failed": ["clang_log"],
+        "flatten_failed": ["flatten_log"],
         "mapper_failed": ["mapper_log"],
         "mapper_partial": ["mapper_log", "compile_log"],
         "compile_failed": ["compile_log", "mapper_log"],
@@ -241,6 +244,7 @@ def benchmark_case(case_index: int, yml_path: Path, esbmc_root: Path, args: argp
     artifact_dir.mkdir(parents=True, exist_ok=True)
 
     mlir_path = artifact_dir / "input.mlir"
+    flat_mlir_path = artifact_dir / "input.flat.mlir"
     c_path = artifact_dir / "output.c"
     trace_path = artifact_dir / "trace.json"
     compile_sentinel = artifact_dir / "compile.o"
@@ -248,6 +252,7 @@ def benchmark_case(case_index: int, yml_path: Path, esbmc_root: Path, args: argp
     source_text = read_text(source_path)
     logs = {
         "clang_log": "",
+        "flatten_log": "",
         "mapper_log": "",
         "compile_log": "",
     }
@@ -262,7 +267,7 @@ def benchmark_case(case_index: int, yml_path: Path, esbmc_root: Path, args: argp
         "c++",
         "-std=c++17",
         "-Xclang",
-        "-emit-cir-flat",
+        "-emit-cir",
         "-S",
         str(source_path),
         "-o",
@@ -281,10 +286,22 @@ def benchmark_case(case_index: int, yml_path: Path, esbmc_root: Path, args: argp
 
     if status == "success":
         mlir_text = read_text(mlir_path)
+        flatten_command = [args.cir_opt, str(mlir_path), "-cir-flatten-cfg", "-o", str(flat_mlir_path)]
+        try:
+            flatten_result = run_command(flatten_command, args.timeout)
+        except subprocess.TimeoutExpired:
+            logs["flatten_log"] = f"Timed out after {args.timeout}s"
+            status = "flatten_failed"
+        else:
+            logs["flatten_log"] = (flatten_result.stdout or "") + (flatten_result.stderr or "")
+            if flatten_result.returncode != 0 or not flat_mlir_path.exists():
+                status = "flatten_failed"
+
+    if status == "success":
         mapper_command = [args.mapper]
         if args.best_effort:
             mapper_command.append("--best-effort")
-        mapper_command.extend(["--monitor-json", str(trace_path), str(mlir_path), str(c_path)])
+        mapper_command.extend(["--monitor-json", str(trace_path), str(flat_mlir_path), str(c_path)])
         try:
             mapper_result = run_command(mapper_command, args.timeout)
         except subprocess.TimeoutExpired:
@@ -413,10 +430,13 @@ def write_markdown_report(results: list[dict[str, object]], output_dir: Path, ar
 def validate_tools(args: argparse.Namespace) -> None:
     mapper_path = Path(args.mapper)
     clang_path = Path(args.clang)
+    cir_opt_path = Path(args.cir_opt)
     if not mapper_path.exists():
         raise SystemExit(f"xcfa-mapper not found: {mapper_path}")
     if not clang_path.exists():
         raise SystemExit(f"clang not found: {clang_path}")
+    if not cir_opt_path.exists():
+        raise SystemExit(f"cir-opt not found: {cir_opt_path}")
 
 
 def main() -> int:

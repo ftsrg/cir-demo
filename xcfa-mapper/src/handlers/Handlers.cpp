@@ -133,8 +133,22 @@ bool emitRegionBody(Region &region, Mapper &m, std::ostream &out,
 
 bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
-  std::string varName = extractName(o);
-  
+
+  // Try the typed property accessor first (modern CIR).
+  std::string varName = op.getName().str();
+
+  // Fallback 1: inherent attribute accessible via the generic MLIR interface.
+  if (varName.empty()) {
+    if (auto attr = o->getInherentAttr("name"))
+      if (auto sa = llvm::dyn_cast<StringAttr>(*attr))
+        varName = sa.getValue().str();
+  }
+
+  // Fallback 2: legacy regular-attribute storage (older compiled libraries
+  // stored the name as a plain dict attribute rather than a property).
+  if (varName.empty())
+    varName = extractName(o);
+
   if (varName.empty()) {
     if (!m.isBestEffort()) {
       llvm::errs() << ERR_ALLOCA_NO_NAME << "\n";
@@ -655,6 +669,11 @@ bool handleReturn(cir::ReturnOp op, Mapper &m, std::ostream &out) {
   }
   std::string rv = m.getOrCreateName(o->getOperand(0));
   out << "  return " << rv << ";\n";
+  return true;
+}
+
+bool handleUnreachable(cir::UnreachableOp op, Mapper &m, std::ostream &out) {
+  out << "  __builtin_unreachable();\n";
   return true;
 }
 
@@ -1269,6 +1288,7 @@ void registerBuiltinHandlers(Mapper &m) {
   // Function calls
   m.registerTypedHandler<cir::CallOp>(handleCall);
   m.registerTypedHandler<cir::ReturnOp>(handleReturn);
+  m.registerTypedHandler<cir::UnreachableOp>(handleUnreachable);
   
   // Memory and pointer operations
   m.registerTypedHandler<cir::GetMemberOp>(handleGetMember);

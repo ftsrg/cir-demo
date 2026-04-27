@@ -83,6 +83,20 @@ int main(int argc, char **argv) {
     input.assign((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
   }
 
+  // Workaround: the tablegen-generated AllocaOp parser has a bug where it
+  // consumes the comma and sets 'init' before verifying the keyword, so it
+  // cannot parse ", cleanup_dest_slot" after the alloca name -- it expects
+  // 'init' instead.  Since xcfa-mapper never inspects this flag (it only marks
+  // the alloca as the C++ cleanup-destination-dispatch slot, something the C
+  // emitter doesn't need), we can safely strip it before handing the text to
+  // the MLIR parser.
+  {
+    const std::string pattern = ", cleanup_dest_slot";
+    std::string::size_type pos = 0;
+    while ((pos = input.find(pattern, pos)) != std::string::npos)
+      input.erase(pos, pattern.size());
+  }
+
   llvm::SourceMgr sourceMgr;
   sourceMgr.AddNewSourceBuffer(llvm::MemoryBuffer::getMemBuffer(input), llvm::SMLoc());
 

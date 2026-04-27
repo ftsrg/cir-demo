@@ -37,6 +37,7 @@ INTEGRATION_OUTPUT_DIR="$INTEGRATION_TEST_DIR/output"
 # Tools
 XCFA_MAPPER="$BUILD_DIR/xcfa-mapper"
 CLANG="$PROJECT_DIR/../backend/bin/bin/clang"
+CLANGPP="$PROJECT_DIR/../backend/bin/bin/clang++"
 CIR_OPT="$PROJECT_DIR/../backend/bin/bin/cir-opt"
 GCC="gcc"  # Use system gcc for compilation checks
 
@@ -44,6 +45,11 @@ GCC="gcc"  # Use system gcc for compilation checks
 TOTAL_TESTS=0
 PASSED_TESTS=0
 FAILED_TESTS=0
+SKIPPED_TESTS=0
+
+# Directories for E2E tests
+ESBMC_EVAL_DIR="$PROJECT_DIR/../backend/examples/esbmc-eval"
+ESBMC_EVAL_OUTPUT_DIR="$SCRIPT_DIR/esbmc-eval/output"
 
 # Create output directory if it doesn't exist
 mkdir -p "$INTEGRATION_OUTPUT_DIR" "$UNIT_TEST_OUTPUT_DIR"
@@ -77,6 +83,7 @@ fi
 echo "Using tools:"
 echo "  xcfa-mapper: $XCFA_MAPPER"
 echo "  clang: $CLANG"
+echo "  clang++: $CLANGPP"
 echo "  cir-opt: $CIR_OPT"
 echo ""
 
@@ -198,6 +205,71 @@ done
 echo ""
 
 #######################################
+# E2E Tests (esbmc-eval)
+#######################################
+echo "======================================"
+echo "  Running E2E Tests (esbmc-eval)"
+echo "======================================"
+echo ""
+
+if [ ! -d "$ESBMC_EVAL_DIR" ]; then
+    echo -e "${YELLOW}SKIPPED: esbmc-eval directory not found at $ESBMC_EVAL_DIR${NC}"
+elif [ ! -f "$CLANGPP" ]; then
+    echo -e "${YELLOW}SKIPPED: clang++ not found at $CLANGPP${NC}"
+else
+    mkdir -p "$ESBMC_EVAL_OUTPUT_DIR"
+
+    while IFS= read -r cpp_file; do
+        rel_path="${cpp_file#$ESBMC_EVAL_DIR/}"   # e.g. algorithm/algorithm0/main.cpp
+        test_dir="$(dirname "$rel_path")"           # e.g. algorithm/algorithm0
+        test_id="${test_dir//\//__}"               # e.g. algorithm__algorithm0
+        TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+        echo -n "Testing $test_id... "
+
+        mlir_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}.mlir"
+        flat_mlir_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}.flat.mlir"
+        clang_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_clang_log.txt"
+
+        # Step 1: Generate CIR from C++ file
+        if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
+            echo -e "${YELLOW}SKIPPED${NC} (CIR generation failed)"
+            SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+            continue
+        fi
+
+        # Step 2: Flatten CIR
+        flat_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_flat_log.txt"
+        if ! "$CIR_OPT" "$mlir_file" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+            echo -e "${YELLOW}SKIPPED${NC} (CIR flattening failed)"
+            SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+            continue
+        fi
+
+        # Step 3: Convert flat CIR to C using xcfa-mapper
+        # Use --best-effort mode: C++ STL templates produce compiler temporaries
+        # with empty names and other edge-case ops; best-effort emits comments for
+        # anything that can't be mapped cleanly instead of aborting.
+        output_c_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_output.c"
+        mapper_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_mapper_log.txt"
+
+        if ! "$XCFA_MAPPER" --best-effort "$flat_mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+            echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+            FAILED_TESTS=$((FAILED_TESTS + 1))
+            echo "  Output from xcfa-mapper:"
+            head -5 "$mapper_log" | sed 's/^/    /'
+            echo ""
+            continue
+        fi
+
+        echo -e "${GREEN}PASSED${NC}"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+    done < <(find "$ESBMC_EVAL_DIR" -name "main.cpp" | sort)
+fi
+
+echo ""
+
+#######################################
 # Summary
 #######################################
 echo "======================================"
@@ -205,6 +277,7 @@ echo "  Test Summary"
 echo "======================================"
 echo "Total tests:  $TOTAL_TESTS"
 echo -e "Passed:       ${GREEN}$PASSED_TESTS${NC}"
+echo -e "Skipped:      ${YELLOW}$SKIPPED_TESTS${NC}"
 echo -e "Failed:       ${RED}$FAILED_TESTS${NC}"
 echo ""
 
@@ -212,6 +285,6 @@ if [ $FAILED_TESTS -eq 0 ]; then
     echo -e "${GREEN}All tests passed!${NC}"
     exit 0
 else
-    echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR${NC}"
+    echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR and $ESBMC_EVAL_OUTPUT_DIR${NC}"
     exit 1
 fi
