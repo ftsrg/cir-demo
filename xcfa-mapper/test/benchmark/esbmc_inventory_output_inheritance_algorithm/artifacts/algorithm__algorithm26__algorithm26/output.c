@@ -1,5 +1,18 @@
 // Struct definitions (auto-parsed)
-struct std::basic_ostream<char> { unsigned char __placeholder; };
+struct __locale_struct { unsigned char __placeholder; };
+struct std::basic_ios<char> { struct std3A3Aios_base __field0; char __field2; _Bool __field3; };
+struct std::basic_ostream<char> { struct std3A3Abasic_ios3Cchar3E __field1; };
+struct std::basic_streambuf<char> { struct std3A3Alocale __field7; };
+struct std::ctype<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; _Bool __field3; char __field8; char __field11; };
+struct std::ios_base { long long __field1; long long __field2; int __field3; int __field4; int __field5; struct std3A3Aios_base3A3A_Words __field7; int __field9; struct std3A3Alocale __field11; };
+struct std::ios_base::_Callback_list { int __field2; int __field3; };
+struct std::ios_base::_Words { long long __field1; };
+struct std::locale { unsigned char __placeholder; };
+struct std::locale::_Impl { int __field0; unsigned long long __field2; };
+struct std::locale::facet { int __field1; };
+struct std::locale::facet_base { int __field1; };
+struct std::num_get<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; };
+struct std::num_put<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; };
 
 int current = 0;
 char _str[18] = "myarray[i] == i+1";
@@ -119,3 +132,27 @@ bb46:
   goto bb48;
 bb47:
   char* cast70 = (char*)_str;
+  char* c71 = _str_1;
+  unsigned int c72 = 24;
+  char* cast73 = (char*)_str_2;
+  __assert_fail(cast70, c71, c72, cast73);
+  goto bb48;
+bb48:
+  goto bb49;
+bb49:
+  int t74 = i52;
+  int u75 = ++t74;
+  i52 = u75;
+  goto bb44;
+bb50:
+  goto bb51;
+bb51:
+  struct std::basic_ostream<char>* g76 = &_ZSt4cout;
+  void* g77 = &_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_;
+  struct std::basic_ostream<char>* r78 = std__ostream__operator___std__ostream_____(g76, g77);
+  int c79 = 0;
+  __retval53 = c79;
+  int t80 = __retval53;
+  return t80;
+}
+

@@ -18,9 +18,9 @@ bb3:
   h6 = v2;
   struct CPolygon* t7 = this4;
   int t8 = w5;
-  *t7->width = t8;
+  t7->width = t8;
   int t9 = h6;
-  *t7->height = t9;
+  t7->height = t9;
   return;
 }
 
@@ -38,9 +38,9 @@ bb13:
   b16 = v12;
   struct CPolygon* t17 = this14;
   int t18 = a15;
-  *t17->width = t18;
+  t17->width = t18;
   int t19 = b16;
-  *t17->height = t19;
+  t17->height = t19;
   return;
 }
 
@@ -51,8 +51,8 @@ bb21:
   int __retval23;
   this22 = v20;
   struct CPolygon* t24 = this22;
-  int t25 = *t24->width;
-  int t26 = *t24->height;
+  int t25 = t24->width;
+  int t26 = t24->height;
   int b27 = t25 * t26;
   __retval23 = b27;
   int t28 = __retval23;

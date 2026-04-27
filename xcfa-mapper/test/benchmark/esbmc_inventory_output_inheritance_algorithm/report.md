@@ -2,14 +2,13 @@
 
 - Benchmarks processed: 160
 - Sets: inheritance_bringup.set, algorithm.set
-- Status counts: clang_failed=4, compile_failed=3, mapper_failed=152, success=1
+- Status counts: clang_failed=4, compile_failed=12, mapper_failed=139, success=5
 
 ## Top unsupported reasons
 
 - 122 × inheritance / virtual dispatch, exceptions / try-catch
-- 23 × inheritance / virtual dispatch
-- 5 × unsupported constant literal lowering
-- 3 × C++ name leakage into emitted C
+- 19 × inheritance / virtual dispatch
+- 8 × C++ name leakage into emitted C
 - 2 × exceptions / try-catch
 - 1 × /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/inheritance_bringup/dynamic_cast_void_error/main.cpp:53:20: error: 'void' is not a class type
 - 1 × /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/algorithm/algorithm11/main.cpp:29:3: error: use of undeclared identifier 'assert'
@@ -23,16 +22,12 @@
 - `inheritance_bringup/dynamic_cast_simple2/dynamic_cast_simple2` — `mapper_failed` — exceptions / try-catch | tags: exceptions / try-catch
 - `inheritance_bringup/dynamic_cast_simple2_fail/dynamic_cast_simple2_fail` — `mapper_failed` — exceptions / try-catch | tags: exceptions / try-catch
 - `inheritance_bringup/dynamic_cast_void_error/dynamic_cast_void_error` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/inheritance_bringup/dynamic_cast_void_error/main.cpp:53:20: error: 'void' is not a class type
-- `inheritance_bringup/inheritance01/inheritance01` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
-- `inheritance_bringup/inheritance01_fail/inheritance01_fail` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
 - `inheritance_bringup/inheritance02/inheritance02` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
 - `inheritance_bringup/inheritance02_fail/inheritance02_fail` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
-- `inheritance_bringup/inheritance07/inheritance07` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
-- `inheritance_bringup/inheritance07_fail/inheritance07_fail` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
-- `inheritance_bringup/inheritance09/inheritance09` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
-- `inheritance_bringup/inheritance09_fail/inheritance09_fail` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
-- `inheritance_bringup/single_member/single_member` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
-- `inheritance_bringup/single_member_fail/single_member_fail` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `inheritance_bringup/inheritance09/inheritance09` — `compile_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `inheritance_bringup/inheritance09_fail/inheritance09_fail` — `compile_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `inheritance_bringup/single_member/single_member` — `compile_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
+- `inheritance_bringup/single_member_fail/single_member_fail` — `compile_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
 - `algorithm/algorithm1/algorithm1` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm10/algorithm10` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm100/algorithm100` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
@@ -59,8 +54,8 @@
 - `algorithm/algorithm115/algorithm115` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm116/algorithm116` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm117/algorithm117` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
-- `algorithm/algorithm118/algorithm118` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
-- `algorithm/algorithm119/algorithm119` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `algorithm/algorithm118/algorithm118` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
+- `algorithm/algorithm119/algorithm119` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
 - `algorithm/algorithm12/algorithm12` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm120/algorithm120` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
 - `algorithm/algorithm121/algorithm121` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
@@ -80,7 +75,7 @@
 - `algorithm/algorithm23/algorithm23` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm24/algorithm24` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm25/algorithm25` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
-- `algorithm/algorithm26/algorithm26` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `algorithm/algorithm26/algorithm26` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
 - `algorithm/algorithm27/algorithm27` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
 - `algorithm/algorithm28/algorithm28` — `mapper_failed` — inheritance / virtual dispatch | tags: inheritance / virtual dispatch
 - `algorithm/algorithm29/algorithm29` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
@@ -114,7 +109,7 @@
 - `algorithm/algorithm49/algorithm49` — `clang_failed` — /home/solarowl/Repositories/cir-demo/backend/examples/esbmc-eval/algorithm/algorithm49/main.cpp:23:3: error: use of undeclared identifier 'assert'
 - `algorithm/algorithm5/algorithm5` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm50/algorithm50` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
-- `algorithm/algorithm51/algorithm51` — `mapper_failed` — unsupported constant literal lowering | tags: unsupported constant literal lowering
+- `algorithm/algorithm51/algorithm51` — `compile_failed` — C++ name leakage into emitted C | tags: C++ name leakage into emitted C
 - `algorithm/algorithm52/algorithm52` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm53/algorithm53` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm54/algorithm54` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
@@ -159,7 +154,7 @@
 - `algorithm/algorithm87/algorithm87` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm87_fill_n/algorithm87_fill_n` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm88/algorithm88` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
-- `algorithm/algorithm89/algorithm89` — `mapper_failed` — unsupported constant literal lowering | tags: inheritance / virtual dispatch, unsupported constant literal lowering
+- `algorithm/algorithm89/algorithm89` — `compile_failed` — C++ name leakage into emitted C | tags: inheritance / virtual dispatch, C++ name leakage into emitted C
 - `algorithm/algorithm9/algorithm9` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm90/algorithm90` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch
 - `algorithm/algorithm90_unique/algorithm90_unique` — `mapper_failed` — inheritance / virtual dispatch, exceptions / try-catch | tags: inheritance / virtual dispatch, exceptions / try-catch

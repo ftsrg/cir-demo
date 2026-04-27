@@ -1,5 +1,18 @@
 // Struct definitions (auto-parsed)
-struct std::basic_ostream<char> { unsigned char __placeholder; };
+struct __locale_struct { unsigned char __placeholder; };
+struct std::basic_ios<char> { struct std3A3Aios_base __field0; char __field2; _Bool __field3; };
+struct std::basic_ostream<char> { struct std3A3Abasic_ios3Cchar3E __field1; };
+struct std::basic_streambuf<char> { struct std3A3Alocale __field7; };
+struct std::ctype<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; _Bool __field3; char __field8; char __field11; };
+struct std::ios_base { long long __field1; long long __field2; int __field3; int __field4; int __field5; struct std3A3Aios_base3A3A_Words __field7; int __field9; struct std3A3Alocale __field11; };
+struct std::ios_base::_Callback_list { int __field2; int __field3; };
+struct std::ios_base::_Words { long long __field1; };
+struct std::locale { unsigned char __placeholder; };
+struct std::locale::_Impl { int __field0; unsigned long long __field2; };
+struct std::locale::facet { int __field1; };
+struct std::locale::facet_base { int __field1; };
+struct std::num_get<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; };
+struct std::num_put<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; };
 
 struct std::basic_ostream<char> _ZSt4cout;
 char _str[11] = "min(1,2)==";
@@ -190,3 +203,36 @@ bb67:
   goto bb68;
 bb68:
   char* cast114 = (char*)_str_3;
+  char* c115 = _str_4;
+  unsigned int c116 = 19;
+  char* cast117 = (char*)_str_5;
+  __assert_fail(cast114, c115, c116, cast117);
+  goto bb69;
+bb69:
+  goto bb70;
+bb70:
+  struct std::basic_ostream<char>* g118 = &_ZSt4cout;
+  char* cast119 = (char*)_str_6;
+  struct std::basic_ostream<char>* r120 = _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc(g118, cast119);
+  double c121 = 3.1400000000000001;
+  ref.tmp680 = c121;
+  double c122 = 2.7200000000000002;
+  ref.tmp781 = c122;
+  double* r123 = double_const__std__min_double_(&ref.tmp680, &ref.tmp781);
+  double t124 = *r123;
+  struct std::basic_ostream<char>* r125 = _ZNSolsEd(r120, t124);
+  void* g126 = &_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_;
+  struct std::basic_ostream<char>* r127 = std__ostream__operator___std__ostream_____(r125, g126);
+  goto bb71;
+bb71:
+  goto bb72;
+bb72:
+  int c128 = 0;
+  goto bb73;
+bb73:
+  int c129 = 0;
+  __retval82 = c129;
+  int t130 = __retval82;
+  return t130;
+}
+

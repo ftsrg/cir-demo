@@ -1,8 +1,21 @@
 // Struct definitions (auto-parsed)
 struct __gnu_cxx::__ops::_Iter_comp_iter<bool (*)(int, int)> { void* _M_comp; };
-struct __gnu_cxx::__ops::_Iter_less_iter { unsigned char __placeholder; };
-struct myclass { unsigned char __placeholder; };
-struct std::basic_ostream<char> { unsigned char __placeholder; };
+struct __gnu_cxx::__ops::_Iter_less_iter { unsigned char __field0; };
+struct __locale_struct { unsigned char __placeholder; };
+struct myclass { unsigned char __field0; };
+struct std::basic_ios<char> { struct std3A3Aios_base __field0; char __field2; _Bool __field3; };
+struct std::basic_ostream<char> { struct std3A3Abasic_ios3Cchar3E __field1; };
+struct std::basic_streambuf<char> { struct std3A3Alocale __field7; };
+struct std::ctype<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; _Bool __field3; char __field8; char __field11; };
+struct std::ios_base { long long __field1; long long __field2; int __field3; int __field4; int __field5; struct std3A3Aios_base3A3A_Words __field7; int __field9; struct std3A3Alocale __field11; };
+struct std::ios_base::_Callback_list { int __field2; int __field3; };
+struct std::ios_base::_Words { long long __field1; };
+struct std::locale { unsigned char __placeholder; };
+struct std::locale::_Impl { int __field0; unsigned long long __field2; };
+struct std::locale::facet { int __field1; };
+struct std::locale::facet_base { int __field1; };
+struct std::num_get<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; };
+struct std::num_put<char> { struct std3A3Alocale3A3Afacet2Ebase __field0; };
 struct __gnu_cxx::__ops::_Iter_comp_iter<myclass> { struct myclass _M_comp; };
 
 int __const_main_myints[7];
@@ -258,7 +271,7 @@ bb139:
   __it1141 = v137;
   __it2142 = v138;
   struct __gnu_cxx::__ops::_Iter_comp_iter<bool (*)(int, int)>* t144 = this140;
-  void* t145 = *t144->_M_comp;
+  void* t145 = t144->_M_comp;
   int* t146 = __it1141;
   int t147 = *t146;
   int* t148 = __it2142;
@@ -340,7 +353,7 @@ bb193:
   __comp195 = v192;
   struct __gnu_cxx::__ops::_Iter_comp_iter<bool (*)(int, int)>* t196 = this194;
   void* t197 = __comp195;
-  *t196->_M_comp = t197;
+  t196->_M_comp = t197;
   return;
 }
 
@@ -498,7 +511,7 @@ bb291:
   int t298 = *t297;
   int* t299 = __it2294;
   int t300 = *t299;
-  _Bool r301 = myclass__operator__(t296->_M_comp, t298, t300);
+  _Bool r301 = myclass__operator__(&t296->_M_comp, t298, t300);
   __retval295 = r301;
   _Bool t302 = __retval295;
   return t302;

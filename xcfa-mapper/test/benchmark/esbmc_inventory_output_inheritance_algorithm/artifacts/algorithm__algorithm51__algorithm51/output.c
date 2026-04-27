@@ -1,6 +1,6 @@
 // Struct definitions (auto-parsed)
 struct __gnu_cxx::__ops::_Iter_comp_iter<bool (*)(int, int)> { void* _M_comp; };
-struct __gnu_cxx::__ops::_Iter_less_iter { unsigned char __placeholder; };
+struct __gnu_cxx::__ops::_Iter_less_iter { unsigned char __field0; };
 
 int __const_main_continent[4];
 int __const_main_container[10];
@@ -199,7 +199,7 @@ bb117:
   __it1119 = v115;
   __it2120 = v116;
   struct __gnu_cxx::__ops::_Iter_comp_iter<bool (*)(int, int)>* t122 = this118;
-  void* t123 = *t122->_M_comp;
+  void* t123 = t122->_M_comp;
   int* t124 = __it1119;
   int t125 = *t124;
   int* t126 = __it2120;
@@ -316,7 +316,7 @@ bb195:
   __comp197 = v194;
   struct __gnu_cxx::__ops::_Iter_comp_iter<bool (*)(int, int)>* t198 = this196;
   void* t199 = __comp197;
-  *t198->_M_comp = t199;
+  t198->_M_comp = t199;
   return;
 }
 
@@ -382,3 +382,33 @@ bb229:
   goto bb231;
 bb230:
   char* cast244 = (char*)_str;
+  char* c245 = _str_1;
+  unsigned int c246 = 23;
+  char* cast247 = (char*)_str_2;
+  __assert_fail(cast244, c245, c246, cast247);
+  goto bb231;
+bb231:
+  int* cast248 = (int*)container236;
+  int c249 = 10;
+  int* cast250 = (int*)continent237;
+  int c251 = 4;
+  void* g252 = &_Z10myfunctionii;
+  _Bool r253 = bool_std__includes_int___int___bool_____int__int___int___int___int___int___bool____(cast248, &container236[c249], cast250, &continent237[c251], g252);
+  if (r253) goto bb232; else goto bb233;
+bb232:
+  int c254 = 0;
+  goto bb234;
+bb233:
+  char* cast255 = (char*)_str_3;
+  char* c256 = _str_1;
+  unsigned int c257 = 24;
+  char* cast258 = (char*)_str_2;
+  __assert_fail(cast255, c256, c257, cast258);
+  goto bb234;
+bb234:
+  int c259 = 0;
+  __retval235 = c259;
+  int t260 = __retval235;
+  return t260;
+}
+

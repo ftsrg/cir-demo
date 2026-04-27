@@ -1,13 +1,13 @@
 // Struct definitions (auto-parsed)
 struct __gnu_cxx::__normal_iterator<int *, std::vector<int>> { int* _M_current; };
-struct __gnu_cxx::__ops::_Iter_less_iter { unsigned char __placeholder; };
-struct __gnu_cxx::__ops::_Iter_less_val { unsigned char __placeholder; };
-struct std::_Vector_base<int, std::allocator<int>>::_Vector_impl { unsigned char __placeholder; };
+struct __gnu_cxx::__ops::_Iter_less_iter { unsigned char __field0; };
+struct __gnu_cxx::__ops::_Iter_less_val { unsigned char __field0; };
+struct std::_Vector_base<int, std::allocator<int>>::_Vector_impl { struct std3A3A_Vector_base3Cint2C_std3A3Aallocator3Cint3E3E3A3A_Vector_impl_data __field0; };
 struct std::_Vector_base<int, std::allocator<int>>::_Vector_impl_data { int* _M_start; int* _M_finish; int* _M_end_of_storage; };
-struct std::__new_allocator<int> { unsigned char __placeholder; };
-struct std::allocator<int> { unsigned char __placeholder; };
-struct std::random_access_iterator_tag { unsigned char __placeholder; };
-struct std::vector<int> { unsigned char __placeholder; };
+struct std::__new_allocator<int> { unsigned char __field0; };
+struct std::allocator<int> { unsigned char __field0; };
+struct std::random_access_iterator_tag { unsigned char __field0; };
+struct std::vector<int> { struct std3A3A_Vector_base3Cint2C_std3A3Aallocator3Cint3E3E __field0; };
 struct std::_Vector_base<int, std::allocator<int>> { struct std::_Vector_base<int, std::allocator<int>>::_Vector_impl _M_impl; };
 
 int __const_main_myints[8];
@@ -44,3 +44,29 @@ bb11:
   struct std::allocator<int>* this12;
   this12 = v10;
   struct std::allocator<int>* t13 = this12;
+  struct std::__new_allocator<int>* base14 = (struct std::__new_allocator<int>*)((char *)t13 + 0);
+  _ZNSt15__new_allocatorIiEC2Ev(base14);
+  return;
+}
+
+// function: _ZNSt6vectorIiSaIiEEC2EmRKS0_
+void std__vector_int__std__allocator_int_____vector(struct std::vector<int>* v15, unsigned long long v16, struct std::allocator<int>* v17) {
+  void* v18;
+  unsigned int v19;
+bb20:
+  struct std::vector<int>* this26;
+  unsigned long long __n27;
+  struct std::allocator<int>* __a28;
+  this26 = v15;
+  __n27 = v16;
+  __a28 = v17;
+  struct std::vector<int>* t29 = this26;
+  struct std::_Vector_base<int, std::allocator<int>>* base30 = (struct std::_Vector_base<int, std::allocator<int>>*)((char *)t29 + 0);
+  unsigned long long t31 = __n27;
+  struct std::allocator<int>* t32 = __a28;
+  unsigned long long r33 = std__vector_int__std__allocator_int______S_check_init_len(t31, t32);
+  struct std::allocator<int>* t34 = __a28;
+  std___Vector_base_int__std__allocator_int______Vector_base(base30, r33, t34);
+  unsigned long long t35 = __n27;
+  goto bb21;
+bb21:
