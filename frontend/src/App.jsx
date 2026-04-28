@@ -18,7 +18,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Split from 'react-split'
 import Editor from './components/Editor'
 import OutputTabs from './components/OutputTabs'
-import { AppBar, Toolbar, Button, Box, Typography, Popover } from '@mui/material'
+import { AppBar, Toolbar, Button, Box, Typography, Popover, Select, MenuItem } from '@mui/material'
 import FolderOpenIcon from '@mui/icons-material/FolderOpen'
 import ExampleTree from './components/ExampleTree'
 import axios from 'axios'
@@ -63,6 +63,7 @@ export default function App() {
     }
   }, [selectedExample])
 
+  const [language, setLanguage] = useState('cpp')
   const [examplesAnchor, setExamplesAnchor] = useState(null)
   const openExamples = Boolean(examplesAnchor)
   const onOpenExamples = (e) => setExamplesAnchor(e.currentTarget)
@@ -70,7 +71,7 @@ export default function App() {
   const onSelectExample = (path) => { setSelectedExample(path); onCloseExamples(); }
 
   const onGenerate = async () => {
-    const resp = await api.post('api/generate', { code })
+    const resp = await api.post('api/generate', { code, language })
     // Ensure missing keys are present to avoid undefined in OutputTabs
     const data = resp.data || {}
     setOutputs({
@@ -105,7 +106,19 @@ export default function App() {
               </Box>
             </Popover>
           </Box>
-          <Button color="inherit" onClick={onGenerate}>Generate</Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              size="small"
+              variant="outlined"
+              sx={{ color: 'inherit', '.MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.5)' }, '.MuiSvgIcon-root': { color: 'inherit' }, fontSize: 14, height: 32 }}
+            >
+              <MenuItem value="cpp">C++</MenuItem>
+              <MenuItem value="c">C</MenuItem>
+            </Select>
+            <Button color="inherit" onClick={onGenerate}>Generate</Button>
+          </Box>
         </Toolbar>
       </AppBar>
 

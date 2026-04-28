@@ -179,11 +179,13 @@ app.get('/api/clang-version', async (req, res) => {
 // generation endpoint: runs clang to produce LLVM IR and CIR, then flattens CIR with cir-opt
 app.post('/api/generate', async (req, res) => {
   const code = req.body.code || '';
+  const language = req.body.language === 'c' ? 'c' : 'cpp';
+  const ext = language === 'c' ? 'c' : 'cpp';
   const tmpDir = path.join(__dirname, '..', 'tmp');
   await fs.mkdir(tmpDir, { recursive: true });
   const base = `input-${Date.now()}`;
-  const tmpFile = path.join(tmpDir, `${base}.cpp`);
-  const tmpFileCir = path.join(tmpDir, `${base}.cir.cpp`);
+  const tmpFile = path.join(tmpDir, `${base}.${ext}`);
+  const tmpFileCir = path.join(tmpDir, `${base}.cir.${ext}`);
   const cirMlirPath = path.join(tmpDir, `${base}.cir.mlir`);
   await fs.writeFile(tmpFile, code, 'utf8');
   // write a dedicated CIR copy and a dedicated output path for the emitted CIR
