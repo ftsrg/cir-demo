@@ -107,6 +107,7 @@ RUN echo "=== Clang binary info ===" && \
 FROM scratch AS export
 COPY --from=builder /build/llvm-install/bin/clang-static /clang
 COPY --from=builder /build/llvm-install/bin/cir-opt /cir-opt
+COPY --from=builder /build/llvm-install/bin/clang++ /clang++
 COPY --from=builder /build/xcfa-mapper/build/xcfa-mapper /xcfa-mapper
 
 # Runtime stage for testing (optional)

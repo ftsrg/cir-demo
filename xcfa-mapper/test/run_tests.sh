@@ -205,6 +205,87 @@ done
 echo ""
 
 #######################################
+# C++ Integration Tests
+#######################################
+echo "======================================"
+echo "  Running C++ Integration Tests"
+echo "======================================"
+echo ""
+
+if [ ! -f "$CLANGPP" ]; then
+    echo -e "${YELLOW}SKIPPED: clang++ not found at $CLANGPP${NC}"
+else
+    for cpp_file in "$INTEGRATION_INPUT_DIR"/*.cpp; do
+        if [ -f "$cpp_file" ]; then
+            test_name=$(basename "$cpp_file" .cpp)
+            TOTAL_TESTS=$((TOTAL_TESTS + 1))
+
+            echo -n "Testing $test_name... "
+
+            # Step 1: Generate CIR from C++ file
+            mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
+            flat_mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.flat.mlir"
+            clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_clang_log.txt"
+
+            if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
+                echo -e "${RED}FAILED${NC} (CIR generation failed)"
+                FAILED_TESTS=$((FAILED_TESTS + 1))
+                echo "  Output from clang++:"
+                cat "$clang_log" | sed 's/^/    /'
+                echo ""
+                continue
+            fi
+
+            # Step 1b: Flatten CIR with cir-opt
+            flat_log="$INTEGRATION_OUTPUT_DIR/${test_name}_flat_log.txt"
+            if ! "$CIR_OPT" "$mlir_file" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+                echo -e "${RED}FAILED${NC} (CIR flattening failed)"
+                FAILED_TESTS=$((FAILED_TESTS + 1))
+                echo "  Output from cir-opt:"
+                cat "$flat_log" | sed 's/^/    /'
+                echo ""
+                continue
+            fi
+
+            # Step 2: Convert flat CIR to C using xcfa-mapper
+            # Use --best-effort: C++ STL internals produce ops that can't be fully mapped.
+            output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
+            mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_mapper_log.txt"
+
+            if ! "$XCFA_MAPPER" --best-effort "$flat_mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+                echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+                FAILED_TESTS=$((FAILED_TESTS + 1))
+                echo "  Output from xcfa-mapper:"
+                cat "$mapper_log" | sed 's/^/    /'
+                echo ""
+                continue
+            fi
+
+            # Step 3: Check that struct/union names in the generated C are valid identifiers.
+            # C++ qualified names (::, <, >) must not appear in struct/union declarations.
+            # Full compilation is not required: C++ STL internals produce unhandled ops
+            # (vtables, exception handling, etc.) that are emitted as comments in
+            # best-effort mode and may cause other unrelated compilation errors.
+            compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
+            "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1
+            if grep -qE "error:.*before '::'|error:.*before '<'" "$compile_log"; then
+                echo -e "${RED}FAILED${NC} (C++ qualified names in struct/union identifiers)"
+                FAILED_TESTS=$((FAILED_TESTS + 1))
+                echo "  Relevant errors:"
+                grep -E "error:.*before '::'|error:.*before '<'" "$compile_log" | head -5 | sed 's/^/    /'
+                echo ""
+                continue
+            fi
+
+            echo -e "${GREEN}PASSED${NC}"
+            PASSED_TESTS=$((PASSED_TESTS + 1))
+        fi
+    done
+fi
+
+echo ""
+
+#######################################
 # E2E Tests (esbmc-eval)
 #######################################
 echo "======================================"

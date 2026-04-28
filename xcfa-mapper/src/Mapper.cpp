@@ -302,9 +302,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     
     // Handle pointer to record (struct/union)
     if (auto recordTy = mlir::dyn_cast<cir::RecordType>(pointee)) {
-      llvm::StringRef typeName = recordTy.getName().getValue();
-      std::string name = typeName.str();
-      std::replace(name.begin(), name.end(), '.', '_');
+      std::string name = sanitizeIdentifier(recordTy.getName().getValue().str());
       
       if (recordTy.isUnion()) {
         return "union " + name + "*";
@@ -326,9 +324,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
   
   // Handle CIR record types (struct/union)
   if (auto recordTy = mlir::dyn_cast<cir::RecordType>(t)) {
-    llvm::StringRef typeName = recordTy.getName().getValue();
-    std::string name = typeName.str();
-    std::replace(name.begin(), name.end(), '.', '_');
+    std::string name = sanitizeIdentifier(recordTy.getName().getValue().str());
     
     if (recordTy.isUnion()) {
       return "union " + name;
@@ -668,10 +664,32 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       pos += needle.size();
       auto end = irText.find("\"", pos);
       if (end == std::string::npos) break;
-      std::string name = irText.substr(pos, end - pos);
-      std::replace(name.begin(), name.end(), '.', '_');
+      std::string name = sanitizeIdentifier(irText.substr(pos, end - pos));
       unionRecordNames.insert(name);
       pos = end + 1;
+    }
+  }
+
+  // Build a map from !rec_<alias> -> sanitized original name for use in the
+  // textual fallback path (mapTextualTypeToC).  CIR aliases hex-encode the
+  // original C++ name, so we need this map to emit consistent struct names.
+  std::map<std::string, std::string> aliasToSanitizedName;
+  {
+    std::istringstream tmpInput(irText);
+    std::string tmpLine;
+    while (std::getline(tmpInput, tmpLine)) {
+      if (tmpLine.rfind("!rec_", 0) != 0) continue;
+      auto eqPos = tmpLine.find(" = ");
+      if (eqPos == std::string::npos) continue;
+      std::string alias = tmpLine.substr(5, eqPos - 5); // strip leading "!rec_"
+      auto recMarker = tmpLine.find("!cir.record<");
+      if (recMarker == std::string::npos) continue;
+      auto qStart = tmpLine.find('"', recMarker);
+      if (qStart == std::string::npos) continue;
+      auto qEnd = tmpLine.find('"', qStart + 1);
+      if (qEnd == std::string::npos) continue;
+      std::string origName = tmpLine.substr(qStart + 1, qEnd - qStart - 1);
+      aliasToSanitizedName[alias] = sanitizeIdentifier(origName);
     }
   }
   
@@ -749,8 +767,9 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   auto mapTextualTypeToC = [&](const std::string &token) {
     std::string text = trim(token);
     if (text.rfind("!rec_", 0) == 0) {
-      std::string name = text.substr(5);
-      std::replace(name.begin(), name.end(), '.', '_');
+      std::string alias = text.substr(5);
+      auto it = aliasToSanitizedName.find(alias);
+      std::string name = (it != aliasToSanitizedName.end()) ? it->second : sanitizeIdentifier(alias);
       return std::string(unionRecordNames.count(name) ? "union " : "struct ") + name;
     }
     if (text == "!cir.bool") return std::string("_Bool");
@@ -777,8 +796,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     if (!t) return;
 
     if (auto recordType = mlir::dyn_cast<cir::RecordType>(t)) {
-      std::string recordName = recordType.getName().getValue().str();
-      std::replace(recordName.begin(), recordName.end(), '.', '_');
+      std::string recordName = sanitizeIdentifier(recordType.getName().getValue().str());
 
       // Keep an entry even if there are no discovered fields yet.
       (void)structFields[recordName];
@@ -836,8 +854,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       if (!recordType) return; // Not pointing to a record, skip
       
       // Get struct name using API
-      std::string structName = recordType.getName().getValue().str();
-      std::replace(structName.begin(), structName.end(), '.', '_');
+      std::string structName = sanitizeIdentifier(recordType.getName().getValue().str());
       
       // Track unions
       if (recordType.isUnion()) {
@@ -853,8 +870,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         mlir::Type resPointee = resPtrType.getPointee();
         
         if (auto resRecordType = mlir::dyn_cast<cir::RecordType>(resPointee)) {
-          std::string fieldStructName = resRecordType.getName().getValue().str();
-          std::replace(fieldStructName.begin(), fieldStructName.end(), '.', '_');
+          std::string fieldStructName = sanitizeIdentifier(resRecordType.getName().getValue().str());
           
           if (resRecordType.isUnion()) {
             info.baseType = "union " + fieldStructName;
@@ -876,8 +892,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
           
           // Get the final element type
           if (auto elemRecordType = mlir::dyn_cast<cir::RecordType>(currentType)) {
-            std::string arrayStructName = elemRecordType.getName().getValue().str();
-            std::replace(arrayStructName.begin(), arrayStructName.end(), '.', '_');
+            std::string arrayStructName = sanitizeIdentifier(elemRecordType.getName().getValue().str());
             
             if (elemRecordType.isUnion()) {
               info.baseType = "union " + arrayStructName;
@@ -941,8 +956,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       auto bodyEnd = line.rfind('}');
       if (bodyStart == std::string::npos || bodyEnd == std::string::npos || bodyEnd <= bodyStart) continue;
 
-      std::string recordName = line.substr(nameStart + 1, nameEnd - nameStart - 1);
-      std::replace(recordName.begin(), recordName.end(), '.', '_');
+      std::string recordName = sanitizeIdentifier(line.substr(nameStart + 1, nameEnd - nameStart - 1));
 
       auto &existingFields = structFields[recordName];
       if (!existingFields.empty()) continue;

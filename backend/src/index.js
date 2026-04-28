@@ -121,6 +121,7 @@ function statSafeSync(candidate) {
 
 const TOOLCHAIN_ROOT = path.join(__dirname, '..', 'bin');
 const CLANG_BIN = path.join(TOOLCHAIN_ROOT, 'bin', 'clang');
+const CLANGPP_BIN = path.join(TOOLCHAIN_ROOT, 'bin', 'clang++');
 const CIR_OPT_BIN = path.join(TOOLCHAIN_ROOT, 'bin', 'cir-opt');
 console.log(`Using CIR toolchain from ${TOOLCHAIN_ROOT}`);
 const { execFile } = require('child_process');
@@ -181,6 +182,7 @@ app.post('/api/generate', async (req, res) => {
   const code = req.body.code || '';
   const language = req.body.language === 'c' ? 'c' : 'cpp';
   const ext = language === 'c' ? 'c' : 'cpp';
+  const clangBin = language === 'c' ? CLANG_BIN : CLANGPP_BIN;
   const tmpDir = path.join(__dirname, '..', 'tmp');
   await fs.mkdir(tmpDir, { recursive: true });
   const base = `input-${Date.now()}`;
@@ -202,8 +204,8 @@ app.post('/api/generate', async (req, res) => {
   const filesToCleanup = [tmpFile, tmpFileCir, cirMlirPath];
   try {
     const [llvmOut, clangOut] = await Promise.all([
-      execFileAsync(CLANG_BIN, llvmArgs),
-      execFileAsync(CLANG_BIN, clangIrArgs)
+      execFileAsync(clangBin, llvmArgs),
+      execFileAsync(clangBin, clangIrArgs)
     ]);
 
     let flatOut = { stdout: '', stderr: '', code: 0 };
