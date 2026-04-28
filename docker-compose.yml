@@ -38,5 +38,6 @@ services:
       WATCHTOWER_SCOPE: cir-demo
       WATCHTOWER_CLEANUP: 1
       WATCHTOWER_INCLUDE_RESTARTING: 1
+      WATCHTOWER_POLL_INTERVAL: 300
     labels:
       com.centurylinklabs.watchtower.scope: cir-demo
