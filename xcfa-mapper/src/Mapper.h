@@ -77,6 +77,10 @@ public:
     registerHandler(OpTy::getOperationName(), std::make_unique<Wrapper>(std::move(wrapperFn)));
   }
 
+  /// Emit a forward declaration (prototype) for a function definition.
+  /// Uses parameter types only; does not assign value names.
+  bool emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out);
+
   /// Map a single function. Returns true on success, false on unrecoverable error.
   bool mapFunc(mlir::Operation *fop, std::ostream &out);
 

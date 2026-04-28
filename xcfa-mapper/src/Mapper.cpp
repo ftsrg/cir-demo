@@ -350,6 +350,36 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
   return "int";
 }
 
+bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
+  auto sym = fop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
+  if (!sym) return true;
+
+  auto cirFuncOp = mlir::cast<cir::FuncOp>(fop);
+  cir::FuncType fty = cirFuncOp.getFunctionType();
+  mlir::Type rty = fty.getReturnType();
+
+  std::string retType;
+  if (mlir::isa<mlir::NoneType>(rty) || mlir::isa<cir::VoidType>(rty))
+    retType = "void";
+  else
+    retType = mapTypeToC(rty);
+
+  std::string outName = getFunctionOutputName(sym.getValue().str());
+
+  // Emit parameter types only (no names) to avoid interfering with value-name
+  // assignments that happen during the real mapFunc pass later.
+  std::string params;
+  bool first = true;
+  for (mlir::Type paramType : fty.getInputs()) {
+    if (!first) params += ", ";
+    first = false;
+    params += mapTypeToC(paramType);
+  }
+
+  out << retType << " " << outName << "(" << params << ");\n";
+  return true;
+}
+
 bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   std::string funcInputText = oneLineOperationText(*fop);
   // Symbol (function name) is required to emit anything useful.
@@ -1017,8 +1047,25 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       if (!mapGlobal(&op, out) && !isBestEffort()) return false;
     }
   }
-  
-  // Second pass: emit functions
+
+  // Second pass: emit forward declarations for all function definitions so
+  // that call sites compile regardless of the order functions appear in the
+  // module.
+  {
+    bool anyDecl = false;
+    for (auto &op : module.getOps()) {
+      if (op.getName().getStringRef() == "cir.func") {
+        bool hasBody = (op.getNumRegions() > 0 && !op.getRegion(0).empty());
+        if (hasBody) {
+          if (!emitFuncForwardDecl(&op, out) && !isBestEffort()) return false;
+          anyDecl = true;
+        }
+      }
+    }
+    if (anyDecl) out << "\n";
+  }
+
+  // Third pass: emit function definitions
   for (auto &op : module.getOps()) {
     if (llvm::isa<mlir::ModuleOp>(op)) {
       mlir::ModuleOp inner = mlir::cast<mlir::ModuleOp>(op);
