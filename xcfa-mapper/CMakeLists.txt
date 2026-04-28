@@ -36,6 +36,24 @@ message(STATUS "MLIR cmake dir: ${MLIR_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${MLIR_CMAKE_DIR}")
 include(AddLLVM)
 
+# ---------------------------------------------------------------------------
+# Git-based version string: <commit-hash>[-dirty]
+# Regenerated on every build so it tracks working-tree changes.
+# ---------------------------------------------------------------------------
+find_package(Git QUIET)
+
+set(VERSION_HEADER "${CMAKE_BINARY_DIR}/version.h")
+
+add_custom_target(xcfa_version ALL
+  BYPRODUCTS "${VERSION_HEADER}"
+  COMMAND ${CMAKE_COMMAND}
+    -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
+    -DOUTPUT_FILE=${VERSION_HEADER}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -P ${CMAKE_SOURCE_DIR}/cmake/GenerateVersion.cmake
+  COMMENT "Generating version header"
+)
+
 add_executable(xcfa-mapper
   src/main.cpp
   src/Mapper.cpp
@@ -43,12 +61,16 @@ add_executable(xcfa-mapper
   src/handlers/Handlers.cpp
 )
 
+add_dependencies(xcfa-mapper xcfa_version)
+
 target_include_directories(xcfa-mapper PRIVATE
   ${LLVM_INCLUDE_DIRS}
   ${MLIR_INCLUDE_DIRS}
   # Some local trees put headers under backend/bin/include
   ${CMAKE_SOURCE_DIR}/../backend/bin/include
   ${CMAKE_SOURCE_DIR}/src
+  # Generated version header
+  ${CMAKE_BINARY_DIR}
 )
 add_definitions(${LLVM_DEFINITIONS})
 

@@ -16,6 +16,7 @@
 
 #include "Mapper.h"
 #include "handlers/Handlers.h"
+#include "version.h"
 
 #include <mlir/IR/MLIRContext.h>
 #include <mlir/AsmParser/AsmParser.h>
@@ -45,6 +46,10 @@ int main(int argc, char **argv) {
 
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
+    if (arg == "--version") {
+      llvm::outs() << "xcfa-mapper " << XCFA_MAPPER_VERSION << "\n";
+      return 0;
+    }
     if (arg == "--best-effort") {
       bestEffort = true;
       continue;
