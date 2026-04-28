@@ -32,6 +32,7 @@ RUN npm install --production
 # Build the xcfa-mapper C++ tool so the backend can call it. We copy the
 # source tree and invoke CMake to produce the binary at xcfa-mapper/build/xcfa-mapper
 COPY xcfa-mapper /app/xcfa-mapper
+COPY .git /app/.git
 WORKDIR /app/xcfa-mapper
 RUN mkdir -p build \
  && cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \

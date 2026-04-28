@@ -67,6 +67,7 @@ RUN cmake --build llvm-build -j$(nproc) && \
 
 # Copy xcfa-mapper source
 COPY xcfa-mapper /build/xcfa-mapper
+COPY .git /build/.git
 
 # Verify MLIRCIR was built and installed
 RUN echo "=== Checking for CIR dialect libraries ===" && \
