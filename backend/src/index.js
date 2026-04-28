@@ -177,6 +177,26 @@ app.get('/api/clang-version', async (req, res) => {
   }
 });
 
+// xcfa-mapper version endpoint
+app.get('/api/xcfa-mapper-version', async (req, res) => {
+  try {
+    const xcfaMapperBin = path.join(__dirname, '..', '..', 'xcfa-mapper', 'build', 'xcfa-mapper');
+    const out = await execFileAsync(xcfaMapperBin, ['--version']);
+    let text = '';
+    if (out && typeof out === 'object') {
+      text = (out.stdout || '').toString();
+      if (!text) text = (out.stderr || '').toString();
+      if (out.error && !text) text = String(out.error);
+    } else {
+      text = String(out || '');
+    }
+    const first = (text || '').split('\n')[0] || '';
+    res.json({ version: first });
+  } catch (err) {
+    res.json({ version: `error: ${String(err.message || err)}` });
+  }
+});
+
 // generation endpoint: runs clang to produce LLVM IR and CIR, then flattens CIR with cir-opt
 app.post('/api/generate', async (req, res) => {
   const code = req.body.code || '';
