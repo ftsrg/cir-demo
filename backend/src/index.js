@@ -338,7 +338,7 @@ app.post('/api/generate', async (req, res) => {
 
       const outXCFA = path.join(tmpDir, `xcfa.dot`);
       // Run Theta mapper
-      const thetaArgs = [cPath, '--output-directory', tmpDir, '--enable-xcfa-serialization', "--lbe", "NO_LBE", "--domain", "PRED_CART"];
+      const thetaArgs = [cPath, '--output-directory', tmpDir, '--enable-xcfa-serialization', "--lbe", "NO_LBE", "--domain", "PRED_CART", "--stacktrace"];
       const thetaRun = await execFileAsync(thetaBin, thetaArgs);
       xcfa.code = (thetaRun && typeof thetaRun.code !== 'undefined') ? thetaRun.code : 1;
       xcfa.stderr = ((thetaRun && thetaRun.stderr) ? thetaRun.stderr : '') + ((thetaRun && thetaRun.stdout) ? thetaRun.stdout : '');

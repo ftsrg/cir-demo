@@ -35,9 +35,9 @@ if(GIT_EXECUTABLE)
     if(GIT_COMMIT)
       set(VERSION "${GIT_COMMIT}")
 
-      # Check for uncommitted changes (tracked files only; also catches staged changes)
+      # Check for uncommitted changes inside SOURCE_DIR only (tracked files only; also catches staged changes)
       execute_process(
-        COMMAND "${GIT_EXECUTABLE}" status --porcelain
+        COMMAND "${GIT_EXECUTABLE}" status --porcelain -- "${SOURCE_DIR}"
         WORKING_DIRECTORY "${SOURCE_DIR}"
         OUTPUT_VARIABLE GIT_STATUS
         ERROR_QUIET
