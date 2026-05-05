@@ -185,36 +185,14 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   }
   
   // Handle array types specially: !cir.array<!s32i x 5> -> int arr[5]
-  if (typeStr.find("!cir.array<") != std::string::npos) {
-    // Extract element type and size from array type
-    // Format: !cir.array<element_type x size>
-    size_t startPos = typeStr.find("<");
-    size_t xPos = typeStr.find(" x ", startPos);
-    size_t endPos = typeStr.find(">", xPos);
-    
-    if (startPos != std::string::npos && xPos != std::string::npos && endPos != std::string::npos) {
-      std::string elementTypeStr = typeStr.substr(startPos + 1, xPos - startPos - 1);
-      std::string sizeStr = typeStr.substr(xPos + 3, endPos - xPos - 3);
-      
-      // Map element type to C type
-      std::string ctype = "int"; // default
-      if (elementTypeStr.find("!s32i") != std::string::npos || elementTypeStr.find("!cir.int<s, 32>") != std::string::npos) {
-        ctype = "int";
-      } else if (elementTypeStr.find("!s64i") != std::string::npos || elementTypeStr.find("!cir.int<s, 64>") != std::string::npos) {
-        ctype = "long long";
-      } else if (elementTypeStr.find("!cir.float") != std::string::npos) {
-        ctype = "float";
-      } else if (elementTypeStr.find("!cir.double") != std::string::npos) {
-        ctype = "double";
-      }
-      
-      out << "  " << ctype << " " << uniqueVarName << "[" << sizeStr << "];\n";
-      for (Value res : o->getResults()) {
-        m.setName(res, uniqueVarName);
-        m.markAsDirectAccess(res);
-      }
-      return true;
+  if (auto arrayTy = llvm::dyn_cast<cir::ArrayType>(allocaTy)) {
+    std::string elemCType = m.mapTypeToC(arrayTy.getElementType());
+    out << "  " << elemCType << " " << uniqueVarName << "[" << arrayTy.getSize() << "];\n";
+    for (Value res : o->getResults()) {
+      m.setName(res, uniqueVarName);
+      m.markAsDirectAccess(res);
     }
+    return true;
   }
   
   // For non-array, non-struct types, use regular type mapping
@@ -704,6 +682,63 @@ bool handleAnd(cir::AndOp op, Mapper &m, std::ostream &out) { return handleBinar
 bool handleOr(cir::OrOp  op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "|"); }
 bool handleXor(cir::XorOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "^"); }
 
+static std::string getOverflowBuiltinName(Operation *o) {
+  llvm::StringRef opName = o->getName().getStringRef();
+  if (opName == "cir.add.overflow") return "add";
+  if (opName == "cir.sub.overflow") return "sub";
+  if (opName == "cir.mul.overflow") return "mul";
+
+  if (opName != "cir.binop.overflow") return std::string();
+
+  auto kindAttr = o->getAttr("kind");
+  if (!kindAttr) return std::string();
+
+  std::string kindText;
+  llvm::raw_string_ostream rso(kindText);
+  kindAttr.print(rso);
+  rso.flush();
+
+  if (kindText.find("add") != std::string::npos) return "add";
+  if (kindText.find("sub") != std::string::npos) return "sub";
+  if (kindText.find("mul") != std::string::npos) return "mul";
+  return std::string();
+}
+
+bool handleBinOpOverflow(Operation *o, Mapper &m, std::ostream &out) {
+  if (o->getNumOperands() < 2 || o->getNumResults() < 2) return false;
+
+  std::string builtinName = getOverflowBuiltinName(o);
+  if (builtinName.empty()) {
+    if (!m.isBestEffort()) {
+      llvm::errs() << ERR_BINOP_NO_KIND << "\n";
+      return false;
+    }
+    out << "  // " << ERR_BINOP_NO_KIND << "\n";
+    return true;
+  }
+
+  Value lhs = o->getOperand(0);
+  Value rhs = o->getOperand(1);
+  Value result = o->getResult(0);
+  Value overflow = o->getResult(1);
+
+  std::string lhsName = m.getOrCreateName(lhs);
+  std::string rhsName = m.getOrCreateName(rhs);
+  std::string resultName = m.freshName("ovr");
+  std::string overflowName = m.freshName("ovf");
+  std::string resultType = m.mapTypeToC(result.getType());
+  std::string overflowType = m.mapTypeToC(overflow.getType());
+
+  out << "  " << resultType << " " << resultName << ";\n";
+  out << "  " << overflowType << " " << overflowName
+      << " = __builtin_" << builtinName << "_overflow("
+      << lhsName << ", " << rhsName << ", &" << resultName << ");\n";
+
+  m.setName(result, resultName);
+  m.setName(overflow, overflowName);
+  return true;
+}
+
 // ============================================================================
 // Unary operations
 // ============================================================================
@@ -776,6 +811,36 @@ bool handleCast(cir::CastOp op, Mapper &m, std::ostream &out) {
   // For most casts, a simple C cast is sufficient
   out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << opnd << ";\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+bool handleVAStart(cir::VAStartOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1) return false;
+  std::string argList = m.getOrCreateName(o->getOperand(0));
+  out << "  __builtin_va_start(" << argList << ", 0);\n";
+  return true;
+}
+
+bool handleVAEnd(cir::VAEndOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1) return false;
+  std::string argList = m.getOrCreateName(o->getOperand(0));
+  out << "  __builtin_va_end(" << argList << ");\n";
+  return true;
+}
+
+bool handleVAArg(cir::VAArgOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1 || o->getNumResults() < 1) return false;
+
+  std::string argList = m.getOrCreateName(o->getOperand(0));
+  std::string tmp = m.freshName("va");
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+
+  out << "  " << ctype << " " << tmp << " = __builtin_va_arg(" << argList
+      << ", " << ctype << ");\n";
+  m.setName(o->getResult(0), tmp);
   return true;
 }
 
@@ -1271,9 +1336,16 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::MinusOp>(handleMinus);
   m.registerTypedHandler<cir::NotOp>(handleNot);
   m.registerTypedHandler<cir::ShiftOp>(handleShiftOp);
+  m.registerHandler("cir.binop.overflow", std::make_unique<LambdaOpHandler>(handleBinOpOverflow));
+  m.registerHandler("cir.add.overflow", std::make_unique<LambdaOpHandler>(handleBinOpOverflow));
+  m.registerHandler("cir.sub.overflow", std::make_unique<LambdaOpHandler>(handleBinOpOverflow));
+  m.registerHandler("cir.mul.overflow", std::make_unique<LambdaOpHandler>(handleBinOpOverflow));
   
   // Type conversions
   m.registerTypedHandler<cir::CastOp>(handleCast);
+  m.registerTypedHandler<cir::VAStartOp>(handleVAStart);
+  m.registerTypedHandler<cir::VAEndOp>(handleVAEnd);
+  m.registerTypedHandler<cir::VAArgOp>(handleVAArg);
   
   // Control flow
   m.registerTypedHandler<cir::BrOp>(handleBr);

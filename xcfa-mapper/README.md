@@ -33,6 +33,13 @@ cmake .. -DLLVM_DIR=../backend/bin/lib/cmake/llvm -DMLIR_DIR=../backend/bin/lib/
 cmake --build . -- -j
 ```
 
+To rebuild:
+```
+mkdir build; cd build; cmake ..; make -j4
+```
+
+*(you might need to `cmake ..` twice)*
+
 2. Run the mapper:
 
 ```bash

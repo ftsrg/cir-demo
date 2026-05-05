@@ -77,18 +77,24 @@ cd test
 
 ### Inventory ESBMC Benchmarks
 
-Use the ESBMC inventory helper to quickly identify which benchmark cases are not yet supported by the current `xcfa-mapper` pipeline:
+Use the ESBMC inventory helper to quickly see which benchmark cases fail, and at which stage, in the current `clang -> cir-opt -> xcfa-mapper -> gcc` pipeline:
 
 ```bash
-/usr/bin/python esbmc_inventory.py --set cpp.set
+/usr/bin/python esbmc_inventory.py inheritance_bringup.set algorithm.set
 ```
 
-The script runs each benchmark through:
-- CIR generation with the bundled `clang`
-- `xcfa-mapper` with trace JSON enabled
-- syntax-only compilation of the generated C with `gcc`
+The script always uses the repository-local benchmark root and bundled tools, takes only `.set` files as arguments, reports normalized original errors from each failing stage, and cleans up all temporary files after it finishes.
 
-It writes summary reports under `test/esbmc_inventory_output/` in Markdown, CSV, and JSON.
+### Check Only CIR Generation
+
+Use the lightweight CIR-generation checker when you only want to know whether the bundled `clang` can produce CIR for the selected ESBMC benchmarks at all:
+
+```bash
+/usr/bin/python esbmc_cir_check.py inheritance_bringup.set algorithm.set
+```
+
+The script always uses the repository-local ESBMC benchmark root and bundled `clang`, expands the requested `.set` files, runs only the clang `-emit-cir` step for each benchmark, and prints any cases where CIR generation fails.
+It does not write any output files.
 
 ## Test Coverage
 

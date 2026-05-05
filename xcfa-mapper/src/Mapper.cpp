@@ -764,7 +764,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     return parts;
   };
 
-  auto mapTextualTypeToC = [&](const std::string &token) {
+  std::function<std::string(const std::string &)> mapTextualTypeToC;
+  mapTextualTypeToC = [&](const std::string &token) {
     std::string text = trim(token);
     if (text.rfind("!rec_", 0) == 0) {
       std::string alias = text.substr(5);
@@ -772,6 +773,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       std::string name = (it != aliasToSanitizedName.end()) ? it->second : sanitizeIdentifier(alias);
       return std::string(unionRecordNames.count(name) ? "union " : "struct ") + name;
     }
+    if (text == "!void" || text == "!cir.void") return std::string("void");
     if (text == "!cir.bool") return std::string("_Bool");
     if (text == "!s8i") return std::string("char");
     if (text == "!u8i") return std::string("unsigned char");
@@ -783,6 +785,12 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     if (text == "!u64i") return std::string("unsigned long long");
     if (text == "!cir.float") return std::string("float");
     if (text == "!cir.double") return std::string("double");
+    if (text.rfind("!cir.ptr<", 0) == 0 && text.back() == '>') {
+      std::string inner = text.substr(9, text.size() - 10);
+      std::string pointee = mapTextualTypeToC(inner);
+      if (pointee.empty()) pointee = "void";
+      return pointee + "*";
+    }
     return std::string();
   };
   
