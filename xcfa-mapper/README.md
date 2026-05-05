@@ -35,7 +35,11 @@ cmake --build . -- -j
 
 To rebuild:
 ```
-mkdir build; cd build; cmake ..; make -j4
+mkdir build; 
+cd build; 
+cmake ..;
+cmake ..;
+make -j4
 ```
 
 *(you might need to `cmake ..` twice)*

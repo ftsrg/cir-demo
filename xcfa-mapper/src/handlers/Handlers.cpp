@@ -814,11 +814,15 @@ bool handleCast(cir::CastOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+static std::string toBuiltinVAList(const std::string &argListPtrExpr) {
+  return "*((__builtin_va_list *)(" + argListPtrExpr + "))";
+}
+
 bool handleVAStart(cir::VAStartOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (o->getNumOperands() < 1) return false;
   std::string argList = m.getOrCreateName(o->getOperand(0));
-  out << "  __builtin_va_start(" << argList << ", 0);\n";
+  out << "  __builtin_va_start(" << toBuiltinVAList(argList) << ", 0);\n";
   return true;
 }
 
@@ -826,7 +830,7 @@ bool handleVAEnd(cir::VAEndOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (o->getNumOperands() < 1) return false;
   std::string argList = m.getOrCreateName(o->getOperand(0));
-  out << "  __builtin_va_end(" << argList << ");\n";
+  out << "  __builtin_va_end(" << toBuiltinVAList(argList) << ");\n";
   return true;
 }
 
@@ -838,9 +842,18 @@ bool handleVAArg(cir::VAArgOp op, Mapper &m, std::ostream &out) {
   std::string tmp = m.freshName("va");
   std::string ctype = m.mapTypeToC(o->getResult(0).getType());
 
-  out << "  " << ctype << " " << tmp << " = __builtin_va_arg(" << argList
+  out << "  " << ctype << " " << tmp << " = __builtin_va_arg(" << toBuiltinVAList(argList)
       << ", " << ctype << ");\n";
   m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+bool handleVACopy(Operation *o, Mapper &m, std::ostream &out) {
+  if (o->getNumOperands() < 2) return false;
+  std::string srcArgList = m.getOrCreateName(o->getOperand(0));
+  std::string dstArgList = m.getOrCreateName(o->getOperand(1));
+  out << "  __builtin_va_copy(" << toBuiltinVAList(dstArgList) << ", "
+      << toBuiltinVAList(srcArgList) << ");\n";
   return true;
 }
 
@@ -1346,6 +1359,7 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::VAStartOp>(handleVAStart);
   m.registerTypedHandler<cir::VAEndOp>(handleVAEnd);
   m.registerTypedHandler<cir::VAArgOp>(handleVAArg);
+  m.registerHandler("cir.va_copy", std::make_unique<LambdaOpHandler>(handleVACopy));
   
   // Control flow
   m.registerTypedHandler<cir::BrOp>(handleBr);
