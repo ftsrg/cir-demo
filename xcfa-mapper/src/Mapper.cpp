@@ -371,6 +371,10 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
     first = false;
     params += mapTypeToC(paramType);
   }
+  if (fty.isVarArg()) {
+    if (!params.empty()) params += ", ";
+    params += "...";
+  }
 
   out << retType << " " << outName << "(" << params << ");\n";
   return true;
@@ -439,6 +443,10 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       std::string cParamType = mapTypeToC(paramType);
       params += cParamType;
     }
+  }
+  if (fty.isVarArg()) {
+    if (!params.empty()) params += ", ";
+    params += "...";
   }
   
   out << retType << " " << outName << "(" << params << ")";
@@ -552,6 +560,83 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   // Cast to GlobalOp to access getSymType()
   auto globalOp = mlir::cast<cir::GlobalOp>(gop);
   mlir::Type symType = globalOp.getSymType();
+
+  auto stripOptionalQuotes = [](std::string s) {
+    if (s.size() >= 2 && s.front() == '"' && s.back() == '"') {
+      return s.substr(1, s.size() - 2);
+    }
+    return s;
+  };
+
+  auto decodeCirConstArrayBytes = [](const std::string &inner) {
+    std::string bytes;
+    bytes.reserve(inner.size());
+    auto hexVal = [](char c) -> int {
+      if (c >= '0' && c <= '9') return c - '0';
+      if (c >= 'a' && c <= 'f') return 10 + (c - 'a');
+      if (c >= 'A' && c <= 'F') return 10 + (c - 'A');
+      return -1;
+    };
+
+    for (size_t i = 0; i < inner.size();) {
+      if (inner[i] == '\\' && i + 2 < inner.size()) {
+        int h1 = hexVal(inner[i + 1]);
+        int h2 = hexVal(inner[i + 2]);
+        if (h1 >= 0 && h2 >= 0) {
+          char byte = static_cast<char>((h1 << 4) | h2);
+          bytes.push_back(byte);
+          i += 3;
+          continue;
+        }
+      }
+      bytes.push_back(inner[i]);
+      ++i;
+    }
+    return bytes;
+  };
+
+  auto escapeCStringBytes = [](const std::string &bytes) {
+    static const char *hex = "0123456789ABCDEF";
+    std::string escaped;
+    escaped.reserve(bytes.size() * 2 + 4);
+
+    for (size_t i = 0; i < bytes.size(); ++i) {
+      unsigned char c = static_cast<unsigned char>(bytes[i]);
+      switch (c) {
+      case '\\': escaped += "\\\\"; break;
+      case '"': escaped += "\\\""; break;
+      case '\n': escaped += "\\n"; break;
+      case '\r': escaped += "\\r"; break;
+      case '\t': escaped += "\\t"; break;
+      case '\0': escaped += "\\0"; break;
+      default:
+        if (c < 32 || c > 126) {
+          escaped += "\\x";
+          escaped.push_back(hex[(c >> 4) & 0xF]);
+          escaped.push_back(hex[c & 0xF]);
+        } else {
+          escaped.push_back(static_cast<char>(c));
+        }
+        break;
+      }
+    }
+    return escaped;
+  };
+
+  auto findGlobalTypeBySymbol = [&](const std::string &symbol) -> mlir::Type {
+    auto module = gop->getParentOfType<mlir::ModuleOp>();
+    if (!module) return mlir::Type();
+
+    for (auto &op : module.getOps()) {
+      if (op.getName().getStringRef() != "cir.global") continue;
+      auto s = op.getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
+      if (!s) continue;
+      if (s.getValue().str() != symbol) continue;
+      auto targetGlobal = mlir::cast<cir::GlobalOp>(op);
+      return targetGlobal.getSymType();
+    }
+    return mlir::Type();
+  };
   
   // Try to recover initializer by printing op (no string-based type recognition, only value patterns)
   std::string initExpr; // empty means no initializer
@@ -584,7 +669,17 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
             size_t gt = rawInit.find('>');
             if (at != std::string::npos && gt != std::string::npos && gt > at+1) {
               std::string target = rawInit.substr(at+1, gt-at-1);
-              initExpr = "&" + sanitizeIdentifier(target);
+              target = stripOptionalQuotes(target);
+              std::string targetName = sanitizeIdentifier(target);
+
+              mlir::Type targetType = findGlobalTypeBySymbol(target);
+              bool targetIsArray = mlir::isa<cir::ArrayType>(targetType);
+              if (targetIsArray) {
+                // Array lvalues decay to pointers in this context.
+                initExpr = targetName;
+              } else {
+                initExpr = "&" + targetName;
+              }
             }
           }
           // Const char array: #cir.const_array<"..." : !cir.array<!s8i x N>>
@@ -594,17 +689,11 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
               size_t q2 = rawInit.find('"', q1+1);
               if (q2 != std::string::npos) {
                 std::string inner = rawInit.substr(q1+1, q2 - (q1+1));
-                // Remove trailing \00 if present (C string literal implicit)
-                // Replace escaped sequence \00 occurrences at end
-                if (inner.size() >= 3 && inner.substr(inner.size()-3) == "\\00") {
-                  inner = inner.substr(0, inner.size()-3);
+                std::string bytes = decodeCirConstArrayBytes(inner);
+                if (!bytes.empty() && bytes.back() == '\0') {
+                  bytes.pop_back();
                 }
-                // Escape embedded quotes/backslashes minimally
-                std::string escaped; escaped.reserve(inner.size()+4);
-                for (char c : inner) {
-                  if (c == '"' || c == '\\') escaped.push_back('\\');
-                  escaped.push_back(c);
-                }
+                std::string escaped = escapeCStringBytes(bytes);
                 initExpr = '"' + escaped + '"';
               }
             }
@@ -1063,31 +1152,47 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     structsEmitted = true;
   }
   
-  // First pass: emit global variables
+  // First pass: emit global variables. Emit non-`global_view` initializers
+  // first so references like `@msg = #cir.global_view<@target>` can safely
+  // use symbols declared earlier in C.
+  std::vector<mlir::Operation *> normalGlobals;
+  std::vector<mlir::Operation *> viewGlobals;
   for (auto &op : module.getOps()) {
-    if (op.getName().getStringRef() == "cir.global") {
-      if (!mapGlobal(&op, out) && !isBestEffort()) return false;
-    }
+    if (op.getName().getStringRef() != "cir.global") continue;
+
+    std::string printed;
+    llvm::raw_string_ostream rso(printed);
+    op.print(rso);
+    rso.flush();
+
+    if (printed.find("#cir.global_view<@") != std::string::npos)
+      viewGlobals.push_back(&op);
+    else
+      normalGlobals.push_back(&op);
   }
 
-  // Second pass: emit forward declarations for all function definitions so
-  // that call sites compile regardless of the order functions appear in the
-  // module.
+  for (mlir::Operation *gop : normalGlobals) {
+    if (!mapGlobal(gop, out) && !isBestEffort()) return false;
+  }
+  for (mlir::Operation *gop : viewGlobals) {
+    if (!mapGlobal(gop, out) && !isBestEffort()) return false;
+  }
+
+  // Second pass: emit forward declarations for all functions (including
+  // declaration-only externs) so that call sites compile regardless of the
+  // order functions appear in the module.
   {
     bool anyDecl = false;
     for (auto &op : module.getOps()) {
       if (op.getName().getStringRef() == "cir.func") {
-        bool hasBody = (op.getNumRegions() > 0 && !op.getRegion(0).empty());
-        if (hasBody) {
-          if (!emitFuncForwardDecl(&op, out) && !isBestEffort()) return false;
-          anyDecl = true;
-        }
+        if (!emitFuncForwardDecl(&op, out) && !isBestEffort()) return false;
+        anyDecl = true;
       }
     }
     if (anyDecl) out << "\n";
   }
 
-  // Third pass: emit function definitions
+  // Third pass: emit function definitions only.
   for (auto &op : module.getOps()) {
     if (llvm::isa<mlir::ModuleOp>(op)) {
       mlir::ModuleOp inner = mlir::cast<mlir::ModuleOp>(op);
@@ -1096,7 +1201,10 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     }
 
     if (op.getName().getStringRef() == "cir.func") {
-      if (!mapFunc(&op, out) && !isBestEffort()) return false;
+      bool hasBody = (op.getNumRegions() > 0 && !op.getRegion(0).empty());
+      if (hasBody) {
+        if (!mapFunc(&op, out) && !isBestEffort()) return false;
+      }
     }
     // Skip cir.global (already processed)
   }

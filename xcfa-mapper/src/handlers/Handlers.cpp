@@ -256,7 +256,7 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
     }
     // Null/constant pointer
     if (auto cpa = llvm::dyn_cast<cir::ConstPtrAttr>(a.getValue())) {
-      litVal = "NULL";
+      litVal = "((void*)0)"; // "NULL"; - NULL would need to be included
       break;
     }
     if (auto gva = llvm::dyn_cast<cir::GlobalViewAttr>(a.getValue())) {
@@ -1058,12 +1058,31 @@ bool handlePtrStride(cir::PtrStrideOp op, Mapper &m, std::ostream &out) {
   Value stride = o->getOperand(1);
   std::string baseName = m.getOrCreateName(base);
   std::string strideName = m.getOrCreateName(stride);
+
+  // Default policy: prefer array-style indexing syntax over raw pointer
+  // arithmetic because downstream verifiers generally support indexing better.
+  // Keep a conservative fallback to `base + stride` for unsupported pointer
+  // categories (e.g., void/function pointers).
+  static constexpr bool kPreferIndexedPtrStride = true;
   
   std::string tmp = m.freshName("ptr");
   std::string ctype = "int*";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  
-  out << "  " << ctype << " " << tmp << " = " << baseName << " + " << strideName << ";\n";
+
+  bool canUseIndexedForm = false;
+  if (auto basePtrTy = llvm::dyn_cast<cir::PointerType>(base.getType())) {
+    mlir::Type pointee = basePtrTy.getPointee();
+    bool unsupportedIndexedPointee = mlir::isa<cir::VoidType>(pointee) ||
+                                     mlir::isa<cir::FuncType>(pointee) ||
+                                     mlir::isa<mlir::NoneType>(pointee);
+    canUseIndexedForm = !unsupportedIndexedPointee;
+  }
+
+  if (kPreferIndexedPtrStride && canUseIndexedForm) {
+    out << "  " << ctype << " " << tmp << " = &(" << baseName << ")[" << strideName << "];\n";
+  } else {
+    out << "  " << ctype << " " << tmp << " = " << baseName << " + " << strideName << ";\n";
+  }
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
