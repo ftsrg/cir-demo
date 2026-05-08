@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import re
 import subprocess
 import sys
@@ -159,6 +160,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Use C mode (`clang -x c -std=c11`) instead of the default C++ mode (`clang++ -x c++ -std=c++11`).",
     )
+    parser.add_argument(
+        "-o",
+        "--output-dir",
+        help="Optional directory for generated per-benchmark files (input.mlir, input.flat.mlir, output.c). If omitted, temporary directories are used.",
+    )
     return parser.parse_args()
 
 def run_command(command: list[str], timeout: int) -> subprocess.CompletedProcess[str]:
@@ -175,15 +181,24 @@ def log_line(handle: TextIO, message: str = "") -> None:
     handle.write(message + "\n")
     handle.flush()
 
-def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool) -> dict[str, str]:
+def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Path | None) -> dict[str, str]:
     relative_yml = yml_path.relative_to(root_dir)
     source_name = parse_input_file_from_yml(yml_path)
     source_path = yml_path.parent / source_name
-    case_id = str(relative_yml.with_suffix(""))
+    case_id = str(source_name)
 
     try:
-        with tempfile.TemporaryDirectory(prefix="xcfa_inventory_") as temp_dir_name:
-            temp_dir = Path(temp_dir_name)
+        if output_dir is None:
+            temp_dir_cm = tempfile.TemporaryDirectory(prefix="xcfa_inventory_")
+            temp_root_cm = contextlib.nullcontext(None)
+        else:
+            case_dir = output_dir / relative_yml.with_suffix("")
+            case_dir.mkdir(parents=True, exist_ok=True)
+            temp_dir_cm = contextlib.nullcontext(str(case_dir))
+            temp_root_cm = contextlib.nullcontext(case_dir)
+
+        with temp_dir_cm as temp_dir_name, temp_root_cm as temp_root:
+            temp_dir = temp_root if temp_root is not None else Path(temp_dir_name)
             mlir_path = temp_dir / "input.mlir"
             flat_mlir_path = temp_dir / "input.flat.mlir"
             c_path = temp_dir / "output.c"
@@ -303,6 +318,11 @@ def main() -> int:
     if not input_dir.is_dir():
         raise SystemExit(f"Input directory not found: {input_dir}")
 
+    output_dir: Path | None = None
+    if args.output_dir:
+        output_dir = Path(args.output_dir).expanduser().resolve()
+        output_dir.mkdir(parents=True, exist_ok=True)
+
     yml_paths = gather_yml_paths(input_dir, args.set_files)
     if not yml_paths:
         raise SystemExit("No benchmark yml files matched the requested selections.")
@@ -314,7 +334,7 @@ def main() -> int:
         print(f"Starting {total} benchmarks")
 
         with ThreadPoolExecutor(max_workers=DEFAULT_JOBS) as executor:
-            futures = [executor.submit(benchmark_case, yml_path, input_dir, args.c_mode) for yml_path in yml_paths]
+            futures = [executor.submit(benchmark_case, yml_path, input_dir, args.c_mode, output_dir) for yml_path in yml_paths]
             completed = 0
             for future in as_completed(futures):
                 results.append(future.result())
