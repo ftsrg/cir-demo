@@ -160,7 +160,8 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   
   // Make variable name unique by appending suffix if it's already been used
   // This handles cases where MLIR has multiple allocas with the same name (e.g., in nested scopes)
-  std::string uniqueVarName = m.freshName(varName);
+  // Sanitize first so dots/dashes in CIR names don't produce invalid C identifiers.
+  std::string uniqueVarName = m.freshName(m.sanitizeIdentifier(varName));
 
   // Get the allocated type (first operand type in the operation signature)
   // cir.alloca returns a pointer, but we want to declare the variable as the pointed-to type
@@ -314,6 +315,30 @@ bool handleLoad(cir::LoadOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (o->getNumOperands() < 1) return false;
   Value ptr = o->getOperand(0);
+
+  // Vtable dispatch chain: if loading from a tracked chain value, propagate
+  // the chain instead of emitting C code.
+  if (m.isVtableDispatchValue(ptr)) {
+    if (o->getNumResults() > 0) {
+      Value result    = o->getResult(0);
+      mlir::Value obj = m.getVtableDispatchObject(ptr);
+      m.trackVtableDispatch(result, obj);
+      // If the result is a pointer to a function type this is the final
+      // function-pointer load -- mark it so that handleCall can emit the
+      // __VERIFIER_virtual_call intrinsic.
+      if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(result.getType()))
+        if (mlir::isa<cir::FuncType>(ptrTy.getPointee())) {
+          m.markVirtualFnPtr(result);
+          // Propagate the virtual function label from the ptr-to-fn-ptr value.
+          std::string lbl = m.getVirtualFnLabel(ptr);
+          if (!lbl.empty()) m.setVirtualFnLabel(result, lbl);
+        }
+      m.getOrCreateName(result);
+    }
+    return true;
+  }
+
+
   std::string src = m.getOrCreateName(ptr);
   std::string tmp = m.freshName("t");
   std::string ctype = "int";
@@ -335,6 +360,14 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
   if (o->getNumOperands() < 2) return false;
   Value val = o->getOperand(0);
   Value ptr = o->getOperand(1);
+
+  // Suppress vtable-initialisation stores: when a constructor writes a
+  // !cir.vptr value (produced by cir.vtable.address_point) into the object's
+  // __vptr slot.  These are internals of the C++ ABI and must not appear in
+  // the verification-targeted output.
+  if (mlir::isa<cir::VPtrType>(val.getType()))
+    return true;
+
   std::string vname = m.getOrCreateName(val);
   std::string pname = m.getOrCreateName(ptr);
   
@@ -560,8 +593,77 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   std::string callee;
   bool isIndirectCall = false;
-  
-  // Try to get callee from attributes (direct call)
+
+  // ── Virtual dispatch: check BEFORE the generic indirect-call path ────────
+  // If the first operand is a tracked virtual function pointer (produced by
+  // the cir.vtable.get_vptr → load → get_virtual_fn_addr → load chain), emit
+  // __VERIFIER_virtual_call(object, args...) instead of a function-pointer
+  // call.  The verifier tool itself gives the semantics of this intrinsic.
+  //
+  // The `this` pointer is already present as operand 1 of the CIR call, so we
+  // simply skip operand 0 (the fn pointer itself) and forward all remaining
+  // operands as arguments.
+  if (o->getNumOperands() > 0 && m.isVirtualFnPtr(o->getOperand(0))) {
+    std::string args;
+    bool firstArg = true;
+    for (unsigned i = 1; i < o->getNumOperands(); ++i) {
+      if (!firstArg) args += ", ";
+      firstArg = false;
+      Value argV = o->getOperand(i);
+      std::string argName = m.getOrCreateName(argV);
+      if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(argV.getType())) {
+        bool pointeeIsArray = mlir::isa<cir::ArrayType>(ptrTy.getPointee());
+        if (m.isDirectAccess(argV) && !pointeeIsArray)
+          argName = "&" + argName;
+      }
+      args += argName;
+    }
+
+    m.setHasVirtualCalls();
+    std::string retType = "void";
+    if (o->getNumResults() > 0)
+      retType = m.mapTypeToC(o->getResult(0).getType());
+    std::string intrinsic = "__VERIFIER_virtual_call_" + Mapper::virtualCallTypeSuffix(retType);
+
+    // Build the argument list: this-ptr first, then the virtual fn label as a
+    // string literal, then the remaining call arguments.
+    std::string fnLabel = m.getVirtualFnLabel(o->getOperand(0));
+    std::string labelArg = "\"" + fnLabel + "\"";
+    // args already has 'this' + remaining args; prepend the label after 'this'.
+    // Re-build: first operand (i=1) is 'this', then label, then rest (i>=2).
+    std::string argsWithLabel;
+    bool firstArg2 = true;
+    for (unsigned i = 1; i < o->getNumOperands(); ++i) {
+      if (!firstArg2) argsWithLabel += ", ";
+      firstArg2 = false;
+      Value argV = o->getOperand(i);
+      std::string argName = m.getOrCreateName(argV);
+      if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(argV.getType())) {
+        bool pointeeIsArray = mlir::isa<cir::ArrayType>(ptrTy.getPointee());
+        if (m.isDirectAccess(argV) && !pointeeIsArray)
+          argName = "&" + argName;
+      }
+      argsWithLabel += argName;
+      // After the first arg (this ptr), insert the label.
+      if (i == 1) argsWithLabel += ", " + labelArg;
+    }
+    // Edge case: no operands beyond fn ptr (i.e. no this or args).
+    if (o->getNumOperands() <= 1) argsWithLabel = labelArg;
+
+    if (o->getNumResults() > 0) {
+      std::string tmp   = m.freshName("vcall");
+      std::string ctype = retType;
+      out << "  " << ctype << " " << tmp
+          << " = (" << ctype << ")" << intrinsic << "(" << argsWithLabel << ");\n";
+      m.setName(o->getResult(0), tmp);
+    } else {
+      out << "  " << intrinsic << "(" << argsWithLabel << ");\n";
+    }
+    return true;
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
+
   if (auto sa = o->getAttrOfType<StringAttr>("callee")) {
     callee = sa.getValue().str();
   } else if (auto sa2 = o->getAttrOfType<SymbolRefAttr>("callee")) {
@@ -983,6 +1085,47 @@ bool handleTernary(cir::TernaryOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+bool handleCleanupScope(cir::CleanupScopeOp op, Mapper &m, std::ostream &out) {
+  // Emit only the normal body region (region 0); ignore the cleanup/EH region
+  // (region 1) as it is irrelevant for reachability verification.
+  return emitRegionBody(op->getRegion(0), m, out);
+}
+
+bool handleScope(cir::ScopeOp op, Mapper &m, std::ostream &out) {
+  // cir.scope optionally yields a value; capture it and propagate to the
+  // result SSA value (if any).
+  Operation *o = op.getOperation();
+  std::vector<Value> yieldedValues;
+  if (!emitRegionBody(o->getRegion(0), m, out,
+                      o->getNumResults() > 0 ? &yieldedValues : nullptr))
+    return false;
+  if (o->getNumResults() > 0) {
+    if (yieldedValues.size() != 1) return false;
+    m.setName(o->getResult(0), m.getOrCreateName(yieldedValues[0]));
+  }
+  return true;
+}
+
+bool handleIf(cir::IfOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1 || o->getNumRegions() < 1) return false;
+
+  std::string condName = m.getOrCreateName(o->getOperand(0));
+  out << "  if (" << condName << ") {\n";
+  if (!emitRegionBody(o->getRegion(0), m, out)) return false;
+  out << "  }";
+
+  // elseRegion is always present but may be empty
+  if (o->getNumRegions() >= 2 && !o->getRegion(1).empty() &&
+      !o->getRegion(1).front().empty()) {
+    out << " else {\n";
+    if (!emitRegionBody(o->getRegion(1), m, out)) return false;
+    out << "  }";
+  }
+  out << "\n";
+  return true;
+}
+
 // ============================================================================
 // Memory and pointer operations
 // ============================================================================
@@ -1342,6 +1485,85 @@ bool handleGlobal(cir::GlobalOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// ============================================================================
+// VTable / virtual dispatch operations
+// ============================================================================
+
+// cir.vtable.address_point: produces a !cir.vptr used to initialise the
+// __vptr field of an object in a constructor.  The value is only ever stored
+// into the __vptr slot (which we suppress in handleStore), so we just give
+// the result a name and emit nothing.
+bool handleVTableAddrPoint(cir::VTableAddrPointOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() > 0)
+    m.getOrCreateName(op->getResult(0));
+  return true;
+}
+
+// cir.vtable.get_vptr: retrieves the address of the __vptr field of an
+// object.  We register the result in the dispatch chain and emit nothing.
+bool handleVTableGetVPtr(cir::VTableGetVPtrOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumOperands() > 0 && op->getNumResults() > 0) {
+    m.trackVtableDispatch(op->getResult(0), op.getSrc());
+    m.getOrCreateName(op->getResult(0));
+  }
+  return true;
+}
+
+// cir.vtable.get_virtual_fn_addr: index into the vtable to get the address
+// of a specific virtual function pointer.  We extend the dispatch chain and
+// emit nothing.
+bool handleVTableGetVirtualFnAddr(cir::VTableGetVirtualFnAddrOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() > 0) {
+    Value vptr   = op.getVptr();
+    Value result = op->getResult(0);
+    mlir::Value chainRoot = m.isVtableDispatchValue(vptr)
+                                ? m.getVtableDispatchObject(vptr)
+                                : vptr;
+    m.trackVtableDispatch(result, chainRoot);
+    m.getOrCreateName(result);
+
+    // Determine a label for this virtual slot so handleCall can pass it as
+    // the second argument to __VERIFIER_virtual_call_<type>.
+    int slot = static_cast<int>(op.getIndex());
+    // Try to resolve to the mangled function name via the vtable pre-scan.
+    std::string label;
+    if (chainRoot) {
+      mlir::Type objTy = chainRoot.getType();
+      if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(objTy))
+        if (auto recTy = mlir::dyn_cast<cir::RecordType>(ptrTy.getPointee()))
+          if (recTy.getName())
+            label = m.lookupVirtualFnName(recTy.getName().getValue().str(), slot);
+    }
+    // Fallback: encode class name (if deduced) + slot index.
+    if (label.empty()) {
+      std::string className;
+      if (chainRoot) {
+        mlir::Type objTy = chainRoot.getType();
+        if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(objTy))
+          if (auto recTy = mlir::dyn_cast<cir::RecordType>(ptrTy.getPointee()))
+            if (recTy.getName())
+              className = recTy.getName().getValue().str();
+      }
+      label = (className.empty() ? "virtual" : className + "_virtual") +
+              "_" + std::to_string(slot);
+    }
+    m.setVirtualFnLabel(result, label);
+  }
+  return true;
+}
+
+// cir.vtable.get_type_info: retrieves the type_info pointer from a vtable.
+// For verification we emit a null-pointer placeholder.
+bool handleVTableGetTypeInfo(cir::VTableGetTypeInfoOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() > 0) {
+    std::string tmp   = m.freshName("tinfo");
+    std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")0;\n";
+    m.setName(op->getResult(0), tmp);
+  }
+  return true;
+}
+
 } // namespace
 
 void registerBuiltinHandlers(Mapper &m) {
@@ -1389,6 +1611,9 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::SwitchFlatOp>(handleSwitchFlat);
   m.registerTypedHandler<cir::SelectOp>(handleSelect);
   m.registerTypedHandler<cir::TernaryOp>(handleTernary);
+  m.registerTypedHandler<cir::CleanupScopeOp>(handleCleanupScope);
+  m.registerTypedHandler<cir::ScopeOp>(handleScope);
+  m.registerTypedHandler<cir::IfOp>(handleIf);
   
   // Function calls
   m.registerTypedHandler<cir::CallOp>(handleCall);
@@ -1410,6 +1635,12 @@ void registerBuiltinHandlers(Mapper &m) {
   // Global variables
   m.registerTypedHandler<cir::GetGlobalOp>(handleGetGlobal);
   m.registerTypedHandler<cir::GlobalOp>(handleGlobal);
+
+  // VTable / virtual dispatch
+  m.registerTypedHandler<cir::VTableAddrPointOp>(handleVTableAddrPoint);
+  m.registerTypedHandler<cir::VTableGetVPtrOp>(handleVTableGetVPtr);
+  m.registerTypedHandler<cir::VTableGetVirtualFnAddrOp>(handleVTableGetVirtualFnAddr);
+  m.registerTypedHandler<cir::VTableGetTypeInfoOp>(handleVTableGetTypeInfo);
 }
 
 } // namespace xcfa

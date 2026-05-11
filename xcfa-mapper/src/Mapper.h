@@ -136,6 +136,11 @@ public:
   /// characters with underscores.
   static std::string sanitizeIdentifier(const std::string &s);
 
+  /// Convert a C type string (as returned by mapTypeToC) into a short
+  /// identifier suffix suitable for __VERIFIER_virtual_call_<suffix>.
+  /// E.g. "int" -> "int", "long long" -> "long_long", "void*" -> "void_ptr".
+  static std::string virtualCallTypeSuffix(const std::string &ctype);
+
 private:
   bool bestEffort;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
@@ -147,6 +152,25 @@ private:
   // Mapping from original (mangled) symbol -> chosen output name
   std::unordered_map<std::string, std::string> functionOutputNames;
 
+  // Vtable dispatch tracking: maps any value in a virtual dispatch chain
+  // (result of get_vptr, loaded vptr, get_virtual_fn_addr result, loaded
+  // fn ptr) back to the original object pointer operand.
+  llvm::DenseMap<mlir::Value, mlir::Value> vtableDispatchChain;
+  // Set of SSA values that are final virtual function pointers (loaded from
+  // get_virtual_fn_addr result) and should trigger __VERIFIER_virtual_call
+  // when used as a callee in cir.call.
+  llvm::DenseSet<mlir::Value> virtualFnPtrSet;
+  bool anyVirtualCalls_ = false;
+  // Maps a virtual fn-ptr SSA value to a human-readable label that identifies
+  // which virtual function slot is being called (e.g. mangled fn name from the
+  // vtable, or a fallback "ClassName_virtual_N").
+  llvm::DenseMap<mlir::Value, std::string> virtualFnLabels_;
+  // Vtable global entries: vtable_sym_name → list of entry names in order
+  // (empty string for null/type_info entries, mangled fn name otherwise).
+  std::map<std::string, std::vector<std::string>> vtableGlobalEntries_;
+  // rec_class_name → (vtable_sym_name, address_point_offset)
+  std::map<std::string, std::pair<std::string, int>> recToVtableOffset_;
+
 public:
   /// Get or create a label name for a block.
   std::string getOrCreateLabel(mlir::Block *b);
@@ -156,6 +180,48 @@ public:
   bool isBestEffort() const { return bestEffort; }
 
   void setBestEffort(bool v) { bestEffort = v; }
+
+  // ── Vtable / virtual dispatch helpers ───────────────────────────────────
+
+  /// Record that `chainValue` is part of a vtable virtual-dispatch chain
+  /// originating from `objectValue` (the object pointer on which the virtual
+  /// call will be made).  All intermediate SSA values produced by
+  /// cir.vtable.get_vptr, the subsequent vptr load, cir.vtable.get_virtual_fn_addr,
+  /// and the final function-pointer load are registered here so that when
+  /// we encounter cir.call through the function pointer we know the object.
+  void trackVtableDispatch(mlir::Value chainValue, mlir::Value objectValue);
+
+  /// Return true when `v` is a tracked vtable dispatch chain value.
+  bool isVtableDispatchValue(mlir::Value v) const;
+
+  /// Return the original object pointer associated with a dispatch chain value.
+  mlir::Value getVtableDispatchObject(mlir::Value v) const;
+
+  /// Mark `v` as the final virtual function pointer in a dispatch chain
+  /// (loaded from the result of cir.vtable.get_virtual_fn_addr).
+  void markVirtualFnPtr(mlir::Value v);
+
+  /// Return true when `v` is the final virtual function pointer in a chain.
+  bool isVirtualFnPtr(mlir::Value v) const;
+
+  /// Record that at least one virtual call has been emitted (used to decide
+  /// whether to emit the __VERIFIER_virtual_call declaration).
+  void setHasVirtualCalls();
+
+  /// Associate a virtual-function label string with the fn-ptr SSA value.
+  void setVirtualFnLabel(mlir::Value v, const std::string &label);
+  /// Return the label for a virtual fn-ptr value, or "" if unknown.
+  std::string getVirtualFnLabel(mlir::Value v) const;
+
+  /// Register vtable global entries (used during mapModule pre-scan).
+  void registerVtableGlobalEntries(const std::string &vtable_sym,
+                                    std::vector<std::string> entries);
+  /// Register the primary vtable and address_point offset for a CIR rec class.
+  void registerRecVtableOffset(const std::string &rec_name,
+                                const std::string &vtable_sym, int offset);
+  /// Look up the mangled function name for a given rec class and virtual slot.
+  /// Returns "" if the information is not available.
+  std::string lookupVirtualFnName(const std::string &rec_name, int slot) const;
 };
 
 } // namespace xcfa

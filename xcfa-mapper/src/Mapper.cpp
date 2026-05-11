@@ -53,6 +53,28 @@ std::string Mapper::sanitizeIdentifier(const std::string &s) {
   return out;
 }
 
+std::string Mapper::virtualCallTypeSuffix(const std::string &ctype) {
+  std::string raw;
+  for (char c : ctype) {
+    if (std::isalnum((unsigned char)c) || c == '_') raw += c;
+    else if (c == '*') raw += "_ptr";
+    else raw += '_';
+  }
+  // Collapse runs of underscores and strip leading/trailing ones.
+  std::string clean;
+  bool prevUnderscore = false;
+  for (char c : raw) {
+    if (c == '_') {
+      if (!prevUnderscore && !clean.empty()) { clean += '_'; prevUnderscore = true; }
+    } else {
+      clean += c;
+      prevUnderscore = false;
+    }
+  }
+  while (!clean.empty() && clean.back() == '_') clean.pop_back();
+  return clean.empty() ? "any" : clean;
+}
+
 static std::string mangleLabel(const std::string &s) {
   return Mapper::sanitizeIdentifier(s);
 }
@@ -302,12 +324,19 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     
     // Handle pointer to record (struct/union)
     if (auto recordTy = mlir::dyn_cast<cir::RecordType>(pointee)) {
-      std::string name = sanitizeIdentifier(recordTy.getName().getValue().str());
-      
+      mlir::StringAttr nameAttr = recordTy.getName();
+      std::string name = (nameAttr && !nameAttr.getValue().empty())
+                             ? sanitizeIdentifier(nameAttr.getValue().str())
+                             : "anon_struct";
       if (recordTy.isUnion()) {
         return "union " + name + "*";
       }
       return "struct " + name + "*";
+    }
+
+    // Handle pointer to vptr (!cir.ptr<!cir.vptr>) -- vtable pointer
+    if (mlir::isa<cir::VPtrType>(pointee)) {
+      return "void*";
     }
     
     // Handle pointer to array (decays to pointer to element)
@@ -322,10 +351,17 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     return pointeeType + "*";
   }
   
+  // Handle CIR vptr type (!cir.vptr) -- vtable pointer value
+  if (mlir::isa<cir::VPtrType>(t)) {
+    return "void*";
+  }
+
   // Handle CIR record types (struct/union)
   if (auto recordTy = mlir::dyn_cast<cir::RecordType>(t)) {
-    std::string name = sanitizeIdentifier(recordTy.getName().getValue().str());
-    
+    mlir::StringAttr nameAttr = recordTy.getName();
+    std::string name = (nameAttr && !nameAttr.getValue().empty())
+                           ? sanitizeIdentifier(nameAttr.getValue().str())
+                           : "anon_struct";
     if (recordTy.isUnion()) {
       return "union " + name;
     }
@@ -542,8 +578,87 @@ bool Mapper::mapOperation(mlir::Operation *op, std::ostream &out) {
   return false;
 }
 
+// ── Vtable dispatch tracking ───────────────────────────────────────────────
+
+void Mapper::trackVtableDispatch(mlir::Value chainValue, mlir::Value objectValue) {
+  vtableDispatchChain[chainValue] = objectValue;
+}
+
+bool Mapper::isVtableDispatchValue(mlir::Value v) const {
+  return vtableDispatchChain.count(v) > 0;
+}
+
+mlir::Value Mapper::getVtableDispatchObject(mlir::Value v) const {
+  auto it = vtableDispatchChain.find(v);
+  if (it != vtableDispatchChain.end()) return it->second;
+  return {};
+}
+
+void Mapper::markVirtualFnPtr(mlir::Value v) {
+  virtualFnPtrSet.insert(v);
+}
+
+bool Mapper::isVirtualFnPtr(mlir::Value v) const {
+  return virtualFnPtrSet.count(v) > 0;
+}
+
+void Mapper::setHasVirtualCalls() {
+  anyVirtualCalls_ = true;
+}
+
+void Mapper::setVirtualFnLabel(mlir::Value v, const std::string &label) {
+  virtualFnLabels_[v] = label;
+}
+
+std::string Mapper::getVirtualFnLabel(mlir::Value v) const {
+  auto it = virtualFnLabels_.find(v);
+  return it != virtualFnLabels_.end() ? it->second : "";
+}
+
+void Mapper::registerVtableGlobalEntries(const std::string &vtable_sym,
+                                          std::vector<std::string> entries) {
+  vtableGlobalEntries_[vtable_sym] = std::move(entries);
+}
+
+void Mapper::registerRecVtableOffset(const std::string &rec_name,
+                                      const std::string &vtable_sym, int offset) {
+  recToVtableOffset_[rec_name] = {vtable_sym, offset};
+}
+
+std::string Mapper::lookupVirtualFnName(const std::string &rec_name, int slot) const {
+  auto checkEntry = [](const std::string &e) -> bool {
+    // A "real" function entry is non-empty, not a pure-virtual ABI marker,
+    // and not a type_info symbol (which starts with _ZTI).
+    return !e.empty() && e != "__cxa_pure_virtual" && e.rfind("_ZTI", 0) != 0;
+  };
+
+  auto rit = recToVtableOffset_.find(rec_name);
+  if (rit != recToVtableOffset_.end()) {
+    const auto &[sym, offset] = rit->second;
+    auto vit = vtableGlobalEntries_.find(sym);
+    if (vit != vtableGlobalEntries_.end()) {
+      int idx = offset + slot;
+      if (idx >= 0 && idx < static_cast<int>(vit->second.size())) {
+        const std::string &entry = vit->second[idx];
+        if (checkEntry(entry)) return demangleSymbol(entry);
+      }
+    }
+  }
+  // Fallback: search all known vtables for a real function at the same
+  // absolute slot (standard Itanium offset = 2).  This handles the case
+  // where the static class has a pure-virtual slot.
+  int absIdx = 2 + slot;
+  for (const auto &[sym, entries] : vtableGlobalEntries_) {
+    if (absIdx >= 0 && absIdx < static_cast<int>(entries.size()))
+      if (checkEntry(entries[absIdx]))
+        return demangleSymbol(entries[absIdx]);
+  }
+  return "";
+}
+
+// ── Global variables ───────────────────────────────────────────────────────
+
 bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
-  // Extract global variable name
   auto sym = gop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
   if (!sym) {
     if (!isBestEffort()) {
@@ -1123,8 +1238,146 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // Append any leftovers (cycles/self-deps) deterministically
   for (auto &s : remaining) order.push_back(s);
 
+  // Pre-scan 1: build vtableGlobalEntries_ — parse each #cir.vtable<{...}>
+  // global to extract the function names stored in each slot.
+  // Pre-scan 2: build recToVtableOffset_ — for each constructor function,
+  // see which vtable.address_point (vtable sym + offset) and which
+  // vtable.get_vptr (rec class name) co-occur to associate class → vtable.
+  {
+    // Parse vtable globals.
+    for (auto &op : module.getOps()) {
+      if (op.getName().getStringRef() != "cir.global") continue;
+      std::string printed;
+      { llvm::raw_string_ostream rso(printed); op.print(rso); }
+      if (printed.find("#cir.vtable<") == std::string::npos) continue;
+      auto symAttr = op.getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
+      if (!symAttr) continue;
+      std::string sym = symAttr.getValue().str();
+      // Find the const_array element list inside the vtable attribute.
+      size_t arrStart = printed.find("#cir.const_array<[");
+      size_t arrEnd   = printed.rfind("]>");
+      if (arrStart == std::string::npos || arrEnd == std::string::npos) continue;
+      std::string arr = printed.substr(arrStart + 18, arrEnd - arrStart - 18);
+      // Walk the entries in order; each entry is either:
+      //   #cir.ptr<null>         → empty string (null slot)
+      //   #cir.global_view<@NAME ...>  → function/type_info name
+      std::vector<std::string> entries;
+      size_t cur = 0;
+      while (cur < arr.size()) {
+        size_t vp = arr.find("#cir.global_view<@", cur);
+        size_t np = arr.find("#cir.ptr<null>",     cur);
+        if (vp == std::string::npos && np == std::string::npos) break;
+        // Pick whichever comes first.
+        if (np != std::string::npos && (vp == std::string::npos || np < vp)) {
+          entries.push_back("");
+          cur = np + 14;
+        } else {
+          size_t nameStart = vp + 18; // after "@"
+          // name ends at ',' or '>' — no array index in vtable fn entries
+          size_t nameEnd = arr.find_first_of(",> \t", nameStart);
+          if (nameEnd == std::string::npos) nameEnd = arr.size();
+          entries.push_back(arr.substr(nameStart, nameEnd - nameStart));
+          cur = nameEnd;
+        }
+      }
+      registerVtableGlobalEntries(sym, std::move(entries));
+    }
+
+    // Scan function bodies to pair vtable.address_point with vtable.get_vptr.
+    std::function<void(mlir::Operation &, std::string &, int &)> scanForVtableInit;
+    scanForVtableInit = [&](mlir::Operation &op,
+                            std::string &lastVtableSym, int &lastOffset) {
+      if (op.getName().getStringRef() == "cir.vtable.address_point") {
+        if (auto nameAttr = op.getAttrOfType<FlatSymbolRefAttr>("name"))
+          lastVtableSym = nameAttr.getValue().str();
+        // Extract offset from address_point attribute (text: "index = N, offset = K")
+        {
+          std::string attrText;
+          llvm::raw_string_ostream rso(attrText);
+          if (auto apAttr = op.getAttr("address_point"))
+            apAttr.print(rso);
+          size_t offPos = attrText.find("offset = ");
+          if (offPos != std::string::npos) {
+            lastOffset = std::stoi(attrText.substr(offPos + 9));
+          }
+        }
+      } else if (op.getName().getStringRef() == "cir.vtable.get_vptr") {
+        if (!lastVtableSym.empty() && op.getNumOperands() > 0) {
+          mlir::Type srcTy = op.getOperand(0).getType();
+          if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(srcTy)) {
+            if (auto recTy = mlir::dyn_cast<cir::RecordType>(ptrTy.getPointee())) {
+              if (recTy.getName()) {
+                std::string recName = recTy.getName().getValue().str();
+                // Only register if not already known (first constructor wins).
+                if (recToVtableOffset_.find(recName) == recToVtableOffset_.end())
+                  registerRecVtableOffset(recName, lastVtableSym, lastOffset);
+              }
+            }
+          }
+        }
+      }
+      for (auto &region : op.getRegions())
+        for (auto &block : region.getBlocks()) {
+          // Reset per-function when we descend into a new function body.
+          std::string localSym;
+          int localOffset = 2; // Itanium default
+          for (auto &nestedOp : block.getOperations())
+            scanForVtableInit(nestedOp, localSym, localOffset);
+        }
+    };
+    for (auto &op : module.getOps()) {
+      if (op.getName().getStringRef() == "cir.func") {
+        std::string sym;
+        int offset = 2;
+        for (auto &region : op.getRegions())
+          for (auto &block : region.getBlocks())
+            for (auto &nestedOp : block.getOperations())
+              scanForVtableInit(nestedOp, sym, offset);
+      }
+    }
+  }
+
+  // Pre-scan: collect the C return types of all virtual calls so we can emit
+  // one typed __VERIFIER_virtual_call_<suffix> declaration per distinct return
+  // type.  We find these by inspecting the result type of every
+  // cir.vtable.get_virtual_fn_addr op: its type is
+  //   !cir.ptr<!cir.ptr<!cir.func<(params) -> RetType>>>
+  // from which RetType is extracted.
+  std::set<std::string> virtualCallRetTypes;
+  {
+    std::function<void(mlir::Operation &)> scanOp;
+    scanOp = [&](mlir::Operation &op) {
+      if (op.getName().getStringRef() == "cir.vtable.get_virtual_fn_addr") {
+        if (op.getNumResults() > 0) {
+          mlir::Type rt = op.getResult(0).getType();
+          if (auto outerPtr = mlir::dyn_cast<cir::PointerType>(rt))
+            if (auto innerPtr = mlir::dyn_cast<cir::PointerType>(outerPtr.getPointee()))
+              if (auto funcTy = mlir::dyn_cast<cir::FuncType>(innerPtr.getPointee()))
+                virtualCallRetTypes.insert(mapTypeToC(funcTy.getReturnType()));
+        }
+      }
+      for (auto &region : op.getRegions())
+        for (auto &block : region.getBlocks())
+          for (auto &nestedOp : block.getOperations())
+            scanOp(nestedOp);
+    };
+    for (auto &op : module.getOps()) scanOp(op);
+  }
+
   // Only emit struct definitions once (for top-level module call)
   if (!structsEmitted && !order.empty()) {
+    // Emit one __VERIFIER_virtual_call_<suffix> declaration per needed return
+    // type before the struct definitions so it appears near the top.
+    if (!virtualCallRetTypes.empty()) {
+      out << "// Virtual call intrinsics -- semantics provided by the verification tool\n";
+      for (const auto &retType : virtualCallRetTypes) {
+        std::string suffix = virtualCallTypeSuffix(retType);
+        out << "extern " << retType
+            << " __VERIFIER_virtual_call_" << suffix << "(void*, const char*, ...);\n";
+      }
+      out << "\n";
+    }
+
     out << "// Struct definitions (auto-parsed)\n";
     for (auto &sname : order) {
       bool isU = false;
@@ -1164,6 +1417,16 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     llvm::raw_string_ostream rso(printed);
     op.print(rso);
     rso.flush();
+
+    // Skip vtable globals: they contain function pointers that are not
+    // representable in verification-friendly C; virtual dispatch is handled
+    // via __VERIFIER_virtual_call instead.
+    if (printed.find("#cir.vtable<") != std::string::npos) continue;
+
+    // Skip RTTI typeinfo/typestring globals: these are C++ ABI internals
+    // (type_info objects and mangled type name strings) not needed for
+    // verification of functional properties.
+    if (printed.find("#cir.typeinfo<") != std::string::npos) continue;
 
     if (printed.find("#cir.global_view<@") != std::string::npos)
       viewGlobals.push_back(&op);
