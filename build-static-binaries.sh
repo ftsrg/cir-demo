@@ -30,22 +30,22 @@ if ! command -v docker >/dev/null 2>&1; then
 fi
 
 # Ensure buildx is available
-if ! docker buildx version >/dev/null 2>&1; then
+if ! sudo docker buildx version >/dev/null 2>&1; then
   echo "Docker Buildx is not installed/enabled."
   echo "Please install/enable Buildx: https://docs.docker.com/build/buildx/install/" >&2
   exit 1
 fi
 
 # Create and use a local builder if none is active
-ACTIVE_BUILDER=$(docker buildx ls | awk '/\*/ {print $1}' || true)
+ACTIVE_BUILDER=$(sudo docker buildx ls | awk '/\*/ {print $1}' || true)
 if [[ -z "${ACTIVE_BUILDER}" ]]; then
   echo "No active buildx builder found. Creating 'cir-static-builder'…"
-  docker buildx create --use --name cir-static-builder >/dev/null
+  sudo docker buildx create --use --name cir-static-builder >/dev/null
 fi
 
 # Build and export only the final binaries using the `export` stage
 rm -rf ./output
-docker buildx build \
+sudo docker buildx build \
   -f docker/static-build.Dockerfile \
   --target=export \
   --output type=local,dest=./output \
@@ -70,4 +70,5 @@ echo "Binary information:"
 file ./output/clang || true
 file ./output/xcfa-mapper || true
 echo
+sudo chown -R "$(id -u):$(id -g)" ./output
 ls -lh ./output/

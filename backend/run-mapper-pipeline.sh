@@ -38,12 +38,7 @@ CIR_MLIR_FILE="$OUTPUT_DIR/$BASE_NAME.cir.mlir"
 FLAT_MLIR_FILE="$OUTPUT_DIR/$BASE_NAME.flat.mlir"
 OUTPUT_C_FILE="$OUTPUT_DIR/$BASE_NAME.output.c"
 
-"$CLANG_BIN" -x c -std=c11 -S -emit-cir \
-  -Wno-error=int-conversion \
-  -Wno-error=incompatible-pointer-types \
-  -Wno-error=implicit-function-declaration \
-  -Wno-error=return-type \
-  -Wno-error=implicit-int \
+"$CLANG_BIN" -x c -S -emit-cir \
   "$INPUT_FILE" -o "$CIR_MLIR_FILE"
 "$CIR_OPT_BIN" "$CIR_MLIR_FILE" -cir-flatten-cfg -o "$FLAT_MLIR_FILE"
 "$XCFA_MAPPER_BIN" "$FLAT_MLIR_FILE" "$OUTPUT_C_FILE"
