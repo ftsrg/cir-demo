@@ -301,6 +301,26 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
     ctype = m.mapTypeToC(resultType);
   }
 
+  // Normalize special floating-point literal values that are not valid C
+  // expressions (LLVM APFloat::toString() may emit "+Inf", "-Inf", "+NaN", etc.)
+  if (literal == "+Inf" || literal == "Inf") {
+    if (ctype == "float")       literal = "__builtin_inff()";
+    else if (ctype == "long double") literal = "__builtin_infl()";
+    else                        literal = "__builtin_inf()";
+  } else if (literal == "-Inf") {
+    if (ctype == "float")       literal = "-__builtin_inff()";
+    else if (ctype == "long double") literal = "-__builtin_infl()";
+    else                        literal = "-__builtin_inf()";
+  } else if (literal == "+NaN" || literal == "NaN") {
+    if (ctype == "float")       literal = "__builtin_nanf(\"\")";
+    else if (ctype == "long double") literal = "__builtin_nanl(\"\")";
+    else                        literal = "__builtin_nan(\"\")";
+  } else if (literal == "-NaN") {
+    if (ctype == "float")       literal = "-__builtin_nanf(\"\")";
+    else if (ctype == "long double") literal = "-__builtin_nanl(\"\")";
+    else                        literal = "-__builtin_nan(\"\")";
+  }
+
   if (isZeroInit && resultType &&
       (mlir::isa<cir::RecordType>(resultType) || mlir::isa<cir::ArrayType>(resultType))) {
     literal = "{0}";
@@ -1315,19 +1335,16 @@ bool handleCopy(cir::CopyOp op, Mapper &m, std::ostream &out) {
 }
 
 bool handleStackSave(cir::StackSaveOp op, Mapper &m, std::ostream &out) {
+  // VLA stack bookkeeping — irrelevant for reachability verification.
+  // Give the result a name (it may be consumed by StackRestore) but emit
+  // nothing.
   Operation *o = op.getOperation();
-  std::string tmp = m.freshName("stack");
-  out << "  void* " << tmp << " = __builtin_stack_save();\n";
-  if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+  if (o->getNumResults() > 0) m.getOrCreateName(o->getResult(0));
   return true;
 }
 
 bool handleStackRestore(cir::StackRestoreOp op, Mapper &m, std::ostream &out) {
-  Operation *o = op.getOperation();
-  if (o->getNumOperands() < 1) return false;
-  Value ptr = o->getOperand(0);
-  std::string ptrName = m.getOrCreateName(ptr);
-  out << "  __builtin_stack_restore(" << ptrName << ");\n";
+  // VLA stack bookkeeping — irrelevant for reachability verification.
   return true;
 }
 
@@ -1564,6 +1581,96 @@ bool handleVTableGetTypeInfo(cir::VTableGetTypeInfoOp op, Mapper &m, std::ostrea
   return true;
 }
 
+// =============================================================================
+// Floating-point math function handlers (Fix 5)
+// =============================================================================
+
+// Choose the correct C math function name by appending a suffix for
+// float ("f") or long double ("l") variants.
+static std::string fpMathFuncName(const char *base, const std::string &ctype) {
+  std::string name = base;
+  if (ctype == "float")            name += "f";
+  else if (ctype == "long double") name += "l";
+  return name;
+}
+
+// Unary floating-point op: result type = operand type (FP→FP).
+static bool handleUnaryFPOp(const char *base, Operation *o, Mapper &m, std::ostream &out) {
+  if (o->getNumOperands() < 1 || o->getNumResults() < 1) return false;
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  std::string fname = fpMathFuncName(base, ctype);
+  std::string opnd  = m.getOrCreateName(o->getOperand(0));
+  std::string tmp   = m.freshName(base);
+  out << "  " << ctype << " " << tmp << " = " << fname << "(" << opnd << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// Unary FP→Int op: result is an integer, function suffix determined by the
+// float input type (e.g., lroundf for float input, lround for double).
+static bool handleFPToIntOp(const char *base, Operation *o, Mapper &m, std::ostream &out) {
+  if (o->getNumOperands() < 1 || o->getNumResults() < 1) return false;
+  std::string inCtype = m.mapTypeToC(o->getOperand(0).getType());
+  std::string fname   = fpMathFuncName(base, inCtype);
+  std::string opnd    = m.getOrCreateName(o->getOperand(0));
+  std::string ctype   = m.mapTypeToC(o->getResult(0).getType());
+  std::string tmp     = m.freshName(base);
+  out << "  " << ctype << " " << tmp << " = " << fname << "(" << opnd << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// Binary FP→FP op.
+static bool handleBinaryFPOp(const char *base, Operation *o, Mapper &m, std::ostream &out) {
+  if (o->getNumOperands() < 2 || o->getNumResults() < 1) return false;
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  std::string fname = fpMathFuncName(base, ctype);
+  std::string lhs   = m.getOrCreateName(o->getOperand(0));
+  std::string rhs   = m.getOrCreateName(o->getOperand(1));
+  std::string tmp   = m.freshName(base);
+  out << "  " << ctype << " " << tmp << " = " << fname << "(" << lhs << ", " << rhs << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// ---- Unary FP→FP handlers ----
+bool handleSqrt(cir::SqrtOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("sqrt",      op.getOperation(), m, out); }
+bool handleACos(cir::ACosOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("acos",      op.getOperation(), m, out); }
+bool handleASin(cir::ASinOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("asin",      op.getOperation(), m, out); }
+bool handleATan(cir::ATanOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("atan",      op.getOperation(), m, out); }
+bool handleCeil(cir::CeilOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("ceil",      op.getOperation(), m, out); }
+bool handleCos(cir::CosOp op, Mapper &m, std::ostream &out)             { return handleUnaryFPOp("cos",       op.getOperation(), m, out); }
+bool handleExp(cir::ExpOp op, Mapper &m, std::ostream &out)             { return handleUnaryFPOp("exp",       op.getOperation(), m, out); }
+bool handleExp2(cir::Exp2Op op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("exp2",      op.getOperation(), m, out); }
+bool handleLog(cir::LogOp op, Mapper &m, std::ostream &out)             { return handleUnaryFPOp("log",       op.getOperation(), m, out); }
+bool handleLog10(cir::Log10Op op, Mapper &m, std::ostream &out)         { return handleUnaryFPOp("log10",     op.getOperation(), m, out); }
+bool handleLog2(cir::Log2Op op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("log2",      op.getOperation(), m, out); }
+bool handleNearbyint(cir::NearbyintOp op, Mapper &m, std::ostream &out) { return handleUnaryFPOp("nearbyint", op.getOperation(), m, out); }
+bool handleRint(cir::RintOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("rint",      op.getOperation(), m, out); }
+bool handleRound(cir::RoundOp op, Mapper &m, std::ostream &out)         { return handleUnaryFPOp("round",     op.getOperation(), m, out); }
+bool handleRoundEven(cir::RoundEvenOp op, Mapper &m, std::ostream &out) { return handleUnaryFPOp("round",     op.getOperation(), m, out); }
+bool handleSin(cir::SinOp op, Mapper &m, std::ostream &out)             { return handleUnaryFPOp("sin",       op.getOperation(), m, out); }
+bool handleTan(cir::TanOp op, Mapper &m, std::ostream &out)             { return handleUnaryFPOp("tan",       op.getOperation(), m, out); }
+bool handleFTrunc(cir::TruncOp op, Mapper &m, std::ostream &out)        { return handleUnaryFPOp("trunc",     op.getOperation(), m, out); }
+bool handleFAbs(cir::FAbsOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("fabs",      op.getOperation(), m, out); }
+bool handleFloor(cir::FloorOp op, Mapper &m, std::ostream &out)         { return handleUnaryFPOp("floor",     op.getOperation(), m, out); }
+
+// ---- Unary FP→Int handlers ----
+bool handleLround(cir::LroundOp op, Mapper &m, std::ostream &out)       { return handleFPToIntOp("lround",    op.getOperation(), m, out); }
+bool handleLlround(cir::LlroundOp op, Mapper &m, std::ostream &out)     { return handleFPToIntOp("llround",   op.getOperation(), m, out); }
+bool handleLrint(cir::LrintOp op, Mapper &m, std::ostream &out)         { return handleFPToIntOp("lrint",     op.getOperation(), m, out); }
+bool handleLlrint(cir::LlrintOp op, Mapper &m, std::ostream &out)       { return handleFPToIntOp("llrint",    op.getOperation(), m, out); }
+
+// ---- Binary FP→FP handlers ----
+bool handleCopysign(cir::CopysignOp op, Mapper &m, std::ostream &out)   { return handleBinaryFPOp("copysign", op.getOperation(), m, out); }
+bool handleFMaxNum(cir::FMaxNumOp op, Mapper &m, std::ostream &out)     { return handleBinaryFPOp("fmax",     op.getOperation(), m, out); }
+bool handleFMaximum(cir::FMaximumOp op, Mapper &m, std::ostream &out)   { return handleBinaryFPOp("fmax",     op.getOperation(), m, out); }
+bool handleFMinNum(cir::FMinNumOp op, Mapper &m, std::ostream &out)     { return handleBinaryFPOp("fmin",     op.getOperation(), m, out); }
+bool handleFMinimum(cir::FMinimumOp op, Mapper &m, std::ostream &out)   { return handleBinaryFPOp("fmin",     op.getOperation(), m, out); }
+bool handleFMod(cir::FModOp op, Mapper &m, std::ostream &out)           { return handleBinaryFPOp("fmod",     op.getOperation(), m, out); }
+bool handlePow(cir::PowOp op, Mapper &m, std::ostream &out)             { return handleBinaryFPOp("pow",      op.getOperation(), m, out); }
+bool handleATan2(cir::ATan2Op op, Mapper &m, std::ostream &out)         { return handleBinaryFPOp("atan2",    op.getOperation(), m, out); }
+
 } // namespace
 
 void registerBuiltinHandlers(Mapper &m) {
@@ -1641,6 +1748,40 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::VTableGetVPtrOp>(handleVTableGetVPtr);
   m.registerTypedHandler<cir::VTableGetVirtualFnAddrOp>(handleVTableGetVirtualFnAddr);
   m.registerTypedHandler<cir::VTableGetTypeInfoOp>(handleVTableGetTypeInfo);
+
+  // Floating-point math functions
+  m.registerTypedHandler<cir::SqrtOp>(handleSqrt);
+  m.registerTypedHandler<cir::ACosOp>(handleACos);
+  m.registerTypedHandler<cir::ASinOp>(handleASin);
+  m.registerTypedHandler<cir::ATanOp>(handleATan);
+  m.registerTypedHandler<cir::CeilOp>(handleCeil);
+  m.registerTypedHandler<cir::CosOp>(handleCos);
+  m.registerTypedHandler<cir::ExpOp>(handleExp);
+  m.registerTypedHandler<cir::Exp2Op>(handleExp2);
+  m.registerTypedHandler<cir::LogOp>(handleLog);
+  m.registerTypedHandler<cir::Log10Op>(handleLog10);
+  m.registerTypedHandler<cir::Log2Op>(handleLog2);
+  m.registerTypedHandler<cir::NearbyintOp>(handleNearbyint);
+  m.registerTypedHandler<cir::RintOp>(handleRint);
+  m.registerTypedHandler<cir::RoundOp>(handleRound);
+  m.registerTypedHandler<cir::RoundEvenOp>(handleRoundEven);
+  m.registerTypedHandler<cir::SinOp>(handleSin);
+  m.registerTypedHandler<cir::TanOp>(handleTan);
+  m.registerTypedHandler<cir::TruncOp>(handleFTrunc);
+  m.registerTypedHandler<cir::FAbsOp>(handleFAbs);
+  m.registerTypedHandler<cir::FloorOp>(handleFloor);
+  m.registerTypedHandler<cir::LroundOp>(handleLround);
+  m.registerTypedHandler<cir::LlroundOp>(handleLlround);
+  m.registerTypedHandler<cir::LrintOp>(handleLrint);
+  m.registerTypedHandler<cir::LlrintOp>(handleLlrint);
+  m.registerTypedHandler<cir::CopysignOp>(handleCopysign);
+  m.registerTypedHandler<cir::FMaxNumOp>(handleFMaxNum);
+  m.registerTypedHandler<cir::FMaximumOp>(handleFMaximum);
+  m.registerTypedHandler<cir::FMinNumOp>(handleFMinNum);
+  m.registerTypedHandler<cir::FMinimumOp>(handleFMinimum);
+  m.registerTypedHandler<cir::FModOp>(handleFMod);
+  m.registerTypedHandler<cir::PowOp>(handlePow);
+  m.registerTypedHandler<cir::ATan2Op>(handleATan2);
 }
 
 } // namespace xcfa
