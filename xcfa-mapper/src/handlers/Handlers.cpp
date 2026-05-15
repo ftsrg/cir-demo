@@ -1290,10 +1290,11 @@ bool handleBaseClassAddr(Operation *o, Mapper &m, std::ostream &out) {
 }
 
 bool handleCopy(cir::CopyOp op, Mapper &m, std::ostream &out) {
-  Operation *o = op.getOperation();
-  if (o->getNumOperands() < 2) return false;
-  Value src = o->getOperand(0);
-  Value dst = o->getOperand(1);
+  // NOTE: cir.copy is spelled as "cir.copy %src to %dst", but in the
+  // generated op API operand(0) is the destination and operand(1) is the
+  // source. Use typed accessors to avoid accidental reversal.
+  Value src = op.getSrc();
+  Value dst = op.getDst();
   std::string srcName = m.getOrCreateName(src);
   std::string dstName = m.getOrCreateName(dst);
   // Determine if this is an array copy (both operands pointer to array)

@@ -93,6 +93,34 @@ static std::string demangleSymbol(const std::string &sym) {
   return out;
 }
 
+// Render a C parameter declaration type, preserving function-pointer shapes.
+// When `name` is empty, returns a type-only parameter fragment.
+static std::string mapParamTypeToC(const Mapper &m, mlir::Type t,
+                                   const std::string &name = "") {
+  if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(t)) {
+    if (auto fnTy = mlir::dyn_cast<cir::FuncType>(ptrTy.getPointee())) {
+      std::string retType = m.mapTypeToC(fnTy.getReturnType());
+      std::string params;
+      bool first = true;
+      for (mlir::Type inTy : fnTy.getInputs()) {
+        if (!first) params += ", ";
+        first = false;
+        params += mapParamTypeToC(m, inTy);
+      }
+      if (fnTy.isVarArg()) {
+        if (!params.empty()) params += ", ";
+        params += "...";
+      }
+      std::string decl = name.empty() ? "(*)" : "(*" + name + ")";
+      return retType + " " + decl + "(" + params + ")";
+    }
+  }
+
+  std::string base = m.mapTypeToC(t);
+  if (name.empty()) return base;
+  return base + " " + name;
+}
+
 // If a demangled symbol ends with an empty-parameter list '()' (commonly
 // produced for function names with no parameters), strip that suffix so the
 // sanitized identifier does not carry the parentheses.
@@ -402,10 +430,12 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
   // assignments that happen during the real mapFunc pass later.
   std::string params;
   bool first = true;
+  unsigned paramIndex = 0;
   for (mlir::Type paramType : fty.getInputs()) {
     if (!first) params += ", ";
     first = false;
-    params += mapTypeToC(paramType);
+    std::string paramName = "p" + std::to_string(paramIndex++);
+    params += mapParamTypeToC(*this, paramType, paramName);
   }
   if (fty.isVarArg()) {
     if (!params.empty()) params += ", ";
@@ -454,9 +484,6 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       if (!first) params += ", ";
       first = false;
       
-      // Map parameter type to C type
-      std::string paramType = mapTypeToC(arg.getType());
-      
       // Generate parameter name
       std::string paramName = freshName("v");
       setName(arg, paramName);
@@ -466,17 +493,19 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
           markAsDirectAccess(arg);
         }
       
-      params += paramType + " " + paramName;
+      params += mapParamTypeToC(*this, arg.getType(), paramName);
     }
   } else {
     // For declarations without body, use types from function signature
     bool first = true;
+    unsigned paramIndex = 0;
     for (mlir::Type paramType : inputs) {
       if (!first) params += ", ";
       first = false;
       
-      // Map parameter type to C type  
-      std::string cParamType = mapTypeToC(paramType);
+      // Map parameter type to C type
+      std::string paramName = "p" + std::to_string(paramIndex++);
+      std::string cParamType = mapParamTypeToC(*this, paramType, paramName);
       params += cParamType;
     }
   }
@@ -511,8 +540,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
     
     for (BlockArgument arg : b.getArguments()) {
       std::string argName = getOrCreateName(arg);
-      std::string ctype = mapTypeToC(arg.getType());
-      out << "  " << ctype << " " << argName << ";\n";
+      out << "  " << mapParamTypeToC(*this, arg.getType(), argName) << ";\n";
     }
   }
   
@@ -901,6 +929,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   struct FieldInfo {
     std::string name;        // field name
     std::string baseType;    // base C type (without array declarators or struct keyword repetition)
+    int index = -1;          // layout index in record; -1 means unknown
     bool isStruct = false;   // whether baseType already includes 'struct X'
     bool isArray = false;    // whether field is an array
     std::vector<std::string> dims; // array dimensions outer->inner
@@ -1076,6 +1105,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       // Result type is pointer to field type
       mlir::Type resType = gm.getOperation()->getResult(0).getType();
       FieldInfo info;
+      info.index = static_cast<int>(gm.getIndex());
 
       // Check if result is pointer to struct
       if (auto resPtrType = mlir::dyn_cast<cir::PointerType>(resType)) {
@@ -1130,7 +1160,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       std::string fname;
       if (auto sa = gm.getOperation()->getAttrOfType<StringAttr>("name")) fname = sa.getValue().str();
       if (fname.empty()) {
-        size_t idx = structFields[structName].size();
+        size_t idx = static_cast<size_t>(std::max(0, info.index));
+        if (info.index < 0) idx = structFields[structName].size();
         fname = "field" + std::to_string(idx);
       }
       info.name = fname;
@@ -1140,7 +1171,12 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       // Avoid duplicate entries for the same field name
   auto &vec = structFields[structName];
   bool exists = false;
-  for (auto &fi : vec) if (fi.name == info.name) { exists = true; break; }
+  for (auto &fi : vec) {
+    if ((info.index >= 0 && fi.index == info.index) || fi.name == info.name) {
+      exists = true;
+      break;
+    }
+  }
   if (!exists) vec.push_back(info);
     }
   };
@@ -1171,7 +1207,6 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       std::string recordName = sanitizeIdentifier(line.substr(nameStart + 1, nameEnd - nameStart - 1));
 
       auto &existingFields = structFields[recordName];
-      if (!existingFields.empty()) continue;
 
       std::vector<FieldInfo> layoutFields;
       std::vector<std::string> fieldTokens = splitTopLevelFields(line.substr(bodyStart + 1, bodyEnd - bodyStart - 1));
@@ -1180,6 +1215,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         if (baseType.empty()) continue;
 
         FieldInfo info;
+        info.index = static_cast<int>(index);
         info.name = "__field" + std::to_string(index);
         info.baseType = baseType;
         info.isStruct = baseType.rfind("struct ", 0) == 0 || baseType.rfind("union ", 0) == 0;
@@ -1187,7 +1223,19 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       }
 
       if (!layoutFields.empty()) {
-        existingFields = std::move(layoutFields);
+        // Merge missing fields by layout index. Keep already discovered member
+        // names (e.g. user-visible field names from cir.get_member attrs), but
+        // ensure omitted fields are still present to preserve struct layout.
+        for (const auto &lf : layoutFields) {
+          bool exists = false;
+          for (const auto &ef : existingFields) {
+            if ((lf.index >= 0 && ef.index == lf.index) || ef.name == lf.name) {
+              exists = true;
+              break;
+            }
+          }
+          if (!exists) existingFields.push_back(lf);
+        }
       }
     }
   }
@@ -1385,6 +1433,12 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       if (itk != isUnionContainer.end()) isU = itk->second;
       out << (isU ? "union " : "struct ") << sname << " { ";
       auto &vec = structFields[sname];
+      std::stable_sort(vec.begin(), vec.end(), [](const FieldInfo &lhs, const FieldInfo &rhs) {
+        if (lhs.index < 0 && rhs.index < 0) return false;
+        if (lhs.index < 0) return false;
+        if (rhs.index < 0) return true;
+        return lhs.index < rhs.index;
+      });
       if (vec.empty()) {
         // Keep records complete in C even when CIR does not expose fields.
         // This avoids "incomplete type" errors for local object allocations.
