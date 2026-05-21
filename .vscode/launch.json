@@ -47,14 +47,13 @@
       ]
     },
     {
-      "name": "xcfa-mapper: Debug test_class.mlir",
+      "name": "xcfa-mapper: Debug algorithm1/main.cpp",
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/xcfa-mapper/build/xcfa-mapper",
       "args": [
-        "--monitor-json", "${workspaceFolder}/xcfa-mapper/build/trace.json",
-        "${workspaceFolder}/xcfa-mapper/test/unit/test_class.mlir",
-        "${workspaceFolder}/xcfa-mapper/build/out.c"
+        "${workspaceFolder}/xcfa-mapper/build/algorithm1.flat.mlir",
+        "${workspaceFolder}/xcfa-mapper/build/algorithm1.out.c"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -62,30 +61,7 @@
       "externalConsole": false,
       "MIMode": "gdb",
       "miDebuggerPath": "/usr/bin/gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ]
-    },
-    {
-      "name": "xcfa-mapper: Debug test_class.mlir (--best-effort)",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/xcfa-mapper/build/xcfa-mapper",
-      "args": [
-        "--best-effort",
-        "${workspaceFolder}/xcfa-mapper/test/unit/test_class.mlir",
-        "${workspaceFolder}/xcfa-mapper/build/out-best-effort.c"
-      ],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "xcfa-mapper: Prepare algorithm1 CIR",
       "setupCommands": [
         {
           "description": "Enable pretty-printing for gdb",

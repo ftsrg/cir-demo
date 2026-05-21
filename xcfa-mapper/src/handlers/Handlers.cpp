@@ -149,14 +149,11 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   if (varName.empty())
     varName = extractName(o);
 
-  if (varName.empty()) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_ALLOCA_NO_NAME << "\n";
-      return false;
-    }
-    out << "  // " << ERR_ALLOCA_NO_NAME << "\n";
-    varName = m.freshName("a");
-  }
+  // An empty name is valid: Clang emits unnamed allocas for unused or
+  // compiler-generated parameter slots (e.g. `const void* __hint` in
+  // std::__new_allocator::allocate).  Just assign a synthetic name.
+  if (varName.empty())
+    varName = "unnamed";
   
   // Make variable name unique by appending suffix if it's already been used
   // This handles cases where MLIR has multiple allocas with the same name (e.g., in nested scopes)
@@ -347,23 +344,35 @@ bool handleLoad(cir::LoadOp op, Mapper &m, std::ostream &out) {
   Value ptr = o->getOperand(0);
 
   // Vtable dispatch chain: if loading from a tracked chain value, propagate
-  // the chain instead of emitting C code.
+  // the chain and emit a C declaration when the loaded value will be referenced
+  // by downstream ops (e.g. virtual-base offset computation).
   if (m.isVtableDispatchValue(ptr)) {
     if (o->getNumResults() > 0) {
       Value result    = o->getResult(0);
       mlir::Value obj = m.getVtableDispatchObject(ptr);
       m.trackVtableDispatch(result, obj);
+      bool isFnPtr = false;
       // If the result is a pointer to a function type this is the final
       // function-pointer load -- mark it so that handleCall can emit the
       // __VERIFIER_virtual_call intrinsic.
       if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(result.getType()))
         if (mlir::isa<cir::FuncType>(ptrTy.getPointee())) {
+          isFnPtr = true;
           m.markVirtualFnPtr(result);
           // Propagate the virtual function label from the ptr-to-fn-ptr value.
           std::string lbl = m.getVirtualFnLabel(ptr);
           if (!lbl.empty()) m.setVirtualFnLabel(result, lbl);
         }
-      m.getOrCreateName(result);
+      std::string name = m.getOrCreateName(result);
+      if (!isFnPtr) {
+        // Non-function-pointer vtable load (e.g. the vtable pointer itself for
+        // virtual-base-offset computation): emit a declaration so that
+        // downstream casts/arithmetic that reference this name compile.
+        // The source has type void* (ptr-to-vptr mapped to void*), so cast to
+        // void** before dereferencing to produce the void* vtable pointer.
+        std::string srcName = m.getOrCreateName(ptr);
+        out << "  void* " << name << " = *((void**)" << srcName << ");\n";
+      }
     }
     return true;
   }
@@ -803,6 +812,11 @@ bool handleReturn(cir::ReturnOp op, Mapper &m, std::ostream &out) {
 
 bool handleUnreachable(cir::UnreachableOp op, Mapper &m, std::ostream &out) {
   out << "  __builtin_unreachable();\n";
+  return true;
+}
+
+bool handleTrap(cir::TrapOp op, Mapper &m, std::ostream &out) {
+  out << "  abort();\n";
   return true;
 }
 
@@ -1460,6 +1474,9 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
     out << "  // " << ERR_GET_GLOBAL_NO_NAME << "\n";
     globalName = "global_var";
   }
+
+  // Keep the raw name for function-output-name lookup before sanitization.
+  std::string rawGlobalName = globalName;
   
   // Sanitize the global name to be a valid C identifier
   globalName = Mapper::sanitizeIdentifier(globalName);
@@ -1500,8 +1517,15 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
       return true;
     }
 
-    // Generic pointer-to-object/function global: use address-of expression
-    // directly (e.g. "&_N", "&f1").
+    // Function-pointer global: use the demangled output name (same as what
+    // mapFunc emits for the definition) so the reference resolves correctly.
+    if (mlir::isa<cir::FuncType>(pointeeType)) {
+      std::string outName = m.getFunctionOutputName(rawGlobalName);
+      m.setName(o->getResult(0), "&" + outName);
+      return true;
+    }
+
+    // Generic pointer-to-object global: use address-of expression directly.
     m.setName(o->getResult(0), "&" + globalName);
     return true;
   }
@@ -1575,7 +1599,11 @@ bool handleVTableAddrPoint(cir::VTableAddrPointOp op, Mapper &m, std::ostream &o
 bool handleVTableGetVPtr(cir::VTableGetVPtrOp op, Mapper &m, std::ostream &out) {
   if (op->getNumOperands() > 0 && op->getNumResults() > 0) {
     m.trackVtableDispatch(op->getResult(0), op.getSrc());
-    m.getOrCreateName(op->getResult(0));
+    std::string name = m.getOrCreateName(op->getResult(0));
+    std::string src  = m.getOrCreateName(op.getSrc());
+    // Emit the vptr-field address as void*. The vtable pointer is always the
+    // first field of the struct, so the struct address equals the vptr address.
+    out << "  void* " << name << " = (void*)" << src << ";\n";
   }
   return true;
 }
@@ -1780,6 +1808,7 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::CallOp>(handleCall);
   m.registerTypedHandler<cir::ReturnOp>(handleReturn);
   m.registerTypedHandler<cir::UnreachableOp>(handleUnreachable);
+  m.registerTypedHandler<cir::TrapOp>(handleTrap);
   
   // Memory and pointer operations
   m.registerTypedHandler<cir::GetMemberOp>(handleGetMember);

@@ -185,7 +185,7 @@ def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Pat
     relative_yml = yml_path.relative_to(root_dir)
     source_name = parse_input_file_from_yml(yml_path)
     source_path = yml_path.parent / source_name
-    case_id = str(source_name)
+    case_id = str(relative_yml.parent / source_name)
 
     try:
         if output_dir is None:

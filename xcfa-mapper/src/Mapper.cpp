@@ -925,6 +925,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         bool isVol    = storeOp.getIsVolatile();
         if (isAtomic || isVol)
           recordAccess(storeOp.getAddr(), isAtomic, isVol);
+      } else if (mlir::isa<cir::TrapOp>(op)) {
+        hasTrap_ = true;
       }
       for (auto &region : op.getRegions())
         for (auto &block : region.getBlocks())
@@ -1464,6 +1466,10 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     };
     for (auto &op : module.getOps()) scanOp(op);
   }
+
+  // SV-COMP preamble: emit extern declarations needed by the generated code.
+  if (hasTrap_)
+    out << "extern void abort(void);\n\n";
 
   if (!structsEmitted && !order.empty()) {
     // Emit one __VERIFIER_virtual_call_<suffix> declaration per needed return
