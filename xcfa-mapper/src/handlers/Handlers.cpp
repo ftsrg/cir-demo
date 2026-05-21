@@ -347,7 +347,11 @@ bool handleLoad(cir::LoadOp op, Mapper &m, std::ostream &out) {
   // Never dereference direct access values
   bool shouldDereference = !m.isDirectAccess(ptr);
   if (shouldDereference) {
-    out << "  " << ctype << " " << tmp << " = *" << src << ";\n";
+    if (src.size() > 1 && src[0] == '&') {
+      out << "  " << ctype << " " << tmp << " = " << src.substr(1) << ";\n";
+    } else {
+      out << "  " << ctype << " " << tmp << " = *" << src << ";\n";
+    }
   } else {
     out << "  " << ctype << " " << tmp << " = " << src << ";\n";
   }
@@ -1400,13 +1404,14 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
   if (o->getNumResults() == 0) return true;
 
   mlir::Type resType = o->getResult(0).getType();
-  std::string ctype = m.mapTypeToC(resType);
+  // Inline get_global by binding SSA names directly to expressions that refer
+  // to the global symbol. This avoids unnecessary temporaries such as
+  //   void* g118 = &f1;
+  // before calls/loads/stores.
 
-  // Pointer global special case:
-  // get_global of a pointer variable returns a pointer-to-pointer (int** for int*).
-  // We do not want to introduce a temporary; we want subsequent stores to write
-  // directly 'pa = value' and loads to read 'pa'. So we simply bind the SSA value
-  // to the global name without emitting a declaration.
+  // Pointer-global special case:
+  // get_global of a pointer variable returns a pointer-to-pointer (int** for
+  // int*). Subsequent stores/loads should target the global lvalue itself.
   if (auto ptrType = mlir::dyn_cast<cir::PointerType>(resType)) {
     mlir::Type pointeeType = ptrType.getPointee();
     if (mlir::isa<cir::PointerType>(pointeeType)) {
@@ -1421,23 +1426,15 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
       m.markAsDirectAccess(o->getResult(0));
       return true;
     }
+
+    // Generic pointer-to-object/function global: use address-of expression
+    // directly (e.g. "&_N", "&f1").
+    m.setName(o->getResult(0), "&" + globalName);
+    return true;
   }
 
-  // Non-pointer-global cases: emit a temporary holding address-of global.
-  std::string tmp = m.freshName("g");
-  // For arrays (pointer to array), we want decay: tmp = globalName;
-  bool isPtrToArray = false;
-  if (auto ptrT = mlir::dyn_cast<cir::PointerType>(resType)) {
-    isPtrToArray = mlir::isa<cir::ArrayType>(ptrT.getPointee());
-  }
-  if (isPtrToArray) {
-    out << "  " << ctype << " " << tmp << " = " << globalName << ";\n";
-    m.setName(o->getResult(0), tmp);
-    // Do NOT mark as direct access; we want loads/stores to treat it as pointer value
-  } else {
-    out << "  " << ctype << " " << tmp << " = &" << globalName << ";\n";
-    m.setName(o->getResult(0), tmp);
-  }
+  // Conservative fallback (unexpected non-pointer result): still bind directly.
+  m.setName(o->getResult(0), globalName);
   return true;
 }
 
