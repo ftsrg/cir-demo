@@ -24,6 +24,7 @@
 
 #include <ostream>
 #include <memory>
+#include <set>
 #include <string>
 #include <functional>
 #include <unordered_map>
@@ -143,6 +144,7 @@ public:
 
 private:
   bool bestEffort;
+  bool structsEmitted = false;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
   TraceabilityTracker traceability;
   llvm::DenseMap<mlir::Value, std::string> valueNames;
@@ -151,6 +153,15 @@ private:
   unsigned counter;
   // Mapping from original (mangled) symbol -> chosen output name
   std::unordered_map<std::string, std::string> functionOutputNames;
+
+  // Raw symbol names of globals whose every access carries _Atomic / volatile
+  // qualifiers (detected by scanning cir.load / cir.store mem_order / is_volatile
+  // attributes during the mapModule pre-scan).
+  std::set<std::string> atomicGlobalSymbols_;
+  std::set<std::string> volatileGlobalSymbols_;
+  // Alloca result Values that are accessed atomically / volatilely.
+  llvm::DenseSet<mlir::Value> atomicAllocaValues_;
+  llvm::DenseSet<mlir::Value> volatileAllocaValues_;
 
   // Vtable dispatch tracking: maps any value in a virtual dispatch chain
   // (result of get_vptr, loaded vptr, get_virtual_fn_addr result, loaded
@@ -174,6 +185,15 @@ private:
 public:
   /// Get or create a label name for a block.
   std::string getOrCreateLabel(mlir::Block *b);
+
+  /// Query whether a global symbol (raw, unsanitized) was detected as _Atomic.
+  bool isAtomicGlobal(const std::string &sym) const { return atomicGlobalSymbols_.count(sym) > 0; }
+  /// Query whether a global symbol (raw, unsanitized) was detected as volatile.
+  bool isVolatileGlobal(const std::string &sym) const { return volatileGlobalSymbols_.count(sym) > 0; }
+  /// Query whether an alloca result Value is accessed atomically (_Atomic).
+  bool isAtomicAlloca(mlir::Value v) const { return atomicAllocaValues_.count(v) > 0; }
+  /// Query whether an alloca result Value is accessed with volatile semantics.
+  bool isVolatileAlloca(mlir::Value v) const { return volatileAllocaValues_.count(v) > 0; }
   
   /// When true, tolerate missing/exact matches and continue mapping with
   /// generated fallbacks; when false mapping will fail on missing exact data.

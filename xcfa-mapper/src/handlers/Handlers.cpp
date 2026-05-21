@@ -163,6 +163,16 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   // Sanitize first so dots/dashes in CIR names don't produce invalid C identifiers.
   std::string uniqueVarName = m.freshName(m.sanitizeIdentifier(varName));
 
+  // Determine qualifier prefix (_Atomic / volatile) based on access patterns
+  // detected during the mapModule pre-scan.  We check the first (and only)
+  // result of the alloca against the sets recorded by the pre-scan.
+  std::string qualPrefix;
+  if (o->getNumResults() > 0) {
+    mlir::Value allocaResult = o->getResult(0);
+    if (m.isAtomicAlloca(allocaResult))   qualPrefix += "_Atomic ";
+    if (m.isVolatileAlloca(allocaResult)) qualPrefix += "volatile ";
+  }
+
   // Get the allocated type (first operand type in the operation signature)
   // cir.alloca returns a pointer, but we want to declare the variable as the pointed-to type
   Type allocaTy = op.getAllocaType();
@@ -177,7 +187,7 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   // This needs to come before array check since some struct names might contain "array"
   if (typeStr.find("!rec_") == 0 || typeStr.find("!cir.record") == 0) {
     std::string ctype = m.mapTypeToC(allocaTy);
-    out << "  " << ctype << " " << uniqueVarName << ";\n";
+    out << "  " << qualPrefix << ctype << " " << uniqueVarName << ";\n";
     for (Value res : o->getResults()) {
       m.setName(res, uniqueVarName);
       m.markAsDirectAccess(res);
@@ -188,7 +198,7 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   // Handle array types specially: !cir.array<!s32i x 5> -> int arr[5]
   if (auto arrayTy = llvm::dyn_cast<cir::ArrayType>(allocaTy)) {
     std::string elemCType = m.mapTypeToC(arrayTy.getElementType());
-    out << "  " << elemCType << " " << uniqueVarName << "[" << arrayTy.getSize() << "];\n";
+    out << "  " << qualPrefix << elemCType << " " << uniqueVarName << "[" << arrayTy.getSize() << "];\n";
     for (Value res : o->getResults()) {
       m.setName(res, uniqueVarName);
       m.markAsDirectAccess(res);
@@ -202,7 +212,7 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
     ctype = m.mapTypeToC(allocaTy);
   }
   
-  out << "  " << ctype << " " << uniqueVarName << ";\n";
+  out << "  " << qualPrefix << ctype << " " << uniqueVarName << ";\n";
   for (Value res : o->getResults()) {
     m.setName(res, uniqueVarName);
     m.markAsDirectAccess(res); // Mark alloca results as direct access
@@ -743,13 +753,28 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
   // Use a typedef-style cast for function pointers
   std::string callExpr;
   if (isIndirectCall) {
-    // Generate return type for function pointer cast
     std::string retType = "void";
-    if (o->getNumResults() > 0) {
+    if (o->getNumResults() > 0)
       retType = m.mapTypeToC(o->getResult(0).getType());
+    // Build parameter types from the actual cir::FuncType of the callee.
+    std::string paramTypes;
+    if (o->getNumOperands() > 0) {
+      Value fnPtrVal = o->getOperand(0);
+      if (auto ptrTy = llvm::dyn_cast<cir::PointerType>(fnPtrVal.getType()))
+        if (auto funcTy = mlir::dyn_cast<cir::FuncType>(ptrTy.getPointee())) {
+          bool firstParam = true;
+          for (mlir::Type pt : funcTy.getInputs()) {
+            if (!firstParam) paramTypes += ", ";
+            firstParam = false;
+            paramTypes += m.mapTypeToC(pt);
+          }
+          if (funcTy.isVarArg()) {
+            if (!firstParam) paramTypes += ", ";
+            paramTypes += "...";
+          }
+        }
     }
-    // Cast void* to function pointer and call: ((retType (*)())ptr)()
-    callExpr = "((" + retType + " (*)())" + outCallee + ")";
+    callExpr = "((" + retType + " (*)(" + paramTypes + "))" + outCallee + ")";
   } else {
     callExpr = outCallee;
   }
@@ -974,10 +999,9 @@ bool handleVAArg(cir::VAArgOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
-bool handleVACopy(Operation *o, Mapper &m, std::ostream &out) {
-  if (o->getNumOperands() < 2) return false;
-  std::string srcArgList = m.getOrCreateName(o->getOperand(0));
-  std::string dstArgList = m.getOrCreateName(o->getOperand(1));
+bool handleVACopy(cir::VACopyOp op, Mapper &m, std::ostream &out) {
+  std::string dstArgList = m.getOrCreateName(op.getDstList());
+  std::string srcArgList = m.getOrCreateName(op.getSrcList());
   out << "  __builtin_va_copy(" << toBuiltinVAList(dstArgList) << ", "
       << toBuiltinVAList(srcArgList) << ");\n";
   return true;
@@ -1354,31 +1378,63 @@ bool handleStackRestore(cir::StackRestoreOp op, Mapper &m, std::ostream &out) {
 }
 
 bool handleGetBitfield(cir::GetBitfieldOp op, Mapper &m, std::ostream &out) {
-  Operation *o = op.getOperation();
-  if (o->getNumOperands() < 1) return false;
-  Value base = o->getOperand(0);
-  std::string baseName = m.getOrCreateName(base);
-  
+  Value addr = op.getAddr();
+  std::string addrName = m.getOrCreateName(addr);
+  cir::BitfieldInfoAttr info = op.getBitfieldInfo();
+  uint64_t offset = info.getOffset();
+  uint64_t width = info.getSize();
+  bool isSigned = info.getIsSigned();
+  std::string ctype = m.mapTypeToC(op.getResult().getType());
+  std::string storageExpr = m.isDirectAccess(addr) ? addrName : ("(*" + addrName + ")");
+  // Guard against width==64 to avoid UB in shift (1ULL<<64).
+  uint64_t mask = (width >= 64) ? ~0ULL : ((1ULL << width) - 1);
   std::string tmp = m.freshName("bf");
-  std::string ctype = "int";
-  if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  
-  // Simplified bitfield access
-  out << "  " << ctype << " " << tmp << " = " << baseName << "; // bitfield get\n";
-  if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+  if (!isSigned) {
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((unsigned long long)("
+        << storageExpr << ") >> " << offset << " & " << mask << "ULL);\n";
+  } else {
+    // Sign-extend using the portable formula: (raw ^ signbit) - signbit
+    uint64_t signbit = 1ULL << (width - 1);
+    std::string raw = m.freshName("bf_raw");
+    out << "  unsigned long long " << raw << " = (unsigned long long)(" << storageExpr
+        << ") >> " << offset << " & " << mask << "ULL;\n";
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((" << raw << " ^ "
+        << signbit << "ULL) - " << signbit << "ULL);\n";
+  }
+  m.setName(op.getResult(), tmp);
   return true;
 }
 
 bool handleSetBitfield(cir::SetBitfieldOp op, Mapper &m, std::ostream &out) {
-  Operation *o = op.getOperation();
-  if (o->getNumOperands() < 2) return false;
-  Value base = o->getOperand(0);
-  Value value = o->getOperand(1);
-  std::string baseName = m.getOrCreateName(base);
-  std::string valueName = m.getOrCreateName(value);
-  
-  // Simplified bitfield assignment
-  out << "  " << baseName << " = " << valueName << "; // bitfield set\n";
+  Value addr = op.getAddr();
+  Value src = op.getSrc();
+  std::string addrName = m.getOrCreateName(addr);
+  std::string srcName = m.getOrCreateName(src);
+  cir::BitfieldInfoAttr info = op.getBitfieldInfo();
+  uint64_t offset = info.getOffset();
+  uint64_t width = info.getSize();
+  bool isSigned = info.getIsSigned();
+  std::string ctype = m.mapTypeToC(op.getResult().getType());
+  std::string storageExpr = m.isDirectAccess(addr) ? addrName : ("(*" + addrName + ")");
+  uint64_t mask = (width >= 64) ? ~0ULL : ((1ULL << width) - 1);
+  // Update storage: clear field bits then OR in new value
+  out << "  " << storageExpr << " = (unsigned long long)(" << storageExpr << ") & ~("
+      << mask << "ULL << " << offset << ") | ((unsigned long long)(" << srcName
+      << ") & " << mask << "ULL) << " << offset << ";\n";
+  // Result: new bitfield value read back (with possible sign extension)
+  std::string tmp = m.freshName("bf");
+  if (!isSigned) {
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((unsigned long long)("
+        << storageExpr << ") >> " << offset << " & " << mask << "ULL);\n";
+  } else {
+    uint64_t signbit = 1ULL << (width - 1);
+    std::string raw = m.freshName("bf_raw");
+    out << "  unsigned long long " << raw << " = (unsigned long long)(" << storageExpr
+        << ") >> " << offset << " & " << mask << "ULL;\n";
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((" << raw << " ^ "
+        << signbit << "ULL) - " << signbit << "ULL);\n";
+  }
+  m.setName(op.getResult(), tmp);
   return true;
 }
 
@@ -1646,7 +1702,7 @@ bool handleLog2(cir::Log2Op op, Mapper &m, std::ostream &out)           { return
 bool handleNearbyint(cir::NearbyintOp op, Mapper &m, std::ostream &out) { return handleUnaryFPOp("nearbyint", op.getOperation(), m, out); }
 bool handleRint(cir::RintOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("rint",      op.getOperation(), m, out); }
 bool handleRound(cir::RoundOp op, Mapper &m, std::ostream &out)         { return handleUnaryFPOp("round",     op.getOperation(), m, out); }
-bool handleRoundEven(cir::RoundEvenOp op, Mapper &m, std::ostream &out) { return handleUnaryFPOp("round",     op.getOperation(), m, out); }
+bool handleRoundEven(cir::RoundEvenOp op, Mapper &m, std::ostream &out) { return handleUnaryFPOp("nearbyint", op.getOperation(), m, out); }
 bool handleSin(cir::SinOp op, Mapper &m, std::ostream &out)             { return handleUnaryFPOp("sin",       op.getOperation(), m, out); }
 bool handleTan(cir::TanOp op, Mapper &m, std::ostream &out)             { return handleUnaryFPOp("tan",       op.getOperation(), m, out); }
 bool handleFTrunc(cir::TruncOp op, Mapper &m, std::ostream &out)        { return handleUnaryFPOp("trunc",     op.getOperation(), m, out); }
@@ -1705,7 +1761,7 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::VAStartOp>(handleVAStart);
   m.registerTypedHandler<cir::VAEndOp>(handleVAEnd);
   m.registerTypedHandler<cir::VAArgOp>(handleVAArg);
-  m.registerHandler("cir.va_copy", std::make_unique<LambdaOpHandler>(handleVACopy));
+  m.registerTypedHandler<cir::VACopyOp>(handleVACopy);
   
   // Control flow
   m.registerTypedHandler<cir::BrOp>(handleBr);

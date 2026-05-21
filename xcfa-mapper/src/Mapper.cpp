@@ -853,12 +853,19 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
     }
   }
 
+  // Build qualifier prefix (_Atomic and/or volatile) based on access patterns
+  // detected during the mapModule pre-scan.
+  std::string rawSym = sym.getValue().str();
+  std::string qualPrefix;
+  if (isAtomicGlobal(rawSym))   qualPrefix += "_Atomic ";
+  if (isVolatileGlobal(rawSym)) qualPrefix += "volatile ";
+
   // Array type
   if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(symType)) {
     mlir::Type elemType = arrayTy.getElementType();
     uint64_t size = arrayTy.getSize();
     std::string elemCType = mapTypeToC(elemType);
-    out << elemCType << " " << name << "[" << size << "]";
+    out << qualPrefix << elemCType << " " << name << "[" << size << "]";
     if (!initExpr.empty()) {
       // If string literal for char array
       if (!elemCType.empty() && elemCType == "char" && initExpr.size() > 0 && initExpr.front()=='"') {
@@ -872,7 +879,7 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
 
   // Non-array types
   std::string ctype = mapTypeToC(symType);
-  out << ctype << " " << name;
+  out << qualPrefix << ctype << " " << name;
   if (!initExpr.empty()) {
     out << " = " << initExpr;
   }
@@ -885,6 +892,48 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // emitting any function declarations/definitions so we can avoid name
   // collisions when demangling.
   prepareFunctionNames(module);
+
+  // Pre-scan: detect _Atomic and volatile qualifiers on global variables and
+  // local allocas by inspecting cir.load / cir.store operations.  When a
+  // load or store carries a mem_order (atomic) or is_volatile attribute we
+  // trace the address operand one step back:
+  //   * cir.get_global @sym  -> record sym in atomicGlobalSymbols_ / volatileGlobalSymbols_
+  //   * cir.alloca            -> record the SSA Value in atomicAllocaValues_ / volatileAllocaValues_
+  {
+    std::function<void(mlir::Operation &)> scanForQualifiers;
+    scanForQualifiers = [&](mlir::Operation &op) {
+      auto recordAccess = [&](mlir::Value addr, bool isAtomic, bool isVol) {
+        if (!addr) return;
+        mlir::Operation *defOp = addr.getDefiningOp();
+        if (!defOp) return;
+        if (auto gg = mlir::dyn_cast<cir::GetGlobalOp>(defOp)) {
+          std::string sym = gg.getName().str();
+          if (isAtomic) atomicGlobalSymbols_.insert(sym);
+          if (isVol)    volatileGlobalSymbols_.insert(sym);
+        } else if (mlir::isa<cir::AllocaOp>(defOp)) {
+          if (isAtomic) atomicAllocaValues_.insert(addr);
+          if (isVol)    volatileAllocaValues_.insert(addr);
+        }
+      };
+      if (auto loadOp = mlir::dyn_cast<cir::LoadOp>(op)) {
+        bool isAtomic = (bool)loadOp.getMemOrderAttr();
+        bool isVol    = loadOp.getIsVolatile();
+        if (isAtomic || isVol)
+          recordAccess(loadOp.getAddr(), isAtomic, isVol);
+      } else if (auto storeOp = mlir::dyn_cast<cir::StoreOp>(op)) {
+        bool isAtomic = (bool)storeOp.getMemOrderAttr();
+        bool isVol    = storeOp.getIsVolatile();
+        if (isAtomic || isVol)
+          recordAccess(storeOp.getAddr(), isAtomic, isVol);
+      }
+      for (auto &region : op.getRegions())
+        for (auto &block : region.getBlocks())
+          for (auto &nestedOp : block.getOperations())
+            scanForQualifiers(nestedOp);
+    };
+    for (auto &op : module.getOps())
+      scanForQualifiers(op);
+  }
 
   std::string irText;
   {
@@ -1034,9 +1083,6 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     return std::string();
   };
   
-  // Use static flag to only emit struct definitions once (for top-level module)
-  static bool structsEmitted = false;
-
   // Ensure every referenced record type is tracked, even when there are no
   // explicit cir.get_member operations (e.g. empty/simple classes).
   std::function<void(mlir::Type)> collectRecordTypesFromType;
@@ -1419,7 +1465,6 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     for (auto &op : module.getOps()) scanOp(op);
   }
 
-  // Only emit struct definitions once (for top-level module call)
   if (!structsEmitted && !order.empty()) {
     // Emit one __VERIFIER_virtual_call_<suffix> declaration per needed return
     // type before the struct definitions so it appears near the top.
