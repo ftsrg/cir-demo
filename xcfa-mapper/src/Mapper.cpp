@@ -80,6 +80,13 @@ static std::string mangleLabel(const std::string &s) {
 }
 
 static std::string demangleSymbol(const std::string &sym) {
+  // Only attempt C++ demangling for Itanium-ABI mangled names (starting with
+  // "_Z" or "_R" for Rust).  Plain C names like "f", "fp", "i" must NOT be
+  // passed to __cxa_demangle because the ABI uses single letters as type-code
+  // abbreviations (e.g. "f" → "float", "i" → "int"), producing bogus output.
+  if (sym.size() < 2 || sym[0] != '_' || (sym[1] != 'Z' && sym[1] != 'R')) {
+    return sym;
+  }
   int status = 0;
   char *res = abi::__cxa_demangle(sym.c_str(), nullptr, nullptr, &status);
   std::string out;

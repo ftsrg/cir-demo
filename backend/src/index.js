@@ -218,7 +218,17 @@ app.post('/api/generate', async (req, res) => {
   const llvmArgs = ['-S', '-emit-llvm', tmpFile, '-o', '-'];
 
   // Clang IR (CIR): clang <file> -Xclang -emit-cir -S -o <file>
-  const clangIrArgs = [tmpFileCir, '-Xclang', '-emit-cir', '-S', '-o', cirMlirPath];
+  // Extra -Wno-error flags allow compilation of files with common legacy C
+  // patterns (implicit conversions, etc.) that clang promotes to errors by
+  // default but that verifiers can still meaningfully analyse.
+  const clangIrArgs = [
+    tmpFileCir, '-Xclang', '-emit-cir', '-S', '-o', cirMlirPath,
+    '-Wno-error=int-conversion',
+    '-Wno-error=incompatible-pointer-types',
+    '-Wno-error=implicit-function-declaration',
+    '-Wno-error=return-type',
+    '-Wno-error=implicit-int',
+  ];
 
   // LLVM IR and CIR generation are independent; flattening depends on the CIR output.
   const filesToCleanup = [tmpFile, tmpFileCir, cirMlirPath];
