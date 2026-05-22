@@ -103,8 +103,24 @@ std::string indentText(const std::string &text, llvm::StringRef indent = "  ") {
   return indented.str();
 }
 
+// Describes which terminator op ended a region walk, for callers that need
+// to make a decision based on the kind of terminator (e.g. switch/case).
+enum class CaseTerminatorKind {
+  Yield,  // cir.yield — fallthrough in a case; end-of-region in other contexts
+  Break,  // cir.break — explicit break; handler already emitted "break;"
+  Other,  // cir.return, cir.unreachable, cir.continue, etc. — already emitted
+};
+
+// Walk the first block of `region`, emitting each op via the mapper.  Stops
+// at `cir.yield` (which is consumed without emitting) or at a block terminator
+// after it has been emitted.  The optional `terminatorKind` out-parameter
+// receives the kind of the terminator that ended the walk; callers that do
+// not need this can leave it null (default callers: cir.if, cir.scope,
+// cir.ternary, cir.cleanup_scope).
 bool emitRegionBody(Region &region, Mapper &m, std::ostream &out,
-                    std::vector<Value> *yieldedValues = nullptr) {
+                    std::vector<Value> *yieldedValues = nullptr,
+                    CaseTerminatorKind *terminatorKind = nullptr) {
+  if (terminatorKind) *terminatorKind = CaseTerminatorKind::Other;
   if (region.empty()) return true;
 
   Block &block = region.front();
@@ -115,10 +131,19 @@ bool emitRegionBody(Region &region, Mapper &m, std::ostream &out,
       if (yieldedValues) {
         yieldedValues->assign(yieldOp->operand_begin(), yieldOp->operand_end());
       }
+      if (terminatorKind) *terminatorKind = CaseTerminatorKind::Yield;
       break;
     }
 
     if (!m.mapOperation(&nestedOp, regionOut)) return false;
+
+    // cir.break is a block terminator; after emitting it (handleBreak) there
+    // are no more ops — record the kind and stop the walk explicitly so that
+    // callers (e.g. handleSwitch) know not to emit a redundant "break;".
+    if (terminatorKind && llvm::isa<cir::BreakOp>(nestedOp)) {
+      *terminatorKind = CaseTerminatorKind::Break;
+      break;
+    }
   }
 
   out << indentText(regionOut.str());
@@ -563,6 +588,44 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
   out << "    goto " << flabel << ";\n";
   out << "  }\n";
   
+  return true;
+}
+
+// ============================================================================
+// Structured control-flow terminators: break and continue
+// ============================================================================
+
+// cir.break terminates a switch case or a loop body.  In the structured form
+// emitRegionBody recognises it and records CaseTerminatorKind::Break so the
+// enclosing switch handler knows not to emit a redundant "break;".  The op
+// itself still goes through the normal handler path so the statement appears
+// in the C output at the right indentation level.
+bool handleBreak(cir::BreakOp op, Mapper &m, std::ostream &out) {
+  out << "  break;\n";
+  return true;
+}
+
+// cir.continue terminates a loop body iteration.
+bool handleContinue(cir::ContinueOp op, Mapper &m, std::ostream &out) {
+  out << "  continue;\n";
+  return true;
+}
+
+// cir.yield is consumed by emitRegionBody before reaching the dispatcher.
+// Register an explicit no-op handler so that any stray cir.yield that escapes
+// (e.g. in best-effort mode for a malformed switch) does not trigger
+// "no handler registered".
+bool handleYield(cir::YieldOp op, Mapper &m, std::ostream &out) {
+  // Intentionally emits nothing; emitRegionBody already handles cir.yield.
+  return true;
+}
+
+// cir.case is always consumed by handleSwitch iterating the switch body.
+// Register a no-op handler as a belt-and-suspenders guard in case a cir.case
+// somehow reaches the top-level dispatcher (e.g. a malformed module in
+// best-effort mode).
+bool handleCase(cir::CaseOp op, Mapper &m, std::ostream &out) {
+  // Intentionally emits nothing; handleSwitch already processes cir.case.
   return true;
 }
 
@@ -1015,30 +1078,62 @@ bool handleVACopy(cir::VACopyOp op, Mapper &m, std::ostream &out) {
 // ============================================================================
 
 bool handleSwitch(cir::SwitchOp op, Mapper &m, std::ostream &out) {
-  Operation *o = op.getOperation();
-  if (o->getNumOperands() < 1) return false;
-  Value cond = o->getOperand(0);
-  std::string condName = m.getOrCreateName(cond);
-  
+  // Structured cir.switch: the body region contains cir.case ops followed by a
+  // trailing cir.yield (the mandatory region terminator).  Each cir.case has a
+  // kind (Default/Equal/Anyof/Range) and a value array, plus its own region.
+
+  std::string condName = m.getOrCreateName(op.getCondition());
   out << "  switch (" << condName << ") {\n";
-  
-  // Extract case values and destinations from attributes
-  if (auto caseVals = o->getAttrOfType<mlir::ArrayAttr>("case_values")) {
-    unsigned numCases = caseVals.size();
-    for (unsigned i = 0; i < numCases && i + 1 < o->getNumSuccessors(); ++i) {
-      if (auto intAttr = llvm::dyn_cast<mlir::IntegerAttr>(caseVals[i])) {
-        std::string label = m.getOrCreateLabel(o->getSuccessors()[i + 1]);
-        out << "    case " << intAttr.getValue().getSExtValue() << ": goto " << label << ";\n";
+
+  for (Operation &bodyOp : op.getBody().front().getOperations()) {
+    auto caseOp = llvm::dyn_cast<cir::CaseOp>(bodyOp);
+    if (!caseOp) continue; // skip the trailing cir.yield and anything else
+
+    cir::CaseOpKind kind = caseOp.getKind();
+    mlir::ArrayAttr values = caseOp.getValue();
+
+    // Emit the case label(s).
+    switch (kind) {
+    case cir::CaseOpKind::Default:
+      out << "  default:\n";
+      break;
+    case cir::CaseOpKind::Equal:
+      for (auto attr : values) {
+        auto intAttr = llvm::cast<cir::IntAttr>(attr);
+        out << "  case " << intAttr.getValue().getSExtValue() << ":\n";
       }
+      break;
+    case cir::CaseOpKind::Anyof:
+      // Multiple discrete values that all map to the same body.
+      for (auto attr : values) {
+        auto intAttr = llvm::cast<cir::IntAttr>(attr);
+        out << "  case " << intAttr.getValue().getSExtValue() << ":\n";
+      }
+      break;
+    case cir::CaseOpKind::Range:
+      // GCC extension: "case lo ... hi:".  values[0] = lo, values[1] = hi.
+      if (values.size() == 2) {
+        int64_t lo = llvm::cast<cir::IntAttr>(values[0]).getValue().getSExtValue();
+        int64_t hi = llvm::cast<cir::IntAttr>(values[1]).getValue().getSExtValue();
+        out << "  case " << lo << " ... " << hi << ":\n";
+      }
+      break;
     }
+
+    // Emit the case body.  Capture the terminator kind to decide whether to
+    // emit a "break;" (if the case body explicitly ended with cir.break, the
+    // handleBreak handler already emitted it — no second break needed; if it
+    // ended with cir.yield, it is a C fallthrough — no break at all).
+    CaseTerminatorKind termKind = CaseTerminatorKind::Yield;
+    if (!emitRegionBody(caseOp.getCaseRegion(), m, out, nullptr, &termKind))
+      return false;
+    // termKind == Yield  => fallthrough; omit break
+    // termKind == Break  => handleBreak already emitted "break;"
+    // termKind == Other  => cir.return/unreachable/continue already emitted
+    // In all three cases we do nothing extra here.
+    (void)termKind;
   }
-  
-  // Default case
-  if (o->getNumSuccessors() > 0) {
-    std::string defLabel = m.getOrCreateLabel(o->getSuccessors()[0]);
-    out << "    default: goto " << defLabel << ";\n";
-  }
-  
+
   out << "  }\n";
   return true;
 }
@@ -2113,6 +2208,11 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::CleanupScopeOp>(handleCleanupScope);
   m.registerTypedHandler<cir::ScopeOp>(handleScope);
   m.registerTypedHandler<cir::IfOp>(handleIf);
+  // Structured-form terminators (Phase A/B)
+  m.registerTypedHandler<cir::BreakOp>(handleBreak);
+  m.registerTypedHandler<cir::ContinueOp>(handleContinue);
+  m.registerTypedHandler<cir::YieldOp>(handleYield);
+  m.registerTypedHandler<cir::CaseOp>(handleCase);
   
   // Function calls
   m.registerTypedHandler<cir::CallOp>(handleCall);
