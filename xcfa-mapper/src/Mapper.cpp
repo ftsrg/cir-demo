@@ -29,7 +29,6 @@
 
 #include <algorithm>
 #include <map>
-#include <sstream>
 #include <set>
 #include <vector>
 
@@ -81,9 +80,11 @@ static std::string mangleLabel(const std::string &s) {
 
 static std::string demangleSymbol(const std::string &sym) {
   // Only attempt C++ demangling for Itanium-ABI mangled names (starting with
-  // "_Z" or "_R" for Rust).  Plain C names like "f", "fp", "i" must NOT be
-  // passed to __cxa_demangle because the ABI uses single letters as type-code
+  // "_Z").  Plain C names like "f", "fp", "i" must NOT be passed to
+  // __cxa_demangle because the ABI uses single letters as type-code
   // abbreviations (e.g. "f" → "float", "i" → "int"), producing bogus output.
+  // The "_R" prefix guard for Rust symbols is intentionally kept: __cxa_demangle
+  // cannot demangle Rust symbols, but the guard prevents passing them through.
   if (sym.size() < 2 || sym[0] != '_' || (sym[1] != 'Z' && sym[1] != 'R')) {
     return sym;
   }
@@ -100,29 +101,15 @@ static std::string demangleSymbol(const std::string &sym) {
   return out;
 }
 
-// Render a C parameter declaration type, preserving function-pointer shapes.
+// Render a C parameter declaration type.
 // When `name` is empty, returns a type-only parameter fragment.
+//
+// NOTE: Function pointer types (!cir.ptr<!cir.func<...>>) are simplified to
+// `void *` here for consistency with mapTypeToC. The concrete function pointer
+// type is recovered at each call site via an explicit cast in handleCallLikeOp
+// so this simplification is safe for verification purposes.
 static std::string mapParamTypeToC(const Mapper &m, mlir::Type t,
                                    const std::string &name = "") {
-  if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(t)) {
-    if (auto fnTy = mlir::dyn_cast<cir::FuncType>(ptrTy.getPointee())) {
-      std::string retType = m.mapTypeToC(fnTy.getReturnType());
-      std::string params;
-      bool first = true;
-      for (mlir::Type inTy : fnTy.getInputs()) {
-        if (!first) params += ", ";
-        first = false;
-        params += mapParamTypeToC(m, inTy);
-      }
-      if (fnTy.isVarArg()) {
-        if (!params.empty()) params += ", ";
-        params += "...";
-      }
-      std::string decl = name.empty() ? "(*)" : "(*" + name + ")";
-      return retType + " " + decl + "(" + params + ")";
-    }
-  }
-
   std::string base = m.mapTypeToC(t);
   if (name.empty()) return base;
   return base + " " + name;
@@ -193,7 +180,7 @@ void Mapper::prepareFunctionNames(mlir::ModuleOp module) {
   // Collect candidate pairs (mangled -> demangled-sanitized)
   std::vector<std::pair<std::string,std::string>> list;
   for (auto &op : module.getOps()) {
-    if (op.getName().getStringRef() == "cir.func") {
+    if (llvm::isa<cir::FuncOp>(op)) {
       if (auto sym = op.getAttrOfType<mlir::StringAttr>(mlir::SymbolTable::getSymbolAttrName())) {
         std::string mangled = sym.getValue().str();
         std::string dem = demangleSymbol(mangled);
@@ -482,10 +469,13 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   std::string outName = getFunctionOutputName(sym.getValue().str());
   
   // Extract function parameters from cir::FuncOp
-  std::string params = "";
+  std::string params;
   bool hasBody = (fop->getNumRegions() > 0 && !fop->getRegion(0).empty());
   llvm::ArrayRef<mlir::Type> inputs = fty.getInputs();
-  
+
+  // Reset the va_start sentinel for this function.
+  lastVarargParamName_.clear();
+
   if (hasBody) {
     // If function has a body, use block arguments to get parameter names
     Block &entryBlock = fop->getRegion(0).front();
@@ -504,6 +494,8 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
         }
       
       params += mapParamTypeToC(*this, arg.getType(), paramName);
+      // Track the last named parameter for va_start.
+      if (fty.isVarArg()) lastVarargParamName_ = paramName;
     }
   } else {
     // For declarations without body, use types from function signature
@@ -517,6 +509,8 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       std::string paramName = "p" + std::to_string(paramIndex++);
       std::string cParamType = mapParamTypeToC(*this, paramType, paramName);
       params += cParamType;
+      // Track the last named parameter for va_start.
+      if (fty.isVarArg()) lastVarargParamName_ = paramName;
     }
   }
   if (fty.isVarArg()) {
@@ -714,40 +708,6 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   auto globalOp = mlir::cast<cir::GlobalOp>(gop);
   mlir::Type symType = globalOp.getSymType();
 
-  auto stripOptionalQuotes = [](std::string s) {
-    if (s.size() >= 2 && s.front() == '"' && s.back() == '"') {
-      return s.substr(1, s.size() - 2);
-    }
-    return s;
-  };
-
-  auto decodeCirConstArrayBytes = [](const std::string &inner) {
-    std::string bytes;
-    bytes.reserve(inner.size());
-    auto hexVal = [](char c) -> int {
-      if (c >= '0' && c <= '9') return c - '0';
-      if (c >= 'a' && c <= 'f') return 10 + (c - 'a');
-      if (c >= 'A' && c <= 'F') return 10 + (c - 'A');
-      return -1;
-    };
-
-    for (size_t i = 0; i < inner.size();) {
-      if (inner[i] == '\\' && i + 2 < inner.size()) {
-        int h1 = hexVal(inner[i + 1]);
-        int h2 = hexVal(inner[i + 2]);
-        if (h1 >= 0 && h2 >= 0) {
-          char byte = static_cast<char>((h1 << 4) | h2);
-          bytes.push_back(byte);
-          i += 3;
-          continue;
-        }
-      }
-      bytes.push_back(inner[i]);
-      ++i;
-    }
-    return bytes;
-  };
-
   auto escapeCStringBytes = [](const std::string &bytes) {
     static const char *hex = "0123456789ABCDEF";
     std::string escaped;
@@ -781,7 +741,7 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
     if (!module) return mlir::Type();
 
     for (auto &op : module.getOps()) {
-      if (op.getName().getStringRef() != "cir.global") continue;
+      if (!llvm::isa<cir::GlobalOp>(op)) continue;
       auto s = op.getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
       if (!s) continue;
       if (s.getValue().str() != symbol) continue;
@@ -791,70 +751,26 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
     return mlir::Type();
   };
   
-  // Try to recover initializer by printing op (no string-based type recognition, only value patterns)
-  std::string initExpr; // empty means no initializer
-  {
-    std::string printed;
-    llvm::raw_string_ostream rso(printed);
-    gop->print(rso);
-    rso.flush();
-    // Find '=' up to ':' (before type)
-    size_t eqPos = printed.find('=');
-    if (eqPos != std::string::npos) {
-      size_t colonPos = printed.find(':', eqPos + 1);
-      if (colonPos != std::string::npos) {
-        std::string rawInit = printed.substr(eqPos + 1, colonPos - (eqPos + 1));
-        // Trim whitespace
-        auto trim = [](std::string s){ size_t a=s.find_first_not_of(" \t\n"); size_t b=s.find_last_not_of(" \t\n"); return (a==std::string::npos)?std::string():s.substr(a,b-a+1); };        
-        rawInit = trim(rawInit);
-        if (!rawInit.empty()) {
-          // Integer constant: #cir.int<42>
-          if (rawInit.rfind("#cir.int<", 0) == 0) {
-            size_t lt = rawInit.find('<');
-            size_t gt = rawInit.find('>');
-            if (lt != std::string::npos && gt != std::string::npos && gt > lt+1) {
-              initExpr = rawInit.substr(lt+1, gt-lt-1); // number
-            }
-          }
-          // Global view: #cir.global_view<@a>
-          else if (rawInit.rfind("#cir.global_view<@", 0) == 0) {
-            size_t at = rawInit.find('@');
-            size_t gt = rawInit.find('>');
-            if (at != std::string::npos && gt != std::string::npos && gt > at+1) {
-              std::string target = rawInit.substr(at+1, gt-at-1);
-              target = stripOptionalQuotes(target);
-              std::string targetName = sanitizeIdentifier(target);
-
-              mlir::Type targetType = findGlobalTypeBySymbol(target);
-              // The target may live outside the module (extern/declared-only)
-              // in which case findGlobalTypeBySymbol returns a null Type; the
-              // generic isa<> on a null Type crashes inside MLIR.
-              bool targetIsArray = targetType && mlir::isa<cir::ArrayType>(targetType);
-              if (targetIsArray) {
-                // Array lvalues decay to pointers in this context.
-                initExpr = targetName;
-              } else {
-                initExpr = "&" + targetName;
-              }
-            }
-          }
-          // Const char array: #cir.const_array<"..." : !cir.array<!s8i x N>>
-          else if (rawInit.rfind("#cir.const_array<", 0) == 0) {
-            size_t q1 = rawInit.find('"');
-            if (q1 != std::string::npos) {
-              size_t q2 = rawInit.find('"', q1+1);
-              if (q2 != std::string::npos) {
-                std::string inner = rawInit.substr(q1+1, q2 - (q1+1));
-                std::string bytes = decodeCirConstArrayBytes(inner);
-                if (!bytes.empty() && bytes.back() == '\0') {
-                  bytes.pop_back();
-                }
-                std::string escaped = escapeCStringBytes(bytes);
-                initExpr = '"' + escaped + '"';
-              }
-            }
-          }
-        }
+  // Recover initializer using the typed attribute API -- no text manipulation required.
+  std::string initExpr;
+  if (auto initVal = globalOp.getInitialValue()) {
+    mlir::Attribute attr = *initVal;
+    if (auto intAttr = mlir::dyn_cast<cir::IntAttr>(attr)) {
+      initExpr = std::to_string(intAttr.getValue().getSExtValue());
+    } else if (auto gvAttr = mlir::dyn_cast<cir::GlobalViewAttr>(attr)) {
+      std::string target = gvAttr.getSymbol().getValue().str();
+      std::string targetName = sanitizeIdentifier(target);
+      mlir::Type targetType = findGlobalTypeBySymbol(target);
+      // The target may live outside the module (extern/declared-only)
+      // in which case findGlobalTypeBySymbol returns a null Type; the
+      // generic isa<> on a null Type crashes inside MLIR.
+      bool targetIsArray = targetType && mlir::isa<cir::ArrayType>(targetType);
+      initExpr = targetIsArray ? targetName : ("&" + targetName);
+    } else if (auto constArr = mlir::dyn_cast<cir::ConstArrayAttr>(attr)) {
+      if (auto strAttr = mlir::dyn_cast<mlir::StringAttr>(constArr.getElts())) {
+        std::string bytes = strAttr.getValue().str();
+        if (!bytes.empty() && bytes.back() == '\0') bytes.pop_back();
+        initExpr = '"' + escapeCStringBytes(bytes) + '"';
       }
     }
   }
@@ -943,52 +859,6 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       scanForQualifiers(op);
   }
 
-  std::string irText;
-  {
-    llvm::raw_string_ostream rso(irText);
-    module.print(rso);
-    rso.flush();
-  }
-  
-  // Discover union record names from the textual IR so aliases (!rec_*)
-  // that denote unions can be recognized without heuristics.
-  std::set<std::string> unionRecordNames;
-  {
-    const std::string needle = "!cir.record<union \"";
-    std::size_t pos = 0;
-    while ((pos = irText.find(needle, pos)) != std::string::npos) {
-      pos += needle.size();
-      auto end = irText.find("\"", pos);
-      if (end == std::string::npos) break;
-      std::string name = sanitizeIdentifier(irText.substr(pos, end - pos));
-      unionRecordNames.insert(name);
-      pos = end + 1;
-    }
-  }
-
-  // Build a map from !rec_<alias> -> sanitized original name for use in the
-  // textual fallback path (mapTextualTypeToC).  CIR aliases hex-encode the
-  // original C++ name, so we need this map to emit consistent struct names.
-  std::map<std::string, std::string> aliasToSanitizedName;
-  {
-    std::istringstream tmpInput(irText);
-    std::string tmpLine;
-    while (std::getline(tmpInput, tmpLine)) {
-      if (tmpLine.rfind("!rec_", 0) != 0) continue;
-      auto eqPos = tmpLine.find(" = ");
-      if (eqPos == std::string::npos) continue;
-      std::string alias = tmpLine.substr(5, eqPos - 5); // strip leading "!rec_"
-      auto recMarker = tmpLine.find("!cir.record<");
-      if (recMarker == std::string::npos) continue;
-      auto qStart = tmpLine.find('"', recMarker);
-      if (qStart == std::string::npos) continue;
-      auto qEnd = tmpLine.find('"', qStart + 1);
-      if (qEnd == std::string::npos) continue;
-      std::string origName = tmpLine.substr(qStart + 1, qEnd - qStart - 1);
-      aliasToSanitizedName[alias] = sanitizeIdentifier(origName);
-    }
-  }
-  
   // Auto-parse struct definitions by scanning member accesses.
   struct FieldInfo {
     std::string name;        // field name
@@ -1000,97 +870,10 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   };
   std::map<std::string, std::vector<FieldInfo>> structFields; // recordName -> fields
   std::map<std::string, bool> isUnionContainer; // recordName -> isUnion
+  // Stores the most complete RecordType seen for each record name; used for
+  // the typed member-layout fallback when no cir.get_member ops were found.
+  std::map<std::string, cir::RecordType> knownRecordTypes;
 
-  auto trim = [](const std::string &text) {
-    size_t start = text.find_first_not_of(" \t\n\r");
-    if (start == std::string::npos) return std::string();
-    size_t end = text.find_last_not_of(" \t\n\r");
-    return text.substr(start, end - start + 1);
-  };
-
-  auto splitTopLevelFields = [&](const std::string &body) {
-    std::vector<std::string> parts;
-    std::string current;
-    int angleDepth = 0;
-    int braceDepth = 0;
-    int parenDepth = 0;
-
-    for (char ch : body) {
-      switch (ch) {
-      case '<':
-        ++angleDepth;
-        current.push_back(ch);
-        break;
-      case '>':
-        if (angleDepth > 0) --angleDepth;
-        current.push_back(ch);
-        break;
-      case '{':
-        ++braceDepth;
-        current.push_back(ch);
-        break;
-      case '}':
-        if (braceDepth > 0) --braceDepth;
-        current.push_back(ch);
-        break;
-      case '(':
-        ++parenDepth;
-        current.push_back(ch);
-        break;
-      case ')':
-        if (parenDepth > 0) --parenDepth;
-        current.push_back(ch);
-        break;
-      case ',':
-        if (angleDepth == 0 && braceDepth == 0 && parenDepth == 0) {
-          std::string piece = trim(current);
-          if (!piece.empty()) parts.push_back(piece);
-          current.clear();
-        } else {
-          current.push_back(ch);
-        }
-        break;
-      default:
-        current.push_back(ch);
-        break;
-      }
-    }
-
-    std::string piece = trim(current);
-    if (!piece.empty()) parts.push_back(piece);
-    return parts;
-  };
-
-  std::function<std::string(const std::string &)> mapTextualTypeToC;
-  mapTextualTypeToC = [&](const std::string &token) {
-    std::string text = trim(token);
-    if (text.rfind("!rec_", 0) == 0) {
-      std::string alias = text.substr(5);
-      auto it = aliasToSanitizedName.find(alias);
-      std::string name = (it != aliasToSanitizedName.end()) ? it->second : sanitizeIdentifier(alias);
-      return std::string(unionRecordNames.count(name) ? "union " : "struct ") + name;
-    }
-    if (text == "!void" || text == "!cir.void") return std::string("void");
-    if (text == "!cir.bool") return std::string("_Bool");
-    if (text == "!s8i") return std::string("char");
-    if (text == "!u8i") return std::string("unsigned char");
-    if (text == "!s16i") return std::string("short");
-    if (text == "!u16i") return std::string("unsigned short");
-    if (text == "!s32i") return std::string("int");
-    if (text == "!u32i") return std::string("unsigned int");
-    if (text == "!s64i") return std::string("long long");
-    if (text == "!u64i") return std::string("unsigned long long");
-    if (text == "!cir.float") return std::string("float");
-    if (text == "!cir.double") return std::string("double");
-    if (text.rfind("!cir.ptr<", 0) == 0 && text.back() == '>') {
-      std::string inner = text.substr(9, text.size() - 10);
-      std::string pointee = mapTextualTypeToC(inner);
-      if (pointee.empty()) pointee = "void";
-      return pointee + "*";
-    }
-    return std::string();
-  };
-  
   // Ensure every referenced record type is tracked, even when there are no
   // explicit cir.get_member operations (e.g. empty/simple classes).
   std::function<void(mlir::Type)> collectRecordTypesFromType;
@@ -1105,8 +888,13 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       // Keep an entry even if there are no discovered fields yet.
       (void)structFields[recordName];
 
-      if (recordType.isUnion() || unionRecordNames.count(recordName)) {
+      if (recordType.isUnion()) {
         isUnionContainer[recordName] = true;
+      }
+      // Store the most complete version seen; prefer complete over incomplete.
+      auto it = knownRecordTypes.find(recordName);
+      if (it == knownRecordTypes.end() || (!it->second.isComplete() && recordType.isComplete())) {
+        knownRecordTypes[recordName] = recordType;
       }
       return;
     }
@@ -1247,67 +1035,70 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // Kick off collection for top-level operations
   for (auto &op : module.getOps()) collectFromOp(op);
 
-  // Fall back to textual CIR record layouts when a record has no directly
-  // discovered members of its own (for example, derived records that are only
-  // accessed through cir.base_class_addr casts).
+  // Typed fallback: for records with no directly discovered members (e.g.
+  // derived records only accessed through cir.base_class_addr casts), extract
+  // member types directly from the complete RecordType definition.
+  // This replaces the previous textual !rec_ line-scanning approach.
   {
-    std::istringstream input(irText);
-    std::string line;
-    while (std::getline(input, line)) {
-      if (line.rfind("!rec_", 0) != 0) continue;
-      auto recordMarker = line.find("!cir.record<");
-      if (recordMarker == std::string::npos) continue;
+    for (auto &kv : structFields) {
+      const auto &recordName = kv.first;
+      auto &existingFields = kv.second;
 
-      auto nameStart = line.find('"', recordMarker);
-      if (nameStart == std::string::npos) continue;
-      auto nameEnd = line.find('"', nameStart + 1);
-      if (nameEnd == std::string::npos) continue;
+      auto recIt = knownRecordTypes.find(recordName);
+      if (recIt == knownRecordTypes.end()) continue;
+      cir::RecordType recType = recIt->second;
+      if (!recType.isComplete()) continue;
 
-      auto bodyStart = line.find('{', nameEnd + 1);
-      auto bodyEnd = line.rfind('}');
-      if (bodyStart == std::string::npos || bodyEnd == std::string::npos || bodyEnd <= bodyStart) continue;
-
-      std::string recordName = sanitizeIdentifier(line.substr(nameStart + 1, nameEnd - nameStart - 1));
-
-      auto &existingFields = structFields[recordName];
-
+      llvm::ArrayRef<mlir::Type> members = recType.getMembers();
       std::vector<FieldInfo> layoutFields;
-      std::vector<std::string> fieldTokens = splitTopLevelFields(line.substr(bodyStart + 1, bodyEnd - bodyStart - 1));
-      for (size_t index = 0; index < fieldTokens.size(); ++index) {
-        std::string baseType = mapTextualTypeToC(fieldTokens[index]);
-        if (baseType.empty()) continue;
-
+      for (size_t index = 0; index < members.size(); ++index) {
+        mlir::Type memberType = members[index];
         FieldInfo info;
         info.index = static_cast<int>(index);
         info.name = "__field" + std::to_string(index);
-        info.baseType = baseType;
-        info.isStruct = baseType.rfind("struct ", 0) == 0 || baseType.rfind("union ", 0) == 0;
-        layoutFields.push_back(info);
-      }
 
-      if (!layoutFields.empty()) {
-        // Merge missing fields by layout index. Keep already discovered member
-        // names (e.g. user-visible field names from cir.get_member attrs), but
-        // ensure omitted fields are still present to preserve struct layout.
-        for (const auto &lf : layoutFields) {
-          bool exists = false;
-          for (const auto &ef : existingFields) {
-            if ((lf.index >= 0 && ef.index == lf.index) || ef.name == lf.name) {
-              exists = true;
-              break;
-            }
+        if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(memberType)) {
+          info.isArray = true;
+          mlir::Type currentType = memberType;
+          while (auto aT = mlir::dyn_cast<cir::ArrayType>(currentType)) {
+            info.dims.push_back(std::to_string(aT.getSize()));
+            currentType = aT.getElementType();
           }
-          if (!exists) existingFields.push_back(lf);
+          if (auto recTy = mlir::dyn_cast<cir::RecordType>(currentType)) {
+            if (recTy.getName()) {
+              std::string fn = sanitizeIdentifier(recTy.getName().getValue().str());
+              info.baseType = (recTy.isUnion() ? "union " : "struct ") + fn;
+              info.isStruct = true;
+            }
+          } else {
+            info.baseType = mapTypeToC(currentType);
+          }
+        } else if (auto recTy = mlir::dyn_cast<cir::RecordType>(memberType)) {
+          if (recTy.getName()) {
+            std::string fn = sanitizeIdentifier(recTy.getName().getValue().str());
+            info.baseType = (recTy.isUnion() ? "union " : "struct ") + fn;
+            info.isStruct = true;
+          }
+        } else {
+          info.baseType = mapTypeToC(memberType);
         }
-      }
-    }
-  }
 
-  // Mark union containers based on discovered union record names.
-  for (auto &kv : structFields) {
-    const auto &recName = kv.first;
-    if (unionRecordNames.count(recName)) {
-      isUnionContainer[recName] = true;
+        if (!info.baseType.empty())
+          layoutFields.push_back(info);
+      }
+
+      // Merge: keep real names from get_member discovery; fill gaps with
+      // synthetic layout fields to preserve struct layout.
+      for (const auto &lf : layoutFields) {
+        bool exists = false;
+        for (const auto &ef : existingFields) {
+          if ((lf.index >= 0 && ef.index == lf.index) || ef.name == lf.name) {
+            exists = true;
+            break;
+          }
+        }
+        if (!exists) existingFields.push_back(lf);
+      }
     }
   }
 
@@ -1362,40 +1153,30 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // see which vtable.address_point (vtable sym + offset) and which
   // vtable.get_vptr (rec class name) co-occur to associate class → vtable.
   {
-    // Parse vtable globals.
+    // Parse vtable globals using the typed attribute API -- no text manipulation.
     for (auto &op : module.getOps()) {
-      if (op.getName().getStringRef() != "cir.global") continue;
-      std::string printed;
-      { llvm::raw_string_ostream rso(printed); op.print(rso); }
-      if (printed.find("#cir.vtable<") == std::string::npos) continue;
+      auto globalOp = llvm::dyn_cast<cir::GlobalOp>(&op);
+      if (!globalOp) continue;
+      auto initVal = globalOp.getInitialValue();
+      if (!initVal) continue;
+      auto vtableAttr = mlir::dyn_cast<cir::VTableAttr>(*initVal);
+      if (!vtableAttr) continue;
       auto symAttr = op.getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
       if (!symAttr) continue;
       std::string sym = symAttr.getValue().str();
-      // Find the const_array element list inside the vtable attribute.
-      size_t arrStart = printed.find("#cir.const_array<[");
-      size_t arrEnd   = printed.rfind("]>");
-      if (arrStart == std::string::npos || arrEnd == std::string::npos) continue;
-      std::string arr = printed.substr(arrStart + 18, arrEnd - arrStart - 18);
-      // Walk the entries in order; each entry is either:
-      //   #cir.ptr<null>         → empty string (null slot)
-      //   #cir.global_view<@NAME ...>  → function/type_info name
       std::vector<std::string> entries;
-      size_t cur = 0;
-      while (cur < arr.size()) {
-        size_t vp = arr.find("#cir.global_view<@", cur);
-        size_t np = arr.find("#cir.ptr<null>",     cur);
-        if (vp == std::string::npos && np == std::string::npos) break;
-        // Pick whichever comes first.
-        if (np != std::string::npos && (vp == std::string::npos || np < vp)) {
-          entries.push_back("");
-          cur = np + 14;
-        } else {
-          size_t nameStart = vp + 18; // after "@"
-          // name ends at ',' or '>' — no array index in vtable fn entries
-          size_t nameEnd = arr.find_first_of(",> \t", nameStart);
-          if (nameEnd == std::string::npos) nameEnd = arr.size();
-          entries.push_back(arr.substr(nameStart, nameEnd - nameStart));
-          cur = nameEnd;
+      // getData() returns ArrayAttr; each element is a ConstArrayAttr (one component per vtable).
+      for (auto component : vtableAttr.getData()) {
+        auto constArr = mlir::dyn_cast<cir::ConstArrayAttr>(component);
+        if (!constArr) continue;
+        auto elts = mlir::dyn_cast<mlir::ArrayAttr>(constArr.getElts());
+        if (!elts) continue;
+        for (auto elt : elts) {
+          if (auto gvAttr = mlir::dyn_cast<cir::GlobalViewAttr>(elt)) {
+            entries.push_back(gvAttr.getSymbol().getValue().str());
+          } else {
+            entries.push_back(""); // null slot or other non-function entry
+          }
         }
       }
       registerVtableGlobalEntries(sym, std::move(entries));
@@ -1405,21 +1186,12 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     std::function<void(mlir::Operation &, std::string &, int &)> scanForVtableInit;
     scanForVtableInit = [&](mlir::Operation &op,
                             std::string &lastVtableSym, int &lastOffset) {
-      if (op.getName().getStringRef() == "cir.vtable.address_point") {
+      if (auto apOp = llvm::dyn_cast<cir::VTableAddrPointOp>(&op)) {
         if (auto nameAttr = op.getAttrOfType<FlatSymbolRefAttr>("name"))
           lastVtableSym = nameAttr.getValue().str();
-        // Extract offset from address_point attribute (text: "index = N, offset = K")
-        {
-          std::string attrText;
-          llvm::raw_string_ostream rso(attrText);
-          if (auto apAttr = op.getAttr("address_point"))
-            apAttr.print(rso);
-          size_t offPos = attrText.find("offset = ");
-          if (offPos != std::string::npos) {
-            lastOffset = std::stoi(attrText.substr(offPos + 9));
-          }
-        }
-      } else if (op.getName().getStringRef() == "cir.vtable.get_vptr") {
+        // Use typed accessor -- no text manipulation required.
+        lastOffset = static_cast<int>(apOp.getAddressPoint().getOffset());
+      } else if (llvm::isa<cir::VTableGetVPtrOp>(op)) {
         if (!lastVtableSym.empty() && op.getNumOperands() > 0) {
           mlir::Type srcTy = op.getOperand(0).getType();
           if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(srcTy)) {
@@ -1444,7 +1216,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         }
     };
     for (auto &op : module.getOps()) {
-      if (op.getName().getStringRef() == "cir.func") {
+      if (llvm::isa<cir::FuncOp>(op)) {
         std::string sym;
         int offset = 2;
         for (auto &region : op.getRegions())
@@ -1465,7 +1237,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   {
     std::function<void(mlir::Operation &)> scanOp;
     scanOp = [&](mlir::Operation &op) {
-      if (op.getName().getStringRef() == "cir.vtable.get_virtual_fn_addr") {
+      if (llvm::isa<cir::VTableGetVirtualFnAddrOp>(op)) {
         if (op.getNumResults() > 0) {
           mlir::Type rt = op.getResult(0).getType();
           if (auto outerPtr = mlir::dyn_cast<cir::PointerType>(rt))
@@ -1538,24 +1310,20 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   std::vector<mlir::Operation *> normalGlobals;
   std::vector<mlir::Operation *> viewGlobals;
   for (auto &op : module.getOps()) {
-    if (op.getName().getStringRef() != "cir.global") continue;
-
-    std::string printed;
-    llvm::raw_string_ostream rso(printed);
-    op.print(rso);
-    rso.flush();
-
+    auto globalOp = llvm::dyn_cast<cir::GlobalOp>(&op);
+    if (!globalOp) continue;
+    auto initVal = globalOp.getInitialValue();
     // Skip vtable globals: they contain function pointers that are not
     // representable in verification-friendly C; virtual dispatch is handled
     // via __VERIFIER_virtual_call instead.
-    if (printed.find("#cir.vtable<") != std::string::npos) continue;
-
+    if (initVal && mlir::isa<cir::VTableAttr>(*initVal)) continue;
     // Skip RTTI typeinfo/typestring globals: these are C++ ABI internals
     // (type_info objects and mangled type name strings) not needed for
     // verification of functional properties.
-    if (printed.find("#cir.typeinfo<") != std::string::npos) continue;
-
-    if (printed.find("#cir.global_view<@") != std::string::npos)
+    if (initVal && mlir::isa<cir::TypeInfoAttr>(*initVal)) continue;
+    // Sort: globals with global_view initializers must be emitted last
+    // so they can safely reference symbols declared earlier in C.
+    if (initVal && mlir::isa<cir::GlobalViewAttr>(*initVal))
       viewGlobals.push_back(&op);
     else
       normalGlobals.push_back(&op);
@@ -1574,7 +1342,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   {
     bool anyDecl = false;
     for (auto &op : module.getOps()) {
-      if (op.getName().getStringRef() == "cir.func") {
+      if (llvm::isa<cir::FuncOp>(op)) {
         if (!emitFuncForwardDecl(&op, out) && !isBestEffort()) return false;
         anyDecl = true;
       }
@@ -1590,7 +1358,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       continue;
     }
 
-    if (op.getName().getStringRef() == "cir.func") {
+    if (llvm::isa<cir::FuncOp>(op)) {
       bool hasBody = (op.getNumRegions() > 0 && !op.getRegion(0).empty());
       if (hasBody) {
         if (!mapFunc(&op, out) && !isBestEffort()) return false;

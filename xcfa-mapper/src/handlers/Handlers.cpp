@@ -174,15 +174,9 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   // cir.alloca returns a pointer, but we want to declare the variable as the pointed-to type
   Type allocaTy = op.getAllocaType();
   
-  // Check if this is an array or struct type by examining type string
-  llvm::SmallString<128> buf;
-  llvm::raw_svector_ostream os(buf);
-  allocaTy.print(os);
-  std::string typeStr = os.str().str();
-  
-  // Handle struct types first: !rec_Point or !cir.record<struct "Point" {...}>
+  // Handle struct types first: use typed API instead of textual type string inspection.
   // This needs to come before array check since some struct names might contain "array"
-  if (typeStr.find("!rec_") == 0 || typeStr.find("!cir.record") == 0) {
+  if (mlir::isa<cir::RecordType>(allocaTy)) {
     std::string ctype = m.mapTypeToC(allocaTy);
     out << "  " << qualPrefix << ctype << " " << uniqueVarName << ";\n";
     for (Value res : o->getResults()) {
@@ -428,16 +422,7 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
       std::string pointeeCType = m.mapTypeToC(pointee);
       bool pointeeIsPointer = !pointeeCType.empty() && pointeeCType.back() == '*';
       if (pointeeIsPointer) {
-        // Storing into a pointer variable
-        // Exception: if val is already a pointer expression (like from ptr_stride)
-        // we don't need &. Check if vname contains operators like + or - at top level
-        // or if it's a cast result (contains "cast")
-        bool isPointerExpr = (vname.find(" + ") != std::string::npos || 
-                              vname.find(" - ") != std::string::npos ||
-                              vname.find("cast") != std::string::npos);
-        if (!isPointerExpr) {
-          needAddressOf = true;
-        }
+        needAddressOf = true;
       }
     }
   }
@@ -550,74 +535,33 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
   tlabel = m.getOrCreateLabel(trueSucc);
   flabel = m.getOrCreateLabel(falseSucc);
   
-  // Check if we need to handle block arguments
-  // BrCondOp can pass different arguments to true and false successors
-  // Operand 0 is the condition, operands 1+ go to true branch, then false branch operands
-  
-  // Get the number of arguments for each successor
-  unsigned trueNumArgs = trueSucc->getNumArguments();
-  unsigned falseNumArgs = falseSucc->getNumArguments();
-  
+  // Use typed accessors from cir::BrCondOp to get the operand ranges for
+  // each successor directly, avoiding manual index arithmetic.
+  auto trueOperands  = op.getDestOperandsTrue();
+  auto falseOperands = op.getDestOperandsFalse();
+
   // Simple case: no block arguments
-  if (trueNumArgs == 0 && falseNumArgs == 0) {
+  if (trueSucc->getNumArguments() == 0 && falseSucc->getNumArguments() == 0) {
     out << "  if (" << cond << ") goto " << tlabel << "; else goto " << flabel << ";\n";
     return true;
   }
-  
-  // Complex case: need to handle block arguments
-  // We need to emit assignments before the goto, but we can't do both branches inline
-  // Solution: use a temporary variable or emit the branches separately with assignments
-  
-  // For conditional branches with block arguments, we need to:
-  // 1. Declare all block argument variables at the start of the block (if not already)
-  // 2. Emit if-else with assignments before goto
-  
-  // Check if true branch has arguments
-  bool hasTrueArgs = (trueNumArgs > 0);
-  // The operands after the condition are split: first trueNumArgs go to true branch
-  unsigned trueArgStartIdx = 1; // After condition
-  
-  // Check if false branch has arguments  
-  bool hasFalseArgs = (falseNumArgs > 0);
-  unsigned falseArgStartIdx = 1 + trueNumArgs; // After condition and true args
-  
-  if (hasTrueArgs || hasFalseArgs) {
-    out << "  if (" << cond << ") {\n";
-    
-    // Emit assignments for true branch
-    if (hasTrueArgs) {
-      for (unsigned i = 0; i < trueNumArgs; ++i) {
-        if (trueArgStartIdx + i < o->getNumOperands()) {
-          Value branchArg = o->getOperand(trueArgStartIdx + i);
-          BlockArgument blockArg = trueSucc->getArgument(i);
-          std::string blockArgName = m.getOrCreateName(blockArg);
-          std::string branchArgName = m.getOrCreateName(branchArg);
-          out << "    " << blockArgName << " = " << branchArgName << ";\n";
-        }
-      }
-    }
-    
-    out << "    goto " << tlabel << ";\n";
-    out << "  } else {\n";
-    
-    // Emit assignments for false branch
-    if (hasFalseArgs) {
-      for (unsigned i = 0; i < falseNumArgs; ++i) {
-        if (falseArgStartIdx + i < o->getNumOperands()) {
-          Value branchArg = o->getOperand(falseArgStartIdx + i);
-          BlockArgument blockArg = falseSucc->getArgument(i);
-          std::string blockArgName = m.getOrCreateName(blockArg);
-          std::string branchArgName = m.getOrCreateName(branchArg);
-          out << "    " << blockArgName << " = " << branchArgName << ";\n";
-        }
-      }
-    }
-    
-    out << "    goto " << flabel << ";\n";
-    out << "  }\n";
-  } else {
-    out << "  if (" << cond << ") goto " << tlabel << "; else goto " << flabel << ";\n";
+
+  // Complex case: emit if-else with phi-assignments before each goto.
+  out << "  if (" << cond << ") {\n";
+  for (unsigned i = 0; i < (unsigned)trueOperands.size() && i < trueSucc->getNumArguments(); ++i) {
+    Value branchArg = trueOperands[i];
+    BlockArgument blockArg = trueSucc->getArgument(i);
+    out << "    " << m.getOrCreateName(blockArg) << " = " << m.getOrCreateName(branchArg) << ";\n";
   }
+  out << "    goto " << tlabel << ";\n";
+  out << "  } else {\n";
+  for (unsigned i = 0; i < (unsigned)falseOperands.size() && i < falseSucc->getNumArguments(); ++i) {
+    Value branchArg = falseOperands[i];
+    BlockArgument blockArg = falseSucc->getArgument(i);
+    out << "    " << m.getOrCreateName(blockArg) << " = " << m.getOrCreateName(branchArg) << ";\n";
+  }
+  out << "    goto " << flabel << ";\n";
+  out << "  }\n";
   
   return true;
 }
@@ -869,12 +813,12 @@ bool handleOr(cir::OrOp  op, Mapper &m, std::ostream &out) { return handleBinary
 bool handleXor(cir::XorOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "^"); }
 
 static std::string getOverflowBuiltinName(Operation *o) {
-  llvm::StringRef opName = o->getName().getStringRef();
-  if (opName == "cir.add.overflow") return "add";
-  if (opName == "cir.sub.overflow") return "sub";
-  if (opName == "cir.mul.overflow") return "mul";
+  if (llvm::isa<cir::AddOverflowOp>(o)) return "add";
+  if (llvm::isa<cir::SubOverflowOp>(o)) return "sub";
+  if (llvm::isa<cir::MulOverflowOp>(o)) return "mul";
 
-  if (opName != "cir.binop.overflow") return std::string();
+  // TODO: remove fallback when cir.binop.overflow is no longer emitted by the compiler
+  if (o->getName().getStringRef() != "cir.binop.overflow") return std::string();
 
   auto kindAttr = o->getAttr("kind");
   if (!kindAttr) return std::string();
@@ -929,6 +873,21 @@ bool handleBinOpOverflow(Operation *o, Mapper &m, std::ostream &out) {
 // Unary operations
 // ============================================================================
 
+// Typed wrappers for overflow ops so they can be registered via registerTypedHandler.
+bool handleAddOverflow(cir::AddOverflowOp op, Mapper &m, std::ostream &out) {
+  return handleBinOpOverflow(op.getOperation(), m, out);
+}
+bool handleSubOverflow(cir::SubOverflowOp op, Mapper &m, std::ostream &out) {
+  return handleBinOpOverflow(op.getOperation(), m, out);
+}
+bool handleMulOverflow(cir::MulOverflowOp op, Mapper &m, std::ostream &out) {
+  return handleBinOpOverflow(op.getOperation(), m, out);
+}
+
+// ============================================================================
+// Unary operations (continued)
+// ============================================================================
+
 static bool handleUnaryOpImpl(Operation *o, Mapper &m, std::ostream &out, const char *opStr) {
   if (o->getNumOperands() < 1) return false;
   Value operand = o->getOperand(0);
@@ -949,12 +908,8 @@ bool handleNot(cir::NotOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (o->getNumOperands() < 1) return false;
   Value operand = o->getOperand(0);
-  // CIR 'not' may represent logical not when applied to !cir.bool,
-  // and bitwise complement otherwise. Inspect operand type.
-  llvm::SmallString<64> tbuf;
-  llvm::raw_svector_ostream tos(tbuf);
-  operand.getType().print(tos);
-  const char *opStr = (tos.str().contains("!cir.bool")) ? "!" : "~";
+  // CIR 'not' represents logical not for !cir.bool, bitwise complement otherwise.
+  const char *opStr = mlir::isa<cir::BoolType>(operand.getType()) ? "!" : "~";
   return handleUnaryOpImpl(o, m, out, opStr);
 }
 
@@ -1017,7 +972,11 @@ bool handleVAStart(cir::VAStartOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (o->getNumOperands() < 1) return false;
   std::string argList = m.getOrCreateName(o->getOperand(0));
-  out << "  __builtin_va_start(" << toBuiltinVAList(argList) << ", 0);\n";
+  // The second argument to va_start must be the last named parameter before
+  // the ellipsis. We recover this from Mapper state set by mapFunc.
+  const std::string &lastParam = m.getLastVarargParamName();
+  std::string sentinel = lastParam.empty() ? "0" : lastParam;
+  out << "  __builtin_va_start(" << toBuiltinVAList(argList) << ", " << sentinel << ");\n";
   return true;
 }
 
@@ -1410,7 +1369,7 @@ bool handleCopy(cir::CopyOp op, Mapper &m, std::ostream &out) {
     if (srcArrTy && dstArrTy && srcArrTy.getSize() == dstArrTy.getSize() && srcArrTy.getElementType() == dstArrTy.getElementType()) {
       uint64_t size = srcArrTy.getSize();
       out << "  // array copy\n";
-      out << "  for (int i = 0; i < " << size << "; ++i) { " << dstName << "[i] = " << srcName << "[i]; }\n";
+      out << "  for (unsigned long long i = 0; i < " << size << "; ++i) { " << dstName << "[i] = " << srcName << "[i]; }\n";
       return true;
     }
   }
@@ -2129,10 +2088,11 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::MinusOp>(handleMinus);
   m.registerTypedHandler<cir::NotOp>(handleNot);
   m.registerTypedHandler<cir::ShiftOp>(handleShiftOp);
+  // TODO: remove when cir.binop.overflow is no longer emitted by the compiler
   m.registerHandler("cir.binop.overflow", std::make_unique<LambdaOpHandler>(handleBinOpOverflow));
-  m.registerHandler("cir.add.overflow", std::make_unique<LambdaOpHandler>(handleBinOpOverflow));
-  m.registerHandler("cir.sub.overflow", std::make_unique<LambdaOpHandler>(handleBinOpOverflow));
-  m.registerHandler("cir.mul.overflow", std::make_unique<LambdaOpHandler>(handleBinOpOverflow));
+  m.registerTypedHandler<cir::AddOverflowOp>(handleAddOverflow);
+  m.registerTypedHandler<cir::SubOverflowOp>(handleSubOverflow);
+  m.registerTypedHandler<cir::MulOverflowOp>(handleMulOverflow);
   
   // Type conversions
   m.registerTypedHandler<cir::CastOp>(handleCast);

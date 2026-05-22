@@ -166,6 +166,11 @@ private:
   llvm::DenseSet<mlir::Value> atomicAllocaValues_;
   llvm::DenseSet<mlir::Value> volatileAllocaValues_;
 
+  // The C name of the last non-variadic parameter of the function currently
+  // being mapped.  Set by mapFunc when the function is variadic (isVarArg).
+  // Used by handleVAStart to emit the correct second argument to va_start.
+  std::string lastVarargParamName_;
+
   // Vtable dispatch tracking: maps any value in a virtual dispatch chain
   // (result of get_vptr, loaded vptr, get_virtual_fn_addr result, loaded
   // fn ptr) back to the original object pointer operand.
@@ -203,6 +208,12 @@ public:
   bool isBestEffort() const { return bestEffort; }
 
   void setBestEffort(bool v) { bestEffort = v; }
+
+  /// Returns the C name of the last named (non-variadic) parameter of the
+  /// function body currently being mapped. Empty if the current function is
+  /// not variadic or has no named parameters. Used by handleVAStart to emit
+  /// the correct last-named-parameter sentinel.
+  const std::string &getLastVarargParamName() const { return lastVarargParamName_; }
 
   // ── Vtable / virtual dispatch helpers ───────────────────────────────────
 
