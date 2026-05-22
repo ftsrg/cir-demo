@@ -41,6 +41,15 @@ CLANGPP="$PROJECT_DIR/../backend/bin/bin/clang++"
 CIR_OPT="$PROJECT_DIR/../backend/bin/bin/cir-opt"
 GCC="gcc"  # Use system gcc for compilation checks
 
+# Flags
+RUN_E2E=1
+for arg in "$@"; do
+    case "$arg" in
+        --no-e2e) RUN_E2E=0 ;;
+        *) echo "Unknown argument: $arg"; exit 1 ;;
+    esac
+done
+
 # Counters
 TOTAL_TESTS=0
 PASSED_TESTS=0
@@ -293,7 +302,9 @@ echo "  Running E2E Tests (esbmc-eval)"
 echo "======================================"
 echo ""
 
-if [ ! -d "$ESBMC_EVAL_DIR" ]; then
+if [ "$RUN_E2E" -eq 0 ]; then
+    echo -e "${YELLOW}SKIPPED: E2E tests disabled (--no-e2e)${NC}"
+elif [ ! -d "$ESBMC_EVAL_DIR" ]; then
     echo -e "${YELLOW}SKIPPED: esbmc-eval directory not found at $ESBMC_EVAL_DIR${NC}"
 elif [ ! -f "$CLANGPP" ]; then
     echo -e "${YELLOW}SKIPPED: clang++ not found at $CLANGPP${NC}"
