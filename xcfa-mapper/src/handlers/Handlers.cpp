@@ -632,8 +632,11 @@ bool handleLabel(cir::LabelOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
-bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
-  Operation *o = op.getOperation();
+// Common implementation shared by cir.call and cir.try_call. Both ops have the
+// same operand/attribute structure; the only difference is that cir.try_call
+// is a terminator with two successor blocks (normal/unwind). We treat the
+// unwind path as unreachable in our model (no exceptions).
+static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
   std::string callee;
   bool isIndirectCall = false;
 
@@ -795,6 +798,24 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
     m.setName(o->getResult(0), tmp);
   } else {
     out << "  " << callExpr << "(" << args << ");\n";
+  }
+  return true;
+}
+
+bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
+  return handleCallLikeOp(op.getOperation(), m, out);
+}
+
+bool handleTryCall(cir::TryCallOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (!handleCallLikeOp(o, m, out)) return false;
+
+  // cir.try_call is a terminator with two successors: normal and unwind.
+  // We model exceptions as non-throwing, so always branch to the normal dest.
+  if (o->getNumSuccessors() > 0) {
+    mlir::Block *normal = o->getSuccessor(0);
+    std::string lbl = m.getOrCreateLabel(normal);
+    out << "  goto " << lbl << ";\n";
   }
   return true;
 }
@@ -968,11 +989,20 @@ bool handleCast(cir::CastOp op, Mapper &m, std::ostream &out) {
   if (o->getNumOperands() < 1) return false;
   Value operand = o->getOperand(0);
   std::string opnd = m.getOrCreateName(operand);
-  
+
+  // When the CIR operand is a pointer but our C representation is a
+  // direct-access lvalue (e.g. an alloca'd struct or a get_member result),
+  // the lvalue itself is not assignment-compatible with a pointer cast.
+  // Take its address so `(T*)expr` operates on a real pointer.
+  if (m.isDirectAccess(operand) && !opnd.empty() && opnd[0] != '&' &&
+      mlir::isa<cir::PointerType>(operand.getType())) {
+    opnd = "&(" + opnd + ")";
+  }
+
   std::string tmp = m.freshName("cast");
   std::string ctype = "int";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  
+
   // For most casts, a simple C cast is sufficient
   out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << opnd << ";\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
@@ -1202,7 +1232,17 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
   if (auto sa = o->getAttrOfType<StringAttr>("name")) {
     memberName = sa.getValue().str();
   }
-  
+
+  // Anonymous members (empty name attr) are emitted into the struct definition
+  // as `field<N>` by the struct collector in Mapper.cpp (the "_M_local_buf"-
+  // bearing anonymous union inside libstdc++ basic_string is the canonical
+  // example). Mirror that scheme here using the op's `index_attr` so the
+  // access expression resolves to a real field.
+  if (memberName.empty()) {
+    if (auto ia = o->getAttrOfType<mlir::IntegerAttr>("index_attr"))
+      memberName = "field" + std::to_string(ia.getInt());
+  }
+
   if (memberName.empty()) {
     if (!m.isBestEffort()) {
       llvm::errs() << ERR_GET_MEMBER_NO_NAME << "\n";
@@ -1314,9 +1354,11 @@ bool handleBaseClassAddr(Operation *o, Mapper &m, std::ostream &out) {
 
   Value base = o->getOperand(0);
   std::string baseName = m.getOrCreateName(base);
-  if (m.isDirectAccess(base) && baseName.find('[') == std::string::npos &&
-      baseName.find("->") == std::string::npos && baseName.find('&') != 0) {
-    baseName = "&" + baseName;
+  // Direct-access values are C lvalues (variables, `a.b`, `p->b`, `a[i]`) —
+  // to use them in pointer arithmetic we need their address. Wrap in parens
+  // so member/index chains stay grouped under the unary &.
+  if (m.isDirectAccess(base) && !baseName.empty() && baseName[0] != '&') {
+    baseName = "&(" + baseName + ")";
   }
   std::string resultType = m.mapTypeToC(o->getResult(0).getType());
 
@@ -1372,8 +1414,13 @@ bool handleCopy(cir::CopyOp op, Mapper &m, std::ostream &out) {
       return true;
     }
   }
-  // Fallback: simple assignment (structs / scalars)
-  out << "  " << dstName << " = " << srcName << "; // copy\n";
+  // Struct/scalar copy. cir.copy semantically does `*dst = *src` — both
+  // operands are pointers. In C, a direct-access value's name *is* the
+  // lvalue (no deref needed); a non-direct-access name is a pointer and
+  // needs `*`. Adjust each side accordingly so the assignment types match.
+  std::string dstExpr = m.isDirectAccess(dst) ? dstName : ("*" + dstName);
+  std::string srcExpr = m.isDirectAccess(src) ? srcName : ("*" + srcName);
+  out << "  " << dstExpr << " = " << srcExpr << "; // copy\n";
   return true;
 }
 
@@ -1601,9 +1648,14 @@ bool handleVTableGetVPtr(cir::VTableGetVPtrOp op, Mapper &m, std::ostream &out) 
     m.trackVtableDispatch(op->getResult(0), op.getSrc());
     std::string name = m.getOrCreateName(op->getResult(0));
     std::string src  = m.getOrCreateName(op.getSrc());
-    // Emit the vptr-field address as void*. The vtable pointer is always the
-    // first field of the struct, so the struct address equals the vptr address.
-    out << "  void* " << name << " = (void*)" << src << ";\n";
+    // Source must be a pointer expression. If it's a direct-access lvalue
+    // (e.g. a local struct), take its address first.
+    if (m.isDirectAccess(op.getSrc()) && !src.empty() && src[0] != '&')
+      src = "&(" + src + ")";
+    // The result is the address of the __vptr field; type !cir.ptr<!cir.vptr>
+    // maps to void** (the slot holds a void* vtable pointer). The vptr is at
+    // offset 0 of the struct, so its address equals the struct address.
+    out << "  void** " << name << " = (void**)" << src << ";\n";
   }
   return true;
 }
@@ -1660,6 +1712,304 @@ bool handleVTableGetTypeInfo(cir::VTableGetTypeInfoOp op, Mapper &m, std::ostrea
     out << "  " << ctype << " " << tmp << " = (" << ctype << ")0;\n";
     m.setName(op->getResult(0), tmp);
   }
+  return true;
+}
+
+// ============================================================================
+// VTT / derived-class address handlers
+// ============================================================================
+
+// cir.vtt.address_point retrieves a !cir.ptr<!cir.ptr<!void>> element from a
+// VTT (virtual table table) and is consumed by base-class constructors so
+// they can install the appropriate __vptr in virtually-inherited subobjects.
+// We do not model vtables faithfully; the only downstream effect that
+// matters is the eventual cir.store of a !cir.vptr into a __vptr field,
+// which handleStore already suppresses.  To keep the intermediate C valid
+// (the result is passed by name into a constructor call that dereferences
+// it), point at a fresh static !void* slot initialised to null.  Reads
+// through the chain then yield 0 — a benign null vptr that the suppressed
+// store discards.
+bool handleVTTAddrPoint(cir::VTTAddrPointOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() < 1) return false;
+  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+  std::string target = m.freshName("vtt_slot");
+  std::string tmp    = m.freshName("vtt");
+  out << "  static void *" << target << " = 0;\n";
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")&" << target << ";\n";
+  m.setName(op->getResult(0), tmp);
+  return true;
+}
+
+// cir.derived_class_addr is the inverse of cir.base_class_addr: given a base
+// pointer it returns a pointer to the enclosing derived object by going
+// backwards in memory by the given offset (lowering to a negative offset).
+// Mirror handleBaseClassAddr but subtract the offset instead of adding it.
+bool handleDerivedClassAddr(Operation *o, Mapper &m, std::ostream &out) {
+  if (o->getNumOperands() < 1 || o->getNumResults() < 1) return false;
+
+  Value base = o->getOperand(0);
+  std::string baseName = m.getOrCreateName(base);
+  if (m.isDirectAccess(base) && !baseName.empty() && baseName[0] != '&') {
+    baseName = "&(" + baseName + ")";
+  }
+  std::string resultType = m.mapTypeToC(o->getResult(0).getType());
+
+  std::string opText;
+  llvm::raw_string_ostream rso(opText);
+  o->print(rso);
+  rso.flush();
+
+  bool isNonnull = opText.find(" nonnull ") != std::string::npos;
+  long long offset = 0;
+  size_t openBracket = opText.rfind('[');
+  size_t closeBracket = (openBracket == std::string::npos) ? std::string::npos : opText.find(']', openBracket + 1);
+  if (openBracket != std::string::npos && closeBracket != std::string::npos && closeBracket > openBracket + 1) {
+    std::string offsetText = opText.substr(openBracket + 1, closeBracket - openBracket - 1);
+    size_t start = 0;
+    while (start < offsetText.size() && std::isspace(static_cast<unsigned char>(offsetText[start]))) ++start;
+    size_t end = offsetText.size();
+    while (end > start && std::isspace(static_cast<unsigned char>(offsetText[end - 1]))) --end;
+    if (end > start) {
+      offset = std::stoll(offsetText.substr(start, end - start));
+    }
+  }
+
+  std::string adjustedExpr = "(" + resultType + ")((char *)" + baseName + " - " + std::to_string(offset) + ")";
+  if (!isNonnull) {
+    adjustedExpr = "((" + baseName + ") ? " + adjustedExpr + " : (" + resultType + ")0)";
+  }
+
+  std::string tmp = m.freshName("derived");
+  out << "  " << resultType << " " << tmp << " = " << adjustedExpr << ";\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// ============================================================================
+// libc handlers
+// ============================================================================
+
+// cir.libc.memchr lowers 1:1 to C's memchr(src, pattern, len).
+bool handleMemChr(cir::MemChrOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 3 || o->getNumResults() < 1) return false;
+  std::string src = m.getOrCreateName(o->getOperand(0));
+  std::string pat = m.getOrCreateName(o->getOperand(1));
+  std::string len = m.getOrCreateName(o->getOperand(2));
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  std::string tmp = m.freshName("memchr");
+  // Use the GCC builtin so we don't need <string.h> or an extern declaration.
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")__builtin_memchr("
+      << src << ", " << pat << ", " << len << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// ============================================================================
+// Bit-counting handler: cir.clz
+// ============================================================================
+
+bool handleClz(cir::BitClzOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1 || o->getNumResults() < 1) return false;
+  Value v = o->getOperand(0);
+  std::string opnd = m.getOrCreateName(v);
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  std::string tmp = m.freshName("clz");
+
+  unsigned width = 32;
+  if (auto intTy = mlir::dyn_cast<cir::IntType>(v.getType()))
+    width = intTy.getWidth();
+
+  // The CIR spec restricts the input width to 16, 32, or 64. Pick the matching
+  // GCC builtin; for 16-bit, promote to 32-bit and subtract the extra 16 bits.
+  std::string builtin;
+  if (width == 64)
+    builtin = "__builtin_clzll((unsigned long long)" + opnd + ")";
+  else if (width == 16)
+    builtin = "(__builtin_clz((unsigned int)(unsigned short)" + opnd + ") - 16)";
+  else
+    builtin = "__builtin_clz((unsigned int)" + opnd + ")";
+
+  // Without poison_zero the input of 0 must not invoke undefined behaviour;
+  // return the full width in that case.
+  std::string expr;
+  if (op.getPoisonZero()) {
+    expr = "(" + ctype + ")" + builtin;
+  } else {
+    expr = "(" + ctype + ")((" + opnd + ") == 0 ? " + std::to_string(width)
+         + " : " + builtin + ")";
+  }
+
+  out << "  " << ctype << " " << tmp << " = " << expr << ";\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// ============================================================================
+// Compile-time constant probe: cir.is_constant
+// ============================================================================
+
+// `__builtin_constant_p` returns 1 only for manifest constants, and any code
+// guarded by it must produce the same result on the runtime branch.  Returning
+// 0 is therefore always semantically safe and avoids relying on the host
+// compiler's notion of "manifest constant" matching CIR's.
+bool handleIsConstant(cir::IsConstantOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() < 1) return false;
+  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+  std::string tmp = m.freshName("isconst");
+  out << "  " << ctype << " " << tmp << " = 0;\n";
+  m.setName(op->getResult(0), tmp);
+  return true;
+}
+
+// ============================================================================
+// Exception-handling no-ops
+// ============================================================================
+//
+// We do not model C++ exceptions: cir.try_call always continues at the normal
+// destination (see handleTryCall).  The unwind-side blocks remain in the CFG
+// but are unreachable at runtime.  We still must emit *valid* C for them, so
+// every EH op gets a stub: result-producing ops assign a dummy value to the
+// result name and terminators emit `goto` to their default successor (or
+// `abort();` when there is none).
+
+bool handleEhInflight(cir::EhInflightOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() >= 1) {
+    std::string p = m.freshName("exc_ptr");
+    out << "  void *" << p << " = 0;\n";
+    m.setName(op->getResult(0), p);
+  }
+  if (op->getNumResults() >= 2) {
+    std::string t = m.freshName("exc_tid");
+    std::string ctype = m.mapTypeToC(op->getResult(1).getType());
+    out << "  " << ctype << " " << t << " = 0;\n";
+    m.setName(op->getResult(1), t);
+  }
+  return true;
+}
+
+bool handleEhTypeId(cir::EhTypeIdOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() < 1) return false;
+  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+  std::string tmp = m.freshName("type_id");
+  out << "  " << ctype << " " << tmp << " = 0;\n";
+  m.setName(op->getResult(0), tmp);
+  return true;
+}
+
+bool handleEhSetjmp(cir::EhSetjmpOp op, Mapper &m, std::ostream &out) {
+  // Always behave as the "initial" setjmp return (0); longjmp is also a no-op.
+  if (op->getNumResults() < 1) return false;
+  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+  std::string tmp = m.freshName("setjmp_r");
+  out << "  " << ctype << " " << tmp << " = 0;\n";
+  m.setName(op->getResult(0), tmp);
+  return true;
+}
+
+bool handleEhLongjmp(cir::EhLongjmpOp op, Mapper &m, std::ostream &out) {
+  return true;
+}
+
+bool handleEhInitiate(cir::EhInitiateOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() < 1) return false;
+  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+  std::string tmp = m.freshName("eh_tok");
+  out << "  " << ctype << " " << tmp << " = 0;\n";
+  m.setName(op->getResult(0), tmp);
+  return true;
+}
+
+bool handleEhTerminate(cir::EhTerminateOp op, Mapper &m, std::ostream &out) {
+  out << "  __builtin_unreachable();\n";
+  return true;
+}
+
+bool handleEhDispatch(cir::EhDispatchOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumSuccessors() == 0) {
+    out << "  __builtin_unreachable();\n";
+    return true;
+  }
+  mlir::Block *defaultSucc = o->getSuccessor(0);
+  // Forward the eh_token operand to the default successor's first block arg,
+  // if any (mirrors handleBr's block-argument forwarding).
+  if (o->getNumOperands() > 0 && defaultSucc->getNumArguments() > 0) {
+    std::string blockArgName = m.getOrCreateName(defaultSucc->getArgument(0));
+    std::string branchArgName = m.getOrCreateName(o->getOperand(0));
+    out << "  " << blockArgName << " = " << branchArgName << ";\n";
+  }
+  std::string lbl = m.getOrCreateLabel(defaultSucc);
+  out << "  goto " << lbl << ";\n";
+  return true;
+}
+
+bool handleBeginCleanup(cir::BeginCleanupOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() < 1) return false;
+  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+  std::string tmp = m.freshName("cl_tok");
+  out << "  " << ctype << " " << tmp << " = 0;\n";
+  m.setName(op->getResult(0), tmp);
+  return true;
+}
+
+bool handleEndCleanup(cir::EndCleanupOp op, Mapper &m, std::ostream &out) {
+  return true;
+}
+
+bool handleBeginCatch(cir::BeginCatchOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() >= 1) {
+    std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+    std::string t = m.freshName("ca_tok");
+    out << "  " << ctype << " " << t << " = 0;\n";
+    m.setName(op->getResult(0), t);
+  }
+  if (op->getNumResults() >= 2) {
+    std::string ctype = m.mapTypeToC(op->getResult(1).getType());
+    std::string p = m.freshName("ca_exn");
+    out << "  " << ctype << " " << p << " = (" << ctype << ")0;\n";
+    m.setName(op->getResult(1), p);
+  }
+  return true;
+}
+
+bool handleEndCatch(cir::EndCatchOp op, Mapper &m, std::ostream &out) {
+  return true;
+}
+
+// cir.throw is not a terminator but transfers control out of the block via
+// the EH unwind path. Because we don't model exceptions, the path that
+// reaches a throw is unreachable in our generated C; emit a hint so the
+// compiler can prune any code that follows.
+bool handleThrow(cir::ThrowOp op, Mapper &m, std::ostream &out) {
+  out << "  __builtin_unreachable();\n";
+  return true;
+}
+
+// cir.resume continues unwinding when no catch matches. After CFG flattening
+// it is a function-level terminator; we treat its block as unreachable.
+bool handleResume(cir::ResumeOp op, Mapper &m, std::ostream &out) {
+  out << "  __builtin_unreachable();\n";
+  return true;
+}
+
+// cir.alloc.exception conceptually calls __cxa_allocate_exception.  Since the
+// allocated buffer is only ever consumed by the (unreachable) throw path, we
+// hand out a stack buffer of the requested size cast to the result pointer
+// type.  This keeps any in-between cir.store ops well-defined.
+bool handleAllocException(cir::AllocExceptionOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() < 1) return false;
+  uint64_t size = 0;
+  if (auto sa = op->getAttrOfType<mlir::IntegerAttr>("size"))
+    size = static_cast<uint64_t>(sa.getInt());
+  if (size == 0) size = 16;  // safety floor for any pathological 0-sized cases
+  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+  std::string buf = m.freshName("exc_buf");
+  std::string tmp = m.freshName("exc");
+  out << "  char " << buf << "[" << size << "] = {0};\n";
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << buf << ";\n";
+  m.setName(op->getResult(0), tmp);
   return true;
 }
 
@@ -1806,6 +2156,7 @@ void registerBuiltinHandlers(Mapper &m) {
   
   // Function calls
   m.registerTypedHandler<cir::CallOp>(handleCall);
+  m.registerTypedHandler<cir::TryCallOp>(handleTryCall);
   m.registerTypedHandler<cir::ReturnOp>(handleReturn);
   m.registerTypedHandler<cir::UnreachableOp>(handleUnreachable);
   m.registerTypedHandler<cir::TrapOp>(handleTrap);
@@ -1831,6 +2182,33 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::VTableGetVPtrOp>(handleVTableGetVPtr);
   m.registerTypedHandler<cir::VTableGetVirtualFnAddrOp>(handleVTableGetVirtualFnAddr);
   m.registerTypedHandler<cir::VTableGetTypeInfoOp>(handleVTableGetTypeInfo);
+  m.registerTypedHandler<cir::VTTAddrPointOp>(handleVTTAddrPoint);
+  m.registerHandler("cir.derived_class_addr", std::make_unique<LambdaOpHandler>(handleDerivedClassAddr));
+
+  // libc
+  m.registerTypedHandler<cir::MemChrOp>(handleMemChr);
+
+  // Bit-counting
+  m.registerTypedHandler<cir::BitClzOp>(handleClz);
+
+  // Compile-time constant probe
+  m.registerTypedHandler<cir::IsConstantOp>(handleIsConstant);
+
+  // Exception handling (modelled as no-ops; the unwind path is unreachable)
+  m.registerTypedHandler<cir::EhInflightOp>(handleEhInflight);
+  m.registerTypedHandler<cir::EhTypeIdOp>(handleEhTypeId);
+  m.registerTypedHandler<cir::EhSetjmpOp>(handleEhSetjmp);
+  m.registerTypedHandler<cir::EhLongjmpOp>(handleEhLongjmp);
+  m.registerTypedHandler<cir::EhInitiateOp>(handleEhInitiate);
+  m.registerTypedHandler<cir::EhTerminateOp>(handleEhTerminate);
+  m.registerTypedHandler<cir::EhDispatchOp>(handleEhDispatch);
+  m.registerTypedHandler<cir::BeginCleanupOp>(handleBeginCleanup);
+  m.registerTypedHandler<cir::EndCleanupOp>(handleEndCleanup);
+  m.registerTypedHandler<cir::BeginCatchOp>(handleBeginCatch);
+  m.registerTypedHandler<cir::EndCatchOp>(handleEndCatch);
+  m.registerTypedHandler<cir::ThrowOp>(handleThrow);
+  m.registerTypedHandler<cir::ResumeOp>(handleResume);
+  m.registerTypedHandler<cir::AllocExceptionOp>(handleAllocException);
 
   // Floating-point math functions
   m.registerTypedHandler<cir::SqrtOp>(handleSqrt);

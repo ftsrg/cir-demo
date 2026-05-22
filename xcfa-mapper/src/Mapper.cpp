@@ -369,9 +369,12 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
       return "struct " + name + "*";
     }
 
-    // Handle pointer to vptr (!cir.ptr<!cir.vptr>) -- vtable pointer
+    // Handle pointer to vptr (!cir.ptr<!cir.vptr>) -- address of the __vptr
+    // slot. The vptr value itself is a void* (vtable pointer), so its address
+    // is void**. Mapping this to void* would make subsequent loads through it
+    // a dereference of void* (illegal in C).
     if (mlir::isa<cir::VPtrType>(pointee)) {
-      return "void*";
+      return "void**";
     }
     
     // Handle pointer to array (decays to pointer to element)
@@ -823,7 +826,10 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
               std::string targetName = sanitizeIdentifier(target);
 
               mlir::Type targetType = findGlobalTypeBySymbol(target);
-              bool targetIsArray = mlir::isa<cir::ArrayType>(targetType);
+              // The target may live outside the module (extern/declared-only)
+              // in which case findGlobalTypeBySymbol returns a null Type; the
+              // generic isa<> on a null Type crashes inside MLIR.
+              bool targetIsArray = targetType && mlir::isa<cir::ArrayType>(targetType);
               if (targetIsArray) {
                 // Array lvalues decay to pointers in this context.
                 initExpr = targetName;
@@ -1092,7 +1098,9 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     if (!t) return;
 
     if (auto recordType = mlir::dyn_cast<cir::RecordType>(t)) {
-      std::string recordName = sanitizeIdentifier(recordType.getName().getValue().str());
+      auto nameAttr = recordType.getName();
+      if (!nameAttr) return; // anonymous record without a tag — skip
+      std::string recordName = sanitizeIdentifier(nameAttr.getValue().str());
 
       // Keep an entry even if there are no discovered fields yet.
       (void)structFields[recordName];
@@ -1310,8 +1318,15 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     auto it = structFields.find(sname);
     if (it != structFields.end()) {
       for (auto &fi : it->second) {
+        // A `struct X` / `union X` field requires the tag's full definition
+        // to be visible at this struct's declaration site. Pointer-typed
+        // fields are fine because the trailing '*' keeps baseType from
+        // matching either prefix.
         if (fi.baseType.rfind("struct ", 0) == 0) {
           std::string dep = fi.baseType.substr(7);
+          if (dep != sname) deps.insert(dep);
+        } else if (fi.baseType.rfind("union ", 0) == 0) {
+          std::string dep = fi.baseType.substr(6);
           if (dep != sname) deps.insert(dep);
         }
       }
