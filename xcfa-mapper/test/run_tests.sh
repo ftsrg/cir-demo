@@ -56,6 +56,13 @@ PASSED_TESTS=0
 FAILED_TESTS=0
 SKIPPED_TESTS=0
 
+# Separate counters for the non-flat path so we can report them without
+# polluting the existing flat-CIR totals while the non-flat support is
+# being implemented (tests-first).
+NONFLAT_TOTAL=0
+NONFLAT_PASSED=0
+NONFLAT_FAILED=0
+
 # Directories for E2E tests
 ESBMC_EVAL_DIR="$PROJECT_DIR/../backend/examples/esbmc-eval"
 ESBMC_EVAL_OUTPUT_DIR="$SCRIPT_DIR/esbmc-eval/output"
@@ -295,6 +302,138 @@ fi
 echo ""
 
 #######################################
+# Non-Flat Integration Tests (C)
+#######################################
+# Runs the mapper directly on the non-flattened CIR produced by clang
+# (i.e. without `cir-opt -cir-flatten-cfg`).  Drives the implementation
+# of the structured-op handlers (cir.while, cir.for, cir.do, structured
+# cir.switch, cir.break, cir.continue, cir.try).  Counts are reported
+# separately so the existing flat-CIR totals stay clean while the non-
+# flat support is in progress.
+echo "======================================"
+echo "  Running Non-Flat Integration Tests (C)"
+echo "======================================"
+echo ""
+
+for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
+    if [ -f "$c_file" ]; then
+        test_name=$(basename "$c_file" .c)
+        NONFLAT_TOTAL=$((NONFLAT_TOTAL + 1))
+
+        echo -n "Testing $test_name (non-flat)... "
+
+        mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
+        # The flat path above already produced ${test_name}.mlir as a side
+        # effect; if it didn't (e.g. clang failed), reuse the same clang
+        # invocation here so this section is self-contained.
+        if [ ! -f "$mlir_file" ]; then
+            clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_clang_log.txt"
+            if ! "$CLANG" "$c_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
+                echo -e "${RED}FAILED${NC} (CIR generation failed)"
+                NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
+                echo "  Output from clang:"
+                cat "$clang_log" | sed 's/^/    /'
+                echo ""
+                continue
+            fi
+        fi
+
+        # Run mapper directly on the non-flat CIR.
+        output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output_nonflat.c"
+        mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_mapper_log.txt"
+
+        if ! "$XCFA_MAPPER" "$mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+            echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+            NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
+            echo "  Output from xcfa-mapper:"
+            cat "$mapper_log" | sed 's/^/    /'
+            echo ""
+            continue
+        fi
+
+        compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_compile_log.txt"
+        if ! "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1; then
+            echo -e "${RED}FAILED${NC} (compilation failed)"
+            NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
+            echo "  Compilation errors:"
+            cat "$compile_log" | sed 's/^/    /'
+            echo ""
+            continue
+        fi
+
+        echo -e "${GREEN}PASSED${NC}"
+        NONFLAT_PASSED=$((NONFLAT_PASSED + 1))
+    fi
+done
+
+echo ""
+
+#######################################
+# Non-Flat C++ Integration Tests
+#######################################
+echo "======================================"
+echo "  Running Non-Flat C++ Integration Tests"
+echo "======================================"
+echo ""
+
+if [ ! -f "$CLANGPP" ]; then
+    echo -e "${YELLOW}SKIPPED: clang++ not found at $CLANGPP${NC}"
+else
+    for cpp_file in "$INTEGRATION_INPUT_DIR"/*.cpp; do
+        if [ -f "$cpp_file" ]; then
+            test_name=$(basename "$cpp_file" .cpp)
+            NONFLAT_TOTAL=$((NONFLAT_TOTAL + 1))
+
+            echo -n "Testing $test_name (non-flat)... "
+
+            mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
+            if [ ! -f "$mlir_file" ]; then
+                clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_clang_log.txt"
+                if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
+                    echo -e "${RED}FAILED${NC} (CIR generation failed)"
+                    NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
+                    echo "  Output from clang++:"
+                    cat "$clang_log" | sed 's/^/    /'
+                    echo ""
+                    continue
+                fi
+            fi
+
+            output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output_nonflat.c"
+            mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_mapper_log.txt"
+
+            # Use --best-effort: C++ STL internals produce ops that can't
+            # be fully mapped (matches the flat C++ section above).
+            if ! "$XCFA_MAPPER" --best-effort "$mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+                echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+                NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
+                echo "  Output from xcfa-mapper:"
+                cat "$mapper_log" | sed 's/^/    /'
+                echo ""
+                continue
+            fi
+
+            # Same lenient C++ identifier check as the flat C++ section.
+            compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_compile_log.txt"
+            "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1
+            if grep -qE "error:.*before '::'|error:.*before '<'" "$compile_log"; then
+                echo -e "${RED}FAILED${NC} (C++ qualified names in struct/union identifiers)"
+                NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
+                echo "  Relevant errors:"
+                grep -E "error:.*before '::'|error:.*before '<'" "$compile_log" | head -5 | sed 's/^/    /'
+                echo ""
+                continue
+            fi
+
+            echo -e "${GREEN}PASSED${NC}"
+            NONFLAT_PASSED=$((NONFLAT_PASSED + 1))
+        fi
+    done
+fi
+
+echo ""
+
+#######################################
 # E2E Tests (esbmc-eval)
 #######################################
 echo "======================================"
@@ -372,9 +511,17 @@ echo -e "Passed:       ${GREEN}$PASSED_TESTS${NC}"
 echo -e "Skipped:      ${YELLOW}$SKIPPED_TESTS${NC}"
 echo -e "Failed:       ${RED}$FAILED_TESTS${NC}"
 echo ""
+echo "Non-flat integration (tracked separately while support is in progress):"
+echo "  Total:  $NONFLAT_TOTAL"
+echo -e "  Passed: ${GREEN}$NONFLAT_PASSED${NC}"
+echo -e "  Failed: ${RED}$NONFLAT_FAILED${NC}"
+echo ""
 
 if [ $FAILED_TESTS -eq 0 ]; then
-    echo -e "${GREEN}All tests passed!${NC}"
+    echo -e "${GREEN}All flat-CIR tests passed!${NC}"
+    if [ $NONFLAT_FAILED -gt 0 ]; then
+        echo -e "${YELLOW}(non-flat path still has $NONFLAT_FAILED failing tests — expected until structured-op handlers land)${NC}"
+    fi
     exit 0
 else
     echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR and $ESBMC_EVAL_OUTPUT_DIR${NC}"

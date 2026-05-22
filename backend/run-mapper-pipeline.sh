@@ -4,9 +4,25 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
-if [[ $# -ne 2 ]]; then
-  echo "Usage: $0 <input-file> <output-dir>" >&2
+NO_FLATTEN=false
+
+usage() {
+  echo "Usage: $0 [--no-flatten] <input-file> <output-dir>" >&2
   exit 1
+}
+
+# Parse flags
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --no-flatten) NO_FLATTEN=true; shift ;;
+    --) shift; break ;;
+    -*) usage ;;
+    *) break ;;
+  esac
+done
+
+if [[ $# -ne 2 ]]; then
+  usage
 fi
 
 INPUT_FILE=$1
@@ -23,7 +39,7 @@ CLANG_BIN="$SCRIPT_DIR/bin/bin/clang"
 CIR_OPT_BIN="$SCRIPT_DIR/bin/bin/cir-opt"
 XCFA_MAPPER_BIN="$SCRIPT_DIR/../xcfa-mapper/build/xcfa-mapper"
 
-for tool in "$CLANG_BIN" "$CIR_OPT_BIN" "$XCFA_MAPPER_BIN"; do
+for tool in "$CLANG_BIN" "$XCFA_MAPPER_BIN"; do
   if [[ ! -x "$tool" ]]; then
     echo "Error: required executable not found: $tool" >&2
     exit 1
@@ -40,10 +56,23 @@ OUTPUT_C_FILE="$OUTPUT_DIR/$BASE_NAME.output.c"
 
 "$CLANG_BIN" -x c -S -emit-cir \
   "$INPUT_FILE" -o "$CIR_MLIR_FILE"
-"$CIR_OPT_BIN" "$CIR_MLIR_FILE" -cir-flatten-cfg -o "$FLAT_MLIR_FILE"
-"$XCFA_MAPPER_BIN" "$FLAT_MLIR_FILE" "$OUTPUT_C_FILE"
 
-echo "Generated:"
-echo "  $CIR_MLIR_FILE"
-echo "  $FLAT_MLIR_FILE"
-echo "  $OUTPUT_C_FILE"
+if [[ "$NO_FLATTEN" == "true" ]]; then
+  # Non-flat mode: run xcfa-mapper directly on the structured CIR.
+  "$XCFA_MAPPER_BIN" "$CIR_MLIR_FILE" "$OUTPUT_C_FILE"
+  echo "Generated (non-flat mode):"
+  echo "  $CIR_MLIR_FILE"
+  echo "  $OUTPUT_C_FILE"
+else
+  # Default flat mode: flatten with cir-opt first.
+  if [[ ! -x "$CIR_OPT_BIN" ]]; then
+    echo "Error: required executable not found: $CIR_OPT_BIN" >&2
+    exit 1
+  fi
+  "$CIR_OPT_BIN" "$CIR_MLIR_FILE" -cir-flatten-cfg -o "$FLAT_MLIR_FILE"
+  "$XCFA_MAPPER_BIN" "$FLAT_MLIR_FILE" "$OUTPUT_C_FILE"
+  echo "Generated:"
+  echo "  $CIR_MLIR_FILE"
+  echo "  $FLAT_MLIR_FILE"
+  echo "  $OUTPUT_C_FILE"
+fi

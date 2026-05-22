@@ -197,10 +197,16 @@ app.get('/api/xcfa-mapper-version', async (req, res) => {
   }
 });
 
-// generation endpoint: runs clang to produce LLVM IR and CIR, then flattens CIR with cir-opt
+// generation endpoint: runs clang to produce LLVM IR and CIR, then optionally
+// flattens CIR with cir-opt before passing it to xcfa-mapper.
+// Request body: { code, language, flatten? }
+// flatten defaults to true (flat-CIR path); set to false for non-flat/structured CIR.
 app.post('/api/generate', async (req, res) => {
   const code = req.body.code || '';
   const language = req.body.language === 'c' ? 'c' : 'cpp';
+  // flatten=true (default): run cir-opt -cir-flatten-cfg before xcfa-mapper.
+  // flatten=false: skip flattening; xcfa-mapper receives structured CIR directly.
+  const flatten = req.body.flatten !== false;
   const ext = language === 'c' ? 'c' : 'cpp';
   const clangBin = language === 'c' ? CLANG_BIN : CLANGPP_BIN;
   const tmpDir = path.join(__dirname, '..', 'tmp');
@@ -261,7 +267,11 @@ app.post('/api/generate', async (req, res) => {
       const flatMlirPath = path.join(tmpDir, `${base}.flat.mlir`);
       filesToCleanup.push(flatMlirPath);
 
-      if (statSafeSync(CIR_OPT_BIN)?.isFile()) {
+      if (!flatten) {
+        // Non-flat mode: use the raw structured CIR directly (no cir-opt step).
+        const data = await fs.readFile(resolvedCirMlirPath, 'utf8').catch(() => '');
+        flatOut = { stdout: data, stderr: '', code: 0 };
+      } else if (statSafeSync(CIR_OPT_BIN)?.isFile()) {
         flatOut = await execFileAsync(CIR_OPT_BIN, [resolvedCirMlirPath, '-cir-flatten-cfg', '-o', flatMlirPath]);
         try {
           const flatExists = await fs.stat(flatMlirPath).then(s => s.isFile()).catch(() => false);

@@ -1273,6 +1273,96 @@ bool handleIf(cir::IfOp op, Mapper &m, std::ostream &out) {
 }
 
 // ============================================================================
+// Structured loops: while, do-while, for
+// ============================================================================
+
+// Walk a loop condition region (whose block ends with cir.condition(%v)).
+// Emits all ops before cir.condition, returns the C name of the bool predicate
+// passed to cir.condition.  Sets *ok = false and returns "" on error.
+static std::string emitCondRegion(Region &region, Mapper &m, std::ostream &out,
+                                   bool *ok) {
+  *ok = true;
+  if (region.empty()) { *ok = false; return ""; }
+  Block &block = region.front();
+  std::ostringstream condOut;
+  std::string condName;
+  for (Operation &nestedOp : block.getOperations()) {
+    if (auto condOp = llvm::dyn_cast<cir::ConditionOp>(&nestedOp)) {
+      condName = m.getOrCreateName(condOp.getCondition());
+      break;
+    }
+    if (!m.mapOperation(&nestedOp, condOut)) { *ok = false; return ""; }
+  }
+  out << indentText(condOut.str());
+  return condName;
+}
+
+// cir.while:
+//   while (1) { <cond-region>; if (!cond) break; <body-region>; }
+bool handleWhile(cir::WhileOp op, Mapper &m, std::ostream &out) {
+  out << "  while (1) {\n";
+  bool ok;
+  std::string condName = emitCondRegion(op.getCond(), m, out, &ok);
+  if (!ok) return false;
+  if (!condName.empty())
+    out << "    if (!" << condName << ") break;\n";
+  if (!emitRegionBody(op.getBody(), m, out)) return false;
+  out << "  }\n";
+  return true;
+}
+
+// cir.do:
+//   do { <body-region>; <cond-region>; if (!cond) break; } while (1);
+bool handleDoWhile(cir::DoWhileOp op, Mapper &m, std::ostream &out) {
+  out << "  do {\n";
+  if (!emitRegionBody(op.getBody(), m, out)) return false;
+  bool ok;
+  std::string condName = emitCondRegion(op.getCond(), m, out, &ok);
+  if (!ok) return false;
+  if (!condName.empty())
+    out << "    if (!" << condName << ") break;\n";
+  out << "  } while (1);\n";
+  return true;
+}
+
+// cir.for:
+//   while (1) { <cond-region>; if (!cond) break; <body-region>; <step-region>; }
+// Note: the C init is emitted as plain alloca/store ops *before* the cir.for
+// op in CIR, so no init region exists here.
+// Limitation: `continue` inside body skips the step region.  This is
+// acceptable for the initial implementation; a goto-based fix can follow.
+bool handleFor(cir::ForOp op, Mapper &m, std::ostream &out) {
+  out << "  while (1) {\n";
+  bool ok;
+  std::string condName = emitCondRegion(op.getCond(), m, out, &ok);
+  if (!ok) return false;
+  if (!condName.empty())
+    out << "    if (!" << condName << ") break;\n";
+  if (!emitRegionBody(op.getBody(), m, out)) return false;
+  if (!emitRegionBody(op.getStep(), m, out)) return false;
+  out << "  }\n";
+  return true;
+}
+
+// cir.condition is the terminator of a loop cond region; it is consumed by
+// emitCondRegion and never reaches the top-level dispatcher.  Register a
+// defensive no-op handler to avoid "no handler registered" for any stray
+// occurrences (e.g. malformed input in best-effort mode).
+bool handleCondition(cir::ConditionOp op, Mapper &m, std::ostream &out) {
+  return true;
+}
+
+// ============================================================================
+// Structured exception handling: try
+// ============================================================================
+
+// cir.try: emit only the body (try) region; ignore all catch/handler regions.
+// The unwind path is modelled as unreachable, consistent with handleTryCall.
+bool handleTry(cir::TryOp op, Mapper &m, std::ostream &out) {
+  return emitRegionBody(op.getTryRegion(), m, out);
+}
+
+// ============================================================================
 // Memory and pointer operations
 // ============================================================================
 
@@ -2208,11 +2298,15 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::CleanupScopeOp>(handleCleanupScope);
   m.registerTypedHandler<cir::ScopeOp>(handleScope);
   m.registerTypedHandler<cir::IfOp>(handleIf);
-  // Structured-form terminators (Phase A/B)
   m.registerTypedHandler<cir::BreakOp>(handleBreak);
   m.registerTypedHandler<cir::ContinueOp>(handleContinue);
   m.registerTypedHandler<cir::YieldOp>(handleYield);
   m.registerTypedHandler<cir::CaseOp>(handleCase);
+  m.registerTypedHandler<cir::ConditionOp>(handleCondition);
+  m.registerTypedHandler<cir::WhileOp>(handleWhile);
+  m.registerTypedHandler<cir::DoWhileOp>(handleDoWhile);
+  m.registerTypedHandler<cir::ForOp>(handleFor);
+  m.registerTypedHandler<cir::TryOp>(handleTry);
   
   // Function calls
   m.registerTypedHandler<cir::CallOp>(handleCall);

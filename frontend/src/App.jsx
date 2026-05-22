@@ -66,6 +66,7 @@ export default function App() {
   }, [selectedExample])
 
   const [language, setLanguage] = useState('cpp')
+  const [flatten, setFlatten] = useState(true)
   const [examplesAnchor, setExamplesAnchor] = useState(null)
   const openExamples = Boolean(examplesAnchor)
   const onOpenExamples = (e) => setExamplesAnchor(e.currentTarget)
@@ -73,7 +74,7 @@ export default function App() {
   const onSelectExample = (path) => { setSelectedExample(path); onCloseExamples(); }
 
   const onGenerate = async () => {
-    const resp = await api.post('api/generate', { code, language })
+    const resp = await api.post('api/generate', { code, language, flatten })
     // Ensure missing keys are present to avoid undefined in OutputTabs
     const data = resp.data || {}
     setOutputs({
@@ -118,6 +119,16 @@ export default function App() {
             >
               <MenuItem value="cpp">C++</MenuItem>
               <MenuItem value="c">C</MenuItem>
+            </Select>
+            <Select
+              value={flatten ? 'flat' : 'nonflat'}
+              onChange={(e) => setFlatten(e.target.value === 'flat')}
+              size="small"
+              variant="outlined"
+              sx={{ color: 'inherit', '.MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.5)' }, '.MuiSvgIcon-root': { color: 'inherit' }, fontSize: 14, height: 32 }}
+            >
+              <MenuItem value="flat">Flat CIR</MenuItem>
+              <MenuItem value="nonflat">Non-flat CIR</MenuItem>
             </Select>
             <Button color="inherit" onClick={onGenerate}>Generate</Button>
           </Box>
