@@ -142,7 +142,7 @@ export default function App() {
           </div>
           <div style={{ width: '100%', height: '100%' }}>
               <div className="no-focus-outline" style={{ height: '100%' }}>
-              <OutputTabs outputs={outputs} />
+              <OutputTabs outputs={outputs} flatten={flatten} />
             </div>
           </div>
         </Split>

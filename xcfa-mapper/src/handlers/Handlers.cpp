@@ -1356,10 +1356,43 @@ bool handleCondition(cir::ConditionOp op, Mapper &m, std::ostream &out) {
 // Structured exception handling: try
 // ============================================================================
 
-// cir.try: emit only the body (try) region; ignore all catch/handler regions.
-// The unwind path is modelled as unreachable, consistent with handleTryCall.
+// cir.try: emit the try body region normally, then emit each handler region
+// (catch / unwind) as dead code wrapped in `if (0) { ... }`. Throws and the
+// unwind path of cir.try_call are both modelled as unreachable (see
+// handleThrow / handleTryCall), so no handler can execute at runtime; the
+// `if (0)` wrapper keeps the catch logic visible in the C output (and uses
+// the catch-parameter alloca that would otherwise be unused) while ensuring
+// downstream tooling sees it as unreachable.
 bool handleTry(cir::TryOp op, Mapper &m, std::ostream &out) {
-  return emitRegionBody(op.getTryRegion(), m, out);
+  if (!emitRegionBody(op.getTryRegion(), m, out)) return false;
+  for (Region &handler : op.getHandlerRegions()) {
+    if (handler.empty()) continue;
+    out << "  if (0) {\n";
+    if (!emitRegionBody(handler, m, out)) return false;
+    out << "  }\n";
+  }
+  return true;
+}
+
+// cir.catch_param: appears inside a cir.try handler region (HasParent<TryOp>)
+// to retrieve the in-flight exception object. We don't model exceptions and
+// the enclosing handler is emitted as dead code, so bind the result to a
+// null pointer of the right C type.
+bool handleCatchParam(cir::CatchParamOp op, Mapper &m, std::ostream &out) {
+  if (op->getNumResults() < 1) return true;
+  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
+  std::string tmp = m.freshName("cp_exn");
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")0;\n";
+  m.setName(op->getResult(0), tmp);
+  return true;
+}
+
+// cir.resume.flat: post-CFG-flattening form of cir.resume that propagates an
+// uncaught exception to the caller. Treated as unreachable, mirroring
+// handleResume.
+bool handleResumeFlat(cir::ResumeFlatOp op, Mapper &m, std::ostream &out) {
+  out << "  __builtin_unreachable();\n";
+  return true;
 }
 
 // ============================================================================
@@ -2362,7 +2395,9 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::EndCatchOp>(handleEndCatch);
   m.registerTypedHandler<cir::ThrowOp>(handleThrow);
   m.registerTypedHandler<cir::ResumeOp>(handleResume);
+  m.registerTypedHandler<cir::ResumeFlatOp>(handleResumeFlat);
   m.registerTypedHandler<cir::AllocExceptionOp>(handleAllocException);
+  m.registerTypedHandler<cir::CatchParamOp>(handleCatchParam);
 
   // Floating-point math functions
   m.registerTypedHandler<cir::SqrtOp>(handleSqrt);

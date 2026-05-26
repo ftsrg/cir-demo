@@ -20,11 +20,21 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import ComparisonView from './ComparisonView'
 
-export default function OutputTabs({ outputs = {} }) {
+export default function OutputTabs({ outputs = {}, flatten = true }) {
   const [tab, setTab] = useState(0)
   const [stderrOpen, setStderrOpen] = useState(true)
-  const keys = ['llvm', 'clang', 'flat_clang', 'c', 'c_best', 'xcfa', 'comparison']
-  const active = outputs[keys[tab]]
+  const tabDefs = [
+    { key: 'llvm', label: 'LLVM IR' },
+    { key: 'clang', label: 'Clang IR' },
+    ...(flatten ? [{ key: 'flat_clang', label: 'Flat Clang IR' }] : []),
+    { key: 'c', label: 'C' },
+    { key: 'c_best', label: 'C (best effort)' },
+    { key: 'xcfa', label: 'XCFA' },
+    { key: 'comparison', label: 'Comparison' }
+  ]
+  const safeTab = Math.min(tab, tabDefs.length - 1)
+  const activeKey = tabDefs[safeTab].key
+  const active = outputs[activeKey]
 
   // helper to extract stdout/stderr for structured outputs
   const getStdout = obj => (obj ? (typeof obj === 'string' ? obj : obj.stdout || '') : '')
@@ -33,7 +43,7 @@ export default function OutputTabs({ outputs = {} }) {
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <Tabs
-        value={tab}
+        value={safeTab}
         onChange={(e, v) => setTab(v)}
         sx={{
           minHeight: 36,
@@ -43,17 +53,13 @@ export default function OutputTabs({ outputs = {} }) {
           '& .MuiTab-root.Mui-selected': { color: '#ffffff' }
         }}
       >
-          <Tab label="LLVM IR" />
-          <Tab label="Clang IR" />
-          <Tab label="Flat Clang IR" />
-          <Tab label="C" />
-          <Tab label="C (best effort)" />
-          <Tab label="XCFA" />
-          <Tab label="Comparison" />
+        {tabDefs.map(def => (
+          <Tab key={def.key} label={def.label} />
+        ))}
       </Tabs>
 
   <Box sx={{ p: 1, flex: 1, display: 'flex', flexDirection: 'column', bgcolor: '#0f1115', color: '#ddd', fontFamily: 'monospace', fontSize: 12, minHeight: 0 }}>
-        {keys[tab] === 'comparison' ? (
+        {activeKey === 'comparison' ? (
           <ComparisonView data={active} />
         ) : (
         <Box sx={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
@@ -71,7 +77,7 @@ export default function OutputTabs({ outputs = {} }) {
             </Box>
           ) : null}
 
-          <pre className="output-pre">{getStdout(active) || `no ${keys[tab]} generated yet`}</pre>
+          <pre className="output-pre">{getStdout(active) || `no ${activeKey} generated yet`}</pre>
         </Box>
         )}
       </Box>

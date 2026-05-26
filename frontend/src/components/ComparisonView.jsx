@@ -127,12 +127,23 @@ export default function ComparisonView({ data = {} }) {
       cDecorRef.current = cEditorRef.current.deltaDecorations(cDecorRef.current, cDecos)
     }
 
+    const revealOnTarget = (editor, line) => {
+      if (!editor || !line) return
+      editor.revealLineInCenter(line, monaco.editor.ScrollType.Smooth)
+    }
+
     const mlirMoveSub = mlirEditorRef.current.onMouseMove((e) => {
       const line = e?.target?.position?.lineNumber
       if (!line) return
       highlightFromMlirLine(line)
     })
     const mlirLeaveSub = mlirEditorRef.current.onMouseLeave(() => clearDecorations())
+    const mlirClickSub = mlirEditorRef.current.onMouseDown((e) => {
+      const line = e?.target?.position?.lineNumber
+      if (!line) return
+      const cRanges = maps.mlirToC.get(line)
+      if (cRanges && cRanges.length > 0) revealOnTarget(cEditorRef.current, cRanges[0].startLine)
+    })
 
     const cMoveSub = cEditorRef.current.onMouseMove((e) => {
       const line = e?.target?.position?.lineNumber
@@ -140,12 +151,23 @@ export default function ComparisonView({ data = {} }) {
       highlightFromCLine(line)
     })
     const cLeaveSub = cEditorRef.current.onMouseLeave(() => clearDecorations())
+    const cClickSub = cEditorRef.current.onMouseDown((e) => {
+      const line = e?.target?.position?.lineNumber
+      if (!line) return
+      const mlirLines = maps.cToMlir.get(line)
+      if (mlirLines && mlirLines.size > 0) {
+        const first = mlirLines.values().next().value
+        revealOnTarget(mlirEditorRef.current, first)
+      }
+    })
 
     return () => {
       mlirMoveSub.dispose()
       mlirLeaveSub.dispose()
+      mlirClickSub.dispose()
       cMoveSub.dispose()
       cLeaveSub.dispose()
+      cClickSub.dispose()
       clearDecorations()
       if (mlirEditorRef.current) mlirEditorRef.current.dispose()
       if (cEditorRef.current) cEditorRef.current.dispose()
@@ -168,7 +190,7 @@ export default function ComparisonView({ data = {} }) {
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1, py: 0.5, color: '#9aa4b2', fontSize: 11 }}>
-        <span>Hover a line on either side to highlight mapped lines.</span>
+        <span>Hover to highlight mapped lines; click to scroll the other side to the match.</span>
         <span>{mappings.length} mapped operations</span>
       </Box>
       <Box sx={{ flex: 1, minHeight: 0 }}>

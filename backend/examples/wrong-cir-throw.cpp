@@ -1,5 +1,6 @@
 // C++ input
 extern int foo();
+extern void abort();
 
 int main() {
     int i = foo();
