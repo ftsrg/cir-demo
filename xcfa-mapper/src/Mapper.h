@@ -28,6 +28,7 @@
 #include <string>
 #include <functional>
 #include <unordered_map>
+#include <vector>
 
 #include <llvm/ADT/DenseMap.h>
 #include <llvm/ADT/DenseSet.h>
@@ -145,6 +146,7 @@ public:
 private:
   bool bestEffort;
   bool structsEmitted = false;
+  bool ehPreambleEmitted = false;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
   TraceabilityTracker traceability;
   llvm::DenseMap<mlir::Value, std::string> valueNames;
@@ -189,6 +191,21 @@ private:
   std::map<std::string, std::vector<std::string>> vtableGlobalEntries_;
   // rec_class_name → (vtable_sym_name, address_point_offset)
   std::map<std::string, std::pair<std::string, int>> recToVtableOffset_;
+
+  // Exception handling: set if any cir.try / cir.throw / cir.try_call /
+  // cir.eh.* op was seen in the module.  Drives emission of the EH state
+  // preamble (`__cir_exc_*` globals + per-type-info string literals).
+  bool hasExceptions_ = false;
+  // Set of RTTI symbols referenced from throws and catches.  We emit one
+  // distinct `static const char __cir_eh_type_<sym>[]` per symbol so the
+  // generated C can compare exception types by address.
+  std::set<std::string> ehTypeSymbols_;
+  // Stack of landing-pad labels for the currently open structured cir.try
+  // bodies (innermost on top).  When a cir.throw fires inside a try body it
+  // jumps to the top-of-stack label instead of returning, so the enclosing
+  // try's dispatch can run.  Empty when no try is open in the current
+  // function; in that case throw / resume must propagate via return.
+  std::vector<std::string> tryLandingPadStack_;
 
 public:
   /// Get or create a label name for a block.
@@ -246,6 +263,32 @@ public:
   void setVirtualFnLabel(mlir::Value v, const std::string &label);
   /// Return the label for a virtual fn-ptr value, or "" if unknown.
   std::string getVirtualFnLabel(mlir::Value v) const;
+
+  // ── Exception handling helpers ─────────────────────────────────────────
+  /// Record that the module uses exception handling.
+  void setHasExceptions() { hasExceptions_ = true; }
+  /// True if any EH op was registered for this module.
+  bool hasExceptions() const { return hasExceptions_; }
+  /// Register an RTTI symbol referenced by a throw or catch handler.
+  void registerEhTypeSymbol(const std::string &sym) {
+    if (!sym.empty()) ehTypeSymbols_.insert(sym);
+    hasExceptions_ = true;
+  }
+  /// The set of RTTI symbols that need per-type address tags emitted.
+  const std::set<std::string> &getEhTypeSymbols() const { return ehTypeSymbols_; }
+  /// Push a landing-pad label for the currently-open structured cir.try body.
+  void pushTryLandingPad(const std::string &label) {
+    tryLandingPadStack_.push_back(label);
+  }
+  /// Pop the innermost landing-pad label.
+  void popTryLandingPad() {
+    if (!tryLandingPadStack_.empty()) tryLandingPadStack_.pop_back();
+  }
+  /// Return the innermost landing-pad label, or empty string if none.
+  const std::string &currentTryLandingPad() const {
+    static const std::string empty;
+    return tryLandingPadStack_.empty() ? empty : tryLandingPadStack_.back();
+  }
 
   /// Register vtable global entries (used during mapModule pre-scan).
   void registerVtableGlobalEntries(const std::string &vtable_sym,

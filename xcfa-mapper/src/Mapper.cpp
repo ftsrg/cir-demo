@@ -1254,9 +1254,70 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     for (auto &op : module.getOps()) scanOp(op);
   }
 
+  // Pre-scan: detect exception-handling ops and collect every RTTI symbol
+  // referenced by a throw, structured cir.try handler list, or
+  // cir.eh.dispatch catch list.  The collected symbols drive emission of
+  // per-type address tags in the EH preamble (one `static const char
+  // __cir_eh_type_<sym>[]` per symbol), and the presence of any EH op
+  // triggers emission of the exception state globals.
+  {
+    auto recordHandlerArray = [&](mlir::ArrayAttr arr) {
+      if (!arr) return;
+      for (auto attr : arr) {
+        if (auto gv = mlir::dyn_cast<cir::GlobalViewAttr>(attr))
+          registerEhTypeSymbol(gv.getSymbol().getValue().str());
+      }
+    };
+
+    std::function<void(mlir::Operation &)> ehScan;
+    ehScan = [&](mlir::Operation &op) {
+      if (auto tryOp = llvm::dyn_cast<cir::TryOp>(&op)) {
+        setHasExceptions();
+        recordHandlerArray(tryOp.getHandlerTypes());
+      } else if (auto throwOp = llvm::dyn_cast<cir::ThrowOp>(&op)) {
+        setHasExceptions();
+        if (auto ti = throwOp.getTypeInfoAttr())
+          registerEhTypeSymbol(ti.getValue().str());
+      } else if (auto dispOp = llvm::dyn_cast<cir::EhDispatchOp>(&op)) {
+        setHasExceptions();
+        recordHandlerArray(dispOp.getCatchTypesAttr());
+      } else if (llvm::isa<cir::TryCallOp, cir::EhInflightOp, cir::EhTypeIdOp,
+                           cir::EhInitiateOp, cir::EhTerminateOp,
+                           cir::BeginCatchOp, cir::EndCatchOp,
+                           cir::ResumeOp, cir::ResumeFlatOp,
+                           cir::CatchParamOp, cir::AllocExceptionOp>(op)) {
+        setHasExceptions();
+      }
+      for (auto &region : op.getRegions())
+        for (auto &block : region.getBlocks())
+          for (auto &nestedOp : block.getOperations())
+            ehScan(nestedOp);
+    };
+    for (auto &op : module.getOps()) ehScan(op);
+  }
+
   // SV-COMP preamble: emit extern declarations needed by the generated code.
   if (hasTrap_)
     out << "extern void abort(void);\n\n";
+
+  if (hasExceptions_ && !ehPreambleEmitted) {
+    out << "// Exception handling state (modelled in plain C)\n";
+    out << "static void *__cir_exc_ptr;\n";
+    out << "static const void *__cir_exc_type;\n";
+    out << "static unsigned __cir_exc_type_id;\n";
+    out << "static int __cir_exc_active;\n";
+    if (!ehTypeSymbols_.empty()) {
+      out << "// Per-RTTI address tags: each thrown/caught type symbol gets a\n"
+          << "// distinct storage location so catch dispatch is a pointer compare.\n";
+      for (const auto &sym : ehTypeSymbols_) {
+        std::string san = sanitizeIdentifier(sym);
+        out << "static const char __cir_eh_type_" << san
+            << "[] = \"" << sym << "\";\n";
+      }
+    }
+    out << "\n";
+    ehPreambleEmitted = true;
+  }
 
   if (!structsEmitted && !order.empty()) {
     // Emit one __VERIFIER_virtual_call_<suffix> declaration per needed return

@@ -58,6 +58,12 @@ private:
 // Helper functions
 // ============================================================================
 
+// Forward decl: defined below alongside the exception-handling section so the
+// EH state model lives in one place.  Earlier handlers (handleResumeFlat,
+// etc.) need it for emitting a function-level unwind return.
+static void emitExceptionReturn(mlir::Operation *op, Mapper &m,
+                                std::ostream &out);
+
 // Extract a name from various attributes (names, sym_names, name, etc.)
 std::string extractName(Operation *o, const std::string &fallback = "") {
   std::string varName;
@@ -810,19 +816,53 @@ static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
 }
 
 bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
-  return handleCallLikeOp(op.getOperation(), m, out);
+  Operation *o = op.getOperation();
+  if (!handleCallLikeOp(o, m, out)) return false;
+
+  // A regular cir.call without the `nothrow` attribute may have left an
+  // exception in flight in the callee.  C has no implicit unwind, so we
+  // model the unwind edge explicitly: if __cir_exc_active is set, either
+  // jump to the enclosing structured try's dispatch label (so its handlers
+  // run) or return from the current function, propagating the exception
+  // to the caller.  cir.try_call already has explicit successors for this
+  // and is handled separately.
+  if (!op.getNothrow()) {
+    m.setHasExceptions();
+    out << "  if (__cir_exc_active) ";
+    const std::string &pad = m.currentTryLandingPad();
+    if (!pad.empty()) {
+      out << "goto " << pad << ";\n";
+    } else {
+      auto func = o->getParentOfType<cir::FuncOp>();
+      mlir::Type rty = func ? func.getFunctionType().getReturnType()
+                            : mlir::Type();
+      if (!func || mlir::isa<mlir::NoneType>(rty) ||
+          mlir::isa<cir::VoidType>(rty)) {
+        out << "return;\n";
+      } else {
+        std::string ctype = m.mapTypeToC(rty);
+        out << "{ " << ctype << " __cir_eh_ret = (" << ctype
+            << ")0; return __cir_eh_ret; }\n";
+      }
+    }
+  }
+  return true;
 }
 
 bool handleTryCall(cir::TryCallOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (!handleCallLikeOp(o, m, out)) return false;
+  m.setHasExceptions();
 
   // cir.try_call is a terminator with two successors: normal and unwind.
-  // We model exceptions as non-throwing, so always branch to the normal dest.
-  if (o->getNumSuccessors() > 0) {
-    mlir::Block *normal = o->getSuccessor(0);
-    std::string lbl = m.getOrCreateLabel(normal);
-    out << "  goto " << lbl << ";\n";
+  // Branch to unwind when the callee left an exception in flight.
+  if (o->getNumSuccessors() >= 2) {
+    mlir::Block *normal = op.getNormalDest();
+    mlir::Block *unwind = op.getUnwindDest();
+    out << "  if (__cir_exc_active) goto " << m.getOrCreateLabel(unwind)
+        << "; else goto " << m.getOrCreateLabel(normal) << ";\n";
+  } else if (o->getNumSuccessors() == 1) {
+    out << "  goto " << m.getOrCreateLabel(o->getSuccessor(0)) << ";\n";
   }
   return true;
 }
@@ -1356,42 +1396,127 @@ bool handleCondition(cir::ConditionOp op, Mapper &m, std::ostream &out) {
 // Structured exception handling: try
 // ============================================================================
 
-// cir.try: emit the try body region normally, then emit each handler region
-// (catch / unwind) as dead code wrapped in `if (0) { ... }`. Throws and the
-// unwind path of cir.try_call are both modelled as unreachable (see
-// handleThrow / handleTryCall), so no handler can execute at runtime; the
-// `if (0)` wrapper keeps the catch logic visible in the C output (and uses
-// the catch-parameter alloca that would otherwise be unused) while ensuring
-// downstream tooling sees it as unreachable.
+// cir.try: emit the try body region, then dispatch to one of the handler
+// regions based on the in-flight exception type.  handler_types is a list
+// parallel to handler_regions; each entry is one of
+//   - #cir.global_view<@RTTI_sym>  (typed catch)
+//   - #cir.all                     (catch-all)
+//   - #cir.unwind                  (unwind continuation, re-raises)
+// Typed handlers run when __cir_exc_type matches; the catch-all runs as a
+// fallback; the unwind handler re-asserts active and returns from the
+// enclosing function so the exception propagates to the caller.
 bool handleTry(cir::TryOp op, Mapper &m, std::ostream &out) {
-  if (!emitRegionBody(op.getTryRegion(), m, out)) return false;
-  for (Region &handler : op.getHandlerRegions()) {
+  m.setHasExceptions();
+
+  // Push a landing-pad label so that any cir.throw inside the body jumps
+  // here instead of returning straight out of the function.  The label is
+  // emitted at the end of the body, right before the dispatch chain.
+  std::string padLabel = m.freshName("cir_try_dispatch");
+  m.pushTryLandingPad(padLabel);
+  bool bodyOk = emitRegionBody(op.getTryRegion(), m, out);
+  m.popTryLandingPad();
+  if (!bodyOk) return false;
+
+  out << "  " << padLabel << ": ;\n";
+
+  auto handlerRegions = op.getHandlerRegions();
+  mlir::ArrayAttr handlerTypes = op.getHandlerTypes();
+  if (handlerRegions.empty()) return true;
+
+  out << "  if (__cir_exc_active) {\n";
+
+  // Classify each handler and chain them as if / else if / else so that
+  // only the first matching catch executes, mirroring C++ catch semantics.
+  enum class Kind { Typed, CatchAll, Unwind };
+  bool firstClause = true;
+  bool sawTerminalClause = false; // catch-all or unwind reached
+  for (unsigned i = 0; i < handlerRegions.size(); ++i) {
+    Region &handler = handlerRegions[i];
     if (handler.empty()) continue;
-    out << "  if (0) {\n";
-    if (!emitRegionBody(handler, m, out)) return false;
+    if (sawTerminalClause) break;
+
+    Kind kind = Kind::CatchAll;
+    std::string typeSym;
+    if (handlerTypes && i < handlerTypes.size()) {
+      auto attr = handlerTypes[i];
+      if (auto gv = mlir::dyn_cast<cir::GlobalViewAttr>(attr)) {
+        kind = Kind::Typed;
+        typeSym = gv.getSymbol().getValue().str();
+        m.registerEhTypeSymbol(typeSym);
+      } else if (mlir::isa<cir::UnwindAttr>(attr)) {
+        kind = Kind::Unwind;
+      } else {
+        // CatchAllAttr or anything we don't recognise: treat as catch-all.
+        kind = Kind::CatchAll;
+      }
+    }
+
+    const char *keyword = firstClause ? "if" : "else if";
+    const char *elseKeyword = firstClause ? "" : "else ";
+    firstClause = false;
+
+    if (kind == Kind::Typed) {
+      std::string san = Mapper::sanitizeIdentifier(typeSym);
+      out << "  " << keyword << " (__cir_exc_type == (const void*)__cir_eh_type_"
+          << san << ") {\n";
+      if (!emitRegionBody(handler, m, out)) return false;
+      out << "  }\n";
+    } else if (kind == Kind::CatchAll) {
+      out << "  " << elseKeyword << "{\n";
+      if (!emitRegionBody(handler, m, out)) return false;
+      out << "  }\n";
+      sawTerminalClause = true;
+    } else { // Unwind
+      out << "  " << elseKeyword << "{\n";
+      if (!emitRegionBody(handler, m, out)) return false;
+      // Re-raise to the enclosing try (or, if none, the caller).  Pad has
+      // already been popped above, so emitExceptionReturn looks at any
+      // outer try or the function-level return.
+      emitExceptionReturn(op.getOperation(), m, out);
+      out << "  }\n";
+      sawTerminalClause = true;
+    }
+  }
+
+  // If no catch-all / unwind clause was emitted and the exception was not
+  // matched, keep it in flight and propagate it.
+  if (!sawTerminalClause) {
+    out << "  else {\n";
+    emitExceptionReturn(op.getOperation(), m, out);
     out << "  }\n";
   }
+
+  out << "  }\n";
   return true;
 }
 
 // cir.catch_param: appears inside a cir.try handler region (HasParent<TryOp>)
-// to retrieve the in-flight exception object. We don't model exceptions and
-// the enclosing handler is emitted as dead code, so bind the result to a
-// null pointer of the right C type.
+// to retrieve the in-flight exception object.  Cast the global exception
+// pointer to the requested type, and mark the exception as caught.
 bool handleCatchParam(cir::CatchParamOp op, Mapper &m, std::ostream &out) {
-  if (op->getNumResults() < 1) return true;
+  m.setHasExceptions();
+  if (op->getNumResults() < 1) {
+    // Bare `cir.catch_param` (no result): still clear the active flag so
+    // the handler runs without re-tripping the dispatch.
+    out << "  __cir_exc_active = 0;\n";
+    return true;
+  }
   std::string ctype = m.mapTypeToC(op->getResult(0).getType());
   std::string tmp = m.freshName("cp_exn");
-  out << "  " << ctype << " " << tmp << " = (" << ctype << ")0;\n";
+  out << "  " << ctype << " " << tmp << " = (" << ctype
+      << ")__cir_exc_ptr;\n";
+  out << "  __cir_exc_active = 0;\n";
   m.setName(op->getResult(0), tmp);
   return true;
 }
 
 // cir.resume.flat: post-CFG-flattening form of cir.resume that propagates an
-// uncaught exception to the caller. Treated as unreachable, mirroring
-// handleResume.
+// uncaught exception to the caller.  Re-raise by keeping __cir_exc_active
+// set and returning from the current function.
 bool handleResumeFlat(cir::ResumeFlatOp op, Mapper &m, std::ostream &out) {
-  out << "  __builtin_unreachable();\n";
+  m.setHasExceptions();
+  out << "  __cir_exc_active = 1;\n";
+  emitExceptionReturn(op.getOperation(), m, out);
   return true;
 }
 
@@ -2041,36 +2166,103 @@ bool handleIsConstant(cir::IsConstantOp op, Mapper &m, std::ostream &out) {
 }
 
 // ============================================================================
-// Exception-handling no-ops
+// Exception handling
 // ============================================================================
 //
-// We do not model C++ exceptions: cir.try_call always continues at the normal
-// destination (see handleTryCall).  The unwind-side blocks remain in the CFG
-// but are unreachable at runtime.  We still must emit *valid* C for them, so
-// every EH op gets a stub: result-producing ops assign a dummy value to the
-// result name and terminators emit `goto` to their default successor (or
-// `abort();` when there is none).
+// C++ exceptions are modelled in plain C through a small set of file-scope
+// globals declared by Mapper::mapModule when any EH op is present:
+//
+//   static void       *__cir_exc_ptr;       // in-flight exception object
+//   static const void *__cir_exc_type;      // RTTI tag address (see below)
+//   static unsigned    __cir_exc_type_id;   // numeric tag (address-as-int)
+//   static int         __cir_exc_active;    // 1 while an exception is in flight
+//
+// Each RTTI symbol referenced from a throw or catch list gets a distinct
+// `static const char __cir_eh_type_<sanitized_sym>[]` so that comparing
+// exception types reduces to a pointer comparison.
+//
+// Control-flow rules implemented by the handlers below:
+//   * cir.throw  — store ptr/type into the globals, set active, return from
+//                  the enclosing function with a default value.
+//   * cir.try_call — emit the call, then branch to the unwind successor when
+//                    __cir_exc_active is set, otherwise to the normal one.
+//   * cir.try   — emit the body, then if active, walk the handler list and
+//                 jump into the first matching one (a typed match clears
+//                 __cir_exc_active before running the handler).
+//   * cir.eh.dispatch — same idea but on flat CFGs, branching to one of the
+//                       successor blocks based on __cir_exc_type.
+//   * cir.catch_param / cir.begin_catch — bind the exception pointer to the
+//                                          handler's local and clear active.
+//   * cir.resume(.flat) — re-raise: keep active set and return.
 
+// Emit the C statement that hands control to whatever should run when the
+// current function is unwinding due to an exception.  If we are inside the
+// body of a structured cir.try, jump to that try's dispatch label so its
+// handlers run.  Otherwise return from the function with a default value of
+// the declared return type, propagating the exception to the caller.
+static void emitExceptionReturn(mlir::Operation *op, Mapper &m,
+                                std::ostream &out) {
+  const std::string &pad = m.currentTryLandingPad();
+  if (!pad.empty()) {
+    out << "  goto " << pad << ";\n";
+    return;
+  }
+  auto func = op->getParentOfType<cir::FuncOp>();
+  if (!func) {
+    out << "  return;\n";
+    return;
+  }
+  cir::FuncType fty = func.getFunctionType();
+  mlir::Type rty = fty.getReturnType();
+  if (mlir::isa<mlir::NoneType>(rty) || mlir::isa<cir::VoidType>(rty)) {
+    out << "  return;\n";
+    return;
+  }
+  std::string ctype = m.mapTypeToC(rty);
+  out << "  { " << ctype << " __cir_eh_ret = (" << ctype
+      << ")0; return __cir_eh_ret; }\n";
+}
+
+// cir.eh.inflight_exception is the first op in a try_call unwind block.
+// It produces the (exception_ptr, type_id) pair from the in-flight exception,
+// which we have stored in the global EH state.
 bool handleEhInflight(cir::EhInflightOp op, Mapper &m, std::ostream &out) {
+  m.setHasExceptions();
+  // Also register every type in the catch list so the type-tag globals exist
+  // before any compare against them.
+  if (auto types = op.getCatchTypeListAttr()) {
+    for (auto attr : types) {
+      if (auto sym = mlir::dyn_cast<mlir::FlatSymbolRefAttr>(attr))
+        m.registerEhTypeSymbol(sym.getValue().str());
+    }
+  }
   if (op->getNumResults() >= 1) {
     std::string p = m.freshName("exc_ptr");
-    out << "  void *" << p << " = 0;\n";
+    out << "  void *" << p << " = __cir_exc_ptr;\n";
     m.setName(op->getResult(0), p);
   }
   if (op->getNumResults() >= 2) {
     std::string t = m.freshName("exc_tid");
     std::string ctype = m.mapTypeToC(op->getResult(1).getType());
-    out << "  " << ctype << " " << t << " = 0;\n";
+    out << "  " << ctype << " " << t << " = (" << ctype
+        << ")__cir_exc_type_id;\n";
     m.setName(op->getResult(1), t);
   }
   return true;
 }
 
+// cir.eh.typeid maps a global RTTI symbol to the numeric tag we use for
+// dispatch (address of the per-symbol type tag, cast to the result int type).
 bool handleEhTypeId(cir::EhTypeIdOp op, Mapper &m, std::ostream &out) {
   if (op->getNumResults() < 1) return false;
+  m.setHasExceptions();
+  std::string sym = op.getTypeSym().str();
+  m.registerEhTypeSymbol(sym);
+  std::string san = Mapper::sanitizeIdentifier(sym);
   std::string ctype = m.mapTypeToC(op->getResult(0).getType());
   std::string tmp = m.freshName("type_id");
-  out << "  " << ctype << " " << tmp << " = 0;\n";
+  out << "  " << ctype << " " << tmp << " = (" << ctype
+      << ")(unsigned long)__cir_eh_type_" << san << ";\n";
   m.setName(op->getResult(0), tmp);
   return true;
 }
@@ -2089,8 +2281,13 @@ bool handleEhLongjmp(cir::EhLongjmpOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// cir.eh.initiate appears at the start of an unwind block in flattened CIR.
+// Its result is an opaque !cir.eh_token that downstream ops (begin_catch,
+// begin_cleanup, eh.dispatch) thread through.  Our model keeps the actual
+// exception state in globals, so the token only needs a placeholder name.
 bool handleEhInitiate(cir::EhInitiateOp op, Mapper &m, std::ostream &out) {
   if (op->getNumResults() < 1) return false;
+  m.setHasExceptions();
   std::string ctype = m.mapTypeToC(op->getResult(0).getType());
   std::string tmp = m.freshName("eh_tok");
   out << "  " << ctype << " " << tmp << " = 0;\n";
@@ -2098,27 +2295,71 @@ bool handleEhInitiate(cir::EhInitiateOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// cir.eh.terminate marks the end of the world: an exception was thrown
+// during cleanup unwinding, which std::terminate()s in C++.  abort() is the
+// closest C equivalent.
 bool handleEhTerminate(cir::EhTerminateOp op, Mapper &m, std::ostream &out) {
-  out << "  __builtin_unreachable();\n";
+  m.setHasExceptions();
+  out << "  abort();\n";
   return true;
 }
 
+// cir.eh.dispatch branches to one of its successor blocks based on the
+// type of the in-flight exception.  catch_types is a parallel array to
+// catch_destinations; the default_destination is taken when no typed entry
+// matches (either as catch-all when default_is_catch_all is set, or as
+// continued unwind).
 bool handleEhDispatch(cir::EhDispatchOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
+  m.setHasExceptions();
+
+  // Helper: forward the dispatch op's eh_token operand into a successor block
+  // that takes one block-arg (mirrors handleBr's phi forwarding).  The caller
+  // provides the indent prefix so the assignment lines up with surrounding
+  // statements.
+  auto forwardEhToken = [&](mlir::Block *succ, const char *indent) {
+    if (o->getNumOperands() > 0 && succ->getNumArguments() > 0) {
+      std::string blockArgName = m.getOrCreateName(succ->getArgument(0));
+      std::string branchArgName = m.getOrCreateName(o->getOperand(0));
+      out << indent << blockArgName << " = " << branchArgName << ";\n";
+    }
+  };
+
   if (o->getNumSuccessors() == 0) {
-    out << "  __builtin_unreachable();\n";
+    out << "  abort();\n";
     return true;
   }
-  mlir::Block *defaultSucc = o->getSuccessor(0);
-  // Forward the eh_token operand to the default successor's first block arg,
-  // if any (mirrors handleBr's block-argument forwarding).
-  if (o->getNumOperands() > 0 && defaultSucc->getNumArguments() > 0) {
-    std::string blockArgName = m.getOrCreateName(defaultSucc->getArgument(0));
-    std::string branchArgName = m.getOrCreateName(o->getOperand(0));
-    out << "  " << blockArgName << " = " << branchArgName << ";\n";
+
+  mlir::ArrayAttr catchTypes = op.getCatchTypesAttr();
+  // catch_destinations are successors 1..N; the default is successor 0.
+  mlir::SuccessorRange catchDests = op.getCatchDestinations();
+
+  unsigned typedCount = catchTypes ? catchTypes.size() : 0;
+  unsigned destCount = catchDests.size();
+  unsigned n = std::min(typedCount, destCount);
+
+  for (unsigned i = 0; i < n; ++i) {
+    auto attr = catchTypes[i];
+    auto gv = mlir::dyn_cast<cir::GlobalViewAttr>(attr);
+    if (!gv) continue; // catch_all / unwind are encoded by default_destination
+    std::string sym = gv.getSymbol().getValue().str();
+    m.registerEhTypeSymbol(sym);
+    std::string san = Mapper::sanitizeIdentifier(sym);
+    mlir::Block *succ = catchDests[i];
+    std::string lbl = m.getOrCreateLabel(succ);
+    out << "  if (__cir_exc_type == (const void*)__cir_eh_type_" << san
+        << ") {\n";
+    forwardEhToken(succ, "    ");
+    out << "    goto " << lbl << ";\n";
+    out << "  }\n";
   }
-  std::string lbl = m.getOrCreateLabel(defaultSucc);
-  out << "  goto " << lbl << ";\n";
+
+  mlir::Block *defaultSucc = op.getDefaultDestination();
+  // Whether catch-all or continued unwind, we drop into the default block.
+  // For catch-all the handler will clear __cir_exc_active; for the unwind
+  // path the exception stays in flight and is resumed.
+  forwardEhToken(defaultSucc, "  ");
+  out << "  goto " << m.getOrCreateLabel(defaultSucc) << ";\n";
   return true;
 }
 
@@ -2135,7 +2376,13 @@ bool handleEndCleanup(cir::EndCleanupOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// cir.begin_catch starts a catch handler.  It returns a catch-token (opaque
+// in our model) and a pointer to the caught exception object, which we
+// produce by casting the global __cir_exc_ptr to the result pointer type.
+// Entering a catch means the exception has been caught: clear the active
+// flag so subsequent calls don't see it as still-in-flight.
 bool handleBeginCatch(cir::BeginCatchOp op, Mapper &m, std::ostream &out) {
+  m.setHasExceptions();
   if (op->getNumResults() >= 1) {
     std::string ctype = m.mapTypeToC(op->getResult(0).getType());
     std::string t = m.freshName("ca_tok");
@@ -2145,29 +2392,64 @@ bool handleBeginCatch(cir::BeginCatchOp op, Mapper &m, std::ostream &out) {
   if (op->getNumResults() >= 2) {
     std::string ctype = m.mapTypeToC(op->getResult(1).getType());
     std::string p = m.freshName("ca_exn");
-    out << "  " << ctype << " " << p << " = (" << ctype << ")0;\n";
+    out << "  " << ctype << " " << p << " = (" << ctype
+        << ")__cir_exc_ptr;\n";
     m.setName(op->getResult(1), p);
   }
+  out << "  __cir_exc_active = 0;\n";
   return true;
 }
 
+// cir.end_catch closes a catch handler.  In our model the catch entry has
+// already cleared __cir_exc_active; nothing more to do here.
 bool handleEndCatch(cir::EndCatchOp op, Mapper &m, std::ostream &out) {
+  m.setHasExceptions();
   return true;
 }
 
-// cir.throw is not a terminator but transfers control out of the block via
-// the EH unwind path. Because we don't model exceptions, the path that
-// reaches a throw is unreachable in our generated C; emit a hint so the
-// compiler can prune any code that follows.
+// cir.throw stores the in-flight exception in the global EH state and then
+// transfers control out of the current function by returning.  The enclosing
+// cir.try (or a caller's cir.try_call) is responsible for checking
+// __cir_exc_active to dispatch the matching handler.  Both the typed-throw
+// (`cir.throw %ptr, @rtti[, @dtor]`) and the bare rethrow form
+// (`cir.throw`) are supported -- the latter leaves the EH state untouched
+// and merely re-asserts that the exception is in flight.
 bool handleThrow(cir::ThrowOp op, Mapper &m, std::ostream &out) {
-  out << "  __builtin_unreachable();\n";
+  m.setHasExceptions();
+
+  if (!op.rethrows()) {
+    if (op.getExceptionPtr()) {
+      std::string excName = m.getOrCreateName(op.getExceptionPtr());
+      out << "  __cir_exc_ptr = (void*)" << excName << ";\n";
+    } else {
+      out << "  __cir_exc_ptr = (void*)0;\n";
+    }
+    if (auto ti = op.getTypeInfoAttr()) {
+      std::string sym = ti.getValue().str();
+      m.registerEhTypeSymbol(sym);
+      std::string san = Mapper::sanitizeIdentifier(sym);
+      out << "  __cir_exc_type = (const void*)__cir_eh_type_" << san << ";\n";
+      out << "  __cir_exc_type_id = (unsigned)(unsigned long)__cir_eh_type_"
+          << san << ";\n";
+    } else {
+      // Untyped throw: clear the type tag so dispatch falls through to
+      // catch-all handlers only.
+      out << "  __cir_exc_type = (const void*)0;\n";
+      out << "  __cir_exc_type_id = 0;\n";
+    }
+  }
+  out << "  __cir_exc_active = 1;\n";
+  emitExceptionReturn(op.getOperation(), m, out);
   return true;
 }
 
-// cir.resume continues unwinding when no catch matches. After CFG flattening
-// it is a function-level terminator; we treat its block as unreachable.
+// cir.resume continues unwinding when no catch matches.  The exception
+// remains in flight (__cir_exc_active stays set); we propagate it to the
+// caller by returning from the current function with a default value.
 bool handleResume(cir::ResumeOp op, Mapper &m, std::ostream &out) {
-  out << "  __builtin_unreachable();\n";
+  m.setHasExceptions();
+  out << "  __cir_exc_active = 1;\n";
+  emitExceptionReturn(op.getOperation(), m, out);
   return true;
 }
 
