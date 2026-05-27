@@ -15,6 +15,7 @@
  */
 
 #include "Mapper.h"
+#include "VtableLayoutParser.h"
 
 #include <mlir/IR/Block.h>
 #include <mlir/IR/Operation.h>
@@ -177,19 +178,20 @@ void Mapper::computeTraceLineMappings(llvm::StringRef mlirText, llvm::StringRef 
 
 void Mapper::prepareFunctionNames(mlir::ModuleOp module) {
   functionOutputNames.clear();
-  // Collect candidate pairs (mangled -> demangled-sanitized)
+  // Collect candidate pairs (mangled -> demangled-sanitized).
+  // Walk recursively so that nested modules (e.g. the named inner module
+  // wrapping the actual translation unit) are also scanned.
   std::vector<std::pair<std::string,std::string>> list;
-  for (auto &op : module.getOps()) {
-    if (llvm::isa<cir::FuncOp>(op)) {
-      if (auto sym = op.getAttrOfType<mlir::StringAttr>(mlir::SymbolTable::getSymbolAttrName())) {
-        std::string mangled = sym.getValue().str();
-        std::string dem = demangleSymbol(mangled);
-        dem = stripEmptyArgList(dem);
-        std::string san = mangleLabel(dem);
-        list.emplace_back(mangled, san);
-      }
+  module.walk([&](cir::FuncOp funcOp) {
+    if (auto sym = funcOp->getAttrOfType<mlir::StringAttr>(
+            mlir::SymbolTable::getSymbolAttrName())) {
+      std::string mangled = sym.getValue().str();
+      std::string dem = demangleSymbol(mangled);
+      dem = stripEmptyArgList(dem);
+      std::string san = mangleLabel(dem);
+      list.emplace_back(mangled, san);
     }
-  }
+  });
   // Count usages of each demangled/sanitized name
   std::unordered_map<std::string,int> counts;
   for (auto &p : list) counts[p.second]++;
@@ -647,44 +649,45 @@ std::string Mapper::getVirtualFnLabel(mlir::Value v) const {
   return it != virtualFnLabels_.end() ? it->second : "";
 }
 
-void Mapper::registerVtableGlobalEntries(const std::string &vtable_sym,
-                                          std::vector<std::string> entries) {
-  vtableGlobalEntries_[vtable_sym] = std::move(entries);
+bool Mapper::loadVtableLayoutDump(const std::string &filename) {
+  return parseVtableLayoutDump(filename, vtableIndexMap_, classHierarchy_);
 }
 
-void Mapper::registerRecVtableOffset(const std::string &rec_name,
-                                      const std::string &vtable_sym, int offset) {
-  recToVtableOffset_[rec_name] = {vtable_sym, offset};
-}
-
-std::string Mapper::lookupVirtualFnName(const std::string &rec_name, int slot) const {
-  auto checkEntry = [](const std::string &e) -> bool {
-    // A "real" function entry is non-empty, not a pure-virtual ABI marker,
-    // and not a type_info symbol (which starts with _ZTI).
-    return !e.empty() && e != "__cxa_pure_virtual" && e.rfind("_ZTI", 0) != 0;
-  };
-
-  auto rit = recToVtableOffset_.find(rec_name);
-  if (rit != recToVtableOffset_.end()) {
-    const auto &[sym, offset] = rit->second;
-    auto vit = vtableGlobalEntries_.find(sym);
-    if (vit != vtableGlobalEntries_.end()) {
-      int idx = offset + slot;
-      if (idx >= 0 && idx < static_cast<int>(vit->second.size())) {
-        const std::string &entry = vit->second[idx];
-        if (checkEntry(entry)) return demangleSymbol(entry);
-      }
+/// Strip the class-qualifier prefix (everything up to and including the last
+/// "::" at template-nesting depth 0) from a vtable-dump label.
+/// "Base::f2()"  -> "f2()"
+/// "A::B::method(int)" -> "method(int)"
+/// "Base::~Base()" -> "~Base()"
+static std::string stripClassQualifier(const std::string &label) {
+  int depth = 0;
+  size_t lastColonColon = std::string::npos;
+  for (size_t i = 0; i + 1 < label.size(); ++i) {
+    char c = label[i];
+    if (c == '<') { ++depth; continue; }
+    if (c == '>') { if (depth > 0) --depth; continue; }
+    if (depth > 0) continue;
+    if (c == ':' && label[i + 1] == ':') {
+      lastColonColon = i;
+      ++i; // skip the second ':'
     }
   }
-  // Fallback: search all known vtables for a real function at the same
-  // absolute slot (standard Itanium offset = 2).  This handles the case
-  // where the static class has a pure-virtual slot.
-  int absIdx = 2 + slot;
-  for (const auto &[sym, entries] : vtableGlobalEntries_) {
-    if (absIdx >= 0 && absIdx < static_cast<int>(entries.size()))
-      if (checkEntry(entries[absIdx]))
-        return demangleSymbol(entries[absIdx]);
+  if (lastColonColon == std::string::npos) return label;
+  return label.substr(lastColonColon + 2);
+}
+
+std::string Mapper::getVtableSlotLabel(const std::string &rec_name, int slot) const {
+  auto it = vtableIndexMap_.find(rec_name);
+  if (it != vtableIndexMap_.end()) {
+    if (slot >= 0 && slot < static_cast<int>(it->second.size())) {
+      const std::string &qualified = it->second[slot];
+      if (!qualified.empty())
+        return stripClassQualifier(qualified);
+    }
   }
+  llvm::errs() << "xcfa-mapper: error: no vtable layout data for '" << rec_name
+               << "' slot " << slot << ".\n"
+               << "  Run clang++ with -Xclang -fdump-vtable-layouts and pass "
+                  "the output to xcfa-mapper --vtlayout.\n";
   return "";
 }
 
@@ -1147,86 +1150,6 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // Append any leftovers (cycles/self-deps) deterministically
   for (auto &s : remaining) order.push_back(s);
 
-  // Pre-scan 1: build vtableGlobalEntries_ — parse each #cir.vtable<{...}>
-  // global to extract the function names stored in each slot.
-  // Pre-scan 2: build recToVtableOffset_ — for each constructor function,
-  // see which vtable.address_point (vtable sym + offset) and which
-  // vtable.get_vptr (rec class name) co-occur to associate class → vtable.
-  {
-    // Parse vtable globals using the typed attribute API -- no text manipulation.
-    for (auto &op : module.getOps()) {
-      auto globalOp = llvm::dyn_cast<cir::GlobalOp>(&op);
-      if (!globalOp) continue;
-      auto initVal = globalOp.getInitialValue();
-      if (!initVal) continue;
-      auto vtableAttr = mlir::dyn_cast<cir::VTableAttr>(*initVal);
-      if (!vtableAttr) continue;
-      auto symAttr = op.getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
-      if (!symAttr) continue;
-      std::string sym = symAttr.getValue().str();
-      std::vector<std::string> entries;
-      // getData() returns ArrayAttr; each element is a ConstArrayAttr (one component per vtable).
-      for (auto component : vtableAttr.getData()) {
-        auto constArr = mlir::dyn_cast<cir::ConstArrayAttr>(component);
-        if (!constArr) continue;
-        auto elts = mlir::dyn_cast<mlir::ArrayAttr>(constArr.getElts());
-        if (!elts) continue;
-        for (auto elt : elts) {
-          if (auto gvAttr = mlir::dyn_cast<cir::GlobalViewAttr>(elt)) {
-            entries.push_back(gvAttr.getSymbol().getValue().str());
-          } else {
-            entries.push_back(""); // null slot or other non-function entry
-          }
-        }
-      }
-      registerVtableGlobalEntries(sym, std::move(entries));
-    }
-
-    // Scan function bodies to pair vtable.address_point with vtable.get_vptr.
-    std::function<void(mlir::Operation &, std::string &, int &)> scanForVtableInit;
-    scanForVtableInit = [&](mlir::Operation &op,
-                            std::string &lastVtableSym, int &lastOffset) {
-      if (auto apOp = llvm::dyn_cast<cir::VTableAddrPointOp>(&op)) {
-        if (auto nameAttr = op.getAttrOfType<FlatSymbolRefAttr>("name"))
-          lastVtableSym = nameAttr.getValue().str();
-        // Use typed accessor -- no text manipulation required.
-        lastOffset = static_cast<int>(apOp.getAddressPoint().getOffset());
-      } else if (llvm::isa<cir::VTableGetVPtrOp>(op)) {
-        if (!lastVtableSym.empty() && op.getNumOperands() > 0) {
-          mlir::Type srcTy = op.getOperand(0).getType();
-          if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(srcTy)) {
-            if (auto recTy = mlir::dyn_cast<cir::RecordType>(ptrTy.getPointee())) {
-              if (recTy.getName()) {
-                std::string recName = recTy.getName().getValue().str();
-                // Only register if not already known (first constructor wins).
-                if (recToVtableOffset_.find(recName) == recToVtableOffset_.end())
-                  registerRecVtableOffset(recName, lastVtableSym, lastOffset);
-              }
-            }
-          }
-        }
-      }
-      for (auto &region : op.getRegions())
-        for (auto &block : region.getBlocks()) {
-          // Reset per-function when we descend into a new function body.
-          std::string localSym;
-          int localOffset = 2; // Itanium default
-          for (auto &nestedOp : block.getOperations())
-            scanForVtableInit(nestedOp, localSym, localOffset);
-        }
-    };
-    for (auto &op : module.getOps()) {
-      if (llvm::isa<cir::FuncOp>(op)) {
-        std::string sym;
-        int offset = 2;
-        for (auto &region : op.getRegions())
-          for (auto &block : region.getBlocks())
-            for (auto &nestedOp : block.getOperations())
-              scanForVtableInit(nestedOp, sym, offset);
-      }
-    }
-  }
-
   // Pre-scan: collect the C return types of all virtual calls so we can emit
   // one typed __VERIFIER_virtual_call_<suffix> declaration per distinct return
   // type.  We find these by inspecting the result type of every
@@ -1330,6 +1253,49 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
             << " __VERIFIER_virtual_call_" << suffix << "(void*, const char*, ...);\n";
       }
       out << "\n";
+    }
+
+    // Emit the virtual dispatch registry when vtable layout data was loaded.
+    // __vcall_registry: maps (slot_label, runtime_class) -> C function name.
+    // __vcall_hierarchy: maps each derived class to its direct base classes.
+    // Together these are the verifier's only source of dispatch/hierarchy info.
+    if (!vtableIndexMap_.empty()) {
+      // Build reverse map: demangled qualified name -> C output name.
+      // Example: "Derived::f2()" -> "Derived__f2"
+      std::map<std::string, std::string> qualifiedToCName;
+      for (const auto &kv : functionOutputNames) {
+        std::string dem = demangleSymbol(kv.first);
+        if (!dem.empty())
+          qualifiedToCName[dem] = kv.second;
+      }
+
+      out << "// Virtual dispatch registry -- generated by xcfa-mapper\n";
+      out << "// __vcall_registry rows: {slot_label, runtime_class, c_function}\n";
+      out << "// c_function is empty when the implementation is not in this TU.\n";
+      out << "typedef struct { const char* slot; const char* cls; const char* fn; } __vcall_row_t;\n";
+      out << "static __vcall_row_t __vcall_registry[] = {\n";
+      for (const auto &clsSlots : vtableIndexMap_) {
+        const std::string &cls = clsSlots.first;
+        for (const std::string &qualified : clsSlots.second) {
+          if (qualified.empty()) continue;
+          std::string slotLabel = stripClassQualifier(qualified);
+          std::string cFn;
+          auto it = qualifiedToCName.find(qualified);
+          if (it != qualifiedToCName.end())
+            cFn = it->second;
+          out << "    {\"" << slotLabel << "\", \"" << cls << "\", \"" << cFn << "\"},\n";
+        }
+      }
+      out << "    {0, 0, 0}\n};\n\n";
+
+      out << "// Class hierarchy -- {derived_class, direct_base_class}\n";
+      out << "static const char* __vcall_hierarchy[][2] = {\n";
+      for (const auto &kv : classHierarchy_) {
+        for (const std::string &parent : kv.second) {
+          out << "    {\"" << kv.first << "\", \"" << parent << "\"},\n";
+        }
+      }
+      out << "    {0, 0}\n};\n\n";
     }
 
     out << "// Struct definitions (auto-parsed)\n";

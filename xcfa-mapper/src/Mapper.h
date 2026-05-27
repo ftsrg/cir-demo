@@ -183,14 +183,20 @@ private:
   llvm::DenseSet<mlir::Value> virtualFnPtrSet;
   bool anyVirtualCalls_ = false;
   // Maps a virtual fn-ptr SSA value to a human-readable label that identifies
-  // which virtual function slot is being called (e.g. mangled fn name from the
-  // vtable, or a fallback "ClassName_virtual_N").
+  // which virtual function slot is being called (e.g. "ClassName::method(args)").
   llvm::DenseMap<mlir::Value, std::string> virtualFnLabels_;
-  // Vtable global entries: vtable_sym_name → list of entry names in order
-  // (empty string for null/type_info entries, mangled fn name otherwise).
-  std::map<std::string, std::vector<std::string>> vtableGlobalEntries_;
-  // rec_class_name → (vtable_sym_name, address_point_offset)
-  std::map<std::string, std::pair<std::string, int>> recToVtableOffset_;
+
+  // ── Vtable layout dump data (populated from --vtlayout file) ─────────────
+  // class_name → [slot0_label, slot1_label, ...]
+  // Labels are "ClassName::method(args)" matching __VERIFIER_virtual_call labels.
+  // TODO(multi-TU): currently populated from a single TU's layout dump; when
+  //   extending to multi-TU builds, all TU dumps must be merged before
+  //   populating this map.
+  std::map<std::string, std::vector<std::string>> vtableIndexMap_;
+
+  // class_name → [direct_base_class_names, ...]
+  // Derived from "-- (Base, offset) vtable address --" lines in the dump.
+  std::map<std::string, std::vector<std::string>> classHierarchy_;
 
   // Exception handling: set if any cir.try / cir.throw / cir.try_call /
   // cir.eh.* op was seen in the module.  Drives emission of the EH state
@@ -290,15 +296,15 @@ public:
     return tryLandingPadStack_.empty() ? empty : tryLandingPadStack_.back();
   }
 
-  /// Register vtable global entries (used during mapModule pre-scan).
-  void registerVtableGlobalEntries(const std::string &vtable_sym,
-                                    std::vector<std::string> entries);
-  /// Register the primary vtable and address_point offset for a CIR rec class.
-  void registerRecVtableOffset(const std::string &rec_name,
-                                const std::string &vtable_sym, int offset);
-  /// Look up the mangled function name for a given rec class and virtual slot.
-  /// Returns "" if the information is not available.
-  std::string lookupVirtualFnName(const std::string &rec_name, int slot) const;
+  /// Load the vtable layout dump produced by
+  /// `clang++ -Xclang -fdump-vtable-layouts`. Populates vtableIndexMap_ and
+  /// classHierarchy_. Returns false on error (diagnostic printed to stderr).
+  bool loadVtableLayoutDump(const std::string &filename);
+
+  /// Look up the correct __VERIFIER_virtual_call label for the given static
+  /// type name and virtual slot index. Uses vtableIndexMap_ when available;
+  /// falls back to a deterministic "RecName_virtual_N" label with a warning.
+  std::string getVtableSlotLabel(const std::string &rec_name, int slot) const;
 };
 
 } // namespace xcfa

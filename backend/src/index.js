@@ -229,6 +229,7 @@ app.post('/api/generate', async (req, res) => {
   // default but that verifiers can still meaningfully analyse.
   const clangIrArgs = [
     tmpFileCir, '-Xclang', '-emit-cir', '-S', '-o', cirMlirPath,
+    '-Xclang', '-fdump-vtable-layouts',
     '-Wno-error=int-conversion',
     '-Wno-error=incompatible-pointer-types',
     '-Wno-error=implicit-function-declaration',
@@ -245,6 +246,13 @@ app.post('/api/generate', async (req, res) => {
     ]);
 
     let flatOut = { stdout: '', stderr: '', code: 0 };
+
+    // Save the vtable layout dump (from clang stdout via -fdump-vtable-layouts)
+    // BEFORE we overwrite clangOut.stdout with the CIR file content below.
+    const vtlayoutPath = path.join(tmpDir, `${base}.vtlayout.txt`);
+    const vtlayoutText = (clangOut && clangOut.stdout) ? clangOut.stdout : '';
+    await fs.writeFile(vtlayoutPath, vtlayoutText, 'utf8').catch(() => {});
+    filesToCleanup.push(vtlayoutPath);
 
     // Read the generated CIR file. Keep a fallback probe for toolchains that ignore -o.
     const cirCandidates = [cirMlirPath, ...generatedMlirCandidates(tmpFileCir)];
@@ -314,7 +322,8 @@ app.post('/api/generate', async (req, res) => {
       const outTrace = path.join(tmpDir, `${base}.trace.json`);
       const outTraceBest = path.join(tmpDir, `${base}.best.trace.json`);
       // Run strict mapper
-      const mapStrict = await execFileAsync(xcfaMapperBin, ['--monitor-json', outTrace, mlirPath, outC]);
+      const strictArgs = ['--monitor-json', outTrace, '--vtlayout', vtlayoutPath, mlirPath, outC];
+      const mapStrict = await execFileAsync(xcfaMapperBin, strictArgs);
       cOutputs.c.code = (mapStrict && typeof mapStrict.code !== 'undefined') ? mapStrict.code : 1;
       cOutputs.c.stderr = (mapStrict && mapStrict.stderr) ? mapStrict.stderr : '';
       if (mapStrict && mapStrict.code === 0) {
@@ -328,7 +337,8 @@ app.post('/api/generate', async (req, res) => {
       } catch (_) {}
 
       // Run best-effort mapper
-      const mapBest = await execFileAsync(xcfaMapperBin, ['--best-effort', '--monitor-json', outTraceBest, mlirPath, outCBest]);
+      const bestArgs = ['--best-effort', '--monitor-json', outTraceBest, '--vtlayout', vtlayoutPath, mlirPath, outCBest];
+      const mapBest = await execFileAsync(xcfaMapperBin, bestArgs);
       cOutputs.c_best.code = (mapBest && typeof mapBest.code !== 'undefined') ? mapBest.code : 1;
       cOutputs.c_best.stderr = (mapBest && mapBest.stderr) ? mapBest.stderr : '';
       if (mapBest && mapBest.code === 0) {

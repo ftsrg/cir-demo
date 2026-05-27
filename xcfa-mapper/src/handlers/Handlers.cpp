@@ -1978,28 +1978,21 @@ bool handleVTableGetVirtualFnAddr(cir::VTableGetVirtualFnAddrOp op, Mapper &m, s
     // Determine a label for this virtual slot so handleCall can pass it as
     // the second argument to __VERIFIER_virtual_call_<type>.
     int slot = static_cast<int>(op.getIndex());
-    // Try to resolve to the mangled function name via the vtable pre-scan.
-    std::string label;
+    std::string rec_name;
     if (chainRoot) {
       mlir::Type objTy = chainRoot.getType();
       if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(objTy))
         if (auto recTy = mlir::dyn_cast<cir::RecordType>(ptrTy.getPointee()))
           if (recTy.getName())
-            label = m.lookupVirtualFnName(recTy.getName().getValue().str(), slot);
+            rec_name = recTy.getName().getValue().str();
     }
-    // Fallback: encode class name (if deduced) + slot index.
-    if (label.empty()) {
-      std::string className;
-      if (chainRoot) {
-        mlir::Type objTy = chainRoot.getType();
-        if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(objTy))
-          if (auto recTy = mlir::dyn_cast<cir::RecordType>(ptrTy.getPointee()))
-            if (recTy.getName())
-              className = recTy.getName().getValue().str();
-      }
-      label = (className.empty() ? "virtual" : className + "_virtual") +
-              "_" + std::to_string(slot);
+    if (rec_name.empty()) {
+      llvm::errs() << "xcfa-mapper: error: cannot determine static type for "
+                      "virtual call (slot " << slot << "); cannot emit label.\n";
+      return false;
     }
+    std::string label = m.getVtableSlotLabel(rec_name, slot);
+    if (label.empty()) return false; // error already printed by getVtableSlotLabel
     m.setVirtualFnLabel(result, label);
   }
   return true;
