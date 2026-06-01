@@ -129,27 +129,52 @@ bool emitRegionBody(Region &region, Mapper &m, std::ostream &out,
   if (terminatorKind) *terminatorKind = CaseTerminatorKind::Other;
   if (region.empty()) return true;
 
-  Block &block = region.front();
   std::ostringstream regionOut;
+  bool isFirstBlock = true;
 
-  for (Operation &nestedOp : block.getOperations()) {
-    if (auto yieldOp = llvm::dyn_cast<cir::YieldOp>(&nestedOp)) {
-      if (yieldedValues) {
-        yieldedValues->assign(yieldOp->operand_begin(), yieldOp->operand_end());
+  for (Block &block : region.getBlocks()) {
+    // Non-first blocks need a label so gotos from the first block can reach them.
+    if (!isFirstBlock) {
+      std::string lbl = Mapper::sanitizeIdentifier(m.getOrCreateLabel(&block));
+      regionOut << lbl << ":\n";
+    }
+    isFirstBlock = false;
+
+    bool yieldSeen = false;
+    Operation *lastOp = nullptr;
+    for (Operation &nestedOp : block.getOperations()) {
+      if (auto yieldOp = llvm::dyn_cast<cir::YieldOp>(&nestedOp)) {
+        if (yieldedValues) {
+          yieldedValues->assign(yieldOp->operand_begin(), yieldOp->operand_end());
+        }
+        if (terminatorKind) *terminatorKind = CaseTerminatorKind::Yield;
+        yieldSeen = true;
+        break;
       }
-      if (terminatorKind) *terminatorKind = CaseTerminatorKind::Yield;
-      break;
-    }
 
-    if (!m.mapOperation(&nestedOp, regionOut)) return false;
+      if (!m.mapOperation(&nestedOp, regionOut)) return false;
+      lastOp = &nestedOp;
 
-    // cir.break is a block terminator; after emitting it (handleBreak) there
-    // are no more ops — record the kind and stop the walk explicitly so that
-    // callers (e.g. handleSwitch) know not to emit a redundant "break;".
-    if (terminatorKind && llvm::isa<cir::BreakOp>(nestedOp)) {
-      *terminatorKind = CaseTerminatorKind::Break;
-      break;
+      // cir.break is a block terminator; after emitting it (handleBreak) there
+      // are no more ops — record the kind and stop the walk explicitly so that
+      // callers (e.g. handleSwitch) know not to emit a redundant "break;".
+      if (terminatorKind && llvm::isa<cir::BreakOp>(nestedOp)) {
+        *terminatorKind = CaseTerminatorKind::Break;
+        break;
+      }
     }
+    if (yieldSeen) break;
+
+    // If this block ended with a definitive region-exit op (goto, return,
+    // continue — NOT cir.br which is an intra-region branch), subsequent
+    // blocks are unreachable.  Stop iterating so their cir.yield does not
+    // incorrectly set termKind=Yield and trigger spurious cleanup emission.
+    if (lastOp && (llvm::isa<cir::GotoOp>(lastOp) ||
+                   llvm::isa<cir::ReturnOp>(lastOp) ||
+                   llvm::isa<cir::ContinueOp>(lastOp) ||
+                   llvm::isa<cir::UnreachableOp>(lastOp) ||
+                   llvm::isa<cir::TrapOp>(lastOp)))
+      break;
   }
 
   out << indentText(regionOut.str());
@@ -292,6 +317,31 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
       litVal = "((void*)0)"; // "NULL"; - NULL would need to be included
       break;
     }
+    // Struct/record constant (e.g. Itanium member-function-pointer {fnptr, adj})
+    if (auto cra = llvm::dyn_cast<cir::ConstRecordAttr>(a.getValue())) {
+      std::string init = "{";
+      bool firstMember = true;
+      for (mlir::Attribute member : cra.getMembers()) {
+        if (!firstMember) init += ", ";
+        firstMember = false;
+        if (auto ia = mlir::dyn_cast<cir::IntAttr>(member)) {
+          init += std::to_string(ia.getValue().getSExtValue());
+        } else if (auto za2 = mlir::dyn_cast<cir::ZeroAttr>(member)) {
+          init += "0";
+        } else if (auto gva2 = mlir::dyn_cast<cir::GlobalViewAttr>(member)) {
+          std::string rawSym = gva2.getSymbol().getValue().str();
+          // Member-function-pointer field0: function address encoded as ptrdiff_t.
+          // Use the demangled output name so it matches the emitted function definition.
+          std::string outSym = m.getFunctionOutputName(rawSym);
+          init += "(long long)&" + outSym;
+        } else {
+          init += "0"; // fallback for unknown member types
+        }
+      }
+      init += "}";
+      litVal = init;
+      break;
+    }
     if (auto gva = llvm::dyn_cast<cir::GlobalViewAttr>(a.getValue())) {
       std::string symbolName = Mapper::sanitizeIdentifier(gva.getSymbol().getValue().str());
       std::string expr = "&" + symbolName;
@@ -323,7 +373,12 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
       return false;
     }
     out << "  // " << ERR_CONSTANT_NO_LITERAL << "\n";
-    litVal = "0";
+    // Use aggregate initializer for struct/array types; plain 0 is not valid.
+    if (resultType &&
+        (mlir::isa<cir::RecordType>(resultType) || mlir::isa<cir::ArrayType>(resultType)))
+      litVal = "{0}";
+    else
+      litVal = "0";
   }
   
   std::string tmp = m.freshName("c");
@@ -652,6 +707,9 @@ bool handleCase(cir::CaseOp op, Mapper &m, std::ostream &out) {
 }
 
 bool handleGoto(cir::GotoOp op, Mapper &m, std::ostream &out) {
+  // Flush any pending cleanup scopes before jumping: a goto that exits a
+  // cir.cleanup.scope boundary must destroy the scoped objects first.
+  m.emitPendingCleanups(out, 0);
   out << "  goto " << op.getLabel().str() << ";\n";
   return true;
 }
@@ -797,23 +855,30 @@ static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
     std::string retType = "void";
     if (o->getNumResults() > 0)
       retType = m.mapTypeToC(o->getResult(0).getType());
-    // Build parameter types from the actual cir::FuncType of the callee.
+    // Build parameter types from the actual arguments passed, not from the
+    // function pointer's declared type.  For Itanium member-function-pointer
+    // dispatch, the declared type includes extra ABI parameters (e.g. the
+    // original class pointer) that are not actually passed at the call site.
+    // Using the operand types ensures the cast matches the actual call.
     std::string paramTypes;
+    bool firstParam = true;
+    bool isFuncVarArg = false;
     if (o->getNumOperands() > 0) {
+      // Check vararg flag from the callee's function type (still needed).
       Value fnPtrVal = o->getOperand(0);
       if (auto ptrTy = llvm::dyn_cast<cir::PointerType>(fnPtrVal.getType()))
-        if (auto funcTy = mlir::dyn_cast<cir::FuncType>(ptrTy.getPointee())) {
-          bool firstParam = true;
-          for (mlir::Type pt : funcTy.getInputs()) {
-            if (!firstParam) paramTypes += ", ";
-            firstParam = false;
-            paramTypes += m.mapTypeToC(pt);
-          }
-          if (funcTy.isVarArg()) {
-            if (!firstParam) paramTypes += ", ";
-            paramTypes += "...";
-          }
-        }
+        if (auto funcTy = mlir::dyn_cast<cir::FuncType>(ptrTy.getPointee()))
+          isFuncVarArg = funcTy.isVarArg();
+      // Arguments are operands 1..N (operand 0 is the callee).
+      for (unsigned i = 1; i < o->getNumOperands(); ++i) {
+        if (!firstParam) paramTypes += ", ";
+        firstParam = false;
+        paramTypes += m.mapTypeToC(o->getOperand(i).getType());
+      }
+    }
+    if (isFuncVarArg) {
+      if (!firstParam) paramTypes += ", ";
+      paramTypes += "...";
     }
     callExpr = "((" + retType + " (*)(" + paramTypes + "))" + outCallee + ")";
   } else {
@@ -1354,9 +1419,14 @@ bool handleCleanupScope(cir::CleanupScopeOp op, Mapper &m, std::ostream &out) {
   if (cleanupRegion && !cleanupRegion->empty())
     m.popCleanup();
 
-  // (a) Normal fall-through: emit the cleanup inline.
+  // (a) Normal fall-through: emit the cleanup inline, but only when:
+  //   - kind != EH  (EH cleanups run on exceptional exits only, not normal ones)
+  //   - not already consumed by an emitPendingCleanups call from a goto inside
+  //     the body (which would cause double-destruction if we also emit here)
   if (termKind == CaseTerminatorKind::Yield && cleanupRegion &&
-      !cleanupRegion->empty()) {
+      !cleanupRegion->empty() &&
+      op.getCleanupKind() != cir::CleanupKind::EH &&
+      !m.isCleanupConsumed(cleanupRegion)) {
     out << "  {\n";
     mlir::Block &block = cleanupRegion->front();
     std::ostringstream cleanupOut;
@@ -1693,7 +1763,12 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
   // For get_member, set the name mapping to the chained expression
   std::string expr;
   if (useArrow) {
-    expr = baseName + "->" + memberName;
+    // If baseName is already address-of (e.g. "&op"), wrap it so that -> binds
+    // to the struct value, not to the address: (&op)->field rather than &op->field.
+    if (!baseName.empty() && baseName[0] == '&')
+      expr = "(" + baseName + ")->" + memberName;
+    else
+      expr = baseName + "->" + memberName;
   } else {
     expr = baseName + "." + memberName;
   }
@@ -1701,6 +1776,18 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
     m.setName(o->getResult(0), expr);
     m.markAsDirectAccess(o->getResult(0));
   }
+  return true;
+}
+
+// cir.extract_member extracts the value of a field from a struct value
+// (not a pointer). Used e.g. for Itanium member-function-pointer fields.
+bool handleExtractMember(cir::ExtractMemberOp op, Mapper &m, std::ostream &out) {
+  std::string recName = m.getOrCreateName(op.getRecord());
+  uint64_t index = op.getIndex();
+  std::string tmp = m.freshName("v");
+  std::string ctype = m.mapTypeToC(op.getResult().getType());
+  out << "  " << ctype << " " << tmp << " = " << recName << ".__field" << index << ";\n";
+  m.setName(op.getResult(), tmp);
   return true;
 }
 
@@ -1718,10 +1805,9 @@ bool handleGetElement(cir::GetElementOp op, Mapper &m, std::ostream &out) {
   std::string expr = baseName + "[" + indexName + "]";
   if (o->getNumResults() > 0) {
     m.setName(o->getResult(0), expr);
-    // Mark the result as direct access if base is direct access (array element)
-    if (m.isDirectAccess(base)) {
-      m.markAsDirectAccess(o->getResult(0));
-    }
+    // get_element always produces base[index] which is the element lvalue;
+    // mark as direct access so load/store don't add an extra dereference.
+    m.markAsDirectAccess(o->getResult(0));
   }
   return true;
 }
@@ -2773,6 +2859,7 @@ void registerBuiltinHandlers(Mapper &m) {
   
   // Memory and pointer operations
   m.registerTypedHandler<cir::GetMemberOp>(handleGetMember);
+  m.registerTypedHandler<cir::ExtractMemberOp>(handleExtractMember);
   m.registerTypedHandler<cir::GetElementOp>(handleGetElement);
   m.registerTypedHandler<cir::PtrStrideOp>(handlePtrStride);
   m.registerTypedHandler<cir::PtrDiffOp>(handlePtrDiff);

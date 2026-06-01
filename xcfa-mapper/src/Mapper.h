@@ -165,6 +165,7 @@ private:
   // `extern void abort(void);` as per SV-COMP conventions.
   bool hasTrap_ = false;
   bool abortDeclEmitted_ = false;
+  bool stdintEmitted_ = false;
   // Alloca result Values that are accessed atomically / volatilely.
   llvm::DenseSet<mlir::Value> atomicAllocaValues_;
   llvm::DenseSet<mlir::Value> volatileAllocaValues_;
@@ -225,6 +226,10 @@ private:
     int loopDepth;         // loop nesting depth when this cleanup was pushed
   };
   std::vector<CleanupEntry> cleanupStack_;
+  // Cleanup regions that have already been emitted by emitPendingCleanups
+  // (e.g. from handleGoto).  handleCleanupScope checks this to avoid emitting
+  // the same destructor calls twice when a scope is exited via goto.
+  std::set<mlir::Region *> consumedCleanups_;
   // Current loop nesting depth (incremented on for/while/do entry, decremented
   // on exit).  Used to populate CleanupEntry::loopDepth.
   int loopDepth_ = 0;
@@ -334,6 +339,11 @@ public:
   /// handleBreak/handleContinue (fromDepth=loopDepth_ → only the cleanups
   /// inside the current loop iteration).
   void emitPendingCleanups(std::ostream &out, int fromDepth = 0);
+  /// Returns true if the given cleanup region was already emitted by a
+  /// previous emitPendingCleanups call (e.g. from handleGoto).
+  bool isCleanupConsumed(mlir::Region *r) const {
+    return consumedCleanups_.count(r) > 0;
+  }
   /// Returns the current loop nesting depth.
   int getLoopDepth() const { return loopDepth_; }
   /// Returns true when the cleanup stack is empty (no pending RAII dtors).

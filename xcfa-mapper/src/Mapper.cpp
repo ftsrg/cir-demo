@@ -194,6 +194,11 @@ void Mapper::emitPendingCleanups(std::ostream &out, int fromDepth) {
     if (cleanupStack_[i].loopDepth < fromDepth) break;
     mlir::Region *cleanupRegion = cleanupStack_[i].region;
     if (!cleanupRegion || cleanupRegion->empty()) continue;
+    // Skip cleanups already emitted by a previous emitPendingCleanups call
+    // (e.g. an earlier goto in the same scope).  Mark newly-emitted ones so
+    // handleCleanupScope won't emit them again on normal-yield exit.
+    if (consumedCleanups_.count(cleanupRegion)) continue;
+    consumedCleanups_.insert(cleanupRegion);
     out << "  {\n";
     // Walk the first (and only) block of the cleanup region, emitting all ops
     // except the trailing cir.yield.
@@ -491,6 +496,71 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
     params += "...";
   }
 
+  // Declaration-only operator new/delete: emit inline stubs that wrap
+  // malloc/free so the linker finds a definition.
+  if (outName.rfind("operator_new", 0) == 0) {
+    out << retType << " " << outName << "(" << params << ") { return malloc(p0); }\n";
+    return true;
+  }
+  if (outName.rfind("operator_delete", 0) == 0) {
+    out << retType << " " << outName << "(" << params << ") { free(p0); }\n";
+    return true;
+  }
+
+  // C1/D1 constructor/destructor variants: the complete-object variant (C1/D1)
+  // is often declaration-only when the base variant (C2/D2) has the body.
+  // Emit a delegation stub so the linker finds a definition.
+  {
+    std::string mangled = sym.getValue().str();
+    auto tryDelegate = [&](const std::string &pattern,
+                           const std::string &replacement) -> bool {
+      size_t pos = mangled.rfind(pattern);
+      if (pos == std::string::npos) return false;
+      std::string baseSym = mangled.substr(0, pos) + replacement +
+                            mangled.substr(pos + pattern.size());
+      auto mod = fop->getParentOfType<mlir::ModuleOp>();
+      if (!mod) return false;
+      for (auto &op2 : mod.getOps()) {
+        if (!llvm::isa<cir::FuncOp>(op2)) continue;
+        auto sym2 = op2.getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
+        if (!sym2 || sym2.getValue().str() != baseSym) continue;
+        if (op2.getNumRegions() == 0 || op2.getRegion(0).empty()) return false;
+        std::string baseName = getFunctionOutputName(baseSym);
+        // Build arg list p0, p1, ...
+        std::string args;
+        unsigned n = fty.getInputs().size();
+        for (unsigned i = 0; i < n; ++i) {
+          if (i) args += ", ";
+          args += "p" + std::to_string(i);
+        }
+        out << retType << " " << outName << "(" << params << ") { "
+            << baseName << "(" << args << "); }\n";
+        return true;
+      }
+      return false;
+    };
+    if (tryDelegate("C1E", "C2E")) return true;
+    if (tryDelegate("D1E", "D2E")) return true;
+    // D1/D2 destructor variants that are declaration-only in this module mean
+    // the destructor body lives in an external library (e.g. libstdc++) that
+    // we cannot link (we compile as plain C with -lm only).  Only emit a noop
+    // stub when the function truly has no body; functions WITH a body are
+    // emitted by mapFunc later and only need a forward declaration here.
+    bool hasBody = (fop->getNumRegions() > 0 && !fop->getRegion(0).empty());
+    if (!hasBody &&
+        (mangled.find("D1E") != std::string::npos ||
+         mangled.find("D2E") != std::string::npos)) {
+      out << retType << " " << outName << "(" << params << ") {}\n";
+      return true;
+    }
+  }
+
+  // _GLOBAL__sub_I_* functions are C++ global constructor trampolines placed
+  // in the .init_array section.  Tag them with __attribute__((constructor))
+  // so GCC invokes them before main() when we compile as plain C.
+  if (sym.getValue().str().rfind("_GLOBAL__sub_I_", 0) == 0)
+    out << "__attribute__((constructor)) ";
+
   out << retType << " " << outName << "(" << params << ");\n";
   return true;
 }
@@ -506,6 +576,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   // Reset per-function state so that stacks from a previous function do not
   // bleed into this one (should normally be empty, but guard defensively).
   cleanupStack_.clear();
+  consumedCleanups_.clear();
   loopDepth_ = 0;
   forStepLabelStack_.clear();
   tryLandingPadStack_.clear();
@@ -576,11 +647,27 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
     params += "...";
   }
   
-  out << retType << " " << outName << "(" << params << ")";
-  std::string funcHeaderText = retType + " " + outName + "(" + params + ")";
+  // Tag _GLOBAL__sub_I_* trampolines as constructor so they run before main.
+  std::string ctorAttr;
+  if (sym.getValue().str().rfind("_GLOBAL__sub_I_", 0) == 0)
+    ctorAttr = "__attribute__((constructor)) ";
+  out << ctorAttr << retType << " " << outName << "(" << params << ")";
+  std::string funcHeaderText = ctorAttr + retType + " " + outName + "(" + params + ")";
 
   // If there is no region/body then emit a declaration (prototype).
   if (fop->getNumRegions() == 0 || fop->getRegion(0).empty()) {
+    // For C++ operator new/delete, emit inline stubs that wrap malloc/free
+    // instead of bare declarations (which would be undefined at link time).
+    if (outName.rfind("operator_new", 0) == 0) {
+      out << " { return malloc(p0); }\n\n";
+      traceability.recordOperationTrace(fop->getName().getStringRef(), funcInputText, funcHeaderText + " { return malloc(p0); }\n", true);
+      return true;
+    }
+    if (outName.rfind("operator_delete", 0) == 0) {
+      out << " { free(p0); }\n\n";
+      traceability.recordOperationTrace(fop->getName().getStringRef(), funcInputText, funcHeaderText + " { free(p0); }\n", true);
+      return true;
+    }
     out << ";\n\n";
     traceability.recordOperationTrace(fop->getName().getStringRef(), funcInputText, funcHeaderText + ";\n", true);
     return true;
@@ -762,7 +849,21 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   
   // Sanitize the name to be a valid C identifier (replace dots, etc. with underscores)
   std::string name = recordCName(sym);
-  
+  std::string rawSym = sym.getValue().str();
+
+  // Suppress ABI-internal symbols that conflict with or are provided by the runtime.
+  if (rawSym == "__dso_handle") {
+    // __dso_handle is a linker-provided symbol (crtbeginS.o) used as a DSO
+    // cookie by __cxa_atexit(f, arg, &__dso_handle).
+    // CIR declares it as type i8 (a byte), so get_global yields !cir.ptr<i8>
+    // and the call argument is &__dso_handle (type int8_t*), matching the
+    // int8_t* parameter of __cxa_atexit.  Declare it as int8_t so the C
+    // compiler sees a complete type and &__dso_handle has the right type.
+    out << "extern int8_t __dso_handle;\n";
+    return true;
+  }
+  if (rawSym.rfind("_ZTV", 0) == 0) return true; // vtable — handled by __VERIFIER_virtual_call
+
   // Cast to GlobalOp to access getSymType()
   auto globalOp = mlir::cast<cir::GlobalOp>(gop);
   mlir::Type symType = globalOp.getSymType();
@@ -830,13 +931,27 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
         std::string bytes = strAttr.getValue().str();
         if (!bytes.empty() && bytes.back() == '\0') bytes.pop_back();
         initExpr = '"' + escapeCStringBytes(bytes) + '"';
+      } else if (auto arrAttr = mlir::dyn_cast<mlir::ArrayAttr>(constArr.getElts())) {
+        std::string braceInit = "{";
+        bool firstElem = true;
+        bool ok = true;
+        for (auto elemAttr : arrAttr.getValue()) {
+          if (!firstElem) braceInit += ", ";
+          firstElem = false;
+          if (auto intElem = mlir::dyn_cast<cir::IntAttr>(elemAttr)) {
+            braceInit += std::to_string(intElem.getValue().getSExtValue());
+          } else {
+            ok = false;
+            break;
+          }
+        }
+        if (ok) initExpr = braceInit + "}";
       }
     }
   }
 
   // Build qualifier prefix (_Atomic and/or volatile) based on access patterns
   // detected during the mapModule pre-scan.
-  std::string rawSym = sym.getValue().str();
   std::string qualPrefix;
   if (isAtomicGlobal(rawSym))   qualPrefix += "_Atomic ";
   if (isVolatileGlobal(rawSym)) qualPrefix += "volatile ";
@@ -848,11 +963,7 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
     std::string elemCType = mapTypeToC(elemType);
     out << qualPrefix << elemCType << " " << name << "[" << size << "]";
     if (!initExpr.empty()) {
-      // If string literal for char array
-      if (!elemCType.empty() && elemCType == "char" && initExpr.size() > 0 && initExpr.front()=='"') {
-        out << " = " << initExpr;        
-      }
-      // Could extend for brace-enclosed initializers later
+      out << " = " << initExpr;
     }
     out << ";\n";
     return true;
@@ -860,6 +971,28 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
 
   // Non-array types
   std::string ctype = mapTypeToC(symType);
+
+  // _ZTI* globals are RTTI type_info objects declared extern (no initializer).
+  // When emitted as zero-initialized pointers they compare equal (NULL==NULL).
+  // Instead emit a two-pointer struct acting as a std::type_info stub so that
+  // the __name field is distinct for each type and operator== returns false.
+  if (rawSym.rfind("_ZTI", 0) == 0 && initExpr.empty() &&
+      mlir::isa<cir::PointerType>(symType)) {
+    // _ZTI* symbols are Itanium-ABI RTTI type_info objects (used by typeid,
+    // dynamic_cast, and exception matching). The CIR type is ptr-to-u8i
+    // (extern pointer), but the actual object is a struct with at minimum two
+    // pointer-sized fields: [0] vptr (ignored for verification), [1] name ptr.
+    // We emit an array of two void* so that &name equals the struct address,
+    // matching what handleCast produces when it prepends & for directAccess
+    // pointer types.  A simple pointer variable would give &var = address of
+    // the 8-byte pointer slot, not the struct — wrong layout.
+    // This approximates __fundamental_type_info / __pointer_type_info layout;
+    // sufficient for verification since we never actually invoke RTTI methods.
+    out << "static const char " << name << "__n_[] = \"" << rawSym << "\";\n";
+    out << "static void* " << name << "[2] = {(void*)0, (void*)" << name << "__n_};\n";
+    return true;
+  }
+
   out << qualPrefix << ctype << " " << name;
   if (!initExpr.empty()) {
     out << " = " << initExpr;
@@ -941,8 +1074,17 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
     if (auto recordType = mlir::dyn_cast<cir::RecordType>(t)) {
       auto nameAttr = recordType.getName();
-      if (!nameAttr) return; // anonymous record without a tag - skip
+      // Anonymous records (member-function pointers, etc.) — register placeholder.
+      if (!nameAttr || nameAttr.getValue().empty()) {
+        (void)structFields["anon_struct"];
+        return;
+      }
       std::string recordName = recordCName(nameAttr);
+
+      // Cycle guard: if we already have a complete type recorded for this name,
+      // the field types have already been recursed; skip to avoid infinite loops.
+      auto it = knownRecordTypes.find(recordName);
+      bool alreadyComplete = (it != knownRecordTypes.end() && it->second.isComplete());
 
       // Keep an entry even if there are no discovered fields yet.
       (void)structFields[recordName];
@@ -951,9 +1093,14 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         isUnionContainer[recordName] = true;
       }
       // Store the most complete version seen; prefer complete over incomplete.
-      auto it = knownRecordTypes.find(recordName);
       if (it == knownRecordTypes.end() || (!it->second.isComplete() && recordType.isComplete())) {
         knownRecordTypes[recordName] = recordType;
+      }
+      // Recurse into field types on first encounter of a complete definition so
+      // transitively-referenced structs are collected (fixes ofstream_ctor).
+      if (!alreadyComplete && recordType.isComplete()) {
+        for (auto memberType : recordType.getMembers())
+          collectRecordTypesFromType(memberType);
       }
       return;
     }
@@ -1294,8 +1441,13 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     abortDeclEmitted_ = true;
   }
 
-  if (hasExceptions_ && !ehPreambleEmitted) {
+  if (!stdintEmitted_) {
     out << "#include <stdint.h>\n";
+    out << "#include <stdlib.h>\n";
+    stdintEmitted_ = true;
+  }
+
+  if (hasExceptions_ && !ehPreambleEmitted) {
     out << "// Exception handling state (modelled in plain C)\n";
     out << "static void *__cir_exc_ptr;\n";
     out << "static const void *__cir_exc_type;\n";
@@ -1374,6 +1526,16 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
     out << "// Struct definitions (auto-parsed)\n";
     for (auto &sname : order) {
+      // The C standard reserves all identifiers beginning with __ for the
+      // implementation.  System headers included transitively via <stdlib.h>
+      // (e.g. <bits/pthreadtypes.h>) already define these structs; emitting
+      // our own definition causes "redefinition of struct" errors.  Skip them
+      // and rely on the system headers to provide the definition.
+      // Alternative approaches (forward-decl only, explicit blocklist) are
+      // more fragile: forward decls fail when the struct is used by value,
+      // and a blocklist needs constant maintenance.
+      if (sname.rfind("__", 0) == 0) continue;
+
       bool isU = false;
       auto itk = isUnionContainer.find(sname);
       if (itk != isUnionContainer.end()) isU = itk->second;
@@ -1387,12 +1549,29 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       });
       if (vec.empty()) {
         // Keep records complete in C even when CIR does not expose fields.
-        // This avoids "incomplete type" errors for local object allocations.
-        out << "unsigned char __placeholder;";
+        if (sname == "anon_struct") {
+          // Itanium ABI member-function-pointer layout.  CIR represents both
+          // fields as !s64i (ptrdiff_t).  field0 = function ptr encoded as int
+          // (odd=virtual, even=direct); field1 = this-pointer adjustment.
+          out << "long long __field0; long long __field1;";
+        } else {
+          out << "unsigned char __placeholder;";
+        }
       }
       for (size_t i = 0; i < vec.size(); ++i) {
         const FieldInfo &fi = vec[i];
-        out << fi.baseType << " " << fi.name;
+        // For __-prefixed record types (which we don't emit our own definition
+        // for), use the typedef name without the 'struct'/'union' keyword.
+        // On Linux, all __-prefixed system record types are typedef'd for
+        // anonymous structs, so the unqualified name resolves to the typedef.
+        std::string fieldType = fi.baseType;
+        static const std::string structPfx = "struct __";
+        static const std::string unionPfx  = "union __";
+        if (fieldType.rfind(structPfx, 0) == 0)
+          fieldType = fieldType.substr(7); // drop "struct "
+        else if (fieldType.rfind(unionPfx, 0) == 0)
+          fieldType = fieldType.substr(6); // drop "union "
+        out << fieldType << " " << fi.name;
         if (fi.isArray) {
           for (auto &dim : fi.dims) out << "[" << dim << "]";
         }
