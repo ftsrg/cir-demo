@@ -41,35 +41,18 @@ CLANGPP="$PROJECT_DIR/../backend/bin/bin/clang++"
 CIR_OPT="$PROJECT_DIR/../backend/bin/bin/cir-opt"
 GCC="gcc"  # Use system gcc for compilation checks
 
-# Flags
-RUN_E2E=1
-for arg in "$@"; do
-    case "$arg" in
-        --no-e2e) RUN_E2E=0 ;;
-        *) echo "Unknown argument: $arg"; exit 1 ;;
-    esac
-done
-
 # Counters
 TOTAL_TESTS=0
 PASSED_TESTS=0
 FAILED_TESTS=0
 SKIPPED_TESTS=0
 
-# Separate counters for the non-flat path so we can report them without
-# polluting the existing flat-CIR totals while the non-flat support is
-# being implemented (tests-first).
-NONFLAT_TOTAL=0
-NONFLAT_PASSED=0
-NONFLAT_FAILED=0
-
 # Directories for E2E tests
-ESBMC_EVAL_DIR="$PROJECT_DIR/../backend/examples/esbmc-eval"
-ESBMC_EVAL_OUTPUT_DIR="$SCRIPT_DIR/esbmc-eval/output"
+LLVM_EVAL_DIR="$PROJECT_DIR/../backend/examples/llvm-test-suite-C++/"
+LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
 
 # Create output directory if it doesn't exist
 mkdir -p "$INTEGRATION_OUTPUT_DIR" "$UNIT_TEST_OUTPUT_DIR"
-
 echo "======================================"
 echo "  XCFA-Mapper Test Suite"
 echo "======================================"
@@ -126,13 +109,13 @@ for mlir_file in "$UNIT_TEST_DIR"/*.mlir; do
     if [ -f "$mlir_file" ]; then
         test_name=$(basename "$mlir_file" .mlir)
         TOTAL_TESTS=$((TOTAL_TESTS + 1))
-        
+
         echo -n "Testing $test_name... "
-        
+
         # Run xcfa-mapper on the MLIR file
         output_file="$UNIT_TEST_OUTPUT_DIR/${test_name}_output.c"
         log_file="$UNIT_TEST_OUTPUT_DIR/${test_name}_log.txt"
-        
+
         if ! "$XCFA_MAPPER" "$mlir_file" "$output_file" > "$log_file" 2>&1 || [ ! -f "$output_file" ]; then
             echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
@@ -141,7 +124,7 @@ for mlir_file in "$UNIT_TEST_DIR"/*.mlir; do
             echo ""
             continue
         fi
-        
+
         # Check if the generated C file compiles
         compile_log="$UNIT_TEST_OUTPUT_DIR/${test_name}_compile_log.txt"
         if ! "$GCC" -c -fsyntax-only "$output_file" > "$compile_log" 2>&1; then
@@ -152,7 +135,7 @@ for mlir_file in "$UNIT_TEST_DIR"/*.mlir; do
             echo ""
             continue
         fi
-        
+
         echo -e "${GREEN}PASSED${NC}"
         PASSED_TESTS=$((PASSED_TESTS + 1))
     fi
@@ -172,14 +155,13 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
     if [ -f "$c_file" ]; then
         test_name=$(basename "$c_file" .c)
         TOTAL_TESTS=$((TOTAL_TESTS + 1))
-        
+
         echo -n "Testing $test_name... "
-        
+
         # Step 1: Generate CIR from C file
         mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
-        flat_mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.flat.mlir"
         clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_clang_log.txt"
-        
+
         if ! "$CLANG" "$c_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
             echo -e "${RED}FAILED${NC} (CIR generation failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
@@ -188,28 +170,15 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
             echo ""
             continue
         fi
-        
-        # Step 1b: Flatten CIR with cir-opt (preprocess first: strip alloca
-        # qualifiers the parser can't handle, e.g. ", const", ", cleanup_dest_slot")
-        flat_log="$INTEGRATION_OUTPUT_DIR/${test_name}_flat_log.txt"
+
+        # Step 2: Convert CIR to C using xcfa-mapper
         _pre_mlir=$(mktemp --suffix=.mlir)
         preprocess_cir "$mlir_file" "$_pre_mlir"
-        if ! "$CIR_OPT" "$_pre_mlir" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
-            rm -f "$_pre_mlir"
-            echo -e "${RED}FAILED${NC} (CIR flattening failed)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            echo "  Output from cir-opt:"
-            cat "$flat_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-        rm -f "$_pre_mlir"
-
-        # Step 2: Convert CIR back to C using xcfa-mapper
         output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
         mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_mapper_log.txt"
-        
-        if ! "$XCFA_MAPPER" "$flat_mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+
+        if ! "$XCFA_MAPPER" "$_pre_mlir" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+            rm -f "$_pre_mlir"
             echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
             echo "  Output from xcfa-mapper:"
@@ -217,7 +186,8 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
             echo ""
             continue
         fi
-        
+        rm -f "$_pre_mlir"
+
         # Step 3: Check if the generated C file compiles
         compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
         if ! "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1; then
@@ -228,7 +198,7 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
             echo ""
             continue
         fi
-        
+
         echo -e "${GREEN}PASSED${NC}"
         PASSED_TESTS=$((PASSED_TESTS + 1))
     fi
@@ -256,7 +226,6 @@ else
 
             # Step 1: Generate CIR from C++ file
             mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
-            flat_mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.flat.mlir"
             clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_clang_log.txt"
 
             if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
@@ -268,27 +237,15 @@ else
                 continue
             fi
 
-            # Step 1b: Flatten CIR with cir-opt (preprocess first)
-            flat_log="$INTEGRATION_OUTPUT_DIR/${test_name}_flat_log.txt"
+            # Step 2: Convert CIR to C using xcfa-mapper
+            # Use --best-effort: C++ STL internals produce ops that can't be fully mapped.
             _pre_mlir=$(mktemp --suffix=.mlir)
             preprocess_cir "$mlir_file" "$_pre_mlir"
-            if ! "$CIR_OPT" "$_pre_mlir" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
-                rm -f "$_pre_mlir"
-                echo -e "${RED}FAILED${NC} (CIR flattening failed)"
-                FAILED_TESTS=$((FAILED_TESTS + 1))
-                echo "  Output from cir-opt:"
-                cat "$flat_log" | sed 's/^/    /'
-                echo ""
-                continue
-            fi
-            rm -f "$_pre_mlir"
-
-            # Step 2: Convert flat CIR to C using xcfa-mapper
-            # Use --best-effort: C++ STL internals produce ops that can't be fully mapped.
             output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
             mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_mapper_log.txt"
 
-            if ! "$XCFA_MAPPER" --best-effort "$flat_mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+            if ! "$XCFA_MAPPER" --best-effort "$_pre_mlir" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
+                rm -f "$_pre_mlir"
                 echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
                 FAILED_TESTS=$((FAILED_TESTS + 1))
                 echo "  Output from xcfa-mapper:"
@@ -296,6 +253,7 @@ else
                 echo ""
                 continue
             fi
+            rm -f "$_pre_mlir"
 
             # Step 3: Check that struct/union names in the generated C are valid identifiers.
             # C++ qualified names (::, <, >) must not appear in struct/union declarations.
@@ -322,204 +280,100 @@ fi
 echo ""
 
 #######################################
-# Non-Flat Integration Tests (C)
+# LLVM Test Suite
 #######################################
-# Runs the mapper directly on the non-flattened CIR produced by clang
-# (i.e. without `cir-opt -cir-flatten-cfg`).  Drives the implementation
-# of the structured-op handlers (cir.while, cir.for, cir.do, structured
-# cir.switch, cir.break, cir.continue, cir.try).  Counts are reported
-# separately so the existing flat-CIR totals stay clean while the non-
-# flat support is in progress.
 echo "======================================"
-echo "  Running Non-Flat Integration Tests (C)"
+echo "  Running LLVM Test Suite Tests"
 echo "======================================"
 echo ""
 
-for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
-    if [ -f "$c_file" ]; then
-        test_name=$(basename "$c_file" .c)
-        NONFLAT_TOTAL=$((NONFLAT_TOTAL + 1))
-
-        echo -n "Testing $test_name (non-flat)... "
-
-        mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
-        # The flat path above already produced ${test_name}.mlir as a side
-        # effect; if it didn't (e.g. clang failed), reuse the same clang
-        # invocation here so this section is self-contained.
-        if [ ! -f "$mlir_file" ]; then
-            clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_clang_log.txt"
-            if ! "$CLANG" "$c_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
-                echo -e "${RED}FAILED${NC} (CIR generation failed)"
-                NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
-                echo "  Output from clang:"
-                cat "$clang_log" | sed 's/^/    /'
-                echo ""
-                continue
-            fi
-        fi
-
-        # Run mapper directly on the non-flat CIR.
-        output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output_nonflat.c"
-        mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_mapper_log.txt"
-
-        if ! "$XCFA_MAPPER" "$mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
-            echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
-            NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
-            echo "  Output from xcfa-mapper:"
-            cat "$mapper_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_compile_log.txt"
-        if ! "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1; then
-            echo -e "${RED}FAILED${NC} (compilation failed)"
-            NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
-            echo "  Compilation errors:"
-            cat "$compile_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        echo -e "${GREEN}PASSED${NC}"
-        NONFLAT_PASSED=$((NONFLAT_PASSED + 1))
-    fi
-done
-
-echo ""
-
-#######################################
-# Non-Flat C++ Integration Tests
-#######################################
-echo "======================================"
-echo "  Running Non-Flat C++ Integration Tests"
-echo "======================================"
-echo ""
-
-if [ ! -f "$CLANGPP" ]; then
-    echo -e "${YELLOW}SKIPPED: clang++ not found at $CLANGPP${NC}"
-else
-    for cpp_file in "$INTEGRATION_INPUT_DIR"/*.cpp; do
-        if [ -f "$cpp_file" ]; then
-            test_name=$(basename "$cpp_file" .cpp)
-            NONFLAT_TOTAL=$((NONFLAT_TOTAL + 1))
-
-            echo -n "Testing $test_name (non-flat)... "
-
-            mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
-            if [ ! -f "$mlir_file" ]; then
-                clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_clang_log.txt"
-                if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
-                    echo -e "${RED}FAILED${NC} (CIR generation failed)"
-                    NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
-                    echo "  Output from clang++:"
-                    cat "$clang_log" | sed 's/^/    /'
-                    echo ""
-                    continue
-                fi
-            fi
-
-            output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output_nonflat.c"
-            mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_mapper_log.txt"
-
-            # Use --best-effort: C++ STL internals produce ops that can't
-            # be fully mapped (matches the flat C++ section above).
-            if ! "$XCFA_MAPPER" --best-effort "$mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
-                echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
-                NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
-                echo "  Output from xcfa-mapper:"
-                cat "$mapper_log" | sed 's/^/    /'
-                echo ""
-                continue
-            fi
-
-            # Same lenient C++ identifier check as the flat C++ section.
-            compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_nf_compile_log.txt"
-            "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1
-            if grep -qE "error:.*before '::'|error:.*before '<'" "$compile_log"; then
-                echo -e "${RED}FAILED${NC} (C++ qualified names in struct/union identifiers)"
-                NONFLAT_FAILED=$((NONFLAT_FAILED + 1))
-                echo "  Relevant errors:"
-                grep -E "error:.*before '::'|error:.*before '<'" "$compile_log" | head -5 | sed 's/^/    /'
-                echo ""
-                continue
-            fi
-
-            echo -e "${GREEN}PASSED${NC}"
-            NONFLAT_PASSED=$((NONFLAT_PASSED + 1))
-        fi
-    done
-fi
-
-echo ""
-
-#######################################
-# E2E Tests (esbmc-eval)
-#######################################
-echo "======================================"
-echo "  Running E2E Tests (esbmc-eval)"
-echo "======================================"
-echo ""
-
-if [ "$RUN_E2E" -eq 0 ]; then
-    echo -e "${YELLOW}SKIPPED: E2E tests disabled (--no-e2e)${NC}"
-elif [ ! -d "$ESBMC_EVAL_DIR" ]; then
-    echo -e "${YELLOW}SKIPPED: esbmc-eval directory not found at $ESBMC_EVAL_DIR${NC}"
+if [ ! -d "$LLVM_EVAL_DIR" ]; then
+    echo -e "${YELLOW}SKIPPED: llvm test suite directory not found at $LLVM_EVAL_DIR${NC}"
 elif [ ! -f "$CLANGPP" ]; then
     echo -e "${YELLOW}SKIPPED: clang++ not found at $CLANGPP${NC}"
 else
-    mkdir -p "$ESBMC_EVAL_OUTPUT_DIR"
+    mkdir -p "$LLVM_EVAL_OUTPUT_DIR"
 
     while IFS= read -r cpp_file; do
-        rel_path="${cpp_file#$ESBMC_EVAL_DIR/}"   # e.g. algorithm/algorithm0/main.cpp
-        test_dir="$(dirname "$rel_path")"           # e.g. algorithm/algorithm0
-        test_id="${test_dir//\//__}"               # e.g. algorithm__algorithm0
+        rel_path="${cpp_file#$LLVM_EVAL_DIR}"          # e.g. "2003-06-08-BaseType.cpp" or "EH/simple_throw.cpp"
+        base="${rel_path%.cpp}"                          # e.g. "2003-06-08-BaseType" or "EH/simple_throw"
+        test_id="${base//\//__}"                         # e.g. "2003-06-08-BaseType" or "EH__simple_throw"
+        ref_file="${cpp_file%.cpp}.reference_output"
         TOTAL_TESTS=$((TOTAL_TESTS + 1))
 
         echo -n "Testing $test_id... "
 
-        mlir_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}.mlir"
-        flat_mlir_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}.flat.mlir"
-        clang_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_clang_log.txt"
+        mlir_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.mlir"
+        clang_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_clang_log.txt"
+        vtlayout_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.vtlayout.txt"
 
-        # Step 1: Generate CIR from C++ file
-        if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
+        # Step 1: Generate CIR from C++ file; capture vtable layout dump from stdout
+        if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" \
+                -Xclang -fdump-vtable-layouts > "$vtlayout_file" 2>"$clang_log"; then
             echo -e "${YELLOW}SKIPPED${NC} (CIR generation failed)"
             SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
             continue
         fi
 
-        # Step 2: Flatten CIR (preprocess first)
-        flat_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_flat_log.txt"
+        # Step 2: Convert CIR to C using xcfa-mapper
         _pre_mlir=$(mktemp --suffix=.mlir)
         preprocess_cir "$mlir_file" "$_pre_mlir"
-        if ! "$CIR_OPT" "$_pre_mlir" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+        output_c_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_output.c"
+        mapper_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_mapper_log.txt"
+
+        if ! "$XCFA_MAPPER" --best-effort --vtlayout "$vtlayout_file" "$_pre_mlir" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
             rm -f "$_pre_mlir"
-            echo -e "${YELLOW}SKIPPED${NC} (CIR flattening failed)"
-            SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+            echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+            FAILED_TESTS=$((FAILED_TESTS + 1))
+            head -5 "$mapper_log" | sed 's/^/    /'
+            echo ""
             continue
         fi
         rm -f "$_pre_mlir"
 
-        # Step 3: Convert flat CIR to C using xcfa-mapper
-        # Use --best-effort mode: C++ STL templates produce compiler temporaries
-        # with empty names and other edge-case ops; best-effort emits comments for
-        # anything that can't be mapped cleanly instead of aborting.
-        output_c_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_output.c"
-        mapper_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_mapper_log.txt"
-
-        if ! "$XCFA_MAPPER" --best-effort "$flat_mlir_file" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
-            echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+        # Step 4: Compile generated C with gcc
+        binary_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_binary"
+        gcc_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_gcc_log.txt"
+        if ! "$GCC" "$output_c_file" -o "$binary_file" -lm > "$gcc_log" 2>&1; then
+            echo -e "${RED}FAILED${NC} (gcc compilation failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
-            echo "  Output from xcfa-mapper:"
-            head -5 "$mapper_log" | sed 's/^/    /'
+            head -5 "$gcc_log" | sed 's/^/    /'
+            echo ""
+            continue
+        fi
+
+        # Step 5: Run binary and compare output against reference
+        actual_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_actual.txt"
+        expected_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_expected.txt"
+
+        # Parse reference: "exit N" always appears at the end (possibly on its own
+        # line, possibly appended without a newline like "0exit 0"). Extract the
+        # exit code and write expected stdout with that suffix stripped.
+        expected_exit=$(awk 'END{if(match($0,/exit ([0-9]+)$/,a))print a[1];else print 0}' "$ref_file")
+        awk 'NR==1{prev=$0;next}{print prev;prev=$0}END{sub(/exit [0-9]+$/,"",prev);printf "%s",prev}' \
+            "$ref_file" > "$expected_out_file"
+
+        "$binary_file" > "$actual_out_file" 2>/dev/null
+        actual_exit=$?
+
+        if [ "$actual_exit" -ne "$expected_exit" ]; then
+            echo -e "${RED}FAILED${NC} (exit code: expected $expected_exit, got $actual_exit)"
+            FAILED_TESTS=$((FAILED_TESTS + 1))
+            echo ""
+            continue
+        fi
+
+        if ! diff -q "$expected_out_file" "$actual_out_file" > /dev/null 2>&1; then
+            echo -e "${RED}FAILED${NC} (output mismatch)"
+            FAILED_TESTS=$((FAILED_TESTS + 1))
+            diff "$expected_out_file" "$actual_out_file" | head -10 | sed 's/^/    /'
             echo ""
             continue
         fi
 
         echo -e "${GREEN}PASSED${NC}"
         PASSED_TESTS=$((PASSED_TESTS + 1))
-    done < <(find "$ESBMC_EVAL_DIR" -name "main.cpp" | sort)
+    done < <(find "$LLVM_EVAL_DIR" -maxdepth 2 -name "*.cpp" | sort)
 fi
 
 echo ""
@@ -534,20 +388,11 @@ echo "Total tests:  $TOTAL_TESTS"
 echo -e "Passed:       ${GREEN}$PASSED_TESTS${NC}"
 echo -e "Skipped:      ${YELLOW}$SKIPPED_TESTS${NC}"
 echo -e "Failed:       ${RED}$FAILED_TESTS${NC}"
-echo ""
-echo "Non-flat integration (tracked separately while support is in progress):"
-echo "  Total:  $NONFLAT_TOTAL"
-echo -e "  Passed: ${GREEN}$NONFLAT_PASSED${NC}"
-echo -e "  Failed: ${RED}$NONFLAT_FAILED${NC}"
-echo ""
 
 if [ $FAILED_TESTS -eq 0 ]; then
-    echo -e "${GREEN}All flat-CIR tests passed!${NC}"
-    if [ $NONFLAT_FAILED -gt 0 ]; then
-        echo -e "${YELLOW}(non-flat path still has $NONFLAT_FAILED failing tests — expected until structured-op handlers land)${NC}"
-    fi
+    echo -e "${GREEN}All tests passed!${NC}"
     exit 0
 else
-    echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR and $ESBMC_EVAL_OUTPUT_DIR${NC}"
+    echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR and $LLVM_EVAL_OUTPUT_DIR${NC}"
     exit 1
 fi
