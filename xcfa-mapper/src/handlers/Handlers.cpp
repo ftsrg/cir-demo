@@ -1626,8 +1626,13 @@ bool handleCatchParam(cir::CatchParamOp op, Mapper &m, std::ostream &out) {
   }
   std::string ctype = m.mapTypeToC(op->getResult(0).getType());
   std::string tmp = m.freshName("cp_exn");
-  out << "  " << ctype << " " << tmp << " = (" << ctype
-      << ")__cir_exc_ptr;\n";
+  // Clang always generates a pointer result, but guard defensively: if the
+  // result is a value type, dereference through a pointer cast rather than
+  // producing a pointer-as-integer.
+  if (!ctype.empty() && ctype.back() == '*')
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")__cir_exc_ptr;\n";
+  else
+    out << "  " << ctype << " " << tmp << " = *(" << ctype << "*)__cir_exc_ptr;\n";
   out << "  __cir_exc_active = 0;\n";
   m.setName(op->getResult(0), tmp);
   return true;
@@ -2378,22 +2383,26 @@ bool handleEhTypeId(cir::EhTypeIdOp op, Mapper &m, std::ostream &out) {
   std::string ctype = m.mapTypeToC(op->getResult(0).getType());
   std::string tmp = m.freshName("type_id");
   out << "  " << ctype << " " << tmp << " = (" << ctype
-      << ")(unsigned long)__cir_eh_type_" << san << ";\n";
+      << ")(uintptr_t)__cir_eh_type_" << san << ";\n";
   m.setName(op->getResult(0), tmp);
   return true;
 }
 
 bool handleEhSetjmp(cir::EhSetjmpOp op, Mapper &m, std::ostream &out) {
-  // Always behave as the "initial" setjmp return (0); longjmp is also a no-op.
-  if (op->getNumResults() < 1) return false;
-  std::string ctype = m.mapTypeToC(op->getResult(0).getType());
-  std::string tmp = m.freshName("setjmp_r");
-  out << "  " << ctype << " " << tmp << " = 0;\n";
-  m.setName(op->getResult(0), tmp);
+  if (!m.isBestEffort()) {
+    llvm::errs() << ERR_EH_SETJMP_UNSUPPORTED << "\n";
+    return false;
+  }
+  out << "  // " << ERR_EH_SETJMP_UNSUPPORTED << "\n";
   return true;
 }
 
 bool handleEhLongjmp(cir::EhLongjmpOp op, Mapper &m, std::ostream &out) {
+  if (!m.isBestEffort()) {
+    llvm::errs() << ERR_EH_LONGJMP_UNSUPPORTED << "\n";
+    return false;
+  }
+  out << "  // " << ERR_EH_LONGJMP_UNSUPPORTED << "\n";
   return true;
 }
 
@@ -2434,9 +2443,11 @@ bool handleEhDispatch(cir::EhDispatchOp op, Mapper &m, std::ostream &out) {
   // provides the indent prefix so the assignment lines up with surrounding
   // statements.
   auto forwardEhToken = [&](mlir::Block *succ, const char *indent) {
-    if (o->getNumOperands() > 0 && succ->getNumArguments() > 0) {
-      std::string blockArgName = m.getOrCreateName(succ->getArgument(0));
-      std::string branchArgName = m.getOrCreateName(o->getOperand(0));
+    unsigned n = std::min(o->getNumOperands(),
+                          (unsigned)succ->getNumArguments());
+    for (unsigned i = 0; i < n; ++i) {
+      std::string blockArgName  = m.getOrCreateName(succ->getArgument(i));
+      std::string branchArgName = m.getOrCreateName(o->getOperand(i));
       out << indent << blockArgName << " = " << branchArgName << ";\n";
     }
   };
@@ -2454,6 +2465,11 @@ bool handleEhDispatch(cir::EhDispatchOp op, Mapper &m, std::ostream &out) {
   unsigned destCount = catchDests.size();
   unsigned n = std::min(typedCount, destCount);
 
+  // Known limitation: dispatch uses exact pointer equality on the RTTI tag.
+  // A `catch (Base &)` block will NOT fire for a `Derived` exception because
+  // C++ inheritance is not modelled here.  This is a deliberate approximation
+  // for verification: the miss is conservative (the handler is unreachable in
+  // the model when it would have been reachable in the real program).
   for (unsigned i = 0; i < n; ++i) {
     auto attr = catchTypes[i];
     auto gv = mlir::dyn_cast<cir::GlobalViewAttr>(attr);
@@ -2508,8 +2524,10 @@ bool handleBeginCatch(cir::BeginCatchOp op, Mapper &m, std::ostream &out) {
   if (op->getNumResults() >= 2) {
     std::string ctype = m.mapTypeToC(op->getResult(1).getType());
     std::string p = m.freshName("ca_exn");
-    out << "  " << ctype << " " << p << " = (" << ctype
-        << ")__cir_exc_ptr;\n";
+    if (!ctype.empty() && ctype.back() == '*')
+      out << "  " << ctype << " " << p << " = (" << ctype << ")__cir_exc_ptr;\n";
+    else
+      out << "  " << ctype << " " << p << " = *(" << ctype << "*)__cir_exc_ptr;\n";
     m.setName(op->getResult(1), p);
   }
   out << "  __cir_exc_active = 0;\n";
@@ -2545,8 +2563,7 @@ bool handleThrow(cir::ThrowOp op, Mapper &m, std::ostream &out) {
       m.registerEhTypeSymbol(sym);
       std::string san = Mapper::sanitizeIdentifier(sym);
       out << "  __cir_exc_type = (const void*)__cir_eh_type_" << san << ";\n";
-      out << "  __cir_exc_type_id = (unsigned)(unsigned long)__cir_eh_type_"
-          << san << ";\n";
+      out << "  __cir_exc_type_id = (uintptr_t)__cir_eh_type_" << san << ";\n";
     } else {
       // Untyped throw: clear the type tag so dispatch falls through to
       // catch-all handlers only.
@@ -2555,6 +2572,11 @@ bool handleThrow(cir::ThrowOp op, Mapper &m, std::ostream &out) {
     }
   }
   out << "  __cir_exc_active = 1;\n";
+  // Run any RAII cleanup regions that are in scope at the throw site, mirroring
+  // what handleReturn does before returning.  CIR-level unwind regions handle
+  // destructor calls at the CIR layer, but cleanupStack_ tracks scopes that
+  // were pushed by the mapper itself and must always be drained.
+  m.emitPendingCleanups(out, 0);
   emitExceptionReturn(op.getOperation(), m, out);
   return true;
 }
@@ -2582,7 +2604,10 @@ bool handleAllocException(cir::AllocExceptionOp op, Mapper &m, std::ostream &out
   std::string ctype = m.mapTypeToC(op->getResult(0).getType());
   std::string buf = m.freshName("exc_buf");
   std::string tmp = m.freshName("exc");
-  out << "  char " << buf << "[" << size << "] = {0};\n";
+  // Static storage: the address must remain valid after the throwing function
+  // returns (the catcher dereferences __cir_exc_ptr in its own frame).
+  // freshName guarantees each throw site gets its own uniquely-named static.
+  out << "  static char " << buf << "[" << size << "] = {0};\n";
   out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << buf << ";\n";
   m.setName(op->getResult(0), tmp);
   return true;
@@ -2779,7 +2804,7 @@ void registerBuiltinHandlers(Mapper &m) {
   // Compile-time constant probe
   m.registerTypedHandler<cir::IsConstantOp>(handleIsConstant);
 
-  // Exception handling (modelled as no-ops; the unwind path is unreachable)
+  // Exception handling (modelled via __cir_exc_* global state)
   m.registerTypedHandler<cir::EhInflightOp>(handleEhInflight);
   m.registerTypedHandler<cir::EhTypeIdOp>(handleEhTypeId);
   m.registerTypedHandler<cir::EhSetjmpOp>(handleEhSetjmp);

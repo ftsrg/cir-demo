@@ -164,6 +164,7 @@ private:
   // Set when at least one cir.trap op is present; triggers emission of
   // `extern void abort(void);` as per SV-COMP conventions.
   bool hasTrap_ = false;
+  bool abortDeclEmitted_ = false;
   // Alloca result Values that are accessed atomically / volatilely.
   llvm::DenseSet<mlir::Value> atomicAllocaValues_;
   llvm::DenseSet<mlir::Value> volatileAllocaValues_;

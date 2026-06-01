@@ -493,6 +493,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   cleanupStack_.clear();
   loopDepth_ = 0;
   forStepLabelStack_.clear();
+  tryLandingPadStack_.clear();
 
   // Get function return type from cir::FuncOp
   auto cirFuncOp = mlir::cast<cir::FuncOp>(fop);
@@ -1244,8 +1245,18 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       } else if (auto dispOp = llvm::dyn_cast<cir::EhDispatchOp>(&op)) {
         setHasExceptions();
         recordHandlerArray(dispOp.getCatchTypesAttr());
-      } else if (llvm::isa<cir::TryCallOp, cir::EhInflightOp, cir::EhTypeIdOp,
-                           cir::EhInitiateOp, cir::EhTerminateOp,
+      } else if (auto inflightOp = llvm::dyn_cast<cir::EhInflightOp>(&op)) {
+        setHasExceptions();
+        // Register catch types now so the EH preamble (written before any
+        // function body) includes their __cir_eh_type_* string literals.
+        if (auto types = inflightOp.getCatchTypeListAttr())
+          for (auto attr : types)
+            if (auto sym = mlir::dyn_cast<mlir::FlatSymbolRefAttr>(attr))
+              registerEhTypeSymbol(sym.getValue().str());
+      } else if (auto typeIdOp = llvm::dyn_cast<cir::EhTypeIdOp>(&op)) {
+        setHasExceptions();
+        registerEhTypeSymbol(typeIdOp.getTypeSym().str());
+      } else if (llvm::isa<cir::TryCallOp, cir::EhInitiateOp, cir::EhTerminateOp,
                            cir::BeginCatchOp, cir::EndCatchOp,
                            cir::ResumeOp, cir::ResumeFlatOp,
                            cir::CatchParamOp, cir::AllocExceptionOp>(op)) {
@@ -1260,14 +1271,22 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   }
 
   // SV-COMP preamble: emit extern declarations needed by the generated code.
-  if (hasTrap_)
-    out << "extern void abort(void);\n\n";
+  // Guard with abortDeclEmitted_ so nested mapModule calls never emit twice,
+  // and gate on hasExceptions_ too because handleEhTerminate / the zero-
+  // successor branch of handleEhDispatch both emit abort().
+  if ((hasTrap_ || hasExceptions_) && !abortDeclEmitted_) {
+    out << "extern void abort(void);\n";
+    abortDeclEmitted_ = true;
+  }
 
   if (hasExceptions_ && !ehPreambleEmitted) {
+    out << "#include <stdint.h>\n";
     out << "// Exception handling state (modelled in plain C)\n";
     out << "static void *__cir_exc_ptr;\n";
     out << "static const void *__cir_exc_type;\n";
-    out << "static unsigned __cir_exc_type_id;\n";
+    // uintptr_t: must be wide enough to hold a pointer value without truncation
+    // on any platform (a plain 'unsigned' would lose the high 32 bits on LP64).
+    out << "static uintptr_t __cir_exc_type_id;\n";
     out << "static int __cir_exc_active;\n";
     if (!ehTypeSymbols_.empty()) {
       out << "// Per-RTTI address tags: each thrown/caught type symbol gets a\n"

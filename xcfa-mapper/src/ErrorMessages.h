@@ -36,3 +36,5 @@
 #define ERR_CIRFUNC_NO_SYMBOL "cir.func without symbol - skipping"
 #define ERR_MAPPING_FAILED "Mapping failed."
 #define ERR_NO_HANDLER_PREFIX "No handler registered for op: "
+#define ERR_EH_SETJMP_UNSUPPORTED "EhSetjmp: cir.eh.setjmp (MSVC SEH) is not supported"
+#define ERR_EH_LONGJMP_UNSUPPORTED "EhLongjmp: cir.eh.longjmp (MSVC SEH) is not supported"
