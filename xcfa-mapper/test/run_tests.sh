@@ -103,6 +103,17 @@ echo "  clang++: $CLANGPP"
 echo "  cir-opt: $CIR_OPT"
 echo ""
 
+# Preprocess a CIR MLIR file to strip alloca qualifiers that the tablegen-
+# generated AllocaOp parser cannot handle (it only accepts "init").
+# Usage: preprocess_cir <input> <output>
+#   ", cleanup_dest_slot" — C++ EH cleanup-destination slot
+#   ", const"             — const-qualified catch-clause variable
+preprocess_cir() {
+    sed -e 's/, cleanup_dest_slot\]/\]/g' \
+        -e 's/, const\]/\]/g' \
+        "$1" > "$2"
+}
+
 #######################################
 # Unit Tests
 #######################################
@@ -178,9 +189,13 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
             continue
         fi
         
-        # Step 1b: Flatten CIR with cir-opt
+        # Step 1b: Flatten CIR with cir-opt (preprocess first: strip alloca
+        # qualifiers the parser can't handle, e.g. ", const", ", cleanup_dest_slot")
         flat_log="$INTEGRATION_OUTPUT_DIR/${test_name}_flat_log.txt"
-        if ! "$CIR_OPT" "$mlir_file" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+        _pre_mlir=$(mktemp --suffix=.mlir)
+        preprocess_cir "$mlir_file" "$_pre_mlir"
+        if ! "$CIR_OPT" "$_pre_mlir" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+            rm -f "$_pre_mlir"
             echo -e "${RED}FAILED${NC} (CIR flattening failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
             echo "  Output from cir-opt:"
@@ -188,7 +203,8 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
             echo ""
             continue
         fi
-        
+        rm -f "$_pre_mlir"
+
         # Step 2: Convert CIR back to C using xcfa-mapper
         output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
         mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_mapper_log.txt"
@@ -252,9 +268,12 @@ else
                 continue
             fi
 
-            # Step 1b: Flatten CIR with cir-opt
+            # Step 1b: Flatten CIR with cir-opt (preprocess first)
             flat_log="$INTEGRATION_OUTPUT_DIR/${test_name}_flat_log.txt"
-            if ! "$CIR_OPT" "$mlir_file" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+            _pre_mlir=$(mktemp --suffix=.mlir)
+            preprocess_cir "$mlir_file" "$_pre_mlir"
+            if ! "$CIR_OPT" "$_pre_mlir" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+                rm -f "$_pre_mlir"
                 echo -e "${RED}FAILED${NC} (CIR flattening failed)"
                 FAILED_TESTS=$((FAILED_TESTS + 1))
                 echo "  Output from cir-opt:"
@@ -262,6 +281,7 @@ else
                 echo ""
                 continue
             fi
+            rm -f "$_pre_mlir"
 
             # Step 2: Convert flat CIR to C using xcfa-mapper
             # Use --best-effort: C++ STL internals produce ops that can't be fully mapped.
@@ -469,13 +489,17 @@ else
             continue
         fi
 
-        # Step 2: Flatten CIR
+        # Step 2: Flatten CIR (preprocess first)
         flat_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_flat_log.txt"
-        if ! "$CIR_OPT" "$mlir_file" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+        _pre_mlir=$(mktemp --suffix=.mlir)
+        preprocess_cir "$mlir_file" "$_pre_mlir"
+        if ! "$CIR_OPT" "$_pre_mlir" -cir-flatten-cfg -o "$flat_mlir_file" > "$flat_log" 2>&1; then
+            rm -f "$_pre_mlir"
             echo -e "${YELLOW}SKIPPED${NC} (CIR flattening failed)"
             SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
             continue
         fi
+        rm -f "$_pre_mlir"
 
         # Step 3: Convert flat CIR to C using xcfa-mapper
         # Use --best-effort mode: C++ STL templates produce compiler temporaries

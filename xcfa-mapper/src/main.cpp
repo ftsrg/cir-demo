@@ -100,13 +100,14 @@ int main(int argc, char **argv) {
 
   // Workaround: the tablegen-generated AllocaOp parser has a bug where it
   // consumes the comma and sets 'init' before verifying the keyword, so it
-  // cannot parse ", cleanup_dest_slot" after the alloca name -- it expects
-  // 'init' instead.  Since xcfa-mapper never inspects this flag (it only marks
-  // the alloca as the C++ cleanup-destination-dispatch slot, something the C
-  // emitter doesn't need), we can safely strip it before handing the text to
-  // the MLIR parser.
-  {
-    const std::string pattern = ", cleanup_dest_slot";
+  // only accepts ", init" and rejects any other qualifier with "expected 'init'".
+  // Known qualifiers emitted by clang that are not 'init':
+  //   ", cleanup_dest_slot" — the C++ EH cleanup-destination slot
+  //   ", const"             — a const-qualified catch-clause variable
+  //                           (emitted for `catch (const T& e)`)
+  // The C emitter never inspects these flags, so it is safe to strip them
+  // before handing the text to the MLIR parser.
+  for (const std::string pattern : {", cleanup_dest_slot", ", const"}) {
     std::string::size_type pos = 0;
     while ((pos = input.find(pattern, pos)) != std::string::npos)
       input.erase(pos, pattern.size());

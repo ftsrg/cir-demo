@@ -47,6 +47,20 @@ ERROR_MARKERS = (
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
 
+def preprocess_cir(path: Path) -> None:
+    """Strip alloca qualifiers the tablegen AllocaOp parser can't handle.
+
+    The CIR AllocaOp parser only accepts 'init' as the qualifier keyword.
+    'cleanup_dest_slot' and 'const' (emitted by clang for EH cleanup slots
+    and const-qualified catch-clause variables respectively) both cause
+    'expected init' parse errors in cir-opt and xcfa-mapper.  Neither
+    qualifier affects the C output so it is safe to strip them.
+    """
+    text = path.read_text(encoding="utf-8", errors="replace")
+    text = text.replace(", cleanup_dest_slot]", "]")
+    text = text.replace(", const]", "]")
+    path.write_text(text, encoding="utf-8")
+
 def parse_input_file_from_yml(yml_path: Path) -> str:
     for raw_line in read_text(yml_path).splitlines():
         stripped = raw_line.strip()
@@ -234,6 +248,10 @@ def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Pat
                         clang_result.returncode,
                     ),
                 }
+
+            # Strip alloca qualifiers the CIR parser can't handle before
+            # passing to cir-opt (flatten path) or xcfa-mapper (non-flat path).
+            preprocess_cir(mlir_path)
 
             if flatten:
                 flatten_command = [

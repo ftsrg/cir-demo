@@ -63,7 +63,15 @@ if [[ "$FLATTEN" == "true" ]]; then
     echo "Error: required executable not found: $CIR_OPT_BIN" >&2
     exit 1
   fi
-  "$CIR_OPT_BIN" "$CIR_MLIR_FILE" -cir-flatten-cfg -o "$FLAT_MLIR_FILE"
+  # Preprocess: strip alloca qualifiers the CIR parser can't handle.
+  # ", cleanup_dest_slot" and ", const" both cause "expected 'init'" errors
+  # in the tablegen-generated AllocaOp parser.
+  _pre_mlir=$(mktemp --suffix=.mlir)
+  sed -e 's/, cleanup_dest_slot\]/\]/g' \
+      -e 's/, const\]/\]/g' \
+      "$CIR_MLIR_FILE" > "$_pre_mlir"
+  "$CIR_OPT_BIN" "$_pre_mlir" -cir-flatten-cfg -o "$FLAT_MLIR_FILE"
+  rm -f "$_pre_mlir"
   "$XCFA_MAPPER_BIN" "$FLAT_MLIR_FILE" "$OUTPUT_C_FILE"
   echo "Generated:"
   echo "  $CIR_MLIR_FILE"
