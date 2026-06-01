@@ -54,6 +54,21 @@ std::string Mapper::sanitizeIdentifier(const std::string &s) {
   return out;
 }
 
+// Strip CIR's ".base" suffix before sanitizing a record type name.
+// CIR emits "X.base" as the internal name for the base subobject layout of
+// class X when it is embedded in a derived class. Stripping it ensures the
+// generated C reuses the same struct tag as the complete class, which is
+// correct because: (a) the '.' character is impossible in any user-defined
+// C++ class name so there is no ambiguity, and (b) the base subobject layout
+// is layout-compatible with the complete type for verification purposes.
+static std::string recordCName(mlir::StringAttr nameAttr) {
+  if (!nameAttr || nameAttr.getValue().empty()) return "anon_struct";
+  llvm::StringRef raw = nameAttr.getValue();
+  if (raw.ends_with(".base"))
+    raw = raw.drop_back(5);
+  return Mapper::sanitizeIdentifier(raw.str());
+}
+
 std::string Mapper::virtualCallTypeSuffix(const std::string &ctype) {
   std::string raw;
   for (char c : ctype) {
@@ -385,7 +400,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     if (auto recordTy = mlir::dyn_cast<cir::RecordType>(pointee)) {
       mlir::StringAttr nameAttr = recordTy.getName();
       std::string name = (nameAttr && !nameAttr.getValue().empty())
-                             ? sanitizeIdentifier(nameAttr.getValue().str())
+                             ? recordCName(nameAttr)
                              : "anon_struct";
       if (recordTy.isUnion()) {
         return "union " + name + "*";
@@ -422,7 +437,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
   if (auto recordTy = mlir::dyn_cast<cir::RecordType>(t)) {
     mlir::StringAttr nameAttr = recordTy.getName();
     std::string name = (nameAttr && !nameAttr.getValue().empty())
-                           ? sanitizeIdentifier(nameAttr.getValue().str())
+                           ? recordCName(nameAttr)
                            : "anon_struct";
     if (recordTy.isUnion()) {
       return "union " + name;
@@ -746,7 +761,7 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   }
   
   // Sanitize the name to be a valid C identifier (replace dots, etc. with underscores)
-  std::string name = sanitizeIdentifier(sym.getValue().str());
+  std::string name = recordCName(sym);
   
   // Cast to GlobalOp to access getSymType()
   auto globalOp = mlir::cast<cir::GlobalOp>(gop);
@@ -926,8 +941,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
     if (auto recordType = mlir::dyn_cast<cir::RecordType>(t)) {
       auto nameAttr = recordType.getName();
-      if (!nameAttr) return; // anonymous record without a tag — skip
-      std::string recordName = sanitizeIdentifier(nameAttr.getValue().str());
+      if (!nameAttr) return; // anonymous record without a tag - skip
+      std::string recordName = recordCName(nameAttr);
 
       // Keep an entry even if there are no discovered fields yet.
       (void)structFields[recordName];
@@ -990,8 +1005,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       if (!recordType) return; // Not pointing to a record, skip
       
       // Get struct name using API
-      std::string structName = sanitizeIdentifier(recordType.getName().getValue().str());
-      
+      std::string structName = recordCName(recordType.getName());
+
       // Track unions
       if (recordType.isUnion()) {
         isUnionContainer[structName] = true;
@@ -1007,7 +1022,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         mlir::Type resPointee = resPtrType.getPointee();
         
         if (auto resRecordType = mlir::dyn_cast<cir::RecordType>(resPointee)) {
-          std::string fieldStructName = sanitizeIdentifier(resRecordType.getName().getValue().str());
+          std::string fieldStructName = recordCName(resRecordType.getName());
           
           if (resRecordType.isUnion()) {
             info.baseType = "union " + fieldStructName;
@@ -1029,7 +1044,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
           
           // Get the final element type
           if (auto elemRecordType = mlir::dyn_cast<cir::RecordType>(currentType)) {
-            std::string arrayStructName = sanitizeIdentifier(elemRecordType.getName().getValue().str());
+            std::string arrayStructName = recordCName(elemRecordType.getName());
             
             if (elemRecordType.isUnion()) {
               info.baseType = "union " + arrayStructName;
@@ -1110,7 +1125,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
           }
           if (auto recTy = mlir::dyn_cast<cir::RecordType>(currentType)) {
             if (recTy.getName()) {
-              std::string fn = sanitizeIdentifier(recTy.getName().getValue().str());
+              std::string fn = recordCName(recTy.getName());
               info.baseType = (recTy.isUnion() ? "union " : "struct ") + fn;
               info.isStruct = true;
             }
@@ -1119,7 +1134,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
           }
         } else if (auto recTy = mlir::dyn_cast<cir::RecordType>(memberType)) {
           if (recTy.getName()) {
-            std::string fn = sanitizeIdentifier(recTy.getName().getValue().str());
+            std::string fn = recordCName(recTy.getName());
             info.baseType = (recTy.isUnion() ? "union " : "struct ") + fn;
             info.isStruct = true;
           }
