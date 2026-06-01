@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <map>
 #include <set>
+#include <sstream>
 #include <vector>
 
 #include <llvm/ADT/SmallString.h>
@@ -166,6 +167,40 @@ static std::string oneLineOperationText(mlir::Operation &op) {
 
 void Mapper::printMonitorReport(std::ostream &out) const {
   traceability.printReport(out);
+}
+
+// Emit pending cleanup regions (from innermost to outermost), stopping at
+// fromDepth.  Each cleanup body is wrapped in a C block `{ ... }` to avoid
+// name collisions when a region is emitted more than once (e.g. early-return
+// and normal fall-through both need the same cleanup).
+void Mapper::emitPendingCleanups(std::ostream &out, int fromDepth) {
+  // Walk innermost → outermost (back → front).
+  for (int i = static_cast<int>(cleanupStack_.size()) - 1; i >= 0; --i) {
+    if (cleanupStack_[i].loopDepth < fromDepth) break;
+    mlir::Region *cleanupRegion = cleanupStack_[i].region;
+    if (!cleanupRegion || cleanupRegion->empty()) continue;
+    out << "  {\n";
+    // Walk the first (and only) block of the cleanup region, emitting all ops
+    // except the trailing cir.yield.
+    mlir::Block &block = cleanupRegion->front();
+    std::ostringstream cleanupOut;
+    for (mlir::Operation &cop : block.getOperations()) {
+      if (llvm::isa<cir::YieldOp>(cop)) break;
+      if (!mapOperation(&cop, cleanupOut)) {
+        // Best-effort: emit a comment and continue.
+        cleanupOut << "  // (cleanup op could not be mapped)\n";
+      }
+    }
+    // Indent the cleanup body by one extra level (we are inside the `{ }`).
+    std::string cleanupText = cleanupOut.str();
+    std::istringstream lines(cleanupText);
+    std::string line;
+    while (std::getline(lines, line)) {
+      if (!line.empty()) out << "  ";
+      out << line << "\n";
+    }
+    out << "  }\n";
+  }
 }
 
 void Mapper::writeMonitorJson(std::ostream &out) const {
@@ -453,6 +488,11 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       out << "// " << ERR_CIRFUNC_NO_SYMBOL << "\n";
       return true;
     }
+  // Reset per-function state so that stacks from a previous function do not
+  // bleed into this one (should normally be empty, but guard defensively).
+  cleanupStack_.clear();
+  loopDepth_ = 0;
+  forStepLabelStack_.clear();
 
   // Get function return type from cir::FuncOp
   auto cirFuncOp = mlir::cast<cir::FuncOp>(fop);

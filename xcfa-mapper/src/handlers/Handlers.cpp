@@ -607,13 +607,29 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
 // itself still goes through the normal handler path so the statement appears
 // in the C output at the right indentation level.
 bool handleBreak(cir::BreakOp op, Mapper &m, std::ostream &out) {
+  // Run cleanups for cir.cleanup.scopes that are nested INSIDE the current
+  // loop/switch (i.e. pushed after the current loop was entered).  We emit
+  // cleanups whose loopDepth >= current loop depth so we only cross the
+  // cleanups between this break and its target loop, not outer cleanups.
+  m.emitPendingCleanups(out, m.getLoopDepth());
   out << "  break;\n";
   return true;
 }
 
 // cir.continue terminates a loop body iteration.
 bool handleContinue(cir::ContinueOp op, Mapper &m, std::ostream &out) {
-  out << "  continue;\n";
+  // Emit cleanups for scopes crossed by this continue (same depth logic as
+  // handleBreak).
+  m.emitPendingCleanups(out, m.getLoopDepth());
+  // If we are inside a cir.for loop, jump to the step label so the increment
+  // runs before the next iteration (plain C `continue` would skip the step
+  // because the step is emitted at the end of the while(1) body).
+  const std::string &stepLabel = m.currentForStepLabel();
+  if (!stepLabel.empty()) {
+    out << "  goto " << stepLabel << ";\n";
+  } else {
+    out << "  continue;\n";
+  }
   return true;
 }
 
@@ -826,25 +842,44 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
   // run) or return from the current function, propagating the exception
   // to the caller.  cir.try_call already has explicit successors for this
   // and is handled separately.
-  if (!op.getNothrow()) {
-    m.setHasExceptions();
-    out << "  if (__cir_exc_active) ";
+  //
+  // Only emit the guard when the module actually uses EH ops: if no
+  // cir.throw / cir.try / cir.try_call / etc. exist then __cir_exc_active
+  // is never declared and the reference would produce a compile error.
+  if (!op.getNothrow() && m.hasExceptions()) {
+    out << "  if (__cir_exc_active) {\n";
+    // Run any pending RAII destructors before propagating the exception.
+    // emitPendingCleanups writes to `out` with its own indentation; we wrap
+    // the whole guard in a block so the cleanup statements are scoped.
+    std::ostringstream cleanupOut;
+    m.emitPendingCleanups(cleanupOut, 0);
+    // Re-indent: the cleanups were produced at "  " indent; inside the if-block
+    // we want one extra level.
+    {
+      std::istringstream lines(cleanupOut.str());
+      std::string line;
+      while (std::getline(lines, line)) {
+        if (!line.empty()) out << "  ";
+        out << line << "\n";
+      }
+    }
     const std::string &pad = m.currentTryLandingPad();
     if (!pad.empty()) {
-      out << "goto " << pad << ";\n";
+      out << "    goto " << pad << ";\n";
     } else {
       auto func = o->getParentOfType<cir::FuncOp>();
       mlir::Type rty = func ? func.getFunctionType().getReturnType()
                             : mlir::Type();
       if (!func || mlir::isa<mlir::NoneType>(rty) ||
           mlir::isa<cir::VoidType>(rty)) {
-        out << "return;\n";
+        out << "    return;\n";
       } else {
         std::string ctype = m.mapTypeToC(rty);
-        out << "{ " << ctype << " __cir_eh_ret = (" << ctype
-            << ")0; return __cir_eh_ret; }\n";
+        out << "    " << ctype << " __cir_eh_ret = (" << ctype << ")0;\n";
+        out << "    return __cir_eh_ret;\n";
       }
     }
+    out << "  }\n";
   }
   return true;
 }
@@ -869,12 +904,31 @@ bool handleTryCall(cir::TryCallOp op, Mapper &m, std::ostream &out) {
 
 bool handleReturn(cir::ReturnOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
-  if (o->getNumOperands() == 0) { 
-    out << "  return;\n"; 
-    return true; 
+  // Destructor order: evaluate return value FIRST, then run dtors, then return.
+  // C++ standard: destructors of locals run after the return expression is
+  // evaluated but before control leaves the function.
+  if (o->getNumOperands() == 0) {
+    // No return value — emit cleanups then return.
+    m.emitPendingCleanups(out, 0);
+    out << "  return;\n";
+    return true;
   }
+  // With a return value: capture it into a temp, run cleanups, return temp.
   std::string rv = m.getOrCreateName(o->getOperand(0));
-  out << "  return " << rv << ";\n";
+  // Only introduce a temp when the pending cleanups could shadow the name.
+  if (m.getLoopDepth() > 0 || !m.currentForStepLabel().empty() ||
+      !m.cleanupStackEmpty()) {
+    // Use a stable temp name that won't collide (freshName gives a new name).
+    std::string retTmp = m.freshName("ret_val");
+    std::string ctype = m.mapTypeToC(o->getOperand(0).getType());
+    out << "  " << ctype << " " << retTmp << " = " << rv << ";\n";
+    m.emitPendingCleanups(out, 0);
+    out << "  return " << retTmp << ";\n";
+  } else {
+    // No cleanups pending — direct return.
+    m.emitPendingCleanups(out, 0);
+    out << "  return " << rv << ";\n";
+  }
   return true;
 }
 
@@ -1271,10 +1325,56 @@ bool handleTernary(cir::TernaryOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// NOTE: C++20 coroutine scopes (cir.await / co_await) are intentionally NOT
+// handled. The await operation wraps its ready/suspend/resume regions in a
+// cir.scope; lowering that to C requires a full coroutine state-machine
+// transformation which is out of scope for the current verification target.
 bool handleCleanupScope(cir::CleanupScopeOp op, Mapper &m, std::ostream &out) {
-  // Emit only the normal body region (region 0); ignore the cleanup/EH region
-  // (region 1) as it is irrelevant for reachability verification.
-  return emitRegionBody(op->getRegion(0), m, out);
+  Operation *o = op.getOperation();
+  // Region 0: normal body.  Region 1: cleanup (destructor) body.
+  // The cleanup must run on EVERY exit from the body:
+  //   (a) Normal fall-through (cir.yield terminator).
+  //   (b) Early exits (cir.return / cir.break / cir.continue) — those
+  //       handlers already check the cleanup stack and emit pending cleanups
+  //       before their own statement, so nothing extra is needed here.
+  //   (c) Exceptional exits — handleCall already emits cleanups before the
+  //       `if (__cir_exc_active)` guard when the module uses EH.
+  //
+  // Push the cleanup region onto the stack before emitting the body so that
+  // any early-exit handler inside the body sees it.
+  mlir::Region *cleanupRegion =
+      (o->getNumRegions() >= 2) ? &o->getRegion(1) : nullptr;
+  if (cleanupRegion && !cleanupRegion->empty())
+    m.pushCleanup(cleanupRegion);
+
+  CaseTerminatorKind termKind = CaseTerminatorKind::Other;
+  if (!emitRegionBody(o->getRegion(0), m, out, nullptr, &termKind))
+    return false;
+
+  if (cleanupRegion && !cleanupRegion->empty())
+    m.popCleanup();
+
+  // (a) Normal fall-through: emit the cleanup inline.
+  if (termKind == CaseTerminatorKind::Yield && cleanupRegion &&
+      !cleanupRegion->empty()) {
+    out << "  {\n";
+    mlir::Block &block = cleanupRegion->front();
+    std::ostringstream cleanupOut;
+    for (mlir::Operation &cop : block.getOperations()) {
+      if (llvm::isa<cir::YieldOp>(cop)) break;
+      if (!m.mapOperation(&cop, cleanupOut))
+        cleanupOut << "  // (cleanup op could not be mapped)\n";
+    }
+    // Indent one extra level inside the braces.
+    std::istringstream ls(cleanupOut.str());
+    std::string ln;
+    while (std::getline(ls, ln)) {
+      if (!ln.empty()) out << "  ";
+      out << ln << "\n";
+    }
+    out << "  }\n";
+  }
+  return true;
 }
 
 bool handleScope(cir::ScopeOp op, Mapper &m, std::ostream &out) {
@@ -1340,47 +1440,70 @@ static std::string emitCondRegion(Region &region, Mapper &m, std::ostream &out,
 // cir.while:
 //   while (1) { <cond-region>; if (!cond) break; <body-region>; }
 bool handleWhile(cir::WhileOp op, Mapper &m, std::ostream &out) {
+  m.enterLoop();
+  m.pushForStepLabel("");  // empty = not a for-loop; continue stays plain
   out << "  while (1) {\n";
   bool ok;
   std::string condName = emitCondRegion(op.getCond(), m, out, &ok);
-  if (!ok) return false;
+  if (!ok) { m.popForStepLabel(); m.exitLoop(); return false; }
   if (!condName.empty())
     out << "    if (!" << condName << ") break;\n";
-  if (!emitRegionBody(op.getBody(), m, out)) return false;
+  if (!emitRegionBody(op.getBody(), m, out)) {
+    m.popForStepLabel(); m.exitLoop(); return false;
+  }
   out << "  }\n";
+  m.popForStepLabel();
+  m.exitLoop();
   return true;
 }
 
 // cir.do:
 //   do { <body-region>; <cond-region>; if (!cond) break; } while (1);
 bool handleDoWhile(cir::DoWhileOp op, Mapper &m, std::ostream &out) {
+  m.enterLoop();
+  m.pushForStepLabel("");  // empty = not a for-loop
   out << "  do {\n";
-  if (!emitRegionBody(op.getBody(), m, out)) return false;
+  if (!emitRegionBody(op.getBody(), m, out)) {
+    m.popForStepLabel(); m.exitLoop(); return false;
+  }
   bool ok;
   std::string condName = emitCondRegion(op.getCond(), m, out, &ok);
-  if (!ok) return false;
+  if (!ok) { m.popForStepLabel(); m.exitLoop(); return false; }
   if (!condName.empty())
     out << "    if (!" << condName << ") break;\n";
   out << "  } while (1);\n";
+  m.popForStepLabel();
+  m.exitLoop();
   return true;
 }
 
 // cir.for:
-//   while (1) { <cond-region>; if (!cond) break; <body-region>; <step-region>; }
-// Note: the C init is emitted as plain alloca/store ops *before* the cir.for
-// op in CIR, so no init region exists here.
-// Limitation: `continue` inside body skips the step region.  This is
-// acceptable for the initial implementation; a goto-based fix can follow.
+//   while (1) { <cond-region>; if (!cond) break; <body-region>;
+//               step_label: ; <step-region>; }
+// A step label is inserted before the step region so that `continue` inside
+// the body can jump to it (via `goto step_label`) rather than skipping the
+// increment by targeting the outer while(1) top.
 bool handleFor(cir::ForOp op, Mapper &m, std::ostream &out) {
+  m.enterLoop();
+  std::string stepLabel = m.freshName("for_step");
+  m.pushForStepLabel(stepLabel);
   out << "  while (1) {\n";
   bool ok;
   std::string condName = emitCondRegion(op.getCond(), m, out, &ok);
-  if (!ok) return false;
+  if (!ok) { m.popForStepLabel(); m.exitLoop(); return false; }
   if (!condName.empty())
     out << "    if (!" << condName << ") break;\n";
-  if (!emitRegionBody(op.getBody(), m, out)) return false;
-  if (!emitRegionBody(op.getStep(), m, out)) return false;
+  if (!emitRegionBody(op.getBody(), m, out)) {
+    m.popForStepLabel(); m.exitLoop(); return false;
+  }
+  // Step label: `continue` jumps here.
+  out << "  " << stepLabel << ": ;\n";
+  if (!emitRegionBody(op.getStep(), m, out)) {
+    m.popForStepLabel(); m.exitLoop(); return false;
+  }
   out << "  }\n";
+  m.popForStepLabel();
+  m.exitLoop();
   return true;
 }
 

@@ -213,6 +213,27 @@ private:
   // function; in that case throw / resume must propagate via return.
   std::vector<std::string> tryLandingPadStack_;
 
+  // ── Cleanup (RAII destructor) stack ────────────────────────────────────
+  // Each entry is the cleanup region (region 1) of an enclosing
+  // cir.cleanup.scope whose body is currently being emitted.  The innermost
+  // (most recently pushed) entry is at the back.  Also stores the loop
+  // nesting depth at the time of the push so break/continue know which
+  // cleanups they cross.
+  struct CleanupEntry {
+    mlir::Region *region;  // region 1 of the cir.cleanup.scope
+    int loopDepth;         // loop nesting depth when this cleanup was pushed
+  };
+  std::vector<CleanupEntry> cleanupStack_;
+  // Current loop nesting depth (incremented on for/while/do entry, decremented
+  // on exit).  Used to populate CleanupEntry::loopDepth.
+  int loopDepth_ = 0;
+
+  // ── For-loop step label stack ───────────────────────────────────────────
+  // Each entry is the step label name for an active cir.for loop (innermost
+  // on top).  An empty string is pushed for cir.while / cir.do so that
+  // handleContinue can distinguish "for" from "while/do" by checking the top.
+  std::vector<std::string> forStepLabelStack_;
+
 public:
   /// Get or create a label name for a block.
   std::string getOrCreateLabel(mlir::Block *b);
@@ -294,6 +315,45 @@ public:
   const std::string &currentTryLandingPad() const {
     static const std::string empty;
     return tryLandingPadStack_.empty() ? empty : tryLandingPadStack_.back();
+  }
+
+  // ── Cleanup stack helpers ──────────────────────────────────────────────
+
+  /// Push a cleanup region (region 1 of a cir.cleanup.scope) onto the stack.
+  void pushCleanup(mlir::Region *region) {
+    cleanupStack_.push_back({region, loopDepth_});
+  }
+  /// Pop the innermost cleanup region.
+  void popCleanup() {
+    if (!cleanupStack_.empty()) cleanupStack_.pop_back();
+  }
+  /// Emit all cleanup regions that are inside the current loop nesting depth
+  /// (i.e. whose loopDepth >= fromDepth), innermost first, each wrapped in
+  /// its own braces block.  Used by handleReturn (fromDepth=0 → all),
+  /// handleBreak/handleContinue (fromDepth=loopDepth_ → only the cleanups
+  /// inside the current loop iteration).
+  void emitPendingCleanups(std::ostream &out, int fromDepth = 0);
+  /// Returns the current loop nesting depth.
+  int getLoopDepth() const { return loopDepth_; }
+  /// Returns true when the cleanup stack is empty (no pending RAII dtors).
+  bool cleanupStackEmpty() const { return cleanupStack_.empty(); }
+  /// Increment/decrement the loop nesting depth.
+  void enterLoop() { ++loopDepth_; }
+  void exitLoop()  { if (loopDepth_ > 0) --loopDepth_; }
+
+  // ── For-loop step label stack helpers ─────────────────────────────────
+  /// Push a step label for a cir.for loop (or empty string for while/do).
+  void pushForStepLabel(const std::string &label) {
+    forStepLabelStack_.push_back(label);
+  }
+  /// Pop the innermost step label.
+  void popForStepLabel() {
+    if (!forStepLabelStack_.empty()) forStepLabelStack_.pop_back();
+  }
+  /// Return the innermost step label (empty if none or if it is a while/do).
+  const std::string &currentForStepLabel() const {
+    static const std::string empty;
+    return forStepLabelStack_.empty() ? empty : forStepLabelStack_.back();
   }
 
   /// Load the vtable layout dump produced by
