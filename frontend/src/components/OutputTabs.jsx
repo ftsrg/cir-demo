@@ -20,7 +20,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import ComparisonView from './ComparisonView'
 
-export default function OutputTabs({ outputs = {}, flatten = true }) {
+export default function OutputTabs({ outputs = {}, flatten = false }) {
   const [tab, setTab] = useState(0)
   const [stderrOpen, setStderrOpen] = useState(true)
   const tabDefs = [

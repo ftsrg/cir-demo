@@ -143,7 +143,7 @@ def extract_generated_c_failure(c_text: str) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run benchmark .yml cases through clang/clang++ + cir-opt + xcfa-mapper and show direct stage failures."
+        description="Run benchmark .yml cases through clang/clang++ + xcfa-mapper and show direct stage failures. Use --flatten to also run cir-opt -cir-flatten-cfg before the mapper."
     )
     parser.add_argument(
         "input_dir",
@@ -161,9 +161,15 @@ def parse_args() -> argparse.Namespace:
         help="Use C mode (`clang -x c -std=c11`) instead of the default C++ mode (`clang++ -x c++ -std=c++11`).",
     )
     parser.add_argument(
+        "-f",
+        "--flatten",
+        action="store_true",
+        help="Run cir-opt -cir-flatten-cfg on the CIR before passing it to xcfa-mapper.",
+    )
+    parser.add_argument(
         "-o",
         "--output-dir",
-        help="Optional directory for generated per-benchmark files (input.mlir, input.flat.mlir, output.c). If omitted, temporary directories are used.",
+        help="Optional directory for generated per-benchmark files (input.mlir, output.c). If omitted, temporary directories are used.",
     )
     return parser.parse_args()
 
@@ -181,7 +187,7 @@ def log_line(handle: TextIO, message: str = "") -> None:
     handle.write(message + "\n")
     handle.flush()
 
-def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Path | None) -> dict[str, str]:
+def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Path | None, flatten: bool = False) -> dict[str, str]:
     relative_yml = yml_path.relative_to(root_dir)
     source_name = parse_input_file_from_yml(yml_path)
     source_path = yml_path.parent / source_name
@@ -229,26 +235,30 @@ def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Pat
                     ),
                 }
 
-            flatten_command = [
-                str(CIR_OPT),
-                str(mlir_path),
-                "-cir-flatten-cfg",
-                "-o",
-                str(flat_mlir_path),
-            ]
-            flatten_result = run_command(flatten_command, DEFAULT_TIMEOUT)
-            if flatten_result.returncode != 0 or not flat_mlir_path.exists():
-                return {
-                    "case_id": case_id,
-                    "status": "flatten_failed",
-                    "detail": summarize_process_failure(
-                        flatten_result.stdout,
-                        flatten_result.stderr,
-                        flatten_result.returncode,
-                    ),
-                }
+            if flatten:
+                flatten_command = [
+                    str(CIR_OPT),
+                    str(mlir_path),
+                    "-cir-flatten-cfg",
+                    "-o",
+                    str(flat_mlir_path),
+                ]
+                flatten_result = run_command(flatten_command, DEFAULT_TIMEOUT)
+                if flatten_result.returncode != 0 or not flat_mlir_path.exists():
+                    return {
+                        "case_id": case_id,
+                        "status": "flatten_failed",
+                        "detail": summarize_process_failure(
+                            flatten_result.stdout,
+                            flatten_result.stderr,
+                            flatten_result.returncode,
+                        ),
+                    }
+                mapper_input = flat_mlir_path
+            else:
+                mapper_input = mlir_path
 
-            mapper_command = [str(MAPPER), str(flat_mlir_path), str(c_path)]
+            mapper_command = [str(MAPPER), str(mapper_input), str(c_path)]
             mapper_result = run_command(mapper_command, DEFAULT_TIMEOUT)
             if mapper_result.returncode != 0 or not c_path.exists():
                 detail = summarize_process_failure(
@@ -300,19 +310,19 @@ def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Pat
         "detail": "",
     }
 
-def validate_tools() -> None:
+def validate_tools(flatten: bool = False) -> None:
     if not MAPPER.exists():
         raise SystemExit(f"xcfa-mapper not found: {MAPPER}")
     if not CLANG.exists():
         raise SystemExit(f"clang not found: {CLANG}")
     if not CLANGXX.exists():
         raise SystemExit(f"clang++ not found: {CLANGXX}")
-    if not CIR_OPT.exists():
+    if flatten and not CIR_OPT.exists():
         raise SystemExit(f"cir-opt not found: {CIR_OPT}")
 
 def main() -> int:
     args = parse_args()
-    validate_tools()
+    validate_tools(args.flatten)
 
     input_dir = Path(args.input_dir).expanduser().resolve()
     if not input_dir.is_dir():
@@ -334,7 +344,7 @@ def main() -> int:
         print(f"Starting {total} benchmarks")
 
         with ThreadPoolExecutor(max_workers=DEFAULT_JOBS) as executor:
-            futures = [executor.submit(benchmark_case, yml_path, input_dir, args.c_mode, output_dir) for yml_path in yml_paths]
+            futures = [executor.submit(benchmark_case, yml_path, input_dir, args.c_mode, output_dir, args.flatten) for yml_path in yml_paths]
             completed = 0
             for future in as_completed(futures):
                 results.append(future.result())

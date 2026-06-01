@@ -200,13 +200,13 @@ app.get('/api/xcfa-mapper-version', async (req, res) => {
 // generation endpoint: runs clang to produce LLVM IR and CIR, then optionally
 // flattens CIR with cir-opt before passing it to xcfa-mapper.
 // Request body: { code, language, flatten? }
-// flatten defaults to true (flat-CIR path); set to false for non-flat/structured CIR.
+// flatten defaults to false (non-flat/structured CIR path); set to true to run cir-opt -cir-flatten-cfg first.
 app.post('/api/generate', async (req, res) => {
   const code = req.body.code || '';
   const language = req.body.language === 'c' ? 'c' : 'cpp';
-  // flatten=true (default): run cir-opt -cir-flatten-cfg before xcfa-mapper.
-  // flatten=false: skip flattening; xcfa-mapper receives structured CIR directly.
-  const flatten = req.body.flatten !== false;
+  // flatten=false (default): skip flattening; xcfa-mapper receives structured CIR directly.
+  // flatten=true: run cir-opt -cir-flatten-cfg before xcfa-mapper.
+  const flatten = req.body.flatten === true;
   const ext = language === 'c' ? 'c' : 'cpp';
   const clangBin = language === 'c' ? CLANG_BIN : CLANGPP_BIN;
   const tmpDir = path.join(__dirname, '..', 'tmp');

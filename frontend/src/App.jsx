@@ -66,7 +66,7 @@ export default function App() {
   }, [selectedExample])
 
   const [language, setLanguage] = useState('cpp')
-  const [flatten, setFlatten] = useState(true)
+  const [flatten, setFlatten] = useState(false)
   const [examplesAnchor, setExamplesAnchor] = useState(null)
   const openExamples = Boolean(examplesAnchor)
   const onOpenExamples = (e) => setExamplesAnchor(e.currentTarget)
@@ -127,8 +127,8 @@ export default function App() {
               variant="outlined"
               sx={{ color: 'inherit', '.MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.5)' }, '.MuiSvgIcon-root': { color: 'inherit' }, fontSize: 14, height: 32 }}
             >
-              <MenuItem value="flat">Flat CIR</MenuItem>
               <MenuItem value="nonflat">Non-flat CIR</MenuItem>
+              <MenuItem value="flat">Flat CIR</MenuItem>
             </Select>
             <Button color="inherit" onClick={onGenerate}>Generate</Button>
           </Box>
