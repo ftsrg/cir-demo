@@ -11,3 +11,6 @@ backend/bin/**
 .vscode/settings.json
 xcfa-mapper/test/tmp/**
 xcfa-mapper/test/benchmark/**
+notes
+xcfa-mapper/test/esbmc-all-output/
+xcfa-mapper/test/output.txt
