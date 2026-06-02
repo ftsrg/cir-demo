@@ -14,3 +14,6 @@ xcfa-mapper/test/benchmark/**
 notes
 xcfa-mapper/test/esbmc-all-output/
 xcfa-mapper/test/output.txt
+build
+llvm-project
+CLAUDE.md
