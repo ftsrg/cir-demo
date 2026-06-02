@@ -36,10 +36,9 @@ INTEGRATION_OUTPUT_DIR="$INTEGRATION_TEST_DIR/output"
 
 # Tools
 XCFA_MAPPER="$BUILD_DIR/xcfa-mapper"
-CLANG="$PROJECT_DIR/../backend/bin/bin/clang"
 CLANGPP="$PROJECT_DIR/../backend/bin/bin/clang++"
-CIR_OPT="$PROJECT_DIR/../backend/bin/bin/cir-opt"
 GCC="gcc"  # Use system gcc for compilation checks
+RUNNER="$SCRIPT_DIR/run-xcfa-mapper.sh"
 
 # Counters
 TOTAL_TESTS=0
@@ -65,36 +64,19 @@ if [ ! -f "$XCFA_MAPPER" ]; then
     exit 1
 fi
 
-# Check if clang exists
-if [ ! -f "$CLANG" ]; then
-    echo -e "${RED}ERROR: clang not found at $CLANG${NC}"
-    echo "Please ensure the CIR-enabled clang is available"
-    exit 1
-fi
-
-# Check if cir-opt exists
-if [ ! -f "$CIR_OPT" ]; then
-    echo -e "${RED}ERROR: cir-opt not found at $CIR_OPT${NC}"
-    echo "Please ensure the CIR-enabled toolchain is available"
-    exit 1
-fi
-
 echo "Using tools:"
 echo "  xcfa-mapper: $XCFA_MAPPER"
-echo "  clang: $CLANG"
-echo "  clang++: $CLANGPP"
-echo "  cir-opt: $CIR_OPT"
+echo "  runner:      $RUNNER"
 echo ""
 
-# Preprocess a CIR MLIR file to strip alloca qualifiers that the tablegen-
-# generated AllocaOp parser cannot handle (it only accepts "init").
-# Usage: preprocess_cir <input> <output>
-#   ", cleanup_dest_slot" — C++ EH cleanup-destination slot
-#   ", const"             — const-qualified catch-clause variable
-preprocess_cir() {
-    sed -e 's/, cleanup_dest_slot\]/\]/g' \
-        -e 's/, const\]/\]/g' \
-        "$1" > "$2"
+# Helper: map pipeline exit code to a stage label
+pipeline_stage() {
+    case "$1" in
+        2) echo "CIR generation" ;;
+        3) echo "flatten" ;;
+        4) echo "xcfa-mapper" ;;
+        *) echo "pipeline" ;;
+    esac
 }
 
 #######################################
@@ -158,37 +140,23 @@ for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
 
         echo -n "Testing $test_name... "
 
-        # Step 1: Generate CIR from C file
-        mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
-        clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_clang_log.txt"
-
-        if ! "$CLANG" "$c_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
-            echo -e "${RED}FAILED${NC} (CIR generation failed)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            echo "  Output from clang:"
-            cat "$clang_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        # Step 2: Convert CIR to C using xcfa-mapper
-        _pre_mlir=$(mktemp --suffix=.mlir)
-        preprocess_cir "$mlir_file" "$_pre_mlir"
         output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
-        mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_mapper_log.txt"
+        pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
 
-        if ! "$XCFA_MAPPER" "$_pre_mlir" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
-            rm -f "$_pre_mlir"
-            echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+        pipeline_rc=0
+        "$RUNNER" --lang c \
+            --mlir "$INTEGRATION_OUTPUT_DIR/${test_name}.mlir" \
+            "$c_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
+
+        if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
+            echo -e "${RED}FAILED${NC} ($(pipeline_stage $pipeline_rc) failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
-            echo "  Output from xcfa-mapper:"
-            cat "$mapper_log" | sed 's/^/    /'
+            cat "$pipeline_log" | sed 's/^/    /'
             echo ""
             continue
         fi
-        rm -f "$_pre_mlir"
 
-        # Step 3: Check if the generated C file compiles
+        # Check if the generated C file compiles
         compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
         if ! "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1; then
             echo -e "${RED}FAILED${NC} (compilation failed)"
@@ -224,38 +192,23 @@ else
 
             echo -n "Testing $test_name... "
 
-            # Step 1: Generate CIR from C++ file
-            mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
-            clang_log="$INTEGRATION_OUTPUT_DIR/${test_name}_clang_log.txt"
-
-            if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" > "$clang_log" 2>&1; then
-                echo -e "${RED}FAILED${NC} (CIR generation failed)"
-                FAILED_TESTS=$((FAILED_TESTS + 1))
-                echo "  Output from clang++:"
-                cat "$clang_log" | sed 's/^/    /'
-                echo ""
-                continue
-            fi
-
-            # Step 2: Convert CIR to C using xcfa-mapper
-            # Use --best-effort: C++ STL internals produce ops that can't be fully mapped.
-            _pre_mlir=$(mktemp --suffix=.mlir)
-            preprocess_cir "$mlir_file" "$_pre_mlir"
             output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
-            mapper_log="$INTEGRATION_OUTPUT_DIR/${test_name}_mapper_log.txt"
+            pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
 
-            if ! "$XCFA_MAPPER" --best-effort "$_pre_mlir" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
-                rm -f "$_pre_mlir"
-                echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+            pipeline_rc=0
+            "$RUNNER" --best-effort \
+                --mlir "$INTEGRATION_OUTPUT_DIR/${test_name}.mlir" \
+                "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
+
+            if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
+                echo -e "${RED}FAILED${NC} ($(pipeline_stage $pipeline_rc) failed)"
                 FAILED_TESTS=$((FAILED_TESTS + 1))
-                echo "  Output from xcfa-mapper:"
-                cat "$mapper_log" | sed 's/^/    /'
+                cat "$pipeline_log" | sed 's/^/    /'
                 echo ""
                 continue
             fi
-            rm -f "$_pre_mlir"
 
-            # Step 3: Check that struct/union names in the generated C are valid identifiers.
+            # Check that struct/union names in the generated C are valid identifiers.
             # C++ qualified names (::, <, >) must not appear in struct/union declarations.
             # Full compilation is not required: C++ STL internals produce unhandled ops
             # (vtables, exception handling, etc.) that are emitted as comments in
@@ -304,34 +257,31 @@ else
         echo -n "Testing $test_id... "
 
         mlir_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.mlir"
-        clang_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_clang_log.txt"
         vtlayout_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.vtlayout.txt"
+        output_c_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_output.c"
+        pipeline_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_pipeline_log.txt"
 
-        # Step 1: Generate CIR from C++ file; capture vtable layout dump from stdout
-        if ! "$CLANGPP" "$cpp_file" -Xclang -emit-cir -S -o "$mlir_file" \
-                -Xclang -fdump-vtable-layouts > "$vtlayout_file" 2>"$clang_log"; then
+        pipeline_rc=0
+        "$RUNNER" --best-effort \
+            --mlir "$mlir_file" \
+            --vtlayout "$vtlayout_file" \
+            "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
+
+        if [[ $pipeline_rc -eq 2 ]]; then
             echo -e "${YELLOW}SKIPPED${NC} (CIR generation failed)"
             SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
             continue
         fi
 
-        # Step 2: Convert CIR to C using xcfa-mapper
-        _pre_mlir=$(mktemp --suffix=.mlir)
-        preprocess_cir "$mlir_file" "$_pre_mlir"
-        output_c_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_output.c"
-        mapper_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_mapper_log.txt"
-
-        if ! "$XCFA_MAPPER" --best-effort --vtlayout "$vtlayout_file" "$_pre_mlir" "$output_c_file" > "$mapper_log" 2>&1 || [ ! -f "$output_c_file" ]; then
-            rm -f "$_pre_mlir"
-            echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
+        if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
+            echo -e "${RED}FAILED${NC} ($(pipeline_stage $pipeline_rc) failed)"
             FAILED_TESTS=$((FAILED_TESTS + 1))
-            head -5 "$mapper_log" | sed 's/^/    /'
+            head -5 "$pipeline_log" | sed 's/^/    /'
             echo ""
             continue
         fi
-        rm -f "$_pre_mlir"
 
-        # Step 4: Compile generated C with gcc
+        # Compile generated C with gcc
         binary_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_binary"
         gcc_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_gcc_log.txt"
         if ! "$GCC" "$output_c_file" -o "$binary_file" -lm > "$gcc_log" 2>&1; then
@@ -342,7 +292,7 @@ else
             continue
         fi
 
-        # Step 5: Run binary and compare output against reference
+        # Run binary and compare output against reference
         actual_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_actual.txt"
         expected_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_expected.txt"
 

@@ -18,7 +18,6 @@
 from __future__ import annotations
 
 import argparse
-import contextlib
 import re
 import subprocess
 import sys
@@ -30,10 +29,7 @@ from typing import TextIO
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent.parent
-CLANG = REPO_ROOT / "backend" / "bin" / "bin" / "clang"
-CLANGXX = REPO_ROOT / "backend" / "bin" / "bin" / "clang++"
-CIR_OPT = REPO_ROOT / "backend" / "bin" / "bin" / "cir-opt"
-MAPPER = SCRIPT_DIR.parent / "build" / "xcfa-mapper"
+RUNNER = SCRIPT_DIR / "run-xcfa-mapper.sh"
 GCC = "gcc"
 DEFAULT_YML_PATTERNS = ["**/*.yml"]
 DEFAULT_JOBS = 8
@@ -44,22 +40,11 @@ ERROR_MARKERS = (
     "ERROR",
 )
 
+# Pipeline exit codes from run-xcfa-mapper.sh
+_EXIT_STAGE = {2: "clang_failed", 3: "flatten_failed", 4: "mapper_failed"}
+
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
-
-def preprocess_cir(path: Path) -> None:
-    """Strip alloca qualifiers the tablegen AllocaOp parser can't handle.
-
-    The CIR AllocaOp parser only accepts 'init' as the qualifier keyword.
-    'cleanup_dest_slot' and 'const' (emitted by clang for EH cleanup slots
-    and const-qualified catch-clause variables respectively) both cause
-    'expected init' parse errors in cir-opt and xcfa-mapper.  Neither
-    qualifier affects the C output so it is safe to strip them.
-    """
-    text = path.read_text(encoding="utf-8", errors="replace")
-    text = text.replace(", cleanup_dest_slot]", "]")
-    text = text.replace(", const]", "]")
-    path.write_text(text, encoding="utf-8")
 
 def parse_input_file_from_yml(yml_path: Path) -> str:
     for raw_line in read_text(yml_path).splitlines():
@@ -118,7 +103,7 @@ def normalize_message(line: str) -> str:
     repo_prefix = str(REPO_ROOT) + "/"
     if repo_prefix in message:
         message = message.replace(repo_prefix, "")
-    message = re.sub(r"/tmp/xcfa_inventory_[^/]+/output\.c", "generated.c", message)
+    message = re.sub(r"/tmp/[^/]+/output\.c", "generated.c", message)
     return message
 
 def summarize_process_failure(stdout_text: str, stderr_text: str, returncode: int | None = None) -> str:
@@ -157,7 +142,7 @@ def extract_generated_c_failure(c_text: str) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run benchmark .yml cases through clang/clang++ + xcfa-mapper and show direct stage failures. Use --flatten to also run cir-opt -cir-flatten-cfg before the mapper."
+        description="Run benchmark .yml cases through the CIR pipeline and show failures. Use --flatten to also run cir-opt -cir-flatten-cfg before the mapper."
     )
     parser.add_argument(
         "input_dir",
@@ -208,113 +193,56 @@ def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Pat
     case_id = str(relative_yml.parent / source_name)
 
     try:
-        if output_dir is None:
-            temp_dir_cm = tempfile.TemporaryDirectory(prefix="xcfa_inventory_")
-            temp_root_cm = contextlib.nullcontext(None)
-        else:
+        if output_dir is not None:
             case_dir = output_dir / relative_yml.with_suffix("")
             case_dir.mkdir(parents=True, exist_ok=True)
-            temp_dir_cm = contextlib.nullcontext(str(case_dir))
-            temp_root_cm = contextlib.nullcontext(case_dir)
+            c_path = case_dir / "output.c"
+            mlir_path: Path | None = case_dir / "input.mlir"
+        else:
+            c_path = Path(tempfile.mkstemp(suffix=".c")[1])
+            mlir_path = None
 
-        with temp_dir_cm as temp_dir_name, temp_root_cm as temp_root:
-            temp_dir = temp_root if temp_root is not None else Path(temp_dir_name)
-            mlir_path = temp_dir / "input.mlir"
-            flat_mlir_path = temp_dir / "input.flat.mlir"
-            c_path = temp_dir / "output.c"
-
-            clang_binary = CLANG if c_mode else CLANGXX
-            language = "c" if c_mode else "c++"
-            standard = "c11" if c_mode else "c++11"
-            clang_command = [
-                str(clang_binary),
-                "-x",
-                language,
-                f"-std={standard}",
-                "-S",
-                "-emit-cir",
-                str(source_path),
-                "-o",
-                str(mlir_path),
-            ]
-            clang_result = run_command(clang_command, DEFAULT_TIMEOUT)
-            if clang_result.returncode != 0 or not mlir_path.exists():
-                return {
-                    "case_id": case_id,
-                    "status": "clang_failed",
-                    "detail": summarize_process_failure(
-                        clang_result.stdout,
-                        clang_result.stderr,
-                        clang_result.returncode,
-                    ),
-                }
-
-            # Strip alloca qualifiers the CIR parser can't handle before
-            # passing to cir-opt (flatten path) or xcfa-mapper (non-flat path).
-            preprocess_cir(mlir_path)
-
+        try:
+            runner_cmd = [str(RUNNER)]
+            if c_mode:
+                runner_cmd += ["--lang", "c"]
             if flatten:
-                flatten_command = [
-                    str(CIR_OPT),
-                    str(mlir_path),
-                    "-cir-flatten-cfg",
-                    "-o",
-                    str(flat_mlir_path),
-                ]
-                flatten_result = run_command(flatten_command, DEFAULT_TIMEOUT)
-                if flatten_result.returncode != 0 or not flat_mlir_path.exists():
-                    return {
-                        "case_id": case_id,
-                        "status": "flatten_failed",
-                        "detail": summarize_process_failure(
-                            flatten_result.stdout,
-                            flatten_result.stderr,
-                            flatten_result.returncode,
-                        ),
-                    }
-                mapper_input = flat_mlir_path
-            else:
-                mapper_input = mlir_path
+                runner_cmd += ["--flatten"]
+            if mlir_path is not None:
+                runner_cmd += ["--mlir", str(mlir_path)]
+            runner_cmd += [str(source_path), str(c_path)]
 
-            mapper_command = [str(MAPPER), str(mapper_input), str(c_path)]
-            mapper_result = run_command(mapper_command, DEFAULT_TIMEOUT)
-            if mapper_result.returncode != 0 or not c_path.exists():
+            pipeline_result = run_command(runner_cmd, DEFAULT_TIMEOUT)
+
+            if pipeline_result.returncode != 0:
+                status = _EXIT_STAGE.get(pipeline_result.returncode, "pipeline_failed")
                 detail = summarize_process_failure(
-                    mapper_result.stdout,
-                    mapper_result.stderr,
-                    mapper_result.returncode,
+                    pipeline_result.stdout, pipeline_result.stderr, pipeline_result.returncode
                 )
-                if c_path.exists():
-                    generated_c_failure = extract_generated_c_failure(read_text(c_path))
-                    if generated_c_failure:
-                        detail = generated_c_failure
-                return {
-                    "case_id": case_id,
-                    "status": "mapper_failed",
-                    "detail": detail,
-                }
+                if pipeline_result.returncode == 4 and c_path.exists():
+                    gen_fail = extract_generated_c_failure(read_text(c_path))
+                    if gen_fail:
+                        detail = gen_fail
+                return {"case_id": case_id, "status": status, "detail": detail}
 
             generated_c = read_text(c_path)
             generated_c_failure = extract_generated_c_failure(generated_c)
             if generated_c_failure:
-                return {
-                    "case_id": case_id,
-                    "status": "mapper_failed",
-                    "detail": generated_c_failure,
-                }
+                return {"case_id": case_id, "status": "mapper_failed", "detail": generated_c_failure}
 
-            compile_command = [GCC, "-fsyntax-only", str(c_path)]
-            compile_result = run_command(compile_command, DEFAULT_TIMEOUT)
+            compile_result = run_command([GCC, "-fsyntax-only", str(c_path)], DEFAULT_TIMEOUT)
             if compile_result.returncode != 0:
                 return {
                     "case_id": case_id,
                     "status": "compile_failed",
                     "detail": summarize_process_failure(
-                        compile_result.stdout,
-                        compile_result.stderr,
-                        compile_result.returncode,
+                        compile_result.stdout, compile_result.stderr, compile_result.returncode
                     ),
                 }
+        finally:
+            if output_dir is None:
+                c_path.unlink(missing_ok=True)
+
     except subprocess.TimeoutExpired:
         return {
             "case_id": case_id,
@@ -328,19 +256,13 @@ def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Pat
         "detail": "",
     }
 
-def validate_tools(flatten: bool = False) -> None:
-    if not MAPPER.exists():
-        raise SystemExit(f"xcfa-mapper not found: {MAPPER}")
-    if not CLANG.exists():
-        raise SystemExit(f"clang not found: {CLANG}")
-    if not CLANGXX.exists():
-        raise SystemExit(f"clang++ not found: {CLANGXX}")
-    if flatten and not CIR_OPT.exists():
-        raise SystemExit(f"cir-opt not found: {CIR_OPT}")
+def validate_tools() -> None:
+    if not RUNNER.exists():
+        raise SystemExit(f"run-xcfa-mapper.sh not found: {RUNNER}")
 
 def main() -> int:
     args = parse_args()
-    validate_tools(args.flatten)
+    validate_tools()
 
     input_dir = Path(args.input_dir).expanduser().resolve()
     if not input_dir.is_dir():
