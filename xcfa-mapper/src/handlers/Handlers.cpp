@@ -229,7 +229,24 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   // Get the allocated type (first operand type in the operation signature)
   // cir.alloca returns a pointer, but we want to declare the variable as the pointed-to type
   Type allocaTy = op.getAllocaType();
-  
+
+  // Variable-length array: a dynamic alloc-size operand makes this a VLA.
+  // Map it to a C99 VLA `T name[n]` so its lifetime is managed by the
+  // enclosing C block scope (matching the cir.scope it lives in). The result
+  // is direct-access like other arrays; it decays to a pointer where used.
+  if (mlir::Value dynSize = op.getDynAllocSize()) {
+    std::string sizeName = m.getOrCreateName(dynSize);
+    std::string dims;
+    std::string elemCType = m.arrayBaseTypeAndDims(allocaTy, dims);
+    out << "  " << qualPrefix << elemCType << " " << uniqueVarName
+        << "[" << sizeName << "]" << dims << ";\n";
+    for (Value res : o->getResults()) {
+      m.setName(res, uniqueVarName);
+      m.markAsDirectAccess(res);
+    }
+    return true;
+  }
+
   // Handle struct types first: use typed API instead of textual type string inspection.
   // This needs to come before array check since some struct names might contain "array"
   if (mlir::isa<cir::RecordType>(allocaTy)) {
@@ -243,9 +260,11 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   }
   
   // Handle array types specially: !cir.array<!s32i x 5> -> int arr[5]
+  // Multi-dimensional arrays emit every dimension: int arr[8][3].
   if (auto arrayTy = llvm::dyn_cast<cir::ArrayType>(allocaTy)) {
-    std::string elemCType = m.mapTypeToC(arrayTy.getElementType());
-    out << "  " << qualPrefix << elemCType << " " << uniqueVarName << "[" << arrayTy.getSize() << "];\n";
+    std::string dims;
+    std::string elemCType = m.arrayBaseTypeAndDims(arrayTy, dims);
+    out << "  " << qualPrefix << elemCType << " " << uniqueVarName << dims << ";\n";
     for (Value res : o->getResults()) {
       m.setName(res, uniqueVarName);
       m.markAsDirectAccess(res);
@@ -1102,8 +1121,31 @@ static bool handleUnaryOpImpl(Operation *o, Mapper &m, std::ostream &out, const 
   return true;
 }
 
-bool handleInc(cir::IncOp op, Mapper &m, std::ostream &out) { return handleUnaryOpImpl(op.getOperation(), m, out, "++"); }
-bool handleDec(cir::DecOp op, Mapper &m, std::ostream &out) { return handleUnaryOpImpl(op.getOperation(), m, out, "--"); }
+// cir.inc/dec are pure SSA ops: they produce a new value without mutating
+// their operand. Do NOT use ++/-- (which would mutate the C variable that
+// represents the SSA operand and break later uses of that operand).
+bool handleInc(cir::IncOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1) return false;
+  Value operand = o->getOperand(0);
+  std::string opnd = m.getOrCreateName(operand);
+  std::string tmp = m.freshName("u");
+  std::string ctype = o->getNumResults() > 0 ? m.mapTypeToC(o->getResult(0).getType()) : "int";
+  out << "  " << ctype << " " << tmp << " = " << opnd << " + 1;\n";
+  if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+  return true;
+}
+bool handleDec(cir::DecOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumOperands() < 1) return false;
+  Value operand = o->getOperand(0);
+  std::string opnd = m.getOrCreateName(operand);
+  std::string tmp = m.freshName("u");
+  std::string ctype = o->getNumResults() > 0 ? m.mapTypeToC(o->getResult(0).getType()) : "int";
+  out << "  " << ctype << " " << tmp << " = " << opnd << " - 1;\n";
+  if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+  return true;
+}
 bool handleMinus(cir::MinusOp op, Mapper &m, std::ostream &out) { return handleUnaryOpImpl(op.getOperation(), m, out, "-"); }
 
 bool handleNot(cir::NotOp op, Mapper &m, std::ostream &out) {
@@ -1688,6 +1730,75 @@ bool handleCatchParam(cir::CatchParamOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// cir.init_catch_param: binds a catch-clause variable to the in-flight
+// exception object. `param_addr` is the address of the catch variable; the
+// kind attribute determines how the exception object (modelled as the global
+// __cir_exc_ptr) is transferred into it:
+//   reference        catch (T& e)  -> store the object's address
+//   pointer          catch (T* e)  -> copy the thrown pointer value
+//   scalar/triv-copy catch (T  e)  -> copy the object by value
+//   non_trivial_copy catch (T  e)  -> the copy is performed by
+//                                     cir.construct_catch_param; nothing here
+//   objc                           -> Objective-C, not modelled
+bool handleInitCatchParam(cir::InitCatchParamOp op, Mapper &m, std::ostream &out) {
+  m.setHasExceptions();
+  mlir::Value paramAddr = op.getParamAddr();
+  std::string pname = m.getOrCreateName(paramAddr);
+  // The catch variable's lvalue: alloca results are direct-access (the name is
+  // the variable itself), otherwise the pointer must be dereferenced.
+  std::string lvalue = m.isDirectAccess(paramAddr) ? pname : ("*" + pname);
+  std::string pointeeCType = "int";
+  if (auto pt = mlir::dyn_cast<cir::PointerType>(paramAddr.getType()))
+    pointeeCType = m.mapTypeToC(pt.getPointee());
+
+  switch (op.getKind()) {
+    case cir::InitCatchKind::Reference:
+      out << "  " << lvalue << " = (" << pointeeCType << ")__cir_exc_ptr;\n";
+      break;
+    case cir::InitCatchKind::Pointer:
+    case cir::InitCatchKind::Scalar:
+    case cir::InitCatchKind::TrivialCopy:
+      out << "  " << lvalue << " = *(" << pointeeCType << "*)__cir_exc_ptr;\n";
+      break;
+    case cir::InitCatchKind::NonTrivialCopy:
+      // Copy-construction handled by cir.construct_catch_param.
+      break;
+    case cir::InitCatchKind::Objc:
+      out << "  // init_catch_param: Objective-C parameter not modelled\n";
+      break;
+  }
+  return true;
+}
+
+// cir.construct_catch_param: copy-constructs a by-value catch variable with a
+// non-trivial copy constructor from the in-flight exception object. The copy
+// constructor symbol is given by the copy_fn attribute and is invoked as
+// copy_fn(&param, (T*)__cir_exc_ptr).
+bool handleConstructCatchParam(cir::ConstructCatchParamOp op, Mapper &m, std::ostream &out) {
+  m.setHasExceptions();
+  mlir::Value paramAddr = op.getParamAddr();
+  std::string pname = m.getOrCreateName(paramAddr);
+  // The copy constructor's destination argument is a pointer to the catch
+  // variable: take the address of direct-access allocas, otherwise the value
+  // is already a pointer.
+  std::string destPtr = m.isDirectAccess(paramAddr) ? ("&" + pname) : pname;
+  std::string pointeeCType = "void";
+  if (auto pt = mlir::dyn_cast<cir::PointerType>(paramAddr.getType()))
+    pointeeCType = m.mapTypeToC(pt.getPointee());
+
+  std::optional<llvm::StringRef> copyFn = op.getCopyFn();
+  if (copyFn && !copyFn->empty()) {
+    std::string fn = m.getFunctionOutputName(copyFn->str());
+    out << "  " << fn << "(" << destPtr << ", (" << pointeeCType
+        << "*)__cir_exc_ptr);\n";
+  } else {
+    // No copy constructor: fall back to a by-value copy.
+    std::string lvalue = m.isDirectAccess(paramAddr) ? pname : ("*" + pname);
+    out << "  " << lvalue << " = *(" << pointeeCType << "*)__cir_exc_ptr;\n";
+  }
+  return true;
+}
+
 // cir.resume.flat: post-CFG-flattening form of cir.resume that propagates an
 // uncaught exception to the caller.  Re-raise by keeping __cir_exc_active
 // set and returning from the current function.
@@ -1709,8 +1820,25 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
   std::string baseName = m.getOrCreateName(base);
   
   std::string memberName;
-  if (auto sa = o->getAttrOfType<StringAttr>("name")) {
-    memberName = sa.getValue().str();
+
+  // Prefer the canonical name the struct emitter chose for this member index.
+  // Multiple bitfields can share one storage member (same index, different
+  // `name` attrs); they must all resolve to the single emitted member name,
+  // not their individual bitfield names.
+  if (auto recPtr = mlir::dyn_cast<cir::PointerType>(base.getType())) {
+    if (auto rec = mlir::dyn_cast<cir::RecordType>(recPtr.getPointee())) {
+      // mapTypeToC yields "struct X" / "union X"; strip the keyword to recover
+      // the bare record name used as the recordFieldNames_ key.
+      std::string recC = m.mapTypeToC(rec);
+      auto sp = recC.find(' ');
+      std::string bare = (sp == std::string::npos) ? recC : recC.substr(sp + 1);
+      memberName = m.lookupFieldName(bare, static_cast<int>(op.getIndex()));
+    }
+  }
+
+  if (memberName.empty()) {
+    if (auto sa = o->getAttrOfType<StringAttr>("name"))
+      memberName = sa.getValue().str();
   }
 
   // Anonymous members (empty name attr) are emitted into the struct definition
@@ -1917,16 +2045,25 @@ bool handleCopy(cir::CopyOp op, Mapper &m, std::ostream &out) {
 }
 
 bool handleStackSave(cir::StackSaveOp op, Mapper &m, std::ostream &out) {
-  // VLA stack bookkeeping — irrelevant for reachability verification.
-  // Give the result a name (it may be consumed by StackRestore) but emit
-  // nothing.
+  // VLA stack bookkeeping. VLAs are mapped to C99 VLAs (see handleAlloca)
+  // whose storage is freed at the end of their enclosing block scope, so the
+  // save/restore are not needed for correctness. The result may be stored into
+  // a variable and read by StackRestore, so it must still be declared — emit a
+  // null placeholder rather than leaving the name undefined.
   Operation *o = op.getOperation();
-  if (o->getNumResults() > 0) m.getOrCreateName(o->getResult(0));
+  if (o->getNumResults() > 0) {
+    mlir::Value res = o->getResult(0);
+    std::string ctype = m.mapTypeToC(res.getType());
+    std::string nm = m.freshName("stack_save");
+    out << "  " << ctype << " " << nm << " = 0;\n";
+    m.setName(res, nm);
+  }
   return true;
 }
 
 bool handleStackRestore(cir::StackRestoreOp op, Mapper &m, std::ostream &out) {
-  // VLA stack bookkeeping — irrelevant for reachability verification.
+  // No-op: VLA storage is reclaimed by C block scope. Modelling this with
+  // __builtin_stack_restore would risk freeing the C99 VLA prematurely.
   return true;
 }
 
@@ -2323,6 +2460,122 @@ bool handleClz(cir::BitClzOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// Helper: bit width of a CIR integer value (defaults to 32).
+static unsigned intWidthOf(mlir::Value v, unsigned dflt = 32) {
+  if (auto it = mlir::dyn_cast<cir::IntType>(v.getType())) return it.getWidth();
+  return dflt;
+}
+
+// cir.abs: integer absolute value. Emitted as a conditional so it needs no
+// header. The operand is already a temporary, so evaluating it twice is safe.
+bool handleAbs(cir::AbsOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getSrc());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  std::string tmp = m.freshName("absv");
+  out << "  " << ctype << " " << tmp << " = ((" << opnd << ") < 0) ? -("
+      << opnd << ") : (" << opnd << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.byte_swap -> __builtin_bswapN (no header required).
+bool handleByteSwap(cir::ByteSwapOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getInput());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  unsigned w = intWidthOf(op.getInput());
+  std::string b;
+  if (w == 64)      b = "__builtin_bswap64((unsigned long)" + opnd + ")";
+  else if (w == 16) b = "__builtin_bswap16((unsigned short)" + opnd + ")";
+  else              b = "__builtin_bswap32((unsigned int)" + opnd + ")";
+  std::string tmp = m.freshName("bswap");
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << b << ";\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.bitreverse -> __builtin_bitreverseN (no header required).
+bool handleBitReverse(cir::BitReverseOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getInput());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  unsigned w = intWidthOf(op.getInput());
+  const char *suffix = w == 64 ? "64" : w == 16 ? "16" : w == 8 ? "8" : "32";
+  const char *cast = w == 64 ? "(unsigned long)" : w == 16 ? "(unsigned short)"
+                   : w == 8 ? "(unsigned char)" : "(unsigned int)";
+  std::string tmp = m.freshName("brev");
+  out << "  " << ctype << " " << tmp << " = (" << ctype
+      << ")__builtin_bitreverse" << suffix << "(" << cast << opnd << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.ctz: count trailing zeros -> __builtin_ctz. Mirrors handleClz: when the
+// input may be zero and poison_zero is not set, a zero input yields the width.
+bool handleCtz(cir::BitCtzOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getInput());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  unsigned w = intWidthOf(op.getInput());
+  std::string b = (w == 64) ? "__builtin_ctzll((unsigned long)" + opnd + ")"
+                            : "__builtin_ctz((unsigned int)" + opnd + ")";
+  std::string expr = op.getPoisonZero()
+      ? "(" + ctype + ")" + b
+      : "(" + ctype + ")((" + opnd + ") == 0 ? " + std::to_string(w) + " : " + b + ")";
+  std::string tmp = m.freshName("ctz");
+  out << "  " << ctype << " " << tmp << " = " << expr << ";\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.ffs: find first set bit (1-based, 0 if input is zero) -> __builtin_ffs.
+bool handleFfs(cir::BitFfsOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getInput());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  unsigned w = intWidthOf(op.getInput());
+  std::string b = (w == 64) ? "__builtin_ffsll((long long)" + opnd + ")"
+                            : "__builtin_ffs((int)" + opnd + ")";
+  std::string tmp = m.freshName("ffs");
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << b << ";\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.popcount -> __builtin_popcount.
+bool handlePopcount(cir::BitPopcountOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getInput());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  unsigned w = intWidthOf(op.getInput());
+  std::string b = (w == 64) ? "__builtin_popcountll((unsigned long)" + opnd + ")"
+                            : "__builtin_popcount((unsigned int)" + opnd + ")";
+  std::string tmp = m.freshName("popcnt");
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << b << ";\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.signbit -> __builtin_signbit (nonzero when the value is negative).
+bool handleSignBit(cir::SignBitOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getInput());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  std::string tmp = m.freshName("signbit");
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")__builtin_signbit("
+      << opnd << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
 // ============================================================================
 // Compile-time constant probe: cir.is_constant
 // ============================================================================
@@ -2711,6 +2964,94 @@ static bool handleBinaryFPOp(const char *base, Operation *o, Mapper &m, std::ost
   return true;
 }
 
+// ============================================================================
+// Complex numbers (mapped to C99 _Complex)
+// ============================================================================
+
+// cir.complex.create %re, %im : build a complex value from its real and
+// imaginary parts. Assign the components through the __real__/__imag__
+// lvalue operators: unlike __builtin_complex (floating-point only) this also
+// works for integer _Complex (a GNU extension that clang emits), and needs no
+// <complex.h>.
+bool handleComplexCreate(cir::ComplexCreateOp op, Mapper &m, std::ostream &out) {
+  mlir::Value res = op.getOperation()->getResult(0);
+  std::string ctype = m.mapTypeToC(res.getType());
+  std::string re = m.getOrCreateName(op.getReal());
+  std::string im = m.getOrCreateName(op.getImag());
+  std::string nm = m.freshName("cplx");
+  out << "  " << ctype << " " << nm << ";\n";
+  out << "  __real__ " << nm << " = " << re << ";\n";
+  out << "  __imag__ " << nm << " = " << im << ";\n";
+  m.setName(res, nm);
+  return true;
+}
+
+// cir.complex.real / cir.complex.imag : extract a component using the
+// __real__ / __imag__ operators (no header required).
+static bool emitComplexComponent(mlir::Operation *o, Mapper &m, std::ostream &out,
+                                 const char *unaryOp, const char *prefix) {
+  mlir::Value res = o->getResult(0);
+  std::string ctype = m.mapTypeToC(res.getType());
+  std::string operand = m.getOrCreateName(o->getOperand(0));
+  std::string nm = m.freshName(prefix);
+  out << "  " << ctype << " " << nm << " = " << unaryOp << " " << operand << ";\n";
+  m.setName(res, nm);
+  return true;
+}
+bool handleComplexReal(cir::ComplexRealOp op, Mapper &m, std::ostream &out) {
+  return emitComplexComponent(op.getOperation(), m, out, "__real__", "creal");
+}
+bool handleComplexImag(cir::ComplexImagOp op, Mapper &m, std::ostream &out) {
+  return emitComplexComponent(op.getOperation(), m, out, "__imag__", "cimag");
+}
+
+// cir.complex.real_ptr / cir.complex.imag_ptr : address of a component of a
+// complex lvalue. &(__real__ lvalue) yields the pointer.
+static bool emitComplexComponentPtr(mlir::Operation *o, Mapper &m, std::ostream &out,
+                                    const char *unaryOp, const char *prefix) {
+  mlir::Value res = o->getResult(0);
+  mlir::Value operand = o->getOperand(0);
+  std::string ctype = m.mapTypeToC(res.getType());
+  std::string oname = m.getOrCreateName(operand);
+  std::string lval = m.isDirectAccess(operand) ? oname : ("*" + oname);
+  std::string nm = m.freshName(prefix);
+  out << "  " << ctype << " " << nm << " = &(" << unaryOp << " (" << lval << "));\n";
+  m.setName(res, nm);
+  return true;
+}
+bool handleComplexRealPtr(cir::ComplexRealPtrOp op, Mapper &m, std::ostream &out) {
+  return emitComplexComponentPtr(op.getOperation(), m, out, "__real__", "crealp");
+}
+bool handleComplexImagPtr(cir::ComplexImagPtrOp op, Mapper &m, std::ostream &out) {
+  return emitComplexComponentPtr(op.getOperation(), m, out, "__imag__", "cimagp");
+}
+
+// cir.complex.{add,sub,mul,div} : C99 _Complex supports these operators
+// directly.
+static bool emitComplexBinop(mlir::Operation *o, Mapper &m, std::ostream &out,
+                             const char *binOp) {
+  mlir::Value res = o->getResult(0);
+  std::string ctype = m.mapTypeToC(res.getType());
+  std::string l = m.getOrCreateName(o->getOperand(0));
+  std::string r = m.getOrCreateName(o->getOperand(1));
+  std::string nm = m.freshName("cplx");
+  out << "  " << ctype << " " << nm << " = " << l << " " << binOp << " " << r << ";\n";
+  m.setName(res, nm);
+  return true;
+}
+bool handleComplexAdd(cir::ComplexAddOp op, Mapper &m, std::ostream &out) {
+  return emitComplexBinop(op.getOperation(), m, out, "+");
+}
+bool handleComplexSub(cir::ComplexSubOp op, Mapper &m, std::ostream &out) {
+  return emitComplexBinop(op.getOperation(), m, out, "-");
+}
+bool handleComplexMul(cir::ComplexMulOp op, Mapper &m, std::ostream &out) {
+  return emitComplexBinop(op.getOperation(), m, out, "*");
+}
+bool handleComplexDiv(cir::ComplexDivOp op, Mapper &m, std::ostream &out) {
+  return emitComplexBinop(op.getOperation(), m, out, "/");
+}
+
 // ---- Unary FP→FP handlers ----
 bool handleSqrt(cir::SqrtOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("sqrt",      op.getOperation(), m, out); }
 bool handleACos(cir::ACosOp op, Mapper &m, std::ostream &out)           { return handleUnaryFPOp("acos",      op.getOperation(), m, out); }
@@ -2847,6 +3188,13 @@ void registerBuiltinHandlers(Mapper &m) {
 
   // Bit-counting
   m.registerTypedHandler<cir::BitClzOp>(handleClz);
+  m.registerTypedHandler<cir::BitCtzOp>(handleCtz);
+  m.registerTypedHandler<cir::BitFfsOp>(handleFfs);
+  m.registerTypedHandler<cir::BitPopcountOp>(handlePopcount);
+  m.registerTypedHandler<cir::AbsOp>(handleAbs);
+  m.registerTypedHandler<cir::ByteSwapOp>(handleByteSwap);
+  m.registerTypedHandler<cir::BitReverseOp>(handleBitReverse);
+  m.registerTypedHandler<cir::SignBitOp>(handleSignBit);
 
   // Compile-time constant probe
   m.registerTypedHandler<cir::IsConstantOp>(handleIsConstant);
@@ -2868,6 +3216,19 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::ResumeFlatOp>(handleResumeFlat);
   m.registerTypedHandler<cir::AllocExceptionOp>(handleAllocException);
   m.registerTypedHandler<cir::CatchParamOp>(handleCatchParam);
+  m.registerTypedHandler<cir::InitCatchParamOp>(handleInitCatchParam);
+  m.registerTypedHandler<cir::ConstructCatchParamOp>(handleConstructCatchParam);
+
+  // Complex numbers (C99 _Complex)
+  m.registerTypedHandler<cir::ComplexCreateOp>(handleComplexCreate);
+  m.registerTypedHandler<cir::ComplexRealOp>(handleComplexReal);
+  m.registerTypedHandler<cir::ComplexImagOp>(handleComplexImag);
+  m.registerTypedHandler<cir::ComplexRealPtrOp>(handleComplexRealPtr);
+  m.registerTypedHandler<cir::ComplexImagPtrOp>(handleComplexImagPtr);
+  m.registerTypedHandler<cir::ComplexAddOp>(handleComplexAdd);
+  m.registerTypedHandler<cir::ComplexSubOp>(handleComplexSub);
+  m.registerTypedHandler<cir::ComplexMulOp>(handleComplexMul);
+  m.registerTypedHandler<cir::ComplexDivOp>(handleComplexDiv);
 
   // Floating-point math functions
   m.registerTypedHandler<cir::SqrtOp>(handleSqrt);

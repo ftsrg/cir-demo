@@ -391,7 +391,13 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
   if (mlir::isa<cir::FP80Type>(t)) {
     return "long double";
   }
-  
+
+  // CIR complex type -> C99 `_Complex`. Element type drives the base (e.g.
+  // !cir.complex<!cir.double> becomes "double _Complex").
+  if (auto cplx = mlir::dyn_cast<cir::ComplexType>(t)) {
+    return mapTypeToC(cplx.getElementType()) + " _Complex";
+  }
+
   // Handle CIR pointer types
   if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(t)) {
     mlir::Type pointee = ptrTy.getPointee();
@@ -464,6 +470,38 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
   return "int";
 }
 
+void Mapper::recordFieldName(const std::string &recordName, int index,
+                             const std::string &fieldName) {
+  if (index < 0) return;
+  auto &byIndex = recordFieldNames_[recordName];
+  // First name wins, matching the struct emitter's dedup behaviour.
+  byIndex.emplace(index, fieldName);
+}
+
+std::string Mapper::lookupFieldName(const std::string &recordName, int index) const {
+  auto it = recordFieldNames_.find(recordName);
+  if (it == recordFieldNames_.end()) return "";
+  auto jt = it->second.find(index);
+  return jt == it->second.end() ? "" : jt->second;
+}
+
+std::string Mapper::arrayBaseTypeAndDims(mlir::Type t, std::string &dimsOut) const {
+  dimsOut.clear();
+  mlir::Type cur = t;
+  while (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(cur)) {
+    dimsOut += "[" + std::to_string(arrayTy.getSize()) + "]";
+    cur = arrayTy.getElementType();
+  }
+  return mapTypeToC(cur);
+}
+
+void Mapper::ensureMallocFreeDeclared(std::ostream &out) {
+  if (mallocFreeDeclEmitted_) return;
+  out << "extern void *malloc(unsigned long);\n";
+  out << "extern void free(void*);\n";
+  mallocFreeDeclEmitted_ = true;
+}
+
 bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
   auto sym = fop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
   if (!sym) return true;
@@ -492,17 +530,21 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
     params += mapParamTypeToC(*this, paramType, paramName);
   }
   if (fty.isVarArg()) {
-    if (!params.empty()) params += ", ";
-    params += "...";
+    // C forbids a lone "..." with no preceding named parameter. For such
+    // functions (e.g. __gxx_personality_v0) emit "()" — an unprototyped
+    // declaration that accepts any arguments — instead of "(...)".
+    if (!params.empty()) params += ", ...";
   }
 
   // Declaration-only operator new/delete: emit inline stubs that wrap
   // malloc/free so the linker finds a definition.
   if (outName.rfind("operator_new", 0) == 0) {
+    ensureMallocFreeDeclared(out);
     out << retType << " " << outName << "(" << params << ") { return malloc(p0); }\n";
     return true;
   }
   if (outName.rfind("operator_delete", 0) == 0) {
+    ensureMallocFreeDeclared(out);
     out << retType << " " << outName << "(" << params << ") { free(p0); }\n";
     return true;
   }
@@ -649,8 +691,10 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
     }
   }
   if (fty.isVarArg()) {
-    if (!params.empty()) params += ", ";
-    params += "...";
+    // C forbids a lone "..." with no preceding named parameter. For such
+    // functions (e.g. __gxx_personality_v0) emit "()" — an unprototyped
+    // declaration that accepts any arguments — instead of "(...)".
+    if (!params.empty()) params += ", ...";
   }
   
   // Tag _GLOBAL__sub_I_* trampolines as constructor so they run before main.
@@ -724,33 +768,30 @@ bool Mapper::mapOperation(mlir::Operation *op, std::ostream &out) {
     bool handled = it->second->handle(op, *this, opOut);
     if (handled) {
       traceability.recordOperationHandled(opName);
-      mapped = true;
+      out << opOut.str();
+      traceability.recordOperationTrace(opName, inputText, opOut.str(), true);
+      return true;
     }
-    if (!handled) {
-      opOut << "  // " << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
-    }
+    // The handler failed. It may already have emitted partial output (e.g. an
+    // opening brace of a control-flow construct whose body could not be
+    // mapped). Continuing would leave that output unbalanced and unsound, so
+    // hard-fail: surface the failure and stop mapping this function.
     out << opOut.str();
-    traceability.recordOperationTrace(opName, inputText, opOut.str(), mapped);
-    return true;
+    opOut << "  // " << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
+    traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
+    llvm::errs() << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
+    return false;
   }
 
-  // No handler registered: emit a comment for each result and continue.
-  for (Value res : op->getResults()) {
-    std::string nm = getOrCreateName(res);
-    opOut << "  // %" << nm << "  (produced by: " << opName.str() << ")\n";
-  }
-  if (!op->getAttrs().empty()) {
-    opOut << "  // attrs:\n";
-    for (NamedAttribute attr : op->getAttrs()) {
-      llvm::SmallString<64> buf;
-      llvm::raw_svector_ostream ros(buf);
-      attr.getValue().print(ros);
-      opOut << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
-    }
-  }
+  // No handler registered for this op. We must not emit a placeholder value
+  // for its results: a default-initialised declaration would be an unsound
+  // mapping (the generated C would compile but compute the wrong result
+  // silently). Hard-fail instead so the unsupported op is surfaced and the
+  // test is reported as a mapper failure rather than producing wrong output.
   out << opOut.str();
   traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
-  return true;
+  llvm::errs() << ERR_NO_HANDLER_PREFIX << opName.str() << "\n";
+  return false;
 }
 
 // ── Vtable dispatch tracking ───────────────────────────────────────────────
@@ -950,12 +991,11 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   if (isAtomicGlobal(rawSym))   qualPrefix += "_Atomic ";
   if (isVolatileGlobal(rawSym)) qualPrefix += "volatile ";
 
-  // Array type
-  if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(symType)) {
-    mlir::Type elemType = arrayTy.getElementType();
-    uint64_t size = arrayTy.getSize();
-    std::string elemCType = mapTypeToC(elemType);
-    out << qualPrefix << elemCType << " " << name << "[" << size << "]";
+  // Array type (handles multi-dimensional arrays: double a[8][3])
+  if (mlir::isa<cir::ArrayType>(symType)) {
+    std::string dims;
+    std::string elemCType = arrayBaseTypeAndDims(symType, dims);
+    out << qualPrefix << elemCType << " " << name << dims;
     if (!initExpr.empty()) {
       out << " = " << initExpr;
     }
@@ -1229,11 +1269,24 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     }
   }
   if (!exists) vec.push_back(info);
+  // Remember the canonical name for this member index so that other accessors
+  // of the same storage (e.g. sibling bitfields) resolve to it.
+  recordFieldName(structName, info.index, info.name);
     }
   };
 
   // Kick off collection for top-level operations
   for (auto &op : module.getOps()) collectFromOp(op);
+
+  // Scan global variable types: cir.global stores its type in the sym_type
+  // attribute (getSymType()), not as an SSA operand/result, so the generic
+  // collectFromOp loop above misses struct types that are only referenced as
+  // a global variable's type (e.g. `struct element cellspace[19]` when no
+  // function body ever reads/writes the struct via get_member).
+  for (auto &op : module.getOps()) {
+    if (auto globalOp = llvm::dyn_cast<cir::GlobalOp>(&op))
+      collectRecordTypesFromType(globalOp.getSymType());
+  }
 
   // Typed fallback: for records with no directly discovered members (e.g.
   // derived records only accessed through cir.base_class_addr casts), extract
@@ -1618,18 +1671,21 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     if (anyDecl) out << "\n";
   }
 
-  // Third pass: emit function definitions only.
+  // Third pass: emit function definitions only. A false return from mapFunc
+  // means an operation could not be mapped soundly (e.g. no handler for the
+  // op); propagate it so xcfa-mapper exits non-zero instead of emitting
+  // partial/unsound C.
   for (auto &op : module.getOps()) {
     if (llvm::isa<mlir::ModuleOp>(op)) {
       mlir::ModuleOp inner = mlir::cast<mlir::ModuleOp>(op);
-      mapModule(inner, out);
+      if (!mapModule(inner, out)) return false;
       continue;
     }
 
     if (llvm::isa<cir::FuncOp>(op)) {
       bool hasBody = (op.getNumRegions() > 0 && !op.getRegion(0).empty());
       if (hasBody) {
-        mapFunc(&op, out);
+        if (!mapFunc(&op, out)) return false;
       }
     }
     // Skip cir.global (already processed)

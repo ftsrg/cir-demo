@@ -83,6 +83,12 @@ public:
   /// Uses parameter types only; does not assign value names.
   bool emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out);
 
+  /// Emit `extern void *malloc(unsigned long);` and `extern void free(void*);`
+  /// at most once. Called before emitting an operator new/delete stub whose
+  /// synthesised body calls malloc/free, in case the CIR module itself never
+  /// declared them.
+  void ensureMallocFreeDeclared(std::ostream &out);
+
   /// Map a single function. Returns true on success, false on unrecoverable error.
   bool mapFunc(mlir::Operation *fop, std::ostream &out);
 
@@ -125,6 +131,24 @@ public:
   /// simple C declarations used by handlers.
   std::string mapTypeToC(mlir::Type t) const;
 
+  /// Record the canonical C field name chosen for a struct/union member at a
+  /// given index (the first name seen wins, matching the struct emitter's
+  /// dedup). Used so that bitfields sharing a storage member all resolve to
+  /// that member's emitted name.
+  void recordFieldName(const std::string &recordName, int index,
+                       const std::string &fieldName);
+
+  /// Look up the canonical C field name for (recordName, index). Returns an
+  /// empty string when unknown.
+  std::string lookupFieldName(const std::string &recordName, int index) const;
+
+  /// Peel off any nested cir::ArrayType layers from `t`, returning the base
+  /// (non-array) C type and appending each dimension as "[N]" to `dimsOut`
+  /// in outer->inner order. For a scalar type, dimsOut is left empty and the
+  /// scalar C type is returned. Example: !cir.array<!cir.array<f64 x 3> x 8>
+  /// yields base "double" and dimsOut "[8][3]".
+  std::string arrayBaseTypeAndDims(mlir::Type t, std::string &dimsOut) const;
+
   /// Prepare function output names for the module: attempt to demangle
   /// symbol names and pick a demangled name when it is unique. If multiple
   /// symbols demangle to the same identifier, the mangled names are kept to
@@ -164,6 +188,12 @@ private:
   // `extern void abort(void);` as per SV-COMP conventions.
   bool hasTrap_ = false;
   bool abortDeclEmitted_ = false;
+  // Canonical C field name per (record name, member index), so bitfield
+  // accesses that share a storage member resolve to the emitted member name.
+  std::map<std::string, std::map<int, std::string>> recordFieldNames_;
+  // Set once the malloc/free externs needed by synthesised operator
+  // new/delete stubs have been emitted, so they appear at most once.
+  bool mallocFreeDeclEmitted_ = false;
   // Alloca result Values that are accessed atomically / volatilely.
   llvm::DenseSet<mlir::Value> atomicAllocaValues_;
   llvm::DenseSet<mlir::Value> volatileAllocaValues_;
