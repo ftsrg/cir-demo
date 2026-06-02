@@ -23,7 +23,7 @@ RUN git clone --depth=1 https://github.com/llvm/llvm-project.git && \
         -DLLVM_USE_LINKER=lld \
         -DBUILD_SHARED_LIBS=ON \
         -DCMAKE_INSTALL_PREFIX=/opt/cir \
-        -DLLVM_FORCE_VC_REVISION=$(head -c7 llvm-project/.git/refs/heads/main)-zorn && \
+        -DLLVM_FORCE_VC_REVISION=$(head -c7 llvm-project/.git/refs/heads/main)-ftsrg && \
     cmake --build build -j$(nproc) && \
     cmake --install build && \
     rm -rf /tmp/llvm-project /tmp/build
