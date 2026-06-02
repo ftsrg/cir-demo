@@ -148,7 +148,7 @@ static std::string stripEmptyArgList(const std::string &s) {
   return s;
 }
 
-Mapper::Mapper(bool bestEffort) : counter(0), bestEffort(bestEffort) {}
+Mapper::Mapper() : counter(0) {}
 
 static std::string oneLineOperationText(mlir::Operation &op) {
   std::string text;
@@ -315,13 +315,13 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     case 1:
       return "bool";
     case 8:
-      return "int8_t";
+      return "signed char";
     case 16:
-      return "int16_t";
+      return "short";
     case 32:
       return "int";
     case 64:
-      return "long long";
+      return "long";
     default:
       return "long";
     }
@@ -373,7 +373,7 @@ std::string Mapper::mapTypeToC(mlir::Type t) const {
     } else if (width == 32) {
       return isSigned ? "int" : "unsigned int";
     } else if (width == 64) {
-      return isSigned ? "long long" : "unsigned long long";
+      return isSigned ? "long" : "unsigned long";
     }
     return "int"; // fallback
   }
@@ -561,6 +561,12 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
   if (sym.getValue().str().rfind("_GLOBAL__sub_I_", 0) == 0)
     out << "__attribute__((constructor)) ";
 
+  // Declaration-only functions are external references; emit them as extern so
+  // the verifier knows their signature without pulling in any system headers.
+  bool hasBody = (fop->getNumRegions() > 0 && !fop->getRegion(0).empty());
+  if (!hasBody)
+    out << "extern ";
+
   out << retType << " " << outName << "(" << params << ");\n";
   return true;
 }
@@ -721,10 +727,6 @@ bool Mapper::mapOperation(mlir::Operation *op, std::ostream &out) {
       mapped = true;
     }
     if (!handled) {
-      if (!isBestEffort()) {
-        llvm::errs() << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
-        return false;
-      }
       opOut << "  // " << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
     }
     out << opOut.str();
@@ -732,27 +734,23 @@ bool Mapper::mapOperation(mlir::Operation *op, std::ostream &out) {
     return true;
   }
 
-  if (isBestEffort()) {
-    for (Value res : op->getResults()) {
-      std::string nm = getOrCreateName(res);
-      opOut << "  // %" << nm << "  (produced by: " << opName.str() << ")\n";
-    }
-    if (!op->getAttrs().empty()) {
-      opOut << "  // attrs:\n";
-      for (NamedAttribute attr : op->getAttrs()) {
-        llvm::SmallString<64> buf;
-        llvm::raw_svector_ostream ros(buf);
-        attr.getValue().print(ros);
-        opOut << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
-      }
-    }
-    out << opOut.str();
-    traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
-    return true;
+  // No handler registered: emit a comment for each result and continue.
+  for (Value res : op->getResults()) {
+    std::string nm = getOrCreateName(res);
+    opOut << "  // %" << nm << "  (produced by: " << opName.str() << ")\n";
   }
-
-  llvm::errs() << ERR_NO_HANDLER_PREFIX << opName.str() << "\n";
-  return false;
+  if (!op->getAttrs().empty()) {
+    opOut << "  // attrs:\n";
+    for (NamedAttribute attr : op->getAttrs()) {
+      llvm::SmallString<64> buf;
+      llvm::raw_svector_ostream ros(buf);
+      attr.getValue().print(ros);
+      opOut << "  //   " << attr.getName().getValue().str() << " = " << ros.str().str() << "\n";
+    }
+  }
+  out << opOut.str();
+  traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
+  return true;
 }
 
 // ── Vtable dispatch tracking ───────────────────────────────────────────────
@@ -839,10 +837,6 @@ std::string Mapper::getVtableSlotLabel(const std::string &rec_name, int slot) co
 bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   auto sym = gop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
   if (!sym) {
-    if (!isBestEffort()) {
-      llvm::errs() << "Global op missing symbol name\n";
-      return false;
-    }
     out << "// Global variable with missing name\n";
     return true;
   }
@@ -859,7 +853,7 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
     // and the call argument is &__dso_handle (type int8_t*), matching the
     // int8_t* parameter of __cxa_atexit.  Declare it as int8_t so the C
     // compiler sees a complete type and &__dso_handle has the right type.
-    out << "extern int8_t __dso_handle;\n";
+    out << "extern signed char __dso_handle;\n";
     return true;
   }
   if (rawSym.rfind("_ZTV", 0) == 0) return true; // vtable — handled by __VERIFIER_virtual_call
@@ -1432,19 +1426,14 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     for (auto &op : module.getOps()) ehScan(op);
   }
 
-  // SV-COMP preamble: emit extern declarations needed by the generated code.
-  // Guard with abortDeclEmitted_ so nested mapModule calls never emit twice,
-  // and gate on hasExceptions_ too because handleEhTerminate / the zero-
-  // successor branch of handleEhDispatch both emit abort().
+  // abort() is called by our synthesised EH-termination and trap code, not
+  // necessarily by a CIR declaration, so we still need to guarantee it is
+  // declared before use.  All other external functions (malloc, free,
+  // __assert_fail, …) are emitted as `extern` by emitFuncForwardDecl when
+  // the CIR contains the corresponding declaration-only FuncOp.
   if ((hasTrap_ || hasExceptions_) && !abortDeclEmitted_) {
     out << "extern void abort(void);\n";
     abortDeclEmitted_ = true;
-  }
-
-  if (!stdintEmitted_) {
-    out << "#include <stdint.h>\n";
-    out << "#include <stdlib.h>\n";
-    stdintEmitted_ = true;
   }
 
   if (hasExceptions_ && !ehPreambleEmitted) {
@@ -1453,7 +1442,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     out << "static const void *__cir_exc_type;\n";
     // uintptr_t: must be wide enough to hold a pointer value without truncation
     // on any platform (a plain 'unsigned' would lose the high 32 bits on LP64).
-    out << "static uintptr_t __cir_exc_type_id;\n";
+    out << "static unsigned long __cir_exc_type_id;\n";
     out << "static int __cir_exc_active;\n";
     if (!ehTypeSymbols_.empty()) {
       out << "// Per-RTTI address tags: each thrown/caught type symbol gets a\n"
@@ -1526,15 +1515,14 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
     out << "// Struct definitions (auto-parsed)\n";
     for (auto &sname : order) {
-      // The C standard reserves all identifiers beginning with __ for the
-      // implementation.  System headers included transitively via <stdlib.h>
-      // (e.g. <bits/pthreadtypes.h>) already define these structs; emitting
-      // our own definition causes "redefinition of struct" errors.  Skip them
-      // and rely on the system headers to provide the definition.
-      // Alternative approaches (forward-decl only, explicit blocklist) are
-      // more fragile: forward decls fail when the struct is used by value,
-      // and a blocklist needs constant maintenance.
-      if (sname.rfind("__", 0) == 0) continue;
+      // Skip struct/union names reserved for the implementation so we don't
+      // conflict with definitions already provided by system headers:
+      //   __foo  — double-underscore prefix (C standard §7.1.3)
+      //   _Foo   — single underscore + uppercase (C standard §7.1.3)
+      // Both forms appear in glibc internals (_IO_FILE, __pthread_mutex_s, …).
+      if (sname.size() >= 2 && sname[0] == '_' &&
+          (sname[1] == '_' || std::isupper((unsigned char)sname[1])))
+        continue;
 
       bool isU = false;
       auto itk = isUnionContainer.find(sname);
@@ -1553,7 +1541,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
           // Itanium ABI member-function-pointer layout.  CIR represents both
           // fields as !s64i (ptrdiff_t).  field0 = function ptr encoded as int
           // (odd=virtual, even=direct); field1 = this-pointer adjustment.
-          out << "long long __field0; long long __field1;";
+          out << "long __field0; long __field1;";
         } else {
           out << "unsigned char __placeholder;";
         }
@@ -1610,20 +1598,20 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   }
 
   for (mlir::Operation *gop : normalGlobals) {
-    if (!mapGlobal(gop, out) && !isBestEffort()) return false;
+    mapGlobal(gop, out);
   }
   for (mlir::Operation *gop : viewGlobals) {
-    if (!mapGlobal(gop, out) && !isBestEffort()) return false;
+    mapGlobal(gop, out);
   }
 
-  // Second pass: emit forward declarations for all functions (including
-  // declaration-only externs) so that call sites compile regardless of the
-  // order functions appear in the module.
+  // Second pass: emit declarations for all functions.  Functions with a body
+  // get a plain prototype; declaration-only (external) functions get an
+  // `extern` declaration so call sites compile regardless of definition order.
   {
     bool anyDecl = false;
     for (auto &op : module.getOps()) {
       if (llvm::isa<cir::FuncOp>(op)) {
-        if (!emitFuncForwardDecl(&op, out) && !isBestEffort()) return false;
+        emitFuncForwardDecl(&op, out);
         anyDecl = true;
       }
     }
@@ -1634,14 +1622,14 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   for (auto &op : module.getOps()) {
     if (llvm::isa<mlir::ModuleOp>(op)) {
       mlir::ModuleOp inner = mlir::cast<mlir::ModuleOp>(op);
-      if (!mapModule(inner, out) && !isBestEffort()) return false;
+      mapModule(inner, out);
       continue;
     }
 
     if (llvm::isa<cir::FuncOp>(op)) {
       bool hasBody = (op.getNumRegions() > 0 && !op.getRegion(0).empty());
       if (hasBody) {
-        if (!mapFunc(&op, out) && !isBestEffort()) return false;
+        mapFunc(&op, out);
       }
     }
     // Skip cir.global (already processed)

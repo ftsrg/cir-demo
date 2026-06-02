@@ -23,15 +23,6 @@ This directory contains the test suite for the xcfa-mapper project, which includ
 ```
 test/
 ├── run_tests.sh              # Main test runner script
-├── unit/                     # Unit tests (MLIR files)
-│   ├── test_alloca.mlir
-│   ├── test_const.mlir
-│   ├── test_binop.mlir
-│   ├── test_cmp.mlir
-│   ├── test_control_flow.mlir
-│   ├── test_cast.mlir
-│   ├── test_unary.mlir
-│   └── test_call.mlir
 └── integration/              # Integration tests
     ├── input/                # C source files
     │   ├── test_basic.c
@@ -57,12 +48,6 @@ test/
 ```bash
 cd test
 ./run_tests.sh
-```
-
-### Run Individual Unit Tests
-
-```bash
-../build/xcfa-mapper unit/test_alloca.mlir
 ```
 
 ### Run Individual Integration Tests
@@ -98,18 +83,6 @@ It does not write any output files.
 
 ## Test Coverage
 
-The test suite covers all major CIR operations found in c-counts.txt:
-
-### Unit Tests
-- **test_alloca.mlir**: Tests `cir.alloca`, `cir.const`, `cir.store`, `cir.load`, `cir.return`
-- **test_const.mlir**: Tests `cir.const` with different types (int, bool, float, zero)
-- **test_binop.mlir**: Tests `cir.binop` (add, sub, mul, div)
-- **test_cmp.mlir**: Tests `cir.cmp` (lt, gt, eq, ne)
-- **test_control_flow.mlir**: Tests `cir.br`, `cir.brcond`, `cir.return`
-- **test_cast.mlir**: Tests `cir.cast`
-- **test_unary.mlir**: Tests `cir.unary` (minus, plus)
-- **test_call.mlir**: Tests `cir.call`, function definitions
-
 ### Integration Tests
 - **test_basic.c**: Basic operations (alloca, load, store, const, return)
 - **test_arithmetic.c**: Binary operations (add, sub, mul, div, rem, and, or, xor)
@@ -124,6 +97,16 @@ The test suite covers all major CIR operations found in c-counts.txt:
 - **test_globals.c**: Global variables (global, get_global)
 - **test_floats.c**: Floating point operations (float, double, fp)
 - **test_bools.c**: Boolean operations (bool)
+
+### LLVM SingleSource End-to-End Tests
+
+The full `SingleSource/` tree from the llvm-test-suite is used, covering:
+- **Benchmarks/** — C and C++ benchmark programs (Dhrystone, Stanford, Polybench, Shootout, …)
+- **Regression/C/** — C regression tests
+- **Regression/C++/** — C++ regression tests (including exception handling)
+- **UnitTests/** — mixed C and C++ unit tests
+
+Each test compiles the source file through the CIR pipeline, produces C output, compiles that with `gcc`, runs the resulting binary, and compares its stdout/exit code against the `.reference_output` file bundled alongside the source. Files without a reference output are skipped. C files are compiled with `--lang c`; C++ files use the default C++ mode.
 
 ## Test Output
 
@@ -145,12 +128,6 @@ A test is considered successful if:
    - `ERROR`
 
 ## Adding New Tests
-
-### Adding a Unit Test
-
-1. Create a new `.mlir` file in `unit/`
-2. Write valid CIR code targeting specific operations
-3. Run the test suite
 
 ### Adding an Integration Test
 

@@ -306,52 +306,31 @@ app.post('/api/generate', async (req, res) => {
     }
 
   const xcfaMapperBin = path.join(__dirname, '..', '..', 'xcfa-mapper', 'build', 'xcfa-mapper');
-  // Structured outputs matching other tasks: { stdout, stderr, code }
-  const cOutputs = { c: { stdout: '', stderr: '', code: 0 }, c_best: { stdout: '', stderr: '', code: 0 } };
-  let strictTrace = [];
-  let bestTrace = [];
+  const cOutput = { stdout: '', stderr: '', code: 0 };
+  let trace = [];
   try {
-    // If flatOut.stdout contains the CIR text, write it to a temp file and run mapper.
     if (flatOut && flatOut.stdout && flatOut.stdout.length > 0) {
       const mlirPath = path.join(tmpDir, `${base}.mlir`);
       await fs.writeFile(mlirPath, flatOut.stdout, 'utf8');
       filesToCleanup.push(mlirPath);
 
       const outC = path.join(tmpDir, `${base}.c`);
-      const outCBest = path.join(tmpDir, `${base}.best.c`);
       const outTrace = path.join(tmpDir, `${base}.trace.json`);
-      const outTraceBest = path.join(tmpDir, `${base}.best.trace.json`);
-      // Run strict mapper
-      const strictArgs = ['--monitor-json', outTrace, '--vtlayout', vtlayoutPath, mlirPath, outC];
-      const mapStrict = await execFileAsync(xcfaMapperBin, strictArgs);
-      cOutputs.c.code = (mapStrict && typeof mapStrict.code !== 'undefined') ? mapStrict.code : 1;
-      cOutputs.c.stderr = (mapStrict && mapStrict.stderr) ? mapStrict.stderr : '';
-      if (mapStrict && mapStrict.code === 0) {
-        try { cOutputs.c.stdout = await fs.readFile(outC, 'utf8'); filesToCleanup.push(outC); } catch (_) { cOutputs.c.stdout = ''; }
+      const mapArgs = ['--monitor-json', outTrace, '--vtlayout', vtlayoutPath, mlirPath, outC];
+      const mapResult = await execFileAsync(xcfaMapperBin, mapArgs);
+      cOutput.code = (mapResult && typeof mapResult.code !== 'undefined') ? mapResult.code : 1;
+      cOutput.stderr = (mapResult && mapResult.stderr) ? mapResult.stderr : '';
+      if (mapResult && mapResult.code === 0) {
+        try { cOutput.stdout = await fs.readFile(outC, 'utf8'); filesToCleanup.push(outC); } catch (_) { cOutput.stdout = ''; }
       }
       try {
-        const strictJson = await fs.readFile(outTrace, 'utf8');
-        const parsed = JSON.parse(strictJson);
-        strictTrace = Array.isArray(parsed.operationTrace) ? parsed.operationTrace : [];
+        const traceJson = await fs.readFile(outTrace, 'utf8');
+        const parsed = JSON.parse(traceJson);
+        trace = Array.isArray(parsed.operationTrace) ? parsed.operationTrace : [];
         filesToCleanup.push(outTrace);
       } catch (_) {}
-
-      // Run best-effort mapper
-      const bestArgs = ['--best-effort', '--monitor-json', outTraceBest, '--vtlayout', vtlayoutPath, mlirPath, outCBest];
-      const mapBest = await execFileAsync(xcfaMapperBin, bestArgs);
-      cOutputs.c_best.code = (mapBest && typeof mapBest.code !== 'undefined') ? mapBest.code : 1;
-      cOutputs.c_best.stderr = (mapBest && mapBest.stderr) ? mapBest.stderr : '';
-      if (mapBest && mapBest.code === 0) {
-        try { cOutputs.c_best.stdout = await fs.readFile(outCBest, 'utf8'); filesToCleanup.push(outCBest); } catch (_) { cOutputs.c_best.stdout = ''; }
-      }
-      try {
-        const bestJson = await fs.readFile(outTraceBest, 'utf8');
-        const parsed = JSON.parse(bestJson);
-        bestTrace = Array.isArray(parsed.operationTrace) ? parsed.operationTrace : [];
-        filesToCleanup.push(outTraceBest);
-      } catch (_) {}
     } else {
-      console.debug('Skipping xcfa-mapper: no flattened CIR output available');
+      console.debug('Skipping xcfa-mapper: no CIR output available');
     }
   } catch (err) {
     console.debug('xcfa-mapper run failed:', String(err));
@@ -360,10 +339,9 @@ app.post('/api/generate', async (req, res) => {
   const thetaBin = path.join(__dirname, '..', '..', 'Theta', 'theta-start.sh');
   const xcfa = { stdout: '', stderr: '', code: 0 };
   try {
-    // If flatOut.stdout contains the CIR text, write it to a temp file and run mapper.
-    if (cOutputs.c_best && cOutputs.c_best.stdout && cOutputs.c_best.stdout.length > 0) {
+    if (cOutput.stdout && cOutput.stdout.length > 0) {
       const cPath = path.join(tmpDir, `${base}_theta-input.c`);
-      await fs.writeFile(cPath, cOutputs.c_best.stdout, 'utf8');
+      await fs.writeFile(cPath, cOutput.stdout, 'utf8');
       filesToCleanup.push(cPath);
 
       const outXCFA = path.join(tmpDir, `xcfa.dot`);
@@ -388,21 +366,17 @@ app.post('/api/generate', async (req, res) => {
     llvm: { code: llvmOut.code, stderrLength: (llvmOut.stderr || '').length, stdoutLength: (llvmOut.stdout || '').length },
     clang: { code: clangOut.code, stderrLength: (clangOut.stderr || '').length, stdoutLength: (clangOut.stdout || '').length },
     flat_clang: { code: flatOut.code, stderrLength: (flatOut.stderr || '').length, stdoutLength: (flatOut.stdout || '').length },
-    c: { code: cOutputs.c.code, stderrLength: (cOutputs.c.stderr || '').length, stdoutLength: (cOutputs.c.stdout || '').length },
-    c_best: { code: cOutputs.c_best.code, stderrLength: (cOutputs.c_best.stderr || '').length, stdoutLength: (cOutputs.c_best.stdout || '').length },
+    c: { code: cOutput.code, stderrLength: (cOutput.stderr || '').length, stdoutLength: (cOutput.stdout || '').length },
     xcfa: { code: xcfa.code, stderrLength: (xcfa.stderr || '').length, stdoutLength: (xcfa.stdout || '').length }
   });
 
   let comparison = { mlir: flatOut?.stdout || '', c: '', mappings: [] };
-  if (cOutputs.c && cOutputs.c.code === 0 && cOutputs.c.stdout) {
-    comparison = buildComparisonPayload(flatOut?.stdout || '', cOutputs.c.stdout, strictTrace);
-  } else if (cOutputs.c_best && cOutputs.c_best.code === 0 && cOutputs.c_best.stdout) {
-    comparison = buildComparisonPayload(flatOut?.stdout || '', cOutputs.c_best.stdout, bestTrace);
+  if (cOutput.code === 0 && cOutput.stdout) {
+    comparison = buildComparisonPayload(flatOut?.stdout || '', cOutput.stdout, trace);
   }
 
-  res.json({ llvm: llvmOut, clang: clangOut, flat_clang: flatOut, xcfa: xcfa, c: cOutputs.c, c_best: cOutputs.c_best, comparison });
+  res.json({ llvm: llvmOut, clang: clangOut, flat_clang: flatOut, xcfa: xcfa, c: cOutput, comparison });
   } finally {
-    // best-effort cleanup of temp and generated files
     for (const file of filesToCleanup) {
       try { await fs.unlink(file); } catch (_) {}
     }

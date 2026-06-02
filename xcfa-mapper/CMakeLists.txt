@@ -14,7 +14,7 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.13)
-project(xcfa-mapper LANGUAGES CXX)
+project(xcfa-mapper LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -107,8 +107,8 @@ else()
   message(WARNING "  Directory does NOT exist: ${LLVM_LIB_DIR}")
 endif()
 
-file(GLOB MLIRCIR_SHARED_LIBS "${LLVM_LIB_DIR}/libMLIRCIR.so*")
-file(GLOB MLIRCIR_STATIC_LIBS "${LLVM_LIB_DIR}/libMLIRCIR.a")
+file(GLOB MLIRCIR_SHARED_LIBS CONFIGURE_DEPENDS "${LLVM_LIB_DIR}/libMLIRCIR.so*")
+file(GLOB MLIRCIR_STATIC_LIBS CONFIGURE_DEPENDS "${LLVM_LIB_DIR}/libMLIRCIR.a")
 
 if(MLIRCIR_SHARED_LIBS)
   message(STATUS "Found MLIRCIR shared libs: ${MLIRCIR_SHARED_LIBS}")
@@ -117,7 +117,7 @@ elseif(MLIRCIR_STATIC_LIBS)
   message(STATUS "Found MLIRCIR static libs: ${MLIRCIR_STATIC_LIBS}")
   
   # When linking statically, link ALL static libraries to resolve all symbols
-  file(GLOB ALL_STATIC_LIBS "${LLVM_LIB_DIR}/*.a")
+  file(GLOB ALL_STATIC_LIBS CONFIGURE_DEPENDS "${LLVM_LIB_DIR}/*.a")
   list(LENGTH ALL_STATIC_LIBS NUM_STATIC_LIBS)
   message(STATUS "Linking all static libraries from ${LLVM_LIB_DIR}")
   message(STATUS "Found ${NUM_STATIC_LIBS} static libraries")

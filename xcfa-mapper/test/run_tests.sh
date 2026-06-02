@@ -16,7 +16,7 @@
 
 
 # Test runner script for xcfa-mapper
-# Runs both unit tests and integration tests
+# Runs integration tests and LLVM SingleSource end-to-end tests
 
 # Colors for output
 RED='\033[0;31m'
@@ -28,8 +28,6 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$SCRIPT_DIR/.."
 BUILD_DIR="$PROJECT_DIR/build"
-UNIT_TEST_DIR="$SCRIPT_DIR/unit"
-UNIT_TEST_OUTPUT_DIR="$UNIT_TEST_DIR/output"
 INTEGRATION_TEST_DIR="$SCRIPT_DIR/integration"
 INTEGRATION_INPUT_DIR="$INTEGRATION_TEST_DIR/input"
 INTEGRATION_OUTPUT_DIR="$INTEGRATION_TEST_DIR/output"
@@ -37,39 +35,84 @@ INTEGRATION_OUTPUT_DIR="$INTEGRATION_TEST_DIR/output"
 # Tools
 XCFA_MAPPER="$BUILD_DIR/xcfa-mapper"
 CLANGPP="$PROJECT_DIR/../backend/bin/bin/clang++"
-GCC="gcc"  # Use system gcc for compilation checks
+GCC="$PROJECT_DIR/../backend/bin/bin/clang"  # Use same clang for compilation checks
 RUNNER="$SCRIPT_DIR/run-xcfa-mapper.sh"
+TIMEOUT=60
+JOBS=${JOBS:-$(nproc)}
 
-# Counters
+# Directories for E2E tests
+LLVM_EVAL_DIR="$PROJECT_DIR/../backend/examples/llvm-test-suite/"
+LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
+
+# ---------------------------------------------------------------------------
+# Counters and interrupt flag
+# ---------------------------------------------------------------------------
 TOTAL_TESTS=0
 PASSED_TESTS=0
 FAILED_TESTS=0
 SKIPPED_TESTS=0
+TIMEDOUT_TESTS=0
+interrupted=0
 
-# Directories for E2E tests
-LLVM_EVAL_DIR="$PROJECT_DIR/../backend/examples/llvm-test-suite-C++/"
-LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
+# ---------------------------------------------------------------------------
+# Summary — called by EXIT trap, always runs
+# ---------------------------------------------------------------------------
+print_summary() {
+    printf "\n"  # ensure we are past any in-progress bar or partial line
+    echo ""
+    echo "======================================"
+    if [[ $interrupted -eq 1 ]]; then
+        echo -e "  ${YELLOW}Test Suite (INTERRUPTED)${NC}"
+    else
+        echo "  Test Summary"
+    fi
+    echo "======================================"
+    echo "Total tests:  $TOTAL_TESTS"
+    echo -e "Passed:       ${GREEN}$PASSED_TESTS${NC}"
+    echo -e "Skipped:      ${YELLOW}$SKIPPED_TESTS${NC}"
+    echo -e "Timed out:    ${YELLOW}$TIMEDOUT_TESTS${NC}"
+    echo -e "Failed:       ${RED}$FAILED_TESTS${NC}"
+    if [[ $interrupted -eq 1 ]]; then
+        echo -e "${YELLOW}Run was interrupted; results above are partial.${NC}"
+    elif [[ $FAILED_TESTS -eq 0 ]]; then
+        echo -e "${GREEN}All tests passed!${NC}"
+    else
+        echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR and $LLVM_EVAL_OUTPUT_DIR${NC}"
+    fi
+}
 
-# Create output directory if it doesn't exist
-mkdir -p "$INTEGRATION_OUTPUT_DIR" "$UNIT_TEST_OUTPUT_DIR"
-echo "======================================"
-echo "  XCFA-Mapper Test Suite"
-echo "======================================"
-echo ""
+trap 'interrupted=1' INT TERM
+trap 'print_summary' EXIT
 
-# Check if xcfa-mapper exists
-if [ ! -f "$XCFA_MAPPER" ]; then
-    echo -e "${RED}ERROR: xcfa-mapper not found at $XCFA_MAPPER${NC}"
-    echo "Please build the project first: cmake -S .. -B ../build && cmake --build ../build --target xcfa-mapper"
-    exit 1
-fi
+# ---------------------------------------------------------------------------
+# Progress bar helpers (used only in the main process, not in workers)
+# ---------------------------------------------------------------------------
+BAR_WIDTH=40
 
-echo "Using tools:"
-echo "  xcfa-mapper: $XCFA_MAPPER"
-echo "  runner:      $RUNNER"
-echo ""
+# Overwrite current line with a progress bar.
+bar_draw() {
+    local cur=$1 tot=$2
+    local pct=0 filled=0
+    if [[ $tot -gt 0 ]]; then
+        pct=$(( cur * 100 / tot ))
+        filled=$(( cur * BAR_WIDTH / tot ))
+    fi
+    local bar
+    bar=$(printf '%*s' "$filled" "" | tr ' ' '=')
+    printf "\r  [%-*s] %d/%d (%d%%)" "$BAR_WIDTH" "$bar" "$cur" "$tot" "$pct"
+}
 
-# Helper: map pipeline exit code to a stage label
+# Clear bar, print a message line, redraw bar.
+bar_println() {
+    local cur=$1 tot=$2 msg="$3"
+    printf "\r%-$((BAR_WIDTH + 24))s\r" ""
+    printf "%s\n" "$msg"
+    bar_draw "$cur" "$tot"
+}
+
+# ---------------------------------------------------------------------------
+# Helper: map pipeline exit code to a stage label (exported for workers)
+# ---------------------------------------------------------------------------
 pipeline_stage() {
     case "$1" in
         2) echo "CIR generation" ;;
@@ -79,104 +122,223 @@ pipeline_stage() {
     esac
 }
 
-#######################################
-# Unit Tests
-#######################################
-echo "======================================"
-echo "  Running Unit Tests"
-echo "======================================"
-echo ""
+# ---------------------------------------------------------------------------
+# Worker: C integration test
+# Outputs exactly one line: RESULT|test_name|message
+# ---------------------------------------------------------------------------
+run_c_test() {
+    local c_file="$1"
+    local test_name pipeline_rc=0
+    test_name=$(basename "$c_file" .c)
+    local output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
+    local pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
 
-for mlir_file in "$UNIT_TEST_DIR"/*.mlir; do
-    if [ -f "$mlir_file" ]; then
-        test_name=$(basename "$mlir_file" .mlir)
-        TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    timeout "$TIMEOUT" "$RUNNER" --lang c \
+        --mlir "$INTEGRATION_OUTPUT_DIR/${test_name}.mlir" \
+        "$c_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
 
-        echo -n "Testing $test_name... "
-
-        # Run xcfa-mapper on the MLIR file
-        output_file="$UNIT_TEST_OUTPUT_DIR/${test_name}_output.c"
-        log_file="$UNIT_TEST_OUTPUT_DIR/${test_name}_log.txt"
-
-        if ! "$XCFA_MAPPER" "$mlir_file" "$output_file" > "$log_file" 2>&1 || [ ! -f "$output_file" ]; then
-            echo -e "${RED}FAILED${NC} (xcfa-mapper failed)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            echo "  Output from xcfa-mapper:"
-            cat "$log_file" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        # Check if the generated C file compiles
-        compile_log="$UNIT_TEST_OUTPUT_DIR/${test_name}_compile_log.txt"
-        if ! "$GCC" -c -fsyntax-only "$output_file" > "$compile_log" 2>&1; then
-            echo -e "${RED}FAILED${NC} (compilation failed)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            echo "  Compilation errors:"
-            cat "$compile_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        echo -e "${GREEN}PASSED${NC}"
-        PASSED_TESTS=$((PASSED_TESTS + 1))
+    if [[ $pipeline_rc -eq 124 ]]; then
+        echo "TIMEDOUT|$test_name|"; return
     fi
-done
+    if [[ $pipeline_rc -eq 2 ]]; then
+        echo "SKIPPED|$test_name|CIR generation failed"; return
+    fi
+    if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
+        echo "FAILED|$test_name|$(pipeline_stage "$pipeline_rc") failed"; return
+    fi
 
+    local compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
+    if ! "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1; then
+        echo "FAILED_COMPILE|$test_name|compilation failed"; return
+    fi
+
+    echo "PASSED|$test_name|"
+}
+
+# ---------------------------------------------------------------------------
+# Worker: C++ integration test
+# ---------------------------------------------------------------------------
+run_cpp_test() {
+    local cpp_file="$1"
+    local test_name pipeline_rc=0
+    test_name=$(basename "$cpp_file" .cpp)
+    local output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
+    local pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
+
+    timeout "$TIMEOUT" "$RUNNER" \
+        --mlir "$INTEGRATION_OUTPUT_DIR/${test_name}.mlir" \
+        "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
+
+    if [[ $pipeline_rc -eq 124 ]]; then
+        echo "TIMEDOUT|$test_name|"; return
+    fi
+    if [[ $pipeline_rc -eq 2 ]]; then
+        echo "SKIPPED|$test_name|CIR generation failed"; return
+    fi
+    if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
+        echo "FAILED|$test_name|$(pipeline_stage "$pipeline_rc") failed"; return
+    fi
+
+    # Check that struct/union names in the generated C are valid identifiers.
+    # C++ qualified names (::, <, >) must not appear in struct/union declarations.
+    local compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
+    "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1
+    if grep -qE "error:.*before '::'|error:.*before '<'" "$compile_log"; then
+        echo "FAILED_QUALIFIED|$test_name|C++ qualified names in struct/union identifiers"; return
+    fi
+
+    echo "PASSED|$test_name|"
+}
+
+# ---------------------------------------------------------------------------
+# Worker: LLVM SingleSource test
+# ---------------------------------------------------------------------------
+run_llvm_test() {
+    local src_file="$1"
+    local ext lang_flag pipeline_rc=0
+
+    if [[ "$src_file" == *.cpp ]]; then
+        lang_flag=""; ext="cpp"
+    else
+        lang_flag="--lang c"; ext="c"
+    fi
+
+    local rel_path="${src_file#$LLVM_EVAL_DIR}"
+    local base="${rel_path%.$ext}"
+    local test_id="${base//\//__}"
+    local ref_file="${src_file%.$ext}.reference_output"
+
+    local mlir_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.mlir"
+    local vtlayout_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.vtlayout.txt"
+    local output_c_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_output.c"
+    local pipeline_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_pipeline_log.txt"
+
+    # shellcheck disable=SC2086
+    timeout "$TIMEOUT" "$RUNNER" $lang_flag \
+        --mlir "$mlir_file" \
+        --vtlayout "$vtlayout_file" \
+        "$src_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
+
+    if [[ $pipeline_rc -eq 124 ]]; then
+        echo "TIMEDOUT|$test_id|"; return
+    fi
+    if [[ $pipeline_rc -eq 2 ]]; then
+        echo "SKIPPED|$test_id|CIR generation failed"; return
+    fi
+    if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
+        echo "FAILED|$test_id|$(pipeline_stage "$pipeline_rc") failed"; return
+    fi
+
+    local binary_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_binary"
+    local gcc_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_gcc_log.txt"
+    if ! "$GCC" "$output_c_file" -o "$binary_file" -lm > "$gcc_log" 2>&1; then
+        echo "FAILED|$test_id|compilation failed"; return
+    fi
+
+    local actual_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_actual.txt"
+    local expected_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_expected.txt"
+
+    local expected_exit
+    expected_exit=$(awk 'END{if(match($0,/exit ([0-9]+)$/,a))print a[1];else print 0}' "$ref_file")
+    awk 'NR==1{prev=$0;next}{print prev;prev=$0}END{sub(/exit [0-9]+$/,"",prev);printf "%s",prev}' \
+        "$ref_file" > "$expected_out_file"
+
+    "$binary_file" > "$actual_out_file" 2>/dev/null
+    local actual_exit=$?
+
+    if [[ $actual_exit -ne $expected_exit ]]; then
+        echo "FAILED|$test_id|exit code: expected $expected_exit, got $actual_exit"; return
+    fi
+    if ! diff -q "$expected_out_file" "$actual_out_file" > /dev/null 2>&1; then
+        echo "FAILED|$test_id|output mismatch"; return
+    fi
+
+    echo "PASSED|$test_id|"
+}
+
+# Export everything workers need
+export TIMEOUT RUNNER GCC INTEGRATION_OUTPUT_DIR LLVM_EVAL_DIR LLVM_EVAL_OUTPUT_DIR
+export -f pipeline_stage run_c_test run_cpp_test run_llvm_test
+
+# ---------------------------------------------------------------------------
+# Preflight checks
+# ---------------------------------------------------------------------------
+if ! command -v parallel >/dev/null 2>&1; then
+    echo -e "${RED}ERROR: GNU parallel not found.${NC}"
+    exit 1
+fi
+
+mkdir -p "$INTEGRATION_OUTPUT_DIR"
+echo "======================================"
+echo "  XCFA-Mapper Test Suite"
+echo "======================================"
 echo ""
 
-#######################################
-# Integration Tests
-#######################################
+if [ ! -f "$XCFA_MAPPER" ]; then
+    echo -e "${RED}ERROR: xcfa-mapper not found at $XCFA_MAPPER${NC}"
+    echo "Please build the project first: cmake -S .. -B ../build && cmake --build ../build --target xcfa-mapper"
+    exit 1
+fi
+
+echo "Using tools:"
+echo "  xcfa-mapper: $XCFA_MAPPER"
+echo "  runner:      $RUNNER"
+echo "  jobs:        $JOBS"
+echo ""
+
+# ---------------------------------------------------------------------------
+# C Integration Tests
+# ---------------------------------------------------------------------------
 echo "======================================"
 echo "  Running Integration Tests"
 echo "======================================"
 echo ""
 
-for c_file in "$INTEGRATION_INPUT_DIR"/*.c; do
-    if [ -f "$c_file" ]; then
-        test_name=$(basename "$c_file" .c)
+mapfile -t c_files < <(printf '%s\n' "$INTEGRATION_INPUT_DIR"/*.c | while read -r f; do [ -f "$f" ] && echo "$f"; done)
+c_total=${#c_files[@]}
+c_cur=0
+
+if [[ $c_total -gt 0 ]]; then
+    while IFS='|' read -r result test_name message; do
+        c_cur=$((c_cur + 1))
         TOTAL_TESTS=$((TOTAL_TESTS + 1))
+        printf "[%*d/%d] %-45s" "${#c_total}" "$c_cur" "$c_total" "Testing $test_name..."
+        case "$result" in
+            PASSED)
+                echo -e "${GREEN}PASSED${NC}"
+                PASSED_TESTS=$((PASSED_TESTS + 1))
+                ;;
+            TIMEDOUT)
+                echo -e "${YELLOW}TIMED OUT${NC}"
+                TIMEDOUT_TESTS=$((TIMEDOUT_TESTS + 1))
+                ;;
+            SKIPPED)
+                echo -e "${YELLOW}SKIPPED${NC} ($message)"
+                SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+                ;;
+            FAILED)
+                echo -e "${RED}FAILED${NC} ($message)"
+                FAILED_TESTS=$((FAILED_TESTS + 1))
+                sed 's/^/    /' "$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt" 2>/dev/null
+                echo ""
+                ;;
+            FAILED_COMPILE)
+                echo -e "${RED}FAILED${NC} (compilation failed)"
+                FAILED_TESTS=$((FAILED_TESTS + 1))
+                echo "  Compilation errors:"
+                sed 's/^/    /' "$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt" 2>/dev/null
+                echo ""
+                ;;
+        esac
+    done < <(parallel --will-cite --keep-order -j "$JOBS" run_c_test ::: "${c_files[@]}")
+fi
 
-        echo -n "Testing $test_name... "
-
-        output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
-        pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
-
-        pipeline_rc=0
-        "$RUNNER" --lang c \
-            --mlir "$INTEGRATION_OUTPUT_DIR/${test_name}.mlir" \
-            "$c_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
-
-        if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
-            echo -e "${RED}FAILED${NC} ($(pipeline_stage $pipeline_rc) failed)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            cat "$pipeline_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        # Check if the generated C file compiles
-        compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
-        if ! "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1; then
-            echo -e "${RED}FAILED${NC} (compilation failed)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            echo "  Compilation errors:"
-            cat "$compile_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        echo -e "${GREEN}PASSED${NC}"
-        PASSED_TESTS=$((PASSED_TESTS + 1))
-    fi
-done
-
+[[ $interrupted -eq 1 ]] && exit 130
 echo ""
 
-#######################################
+# ---------------------------------------------------------------------------
 # C++ Integration Tests
-#######################################
+# ---------------------------------------------------------------------------
 echo "======================================"
 echo "  Running C++ Integration Tests"
 echo "======================================"
@@ -185,58 +347,55 @@ echo ""
 if [ ! -f "$CLANGPP" ]; then
     echo -e "${YELLOW}SKIPPED: clang++ not found at $CLANGPP${NC}"
 else
-    for cpp_file in "$INTEGRATION_INPUT_DIR"/*.cpp; do
-        if [ -f "$cpp_file" ]; then
-            test_name=$(basename "$cpp_file" .cpp)
+    mapfile -t cpp_files < <(printf '%s\n' "$INTEGRATION_INPUT_DIR"/*.cpp | while read -r f; do [ -f "$f" ] && echo "$f"; done)
+    cpp_total=${#cpp_files[@]}
+    cpp_cur=0
+
+    if [[ $cpp_total -gt 0 ]]; then
+        while IFS='|' read -r result test_name message; do
+            cpp_cur=$((cpp_cur + 1))
             TOTAL_TESTS=$((TOTAL_TESTS + 1))
-
-            echo -n "Testing $test_name... "
-
-            output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
-            pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
-
-            pipeline_rc=0
-            "$RUNNER" --best-effort \
-                --mlir "$INTEGRATION_OUTPUT_DIR/${test_name}.mlir" \
-                "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
-
-            if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
-                echo -e "${RED}FAILED${NC} ($(pipeline_stage $pipeline_rc) failed)"
-                FAILED_TESTS=$((FAILED_TESTS + 1))
-                cat "$pipeline_log" | sed 's/^/    /'
-                echo ""
-                continue
-            fi
-
-            # Check that struct/union names in the generated C are valid identifiers.
-            # C++ qualified names (::, <, >) must not appear in struct/union declarations.
-            # Full compilation is not required: C++ STL internals produce unhandled ops
-            # (vtables, exception handling, etc.) that are emitted as comments in
-            # best-effort mode and may cause other unrelated compilation errors.
-            compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
-            "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1
-            if grep -qE "error:.*before '::'|error:.*before '<'" "$compile_log"; then
-                echo -e "${RED}FAILED${NC} (C++ qualified names in struct/union identifiers)"
-                FAILED_TESTS=$((FAILED_TESTS + 1))
-                echo "  Relevant errors:"
-                grep -E "error:.*before '::'|error:.*before '<'" "$compile_log" | head -5 | sed 's/^/    /'
-                echo ""
-                continue
-            fi
-
-            echo -e "${GREEN}PASSED${NC}"
-            PASSED_TESTS=$((PASSED_TESTS + 1))
-        fi
-    done
+            printf "[%*d/%d] %-45s" "${#cpp_total}" "$cpp_cur" "$cpp_total" "Testing $test_name..."
+            case "$result" in
+                PASSED)
+                    echo -e "${GREEN}PASSED${NC}"
+                    PASSED_TESTS=$((PASSED_TESTS + 1))
+                    ;;
+                TIMEDOUT)
+                    echo -e "${YELLOW}TIMED OUT${NC}"
+                    TIMEDOUT_TESTS=$((TIMEDOUT_TESTS + 1))
+                    ;;
+                SKIPPED)
+                    echo -e "${YELLOW}SKIPPED${NC} ($message)"
+                    SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+                    ;;
+                FAILED)
+                    echo -e "${RED}FAILED${NC} ($message)"
+                    FAILED_TESTS=$((FAILED_TESTS + 1))
+                    sed 's/^/    /' "$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt" 2>/dev/null
+                    echo ""
+                    ;;
+                FAILED_QUALIFIED)
+                    echo -e "${RED}FAILED${NC} ($message)"
+                    FAILED_TESTS=$((FAILED_TESTS + 1))
+                    grep -E "error:.*before '::'|error:.*before '<'" \
+                        "$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt" 2>/dev/null \
+                        | head -5 | sed 's/^/    /'
+                    echo ""
+                    ;;
+            esac
+        done < <(parallel --will-cite --keep-order -j "$JOBS" run_cpp_test ::: "${cpp_files[@]}")
+    fi
 fi
 
+[[ $interrupted -eq 1 ]] && exit 130
 echo ""
 
-#######################################
-# LLVM Test Suite
-#######################################
+# ---------------------------------------------------------------------------
+# LLVM SingleSource Tests
+# ---------------------------------------------------------------------------
 echo "======================================"
-echo "  Running LLVM Test Suite Tests"
+echo "  Running LLVM SingleSource Tests"
 echo "======================================"
 echo ""
 
@@ -247,102 +406,57 @@ elif [ ! -f "$CLANGPP" ]; then
 else
     mkdir -p "$LLVM_EVAL_OUTPUT_DIR"
 
-    while IFS= read -r cpp_file; do
-        rel_path="${cpp_file#$LLVM_EVAL_DIR}"          # e.g. "2003-06-08-BaseType.cpp" or "EH/simple_throw.cpp"
-        base="${rel_path%.cpp}"                          # e.g. "2003-06-08-BaseType" or "EH/simple_throw"
-        test_id="${base//\//__}"                         # e.g. "2003-06-08-BaseType" or "EH__simple_throw"
-        ref_file="${cpp_file%.cpp}.reference_output"
-        TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    # Pre-filter: only files that have a .reference_output sibling.
+    # This gives the bar an accurate total and avoids passing untestable
+    # files to the workers.
+    printf "  Scanning test files..."
+    mapfile -t llvm_files < <(
+        while IFS= read -r f; do
+            ext="${f##*.}"; base="${f%.$ext}"
+            [ -f "${base}.reference_output" ] && echo "$f"
+        done < <(find "$LLVM_EVAL_DIR" \( -name "*.cpp" -o -name "*.c" \) | sort)
+    )
+    printf "\r%-30s\r" ""  # clear the scanning line
+    llvm_total=${#llvm_files[@]}
+    llvm_cur=0
 
-        echo -n "Testing $test_id... "
+    if [[ $llvm_total -gt 0 ]]; then
+        bar_draw 0 "$llvm_total"
 
-        mlir_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.mlir"
-        vtlayout_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.vtlayout.txt"
-        output_c_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_output.c"
-        pipeline_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_pipeline_log.txt"
+        while IFS='|' read -r result test_id message; do
+            llvm_cur=$((llvm_cur + 1))
+            TOTAL_TESTS=$((TOTAL_TESTS + 1))
+            bar_draw "$llvm_cur" "$llvm_total"
 
-        pipeline_rc=0
-        "$RUNNER" --best-effort \
-            --mlir "$mlir_file" \
-            --vtlayout "$vtlayout_file" \
-            "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
+            case "$result" in
+                PASSED)
+                    PASSED_TESTS=$((PASSED_TESTS + 1))
+                    ;;
+                TIMEDOUT)
+                    bar_println "$llvm_cur" "$llvm_total" \
+                        "$(printf "  ${YELLOW}TIMED OUT${NC} %s" "$test_id")"
+                    TIMEDOUT_TESTS=$((TIMEDOUT_TESTS + 1))
+                    ;;
+                SKIPPED)
+                    bar_println "$llvm_cur" "$llvm_total" \
+                        "$(printf "  ${YELLOW}SKIPPED${NC}  %s (%s)" "$test_id" "$message")"
+                    SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+                    ;;
+                FAILED)
+                    bar_println "$llvm_cur" "$llvm_total" \
+                        "$(printf "  ${RED}FAILED${NC}   %s (%s)" "$test_id" "$message")"
+                    FAILED_TESTS=$((FAILED_TESTS + 1))
+                    ;;
+            esac
+        done < <(parallel --will-cite --line-buffer -j "$JOBS" run_llvm_test ::: "${llvm_files[@]}")
 
-        if [[ $pipeline_rc -eq 2 ]]; then
-            echo -e "${YELLOW}SKIPPED${NC} (CIR generation failed)"
-            SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
-            continue
-        fi
-
-        if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
-            echo -e "${RED}FAILED${NC} ($(pipeline_stage $pipeline_rc) failed)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            head -5 "$pipeline_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        # Compile generated C with gcc
-        binary_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_binary"
-        gcc_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_gcc_log.txt"
-        if ! "$GCC" "$output_c_file" -o "$binary_file" -lm > "$gcc_log" 2>&1; then
-            echo -e "${RED}FAILED${NC} (gcc compilation failed)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            head -5 "$gcc_log" | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        # Run binary and compare output against reference
-        actual_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_actual.txt"
-        expected_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_expected.txt"
-
-        # Parse reference: "exit N" always appears at the end (possibly on its own
-        # line, possibly appended without a newline like "0exit 0"). Extract the
-        # exit code and write expected stdout with that suffix stripped.
-        expected_exit=$(awk 'END{if(match($0,/exit ([0-9]+)$/,a))print a[1];else print 0}' "$ref_file")
-        awk 'NR==1{prev=$0;next}{print prev;prev=$0}END{sub(/exit [0-9]+$/,"",prev);printf "%s",prev}' \
-            "$ref_file" > "$expected_out_file"
-
-        "$binary_file" > "$actual_out_file" 2>/dev/null
-        actual_exit=$?
-
-        if [ "$actual_exit" -ne "$expected_exit" ]; then
-            echo -e "${RED}FAILED${NC} (exit code: expected $expected_exit, got $actual_exit)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            echo ""
-            continue
-        fi
-
-        if ! diff -q "$expected_out_file" "$actual_out_file" > /dev/null 2>&1; then
-            echo -e "${RED}FAILED${NC} (output mismatch)"
-            FAILED_TESTS=$((FAILED_TESTS + 1))
-            diff "$expected_out_file" "$actual_out_file" | head -10 | sed 's/^/    /'
-            echo ""
-            continue
-        fi
-
-        echo -e "${GREEN}PASSED${NC}"
-        PASSED_TESTS=$((PASSED_TESTS + 1))
-    done < <(find "$LLVM_EVAL_DIR" -maxdepth 2 -name "*.cpp" | sort)
+        printf "\n"  # move past the bar line
+    fi
 fi
 
-echo ""
-
-#######################################
-# Summary
-#######################################
-echo "======================================"
-echo "  Test Summary"
-echo "======================================"
-echo "Total tests:  $TOTAL_TESTS"
-echo -e "Passed:       ${GREEN}$PASSED_TESTS${NC}"
-echo -e "Skipped:      ${YELLOW}$SKIPPED_TESTS${NC}"
-echo -e "Failed:       ${RED}$FAILED_TESTS${NC}"
-
-if [ $FAILED_TESTS -eq 0 ]; then
-    echo -e "${GREEN}All tests passed!${NC}"
-    exit 0
-else
-    echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR and $LLVM_EVAL_OUTPUT_DIR${NC}"
+# Normal exit — EXIT trap prints summary
+if [[ $FAILED_TESTS -gt 0 ]]; then
     exit 1
+else
+    exit 0
 fi

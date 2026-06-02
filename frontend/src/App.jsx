@@ -48,7 +48,7 @@ export default function App() {
   const [examples, setExamples] = useState([])
   const [selectedExample, setSelectedExample] = useState('')
   const [code, setCode] = useState('// select an example or start typing...')
-  const [outputs, setOutputs] = useState({ llvm: '', clang: '', flat_clang: '', xcfa: '', c: '', c_best: '', comparison: {} })
+  const [outputs, setOutputs] = useState({ llvm: '', clang: '', flat_clang: '', xcfa: '', c: '', comparison: {} })
   const [clangVersion, setClangVersion] = useState('')
   const [xcfaMapperVersion, setXcfaMapperVersion] = useState('')
   const [position, setPosition] = useState({ line: 1, column: 1 })
@@ -83,7 +83,6 @@ export default function App() {
       flat_clang: data.flat_clang || '',
       xcfa: data.xcfa || '',
       c: data.c || '',
-      c_best: data.c_best || '',
       comparison: data.comparison || {}
     })
   }

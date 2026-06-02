@@ -41,7 +41,6 @@ using namespace mlir;
 using namespace xcfa;
 
 int main(int argc, char **argv) {
-  bool bestEffort = false;
   const char *monitorJsonFile = nullptr;
   const char *vtlayoutFile = nullptr;
   std::vector<std::string> positional;
@@ -52,13 +51,9 @@ int main(int argc, char **argv) {
       llvm::outs() << "xcfa-mapper " << XCFA_MAPPER_VERSION << "\n";
       return 0;
     }
-    if (arg == "--best-effort") {
-      bestEffort = true;
-      continue;
-    }
     if (arg == "--monitor-json") {
       if (i + 1 >= argc) {
-        llvm::errs() << "Usage: xcfa-mapper [--best-effort] [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
+        llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
         return 2;
       }
       monitorJsonFile = argv[++i];
@@ -66,7 +61,7 @@ int main(int argc, char **argv) {
     }
     if (arg == "--vtlayout") {
       if (i + 1 >= argc) {
-        llvm::errs() << "Usage: xcfa-mapper [--best-effort] [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
+        llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
         return 2;
       }
       vtlayoutFile = argv[++i];
@@ -76,7 +71,7 @@ int main(int argc, char **argv) {
   }
 
   if (positional.size() != 2) {
-    llvm::errs() << "Usage: xcfa-mapper [--best-effort] [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
+    llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
     return 2;
   }
 
@@ -124,7 +119,7 @@ int main(int argc, char **argv) {
     return 4;
   }
 
-  Mapper mapper(bestEffort);
+  Mapper mapper;
   registerBuiltinHandlers(mapper);
 
   if (vtlayoutFile) {

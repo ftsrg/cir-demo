@@ -10,9 +10,8 @@
 # Usage: run-xcfa-mapper.sh [OPTIONS] <input-file> <output.c>
 # Options:
 #   --lang c|c++         Language (default: infer from file extension)
-#   --std STD            Standard (default: c11 or c++11)
+#   --std STD            Standard (default: c23 or c++23)
 #   --flatten            Run cir-opt -cir-flatten-cfg before xcfa-mapper
-#   --best-effort        Pass --best-effort to xcfa-mapper
 #   --vtlayout FILE      Save the vtable layout dump to FILE (always generated internally)
 #   --mlir FILE          Save intermediate CIR MLIR to FILE (default: temp)
 #   --flat-mlir FILE     Save flattened MLIR to FILE (implies --flatten)
@@ -29,14 +28,13 @@ XCFA_MAPPER="$SCRIPT_DIR/../build/xcfa-mapper"
 LANG=""
 STD=""
 FLATTEN=false
-BEST_EFFORT=false
 VTLAYOUT_OUT=""
 MLIR_OUT=""
 FLAT_MLIR_OUT=""
 
 usage() {
     echo "Usage: $0 [OPTIONS] <input-file> <output.c>" >&2
-    echo "  --lang c|c++, --std STD, --flatten, --best-effort" >&2
+    echo "  --lang c|c++, --std STD, --flatten" >&2
     echo "  --vtlayout FILE, --mlir FILE, --flat-mlir FILE" >&2
     exit 1
 }
@@ -46,7 +44,6 @@ while [[ $# -gt 0 ]]; do
         --lang)      LANG="$2"; shift 2 ;;
         --std)       STD="$2"; shift 2 ;;
         --flatten)   FLATTEN=true; shift ;;
-        --best-effort) BEST_EFFORT=true; shift ;;
         --vtlayout)  VTLAYOUT_OUT="$2"; shift 2 ;;
         --mlir)      MLIR_OUT="$2"; shift 2 ;;
         --flat-mlir) FLAT_MLIR_OUT="$2"; FLATTEN=true; shift 2 ;;
@@ -68,7 +65,7 @@ if [[ -z "$LANG" ]]; then
         *) LANG="c" ;;
     esac
 fi
-[[ -z "$STD" ]] && { [[ "$LANG" == "c++" ]] && STD="c++11" || STD="c11"; }
+[[ -z "$STD" ]] && { [[ "$LANG" == "c++" ]] && STD="c++23" || STD="c23"; }
 
 CLANG_BIN="$CLANG"
 [[ "$LANG" == "c++" ]] && CLANG_BIN="$CLANGPP"
@@ -123,7 +120,6 @@ fi
 
 # Step 4: xcfa-mapper
 MAPPER_CMD=("$XCFA_MAPPER")
-[[ "$BEST_EFFORT" == true ]] && MAPPER_CMD+=(--best-effort)
 MAPPER_CMD+=(--vtlayout "$VTLAYOUT_FILE")
 MAPPER_CMD+=("$MAPPER_INPUT" "$OUTPUT_C")
 "${MAPPER_CMD[@]}" || exit 4

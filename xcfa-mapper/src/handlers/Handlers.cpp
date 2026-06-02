@@ -333,7 +333,7 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
           // Member-function-pointer field0: function address encoded as ptrdiff_t.
           // Use the demangled output name so it matches the emitted function definition.
           std::string outSym = m.getFunctionOutputName(rawSym);
-          init += "(long long)&" + outSym;
+          init += "(long)&" + outSym;
         } else {
           init += "0"; // fallback for unknown member types
         }
@@ -368,10 +368,6 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
   }
   
   if (!litVal.has_value()) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_CONSTANT_NO_LITERAL << "\n";
-      return false;
-    }
     out << "  // " << ERR_CONSTANT_NO_LITERAL << "\n";
     // Use aggregate initializer for struct/array types; plain 0 is not valid.
     if (resultType &&
@@ -549,10 +545,6 @@ bool handleCmp(cir::CmpOp op, Mapper &m, std::ostream &out) {
   }
   
   if (!predFound) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_CMP_NO_PRED << "\n";
-      return false;
-    }
     out << "  // " << ERR_CMP_NO_PRED << "\n";
     pred = "==";
   }
@@ -607,10 +599,6 @@ bool handleBrCond(cir::BrCondOp op, Mapper &m, std::ostream &out) {
   std::string flabel;
   
   if (o->getNumSuccessors() < 2) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_BRCOND_NO_SUCCESSORS << "\n";
-      return false;
-    }
     out << "  // " << ERR_BRCOND_NO_SUCCESSORS << "\n";
     out << "  if (" << cond << ") goto bb_true; else goto bb_false;\n";
     return true;
@@ -817,10 +805,6 @@ static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
   }
   
   if (callee.empty()) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_CALL_NO_CALLEE << "\n";
-      return false;
-    }
     out << "  // " << ERR_CALL_NO_CALLEE << "\n";
     callee = "unknown_fn";
   }
@@ -1061,10 +1045,6 @@ bool handleBinOpOverflow(Operation *o, Mapper &m, std::ostream &out) {
 
   std::string builtinName = getOverflowBuiltinName(o);
   if (builtinName.empty()) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_BINOP_NO_KIND << "\n";
-      return false;
-    }
     out << "  // " << ERR_BINOP_NO_KIND << "\n";
     return true;
   }
@@ -1744,10 +1724,6 @@ bool handleGetMember(cir::GetMemberOp op, Mapper &m, std::ostream &out) {
   }
 
   if (memberName.empty()) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_GET_MEMBER_NO_NAME << "\n";
-      return false;
-    }
     out << "  // " << ERR_GET_MEMBER_NO_NAME << "\n";
     memberName = "field";
   }
@@ -1926,7 +1902,7 @@ bool handleCopy(cir::CopyOp op, Mapper &m, std::ostream &out) {
     if (srcArrTy && dstArrTy && srcArrTy.getSize() == dstArrTy.getSize() && srcArrTy.getElementType() == dstArrTy.getElementType()) {
       uint64_t size = srcArrTy.getSize();
       out << "  // array copy\n";
-      out << "  for (unsigned long long i = 0; i < " << size << "; ++i) { " << dstName << "[i] = " << srcName << "[i]; }\n";
+      out << "  for (unsigned long i = 0; i < " << size << "; ++i) { " << dstName << "[i] = " << srcName << "[i]; }\n";
       return true;
     }
   }
@@ -1967,13 +1943,13 @@ bool handleGetBitfield(cir::GetBitfieldOp op, Mapper &m, std::ostream &out) {
   uint64_t mask = (width >= 64) ? ~0ULL : ((1ULL << width) - 1);
   std::string tmp = m.freshName("bf");
   if (!isSigned) {
-    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((unsigned long long)("
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((unsigned long)("
         << storageExpr << ") >> " << offset << " & " << mask << "ULL);\n";
   } else {
     // Sign-extend using the portable formula: (raw ^ signbit) - signbit
     uint64_t signbit = 1ULL << (width - 1);
     std::string raw = m.freshName("bf_raw");
-    out << "  unsigned long long " << raw << " = (unsigned long long)(" << storageExpr
+    out << "  unsigned long " << raw << " = (unsigned long)(" << storageExpr
         << ") >> " << offset << " & " << mask << "ULL;\n";
     out << "  " << ctype << " " << tmp << " = (" << ctype << ")((" << raw << " ^ "
         << signbit << "ULL) - " << signbit << "ULL);\n";
@@ -1995,18 +1971,18 @@ bool handleSetBitfield(cir::SetBitfieldOp op, Mapper &m, std::ostream &out) {
   std::string storageExpr = m.isDirectAccess(addr) ? addrName : ("(*" + addrName + ")");
   uint64_t mask = (width >= 64) ? ~0ULL : ((1ULL << width) - 1);
   // Update storage: clear field bits then OR in new value
-  out << "  " << storageExpr << " = (unsigned long long)(" << storageExpr << ") & ~("
-      << mask << "ULL << " << offset << ") | ((unsigned long long)(" << srcName
+  out << "  " << storageExpr << " = (unsigned long)(" << storageExpr << ") & ~("
+      << mask << "ULL << " << offset << ") | ((unsigned long)(" << srcName
       << ") & " << mask << "ULL) << " << offset << ";\n";
   // Result: new bitfield value read back (with possible sign extension)
   std::string tmp = m.freshName("bf");
   if (!isSigned) {
-    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((unsigned long long)("
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((unsigned long)("
         << storageExpr << ") >> " << offset << " & " << mask << "ULL);\n";
   } else {
     uint64_t signbit = 1ULL << (width - 1);
     std::string raw = m.freshName("bf_raw");
-    out << "  unsigned long long " << raw << " = (unsigned long long)(" << storageExpr
+    out << "  unsigned long " << raw << " = (unsigned long)(" << storageExpr
         << ") >> " << offset << " & " << mask << "ULL;\n";
     out << "  " << ctype << " " << tmp << " = (" << ctype << ")((" << raw << " ^ "
         << signbit << "ULL) - " << signbit << "ULL);\n";
@@ -2030,10 +2006,6 @@ bool handleGetGlobal(cir::GetGlobalOp op, Mapper &m, std::ostream &out) {
   }
   
   if (globalName.empty()) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_GET_GLOBAL_NO_NAME << "\n";
-      return false;
-    }
     out << "  // " << ERR_GET_GLOBAL_NO_NAME << "\n";
     globalName = "global_var";
   }
@@ -2111,10 +2083,6 @@ bool handleGlobal(cir::GlobalOp op, Mapper &m, std::ostream &out) {
   }
   
   if (name.empty()) {
-    if (!m.isBestEffort()) {
-      llvm::errs() << ERR_GLOBAL_NO_NAME << "\n";
-      return false;
-    }
     name = "global_var";
   }
   
@@ -2334,7 +2302,7 @@ bool handleClz(cir::BitClzOp op, Mapper &m, std::ostream &out) {
   // GCC builtin; for 16-bit, promote to 32-bit and subtract the extra 16 bits.
   std::string builtin;
   if (width == 64)
-    builtin = "__builtin_clzll((unsigned long long)" + opnd + ")";
+    builtin = "__builtin_clzll((unsigned long)" + opnd + ")";
   else if (width == 16)
     builtin = "(__builtin_clz((unsigned int)(unsigned short)" + opnd + ") - 16)";
   else
@@ -2469,25 +2437,17 @@ bool handleEhTypeId(cir::EhTypeIdOp op, Mapper &m, std::ostream &out) {
   std::string ctype = m.mapTypeToC(op->getResult(0).getType());
   std::string tmp = m.freshName("type_id");
   out << "  " << ctype << " " << tmp << " = (" << ctype
-      << ")(uintptr_t)__cir_eh_type_" << san << ";\n";
+      << ")(unsigned long)__cir_eh_type_" << san << ";\n";
   m.setName(op->getResult(0), tmp);
   return true;
 }
 
 bool handleEhSetjmp(cir::EhSetjmpOp op, Mapper &m, std::ostream &out) {
-  if (!m.isBestEffort()) {
-    llvm::errs() << ERR_EH_SETJMP_UNSUPPORTED << "\n";
-    return false;
-  }
   out << "  // " << ERR_EH_SETJMP_UNSUPPORTED << "\n";
   return true;
 }
 
 bool handleEhLongjmp(cir::EhLongjmpOp op, Mapper &m, std::ostream &out) {
-  if (!m.isBestEffort()) {
-    llvm::errs() << ERR_EH_LONGJMP_UNSUPPORTED << "\n";
-    return false;
-  }
   out << "  // " << ERR_EH_LONGJMP_UNSUPPORTED << "\n";
   return true;
 }
@@ -2649,7 +2609,7 @@ bool handleThrow(cir::ThrowOp op, Mapper &m, std::ostream &out) {
       m.registerEhTypeSymbol(sym);
       std::string san = Mapper::sanitizeIdentifier(sym);
       out << "  __cir_exc_type = (const void*)__cir_eh_type_" << san << ";\n";
-      out << "  __cir_exc_type_id = (uintptr_t)__cir_eh_type_" << san << ";\n";
+      out << "  __cir_exc_type_id = (unsigned long)__cir_eh_type_" << san << ";\n";
     } else {
       // Untyped throw: clear the type tag so dispatch falls through to
       // catch-all handlers only.

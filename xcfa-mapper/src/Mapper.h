@@ -53,7 +53,7 @@ public:
 /// The central Mapper: holds mapping state and dispatches ops to handlers.
 class Mapper {
 public:
-  Mapper(bool bestEffort = false);
+  Mapper();
 
   /// Register a handler for an operation name, e.g. "cir.alloca".
   void registerHandler(llvm::StringRef opName, std::unique_ptr<OpHandler> handler);
@@ -144,7 +144,6 @@ public:
   static std::string virtualCallTypeSuffix(const std::string &ctype);
 
 private:
-  bool bestEffort;
   bool structsEmitted = false;
   bool ehPreambleEmitted = false;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
@@ -165,7 +164,6 @@ private:
   // `extern void abort(void);` as per SV-COMP conventions.
   bool hasTrap_ = false;
   bool abortDeclEmitted_ = false;
-  bool stdintEmitted_ = false;
   // Alloca result Values that are accessed atomically / volatilely.
   llvm::DenseSet<mlir::Value> atomicAllocaValues_;
   llvm::DenseSet<mlir::Value> volatileAllocaValues_;
@@ -253,12 +251,6 @@ public:
   /// Query whether an alloca result Value is accessed with volatile semantics.
   bool isVolatileAlloca(mlir::Value v) const { return volatileAllocaValues_.count(v) > 0; }
   
-  /// When true, tolerate missing/exact matches and continue mapping with
-  /// generated fallbacks; when false mapping will fail on missing exact data.
-  bool isBestEffort() const { return bestEffort; }
-
-  void setBestEffort(bool v) { bestEffort = v; }
-
   /// Returns the C name of the last named (non-variadic) parameter of the
   /// function body currently being mapped. Empty if the current function is
   /// not variadic or has no named parameters. Used by handleVAStart to emit

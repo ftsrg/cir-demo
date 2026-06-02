@@ -28,7 +28,6 @@ export default function OutputTabs({ outputs = {}, flatten = false }) {
     { key: 'clang', label: 'Clang IR' },
     ...(flatten ? [{ key: 'flat_clang', label: 'Flat Clang IR' }] : []),
     { key: 'c', label: 'C' },
-    { key: 'c_best', label: 'C (best effort)' },
     { key: 'xcfa', label: 'XCFA' },
     { key: 'comparison', label: 'Comparison' }
   ]
