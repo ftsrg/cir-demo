@@ -537,13 +537,24 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
   }
 
   // Declaration-only operator new/delete: emit inline stubs that wrap
-  // malloc/free so the linker finds a definition.
-  if (outName.rfind("operator_new", 0) == 0) {
+  // malloc/free so the linker finds a definition. We match both the demangled
+  // output name (operator_new*/operator_delete*) and the raw Itanium mangled
+  // symbol, because the demangler handles operator new[] (_Zna*) but leaves the
+  // array-delete forms (_ZdaPv / _ZdaPvm) mangled — without this they would be
+  // emitted as a bare extern and fail to link.
+  std::string mangledSym = sym.getValue().str();
+  bool isNewOp = outName.rfind("operator_new", 0) == 0 ||
+                 mangledSym.rfind("_Znw", 0) == 0 ||   // operator new
+                 mangledSym.rfind("_Zna", 0) == 0;     // operator new[]
+  bool isDeleteOp = outName.rfind("operator_delete", 0) == 0 ||
+                    mangledSym.rfind("_Zdl", 0) == 0 || // operator delete
+                    mangledSym.rfind("_Zda", 0) == 0;   // operator delete[]
+  if (isNewOp) {
     ensureMallocFreeDeclared(out);
     out << retType << " " << outName << "(" << params << ") { return malloc(p0); }\n";
     return true;
   }
-  if (outName.rfind("operator_delete", 0) == 0) {
+  if (isDeleteOp) {
     ensureMallocFreeDeclared(out);
     out << retType << " " << outName << "(" << params << ") { free(p0); }\n";
     return true;
@@ -904,9 +915,8 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   mlir::Type symType = globalOp.getSymType();
 
   auto escapeCStringBytes = [](const std::string &bytes) {
-    static const char *hex = "0123456789ABCDEF";
     std::string escaped;
-    escaped.reserve(bytes.size() * 2 + 4);
+    escaped.reserve(bytes.size() * 4 + 4);
 
     for (size_t i = 0; i < bytes.size(); ++i) {
       unsigned char c = static_cast<unsigned char>(bytes[i]);
@@ -916,12 +926,16 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
       case '\n': escaped += "\\n"; break;
       case '\r': escaped += "\\r"; break;
       case '\t': escaped += "\\t"; break;
-      case '\0': escaped += "\\0"; break;
       default:
         if (c < 32 || c > 126) {
-          escaped += "\\x";
-          escaped.push_back(hex[(c >> 4) & 0xF]);
-          escaped.push_back(hex[c & 0xF]);
+          // Use a full 3-digit octal escape rather than \xHH: a hex escape
+          // greedily consumes *all* following hex digits, so "\x01" "7" becomes
+          // "\x017" (= 279, out of range). An octal escape takes at most 3
+          // digits, so \001 followed by '7' stays two characters.
+          escaped.push_back('\\');
+          escaped.push_back(static_cast<char>('0' + ((c >> 6) & 7)));
+          escaped.push_back(static_cast<char>('0' + ((c >> 3) & 7)));
+          escaped.push_back(static_cast<char>('0' + (c & 7)));
         } else {
           escaped.push_back(static_cast<char>(c));
         }
@@ -961,6 +975,12 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
       // generic isa<> on a null Type crashes inside MLIR.
       bool targetIsArray = targetType && mlir::isa<cir::ArrayType>(targetType);
       initExpr = targetIsArray ? targetName : ("&" + targetName);
+      // The address constant's type (pointer to the target) may differ from the
+      // global's declared pointer type when the source type-puns globals (e.g.
+      // `int *p = &some_struct;` or `int *p = some_2d_array;`). Cast to the
+      // declared type so C accepts it; this is a no-op when the types match.
+      if (mlir::isa<cir::PointerType>(symType))
+        initExpr = "(" + mapTypeToC(symType) + ")(" + initExpr + ")";
     } else if (auto constArr = mlir::dyn_cast<cir::ConstArrayAttr>(attr)) {
       if (auto strAttr = mlir::dyn_cast<mlir::StringAttr>(constArr.getElts())) {
         std::string bytes = strAttr.getValue().str();
@@ -1283,10 +1303,15 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // collectFromOp loop above misses struct types that are only referenced as
   // a global variable's type (e.g. `struct element cellspace[19]` when no
   // function body ever reads/writes the struct via get_member).
-  for (auto &op : module.getOps()) {
-    if (auto globalOp = llvm::dyn_cast<cir::GlobalOp>(&op))
-      collectRecordTypesFromType(globalOp.getSymType());
-  }
+  //
+  // Use walk() rather than getOps() so we also reach globals inside a nested
+  // module: clang wraps the real translation unit in an outer ModuleOp, and
+  // this struct-collection runs on the outer module (which writes the struct
+  // definitions). A getOps() loop would only see the inner ModuleOp, missing
+  // every record used solely as a nested global's element type.
+  module->walk([&](cir::GlobalOp globalOp) {
+    collectRecordTypesFromType(globalOp.getSymType());
+  });
 
   // Typed fallback: for records with no directly discovered members (e.g.
   // derived records only accessed through cir.base_class_addr casts), extract
@@ -1568,14 +1593,11 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
     out << "// Struct definitions (auto-parsed)\n";
     for (auto &sname : order) {
-      // Skip struct/union names reserved for the implementation so we don't
-      // conflict with definitions already provided by system headers:
-      //   __foo  — double-underscore prefix (C standard §7.1.3)
-      //   _Foo   — single underscore + uppercase (C standard §7.1.3)
-      // Both forms appear in glibc internals (_IO_FILE, __pthread_mutex_s, …).
-      if (sname.size() >= 2 && sname[0] == '_' &&
-          (sname[1] == '_' || std::isupper((unsigned char)sname[1])))
-        continue;
+      // NOTE: reserved-name records (__foo, _Foo) used to be skipped here on the
+      // assumption that system headers already define them. We now emit fully
+      // header-free C, so nothing else provides these — skipping them left the
+      // type undefined ("unknown type name '__locale_struct'"). Emit them like
+      // any other record; there is no system definition to conflict with.
 
       bool isU = false;
       auto itk = isUnionContainer.find(sname);
@@ -1601,17 +1623,12 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       }
       for (size_t i = 0; i < vec.size(); ++i) {
         const FieldInfo &fi = vec[i];
-        // For __-prefixed record types (which we don't emit our own definition
-        // for), use the typedef name without the 'struct'/'union' keyword.
-        // On Linux, all __-prefixed system record types are typedef'd for
-        // anonymous structs, so the unqualified name resolves to the typedef.
+        // Always keep the 'struct'/'union' keyword. We previously dropped it for
+        // __-prefixed field types, relying on a matching system typedef — but in
+        // header-free C there is no such typedef, and we now emit the record's
+        // own definition above, so the keyword-qualified name resolves directly
+        // (and a pointer to it stays valid even when the record is incomplete).
         std::string fieldType = fi.baseType;
-        static const std::string structPfx = "struct __";
-        static const std::string unionPfx  = "union __";
-        if (fieldType.rfind(structPfx, 0) == 0)
-          fieldType = fieldType.substr(7); // drop "struct "
-        else if (fieldType.rfind(unionPfx, 0) == 0)
-          fieldType = fieldType.substr(6); // drop "union "
         out << fieldType << " " << fi.name;
         if (fi.isArray) {
           for (auto &dim : fi.dims) out << "[" << dim << "]";

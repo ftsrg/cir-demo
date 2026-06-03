@@ -546,8 +546,18 @@ bool handleCmp(cir::CmpOp op, Mapper &m, std::ostream &out) {
   if (o->getNumOperands() < 2) return false;
   Value lhs = o->getOperand(0);
   Value rhs = o->getOperand(1);
-  std::string l = m.getOrCreateName(lhs);
-  std::string r = m.getOrCreateName(rhs);
+  // A pointer-typed operand that is "direct access" has its C name bound to the
+  // pointee lvalue (not a pointer), e.g. a by-value struct parameter `q` of CIR
+  // type !cir.ptr<!rec_S>. Comparing it as the pointer the CIR intends requires
+  // taking its address; otherwise we'd emit `p == q` with q a struct value.
+  auto cmpOperand = [&](Value v) {
+    std::string n = m.getOrCreateName(v);
+    if (m.isDirectAccess(v) && mlir::isa<cir::PointerType>(v.getType()))
+      return "&" + n;
+    return n;
+  };
+  std::string l = cmpOperand(lhs);
+  std::string r = cmpOperand(rhs);
   std::string pred;
   bool predFound = false;
   
@@ -1924,6 +1934,20 @@ bool handlePtrStride(cir::PtrStrideOp op, Mapper &m, std::ostream &out) {
   std::string baseName = m.getOrCreateName(base);
   std::string strideName = m.getOrCreateName(stride);
 
+  // A direct-access base has its C name bound to the pointee lvalue rather than
+  // a pointer. If the pointee is a *scalar* (e.g. a get_element result `s1[c]`
+  // is the element), the pointer we stride from is its address, so qualify with
+  // '&'; otherwise we'd index a scalar (`&(s1[c])[i]` — "subscripted value is
+  // not a pointer"). If the pointee is an *array*, the name already decays to a
+  // pointer, so taking '&' would wrongly yield a pointer-to-array.
+  if (m.isDirectAccess(base)) {
+    bool pointeeIsArray = false;
+    if (auto bpt = mlir::dyn_cast<cir::PointerType>(base.getType()))
+      pointeeIsArray = mlir::isa<cir::ArrayType>(bpt.getPointee());
+    if (!pointeeIsArray)
+      baseName = "&(" + baseName + ")";
+  }
+
   // Default policy: prefer array-style indexing syntax over raw pointer
   // arithmetic because downstream verifiers generally support indexing better.
   // Keep a conservative fallback to `base + stride` for unsupported pointer
@@ -2029,8 +2053,14 @@ bool handleCopy(cir::CopyOp op, Mapper &m, std::ostream &out) {
     auto dstArrTy = llvm::dyn_cast<cir::ArrayType>(dstPtrTy.getPointee());
     if (srcArrTy && dstArrTy && srcArrTy.getSize() == dstArrTy.getSize() && srcArrTy.getElementType() == dstArrTy.getElementType()) {
       uint64_t size = srcArrTy.getSize();
+      // Copy via __builtin_memcpy rather than an element-wise loop: when the
+      // element type is itself an array (multi-dimensional), `dst[i] = src[i]`
+      // is an array assignment, which C rejects. memcpy works for any element
+      // type. Length = outer count * sizeof(one element); subscripting works
+      // whether the operand is a direct-access array or a pointer.
       out << "  // array copy\n";
-      out << "  for (unsigned long i = 0; i < " << size << "; ++i) { " << dstName << "[i] = " << srcName << "[i]; }\n";
+      out << "  __builtin_memcpy(" << dstName << ", " << srcName << ", "
+          << "(unsigned long)" << size << " * sizeof(" << srcName << "[0]));\n";
       return true;
     }
   }
@@ -2067,6 +2097,53 @@ bool handleStackRestore(cir::StackRestoreOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// True when the bitfield storage member is a byte array rather than a scalar
+// integer (wide bitfields are laid out over `unsigned char storage[N]`). For
+// array storage, `(unsigned long)(member)` would decay to the address instead
+// of reading the bits, and assigning to the array would not compile — so we
+// load/store the bytes through __builtin_memcpy into an integer instead.
+static bool isArrayBitfieldStorage(mlir::Value addr) {
+  if (auto pt = mlir::dyn_cast<cir::PointerType>(addr.getType()))
+    return mlir::isa<cir::ArrayType>(pt.getPointee());
+  return false;
+}
+
+// Emit a `unsigned long <name>` holding the bitfield storage bits. For scalar
+// storage this is a plain cast; for array storage it memcpys min(8, sizeof)
+// bytes so offset+width<=64 fields are read correctly without over-reading.
+static std::string loadBitfieldStorage(const std::string &storageExpr,
+                                       bool arrayStorage, Mapper &m,
+                                       std::ostream &out) {
+  std::string s = m.freshName("bf_st");
+  if (arrayStorage) {
+    out << "  unsigned long " << s << " = 0;\n";
+    out << "  __builtin_memcpy(&" << s << ", " << storageExpr
+        << ", sizeof(" << s << ") < sizeof(" << storageExpr << ") ? sizeof("
+        << s << ") : sizeof(" << storageExpr << "));\n";
+  } else {
+    out << "  unsigned long " << s << " = (unsigned long)(" << storageExpr << ");\n";
+  }
+  return s;
+}
+
+// Emit the extraction of `tmp` (typed `ctype`) from storage value `st`.
+static void extractBitfield(const std::string &tmp, const std::string &ctype,
+                            const std::string &st, uint64_t offset,
+                            uint64_t width, uint64_t mask, bool isSigned,
+                            Mapper &m, std::ostream &out) {
+  if (!isSigned) {
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")(" << st
+        << " >> " << offset << " & " << mask << "ULL);\n";
+  } else {
+    uint64_t signbit = 1ULL << (width - 1);
+    std::string raw = m.freshName("bf_raw");
+    out << "  unsigned long " << raw << " = " << st << " >> " << offset
+        << " & " << mask << "ULL;\n";
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((" << raw
+        << " ^ " << signbit << "ULL) - " << signbit << "ULL);\n";
+  }
+}
+
 bool handleGetBitfield(cir::GetBitfieldOp op, Mapper &m, std::ostream &out) {
   Value addr = op.getAddr();
   std::string addrName = m.getOrCreateName(addr);
@@ -2075,22 +2152,13 @@ bool handleGetBitfield(cir::GetBitfieldOp op, Mapper &m, std::ostream &out) {
   uint64_t width = info.getSize();
   bool isSigned = info.getIsSigned();
   std::string ctype = m.mapTypeToC(op.getResult().getType());
+  bool arrayStorage = isArrayBitfieldStorage(addr);
   std::string storageExpr = m.isDirectAccess(addr) ? addrName : ("(*" + addrName + ")");
   // Guard against width==64 to avoid UB in shift (1ULL<<64).
   uint64_t mask = (width >= 64) ? ~0ULL : ((1ULL << width) - 1);
+  std::string st = loadBitfieldStorage(storageExpr, arrayStorage, m, out);
   std::string tmp = m.freshName("bf");
-  if (!isSigned) {
-    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((unsigned long)("
-        << storageExpr << ") >> " << offset << " & " << mask << "ULL);\n";
-  } else {
-    // Sign-extend using the portable formula: (raw ^ signbit) - signbit
-    uint64_t signbit = 1ULL << (width - 1);
-    std::string raw = m.freshName("bf_raw");
-    out << "  unsigned long " << raw << " = (unsigned long)(" << storageExpr
-        << ") >> " << offset << " & " << mask << "ULL;\n";
-    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((" << raw << " ^ "
-        << signbit << "ULL) - " << signbit << "ULL);\n";
-  }
+  extractBitfield(tmp, ctype, st, offset, width, mask, isSigned, m, out);
   m.setName(op.getResult(), tmp);
   return true;
 }
@@ -2105,25 +2173,24 @@ bool handleSetBitfield(cir::SetBitfieldOp op, Mapper &m, std::ostream &out) {
   uint64_t width = info.getSize();
   bool isSigned = info.getIsSigned();
   std::string ctype = m.mapTypeToC(op.getResult().getType());
+  bool arrayStorage = isArrayBitfieldStorage(addr);
   std::string storageExpr = m.isDirectAccess(addr) ? addrName : ("(*" + addrName + ")");
   uint64_t mask = (width >= 64) ? ~0ULL : ((1ULL << width) - 1);
-  // Update storage: clear field bits then OR in new value
-  out << "  " << storageExpr << " = (unsigned long)(" << storageExpr << ") & ~("
-      << mask << "ULL << " << offset << ") | ((unsigned long)(" << srcName
-      << ") & " << mask << "ULL) << " << offset << ";\n";
-  // Result: new bitfield value read back (with possible sign extension)
-  std::string tmp = m.freshName("bf");
-  if (!isSigned) {
-    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((unsigned long)("
-        << storageExpr << ") >> " << offset << " & " << mask << "ULL);\n";
+  // Load storage, clear the field bits, OR in the new value.
+  std::string st = loadBitfieldStorage(storageExpr, arrayStorage, m, out);
+  out << "  " << st << " = " << st << " & ~(" << mask << "ULL << " << offset
+      << ") | ((unsigned long)(" << srcName << ") & " << mask << "ULL) << "
+      << offset << ";\n";
+  if (arrayStorage) {
+    out << "  __builtin_memcpy(" << storageExpr << ", &" << st
+        << ", sizeof(unsigned long) < sizeof(" << storageExpr
+        << ") ? sizeof(unsigned long) : sizeof(" << storageExpr << "));\n";
   } else {
-    uint64_t signbit = 1ULL << (width - 1);
-    std::string raw = m.freshName("bf_raw");
-    out << "  unsigned long " << raw << " = (unsigned long)(" << storageExpr
-        << ") >> " << offset << " & " << mask << "ULL;\n";
-    out << "  " << ctype << " " << tmp << " = (" << ctype << ")((" << raw << " ^ "
-        << signbit << "ULL) - " << signbit << "ULL);\n";
+    out << "  " << storageExpr << " = " << st << ";\n";
   }
+  // Result: new bitfield value read back (with possible sign extension).
+  std::string tmp = m.freshName("bf");
+  extractBitfield(tmp, ctype, st, offset, width, mask, isSigned, m, out);
   m.setName(op.getResult(), tmp);
   return true;
 }
@@ -2576,6 +2643,91 @@ bool handleSignBit(cir::SignBitOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// cir.parity -> __builtin_parity (1 if the number of set bits is odd).
+bool handleParity(cir::BitParityOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getInput());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  unsigned w = intWidthOf(op.getInput());
+  std::string b = (w == 64) ? "__builtin_parityll((unsigned long)" + opnd + ")"
+                            : "__builtin_parity((unsigned int)" + opnd + ")";
+  std::string tmp = m.freshName("parity");
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << b << ";\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.clrsb: count leading redundant sign bits -> __builtin_clrsb. For a 16-bit
+// input we sign-extend to int and subtract the 16 extra leading sign bits, the
+// mirror of handleClz's 16-bit promotion.
+bool handleClrsb(cir::BitClrsbOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  std::string opnd = m.getOrCreateName(op.getInput());
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  unsigned w = intWidthOf(op.getInput());
+  std::string b;
+  if (w == 64)      b = "__builtin_clrsbll((long long)" + opnd + ")";
+  else if (w == 16) b = "(__builtin_clrsb((int)(short)" + opnd + ") - 16)";
+  else              b = "__builtin_clrsb((int)" + opnd + ")";
+  std::string tmp = m.freshName("clrsb");
+  out << "  " << ctype << " " << tmp << " = (" << ctype << ")" << b << ";\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// Extract a compile-time constant level operand (for return/frame address).
+// __builtin_return_address/__builtin_frame_address require a literal argument,
+// so the level must fold to a constant; otherwise we cannot map soundly.
+static bool constantLevel(mlir::Value v, int64_t &out) {
+  if (auto c = v.getDefiningOp<cir::ConstantOp>()) {
+    if (auto ia = mlir::dyn_cast<cir::IntAttr>(c.getValue())) {
+      out = ia.getValue().getSExtValue();
+      return true;
+    }
+  }
+  return false;
+}
+
+// cir.return_address -> __builtin_return_address(level). Level must be constant.
+bool handleReturnAddr(cir::ReturnAddrOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  int64_t lvl;
+  if (!constantLevel(op.getLevel(), lvl)) return false;
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  std::string tmp = m.freshName("retaddr");
+  out << "  " << ctype << " " << tmp << " = (" << ctype
+      << ")__builtin_return_address(" << lvl << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.frame_address -> __builtin_frame_address(level). Level must be constant.
+bool handleFrameAddr(cir::FrameAddrOp op, Mapper &m, std::ostream &out) {
+  Operation *o = op.getOperation();
+  if (o->getNumResults() < 1) return false;
+  int64_t lvl;
+  if (!constantLevel(op.getLevel(), lvl)) return false;
+  std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+  std::string tmp = m.freshName("frameaddr");
+  out << "  " << ctype << " " << tmp << " = (" << ctype
+      << ")__builtin_frame_address(" << lvl << ");\n";
+  m.setName(o->getResult(0), tmp);
+  return true;
+}
+
+// cir.libc.memset(dst, val, len) -> __builtin_memset (no <string.h> required).
+bool handleMemSet(cir::MemSetOp op, Mapper &m, std::ostream &out) {
+  std::string dst = m.getOrCreateName(op.getDst());
+  std::string val = m.getOrCreateName(op.getVal());
+  std::string len = m.getOrCreateName(op.getLen());
+  out << "  __builtin_memset(" << dst << ", (int)" << val
+      << ", (unsigned long)" << len << ");\n";
+  return true;
+}
+
 // ============================================================================
 // Compile-time constant probe: cir.is_constant
 // ============================================================================
@@ -2696,13 +2848,16 @@ bool handleEhTypeId(cir::EhTypeIdOp op, Mapper &m, std::ostream &out) {
 }
 
 bool handleEhSetjmp(cir::EhSetjmpOp op, Mapper &m, std::ostream &out) {
-  out << "  // " << ERR_EH_SETJMP_UNSUPPORTED << "\n";
-  return true;
+  // Hard-fail: emitting only a comment left the op's result undeclared, so a
+  // later use of it produced uncompilable C ("use of undeclared identifier").
+  // MSVC-SEH setjmp cannot be modelled soundly — fail instead of guessing.
+  llvm::errs() << ERR_EH_SETJMP_UNSUPPORTED << "\n";
+  return false;
 }
 
 bool handleEhLongjmp(cir::EhLongjmpOp op, Mapper &m, std::ostream &out) {
-  out << "  // " << ERR_EH_LONGJMP_UNSUPPORTED << "\n";
-  return true;
+  llvm::errs() << ERR_EH_LONGJMP_UNSUPPORTED << "\n";
+  return false;
 }
 
 // cir.eh.initiate appears at the start of an unwind block in flattened CIR.
@@ -2919,7 +3074,11 @@ bool handleAllocException(cir::AllocExceptionOp op, Mapper &m, std::ostream &out
 // Choose the correct C math function name by appending a suffix for
 // float ("f") or long double ("l") variants.
 static std::string fpMathFuncName(const char *base, const std::string &ctype) {
-  std::string name = base;
+  // Use the __builtin_ form so the generated C needs no <math.h>: clang/gcc
+  // recognise __builtin_fabs/__builtin_copysignf/etc. with correct semantics
+  // and no implicit-declaration error. These ops come from CIR math intrinsics
+  // for which clang emits no function declaration (so no extern is generated).
+  std::string name = std::string("__builtin_") + base;
   if (ctype == "float")            name += "f";
   else if (ctype == "long double") name += "l";
   return name;
@@ -3195,6 +3354,15 @@ void registerBuiltinHandlers(Mapper &m) {
   m.registerTypedHandler<cir::ByteSwapOp>(handleByteSwap);
   m.registerTypedHandler<cir::BitReverseOp>(handleBitReverse);
   m.registerTypedHandler<cir::SignBitOp>(handleSignBit);
+  m.registerTypedHandler<cir::BitClrsbOp>(handleClrsb);
+  m.registerTypedHandler<cir::BitParityOp>(handleParity);
+
+  // Address-of-stack-frame builtins
+  m.registerTypedHandler<cir::ReturnAddrOp>(handleReturnAddr);
+  m.registerTypedHandler<cir::FrameAddrOp>(handleFrameAddr);
+
+  // libc intrinsics
+  m.registerTypedHandler<cir::MemSetOp>(handleMemSet);
 
   // Compile-time constant probe
   m.registerTypedHandler<cir::IsConstantOp>(handleIsConstant);

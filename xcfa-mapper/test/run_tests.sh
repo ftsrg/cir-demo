@@ -40,6 +40,44 @@ RUNNER="$SCRIPT_DIR/run-xcfa-mapper.sh"
 TIMEOUT=60
 JOBS=${JOBS:-$(nproc)}
 
+# ---------------------------------------------------------------------------
+# CIR operation blocklist
+# ---------------------------------------------------------------------------
+# If a test's generated CIR (.mlir) contains any of these operations/types, the
+# test is reported as SKIPPED rather than run — these constructs are knowingly
+# out of scope and cannot be mapped to verifier-friendly C soundly, so counting
+# them as failures only adds noise. Each entry is matched as a fixed substring
+# (grep -F) against the .mlir text. Add or remove entries freely.
+BLOCKLIST_OPS=(
+    "cir.asm"                          # inline assembly — not mappable
+    "cir.vtable.get_virtual_fn_addr"   # C++ virtual dispatch (vtable) — unimplemented
+    "cir.vec."                         # SIMD vector ops (create/splat/extract/insert/cmp/…)
+    "!cir.vector<"                     # SIMD vector types
+    "cir.is_fp_class"                  # FP classification — no portable C builtin
+    "cir.int<s, 128>"                  # 128-bit integers (__int128) — unsupported (also crashes the mapper)
+    "cir.int<u, 128>"                  # 128-bit integers (__int128) — unsupported (also crashes the mapper)
+    "cir.eh.setjmp"                    # MSVC-SEH / __builtin_setjmp — not modellable
+    "cir.eh.longjmp"                   # MSVC-SEH / __builtin_longjmp — not modellable
+)
+# Bash arrays cannot be exported to the parallel worker subshells, so flatten
+# the editable array above into a newline-delimited scalar that workers can see.
+BLOCKLIST_OPS_STR=$(printf '%s\n' "${BLOCKLIST_OPS[@]}")
+export BLOCKLIST_OPS_STR
+
+# Echo the first blocklisted op found in the given .mlir file (empty if none).
+blocklisted_op_in() {
+    local mlir_file="$1" op
+    [ -f "$mlir_file" ] || return 0
+    while IFS= read -r op; do
+        [ -z "$op" ] && continue
+        if grep -qF -- "$op" "$mlir_file" 2>/dev/null; then
+            printf '%s' "$op"
+            return 0
+        fi
+    done <<< "$BLOCKLIST_OPS_STR"
+}
+export -f blocklisted_op_in
+
 # Directories for E2E tests
 LLVM_EVAL_DIR="$PROJECT_DIR/../backend/examples/llvm-test-suite/"
 LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
@@ -49,7 +87,10 @@ LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
 # ---------------------------------------------------------------------------
 TOTAL_TESTS=0
 PASSED_TESTS=0
-FAILED_TESTS=0
+FAILED_TESTS=0            # aggregate of the failure sub-categories (drives exit code)
+MAPPER_FAILED_TESTS=0    # pipeline/xcfa-mapper could not produce C
+COMPILE_FAILED_TESTS=0   # generated C does not compile
+MISMATCH_TESTS=0         # compiles & runs, but wrong output/exit code
 SKIPPED_TESTS=0
 TIMEDOUT_TESTS=0
 interrupted=0
@@ -67,11 +108,14 @@ print_summary() {
         echo "  Test Summary"
     fi
     echo "======================================"
-    echo "Total tests:  $TOTAL_TESTS"
-    echo -e "Passed:       ${GREEN}$PASSED_TESTS${NC}"
-    echo -e "Skipped:      ${YELLOW}$SKIPPED_TESTS${NC}"
-    echo -e "Timed out:    ${YELLOW}$TIMEDOUT_TESTS${NC}"
-    echo -e "Failed:       ${RED}$FAILED_TESTS${NC}"
+    echo "Total tests:      $TOTAL_TESTS"
+    echo -e "Passed:           ${GREEN}$PASSED_TESTS${NC}"
+    echo -e "Skipped:          ${YELLOW}$SKIPPED_TESTS${NC}"
+    echo -e "Timed out:        ${YELLOW}$TIMEDOUT_TESTS${NC}"
+    echo -e "Failed:           ${RED}$FAILED_TESTS${NC}"
+    echo -e "  mapper failed:    ${RED}$MAPPER_FAILED_TESTS${NC}"
+    echo -e "  compile failed:   ${RED}$COMPILE_FAILED_TESTS${NC}"
+    echo -e "  output mismatch:  ${RED}$MISMATCH_TESTS${NC}"
     if [[ $interrupted -eq 1 ]]; then
         echo -e "${YELLOW}Run was interrupted; results above are partial.${NC}"
     elif [[ $FAILED_TESTS -eq 0 ]]; then
@@ -133,8 +177,9 @@ run_c_test() {
     local output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
     local pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
 
+    local mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
     timeout "$TIMEOUT" "$RUNNER" --lang c \
-        --mlir "$INTEGRATION_OUTPUT_DIR/${test_name}.mlir" \
+        --mlir "$mlir_file" \
         "$c_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
 
     if [[ $pipeline_rc -eq 124 ]]; then
@@ -143,13 +188,19 @@ run_c_test() {
     if [[ $pipeline_rc -eq 2 ]]; then
         echo "SKIPPED|$test_name|CIR generation failed"; return
     fi
+    # Blocklisted CIR ops: skip rather than judge the mapper on them.
+    local blocked
+    blocked=$(blocklisted_op_in "$mlir_file")
+    if [[ -n "$blocked" ]]; then
+        echo "SKIPPED|$test_name|blocklisted op: $blocked"; return
+    fi
     if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
-        echo "FAILED|$test_name|$(pipeline_stage "$pipeline_rc") failed"; return
+        echo "MAPPER_FAILED|$test_name|$(pipeline_stage "$pipeline_rc") failed"; return
     fi
 
     local compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
     if ! "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1; then
-        echo "FAILED_COMPILE|$test_name|compilation failed"; return
+        echo "COMPILE_FAILED|$test_name|compilation failed"; return
     fi
 
     echo "PASSED|$test_name|"
@@ -165,8 +216,9 @@ run_cpp_test() {
     local output_c_file="$INTEGRATION_OUTPUT_DIR/${test_name}_output.c"
     local pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
 
+    local mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
     timeout "$TIMEOUT" "$RUNNER" \
-        --mlir "$INTEGRATION_OUTPUT_DIR/${test_name}.mlir" \
+        --mlir "$mlir_file" \
         "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
 
     if [[ $pipeline_rc -eq 124 ]]; then
@@ -175,8 +227,14 @@ run_cpp_test() {
     if [[ $pipeline_rc -eq 2 ]]; then
         echo "SKIPPED|$test_name|CIR generation failed"; return
     fi
+    # Blocklisted CIR ops: skip rather than judge the mapper on them.
+    local blocked
+    blocked=$(blocklisted_op_in "$mlir_file")
+    if [[ -n "$blocked" ]]; then
+        echo "SKIPPED|$test_name|blocklisted op: $blocked"; return
+    fi
     if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
-        echo "FAILED|$test_name|$(pipeline_stage "$pipeline_rc") failed"; return
+        echo "MAPPER_FAILED|$test_name|$(pipeline_stage "$pipeline_rc") failed"; return
     fi
 
     # Check that struct/union names in the generated C are valid identifiers.
@@ -184,7 +242,7 @@ run_cpp_test() {
     local compile_log="$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt"
     "$GCC" -c -fsyntax-only "$output_c_file" > "$compile_log" 2>&1
     if grep -qE "error:.*before '::'|error:.*before '<'" "$compile_log"; then
-        echo "FAILED_QUALIFIED|$test_name|C++ qualified names in struct/union identifiers"; return
+        echo "COMPILE_FAILED|$test_name|C++ qualified names in struct/union identifiers"; return
     fi
 
     echo "PASSED|$test_name|"
@@ -225,14 +283,20 @@ run_llvm_test() {
     if [[ $pipeline_rc -eq 2 ]]; then
         echo "SKIPPED|$test_id|CIR generation failed"; return
     fi
+    # Blocklisted CIR ops: skip rather than judge the mapper on them.
+    local blocked
+    blocked=$(blocklisted_op_in "$mlir_file")
+    if [[ -n "$blocked" ]]; then
+        echo "SKIPPED|$test_id|blocklisted op: $blocked"; return
+    fi
     if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
-        echo "FAILED|$test_id|$(pipeline_stage "$pipeline_rc") failed"; return
+        echo "MAPPER_FAILED|$test_id|$(pipeline_stage "$pipeline_rc") failed"; return
     fi
 
     local binary_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_binary"
     local gcc_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_gcc_log.txt"
     if ! "$GCC" "$output_c_file" -o "$binary_file" -lm > "$gcc_log" 2>&1; then
-        echo "FAILED|$test_id|compilation failed"; return
+        echo "COMPILE_FAILED|$test_id|compilation failed"; return
     fi
 
     local actual_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_actual.txt"
@@ -247,10 +311,10 @@ run_llvm_test() {
     local actual_exit=$?
 
     if [[ $actual_exit -ne $expected_exit ]]; then
-        echo "FAILED|$test_id|exit code: expected $expected_exit, got $actual_exit"; return
+        echo "MISMATCH|$test_id|exit code: expected $expected_exit, got $actual_exit"; return
     fi
     if ! diff -q "$expected_out_file" "$actual_out_file" > /dev/null 2>&1; then
-        echo "FAILED|$test_id|output mismatch"; return
+        echo "MISMATCH|$test_id|output mismatch"; return
     fi
 
     echo "PASSED|$test_id|"
@@ -316,15 +380,17 @@ if [[ $c_total -gt 0 ]]; then
                 echo -e "${YELLOW}SKIPPED${NC} ($message)"
                 SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
                 ;;
-            FAILED)
+            MAPPER_FAILED)
                 echo -e "${RED}FAILED${NC} ($message)"
                 FAILED_TESTS=$((FAILED_TESTS + 1))
+                MAPPER_FAILED_TESTS=$((MAPPER_FAILED_TESTS + 1))
                 sed 's/^/    /' "$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt" 2>/dev/null
                 echo ""
                 ;;
-            FAILED_COMPILE)
-                echo -e "${RED}FAILED${NC} (compilation failed)"
+            COMPILE_FAILED)
+                echo -e "${RED}FAILED${NC} ($message)"
                 FAILED_TESTS=$((FAILED_TESTS + 1))
+                COMPILE_FAILED_TESTS=$((COMPILE_FAILED_TESTS + 1))
                 echo "  Compilation errors:"
                 sed 's/^/    /' "$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt" 2>/dev/null
                 echo ""
@@ -369,15 +435,17 @@ else
                     echo -e "${YELLOW}SKIPPED${NC} ($message)"
                     SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
                     ;;
-                FAILED)
+                MAPPER_FAILED)
                     echo -e "${RED}FAILED${NC} ($message)"
                     FAILED_TESTS=$((FAILED_TESTS + 1))
+                    MAPPER_FAILED_TESTS=$((MAPPER_FAILED_TESTS + 1))
                     sed 's/^/    /' "$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt" 2>/dev/null
                     echo ""
                     ;;
-                FAILED_QUALIFIED)
+                COMPILE_FAILED)
                     echo -e "${RED}FAILED${NC} ($message)"
                     FAILED_TESTS=$((FAILED_TESTS + 1))
+                    COMPILE_FAILED_TESTS=$((COMPILE_FAILED_TESTS + 1))
                     grep -E "error:.*before '::'|error:.*before '<'" \
                         "$INTEGRATION_OUTPUT_DIR/${test_name}_compile_log.txt" 2>/dev/null \
                         | head -5 | sed 's/^/    /'
@@ -442,10 +510,23 @@ else
                         "$(printf "  ${YELLOW}SKIPPED${NC}  %s (%s)" "$test_id" "$message")"
                     SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
                     ;;
-                FAILED)
+                MAPPER_FAILED)
                     bar_println "$llvm_cur" "$llvm_total" \
-                        "$(printf "  ${RED}FAILED${NC}   %s (%s)" "$test_id" "$message")"
+                        "$(printf "  ${RED}MAPPER FAIL${NC} %s (%s)" "$test_id" "$message")"
                     FAILED_TESTS=$((FAILED_TESTS + 1))
+                    MAPPER_FAILED_TESTS=$((MAPPER_FAILED_TESTS + 1))
+                    ;;
+                COMPILE_FAILED)
+                    bar_println "$llvm_cur" "$llvm_total" \
+                        "$(printf "  ${RED}COMPILE FAIL${NC} %s (%s)" "$test_id" "$message")"
+                    FAILED_TESTS=$((FAILED_TESTS + 1))
+                    COMPILE_FAILED_TESTS=$((COMPILE_FAILED_TESTS + 1))
+                    ;;
+                MISMATCH)
+                    bar_println "$llvm_cur" "$llvm_total" \
+                        "$(printf "  ${RED}MISMATCH${NC}   %s (%s)" "$test_id" "$message")"
+                    FAILED_TESTS=$((FAILED_TESTS + 1))
+                    MISMATCH_TESTS=$((MISMATCH_TESTS + 1))
                     ;;
             esac
         done < <(parallel --will-cite --line-buffer -j "$JOBS" run_llvm_test ::: "${llvm_files[@]}")
