@@ -28,6 +28,7 @@
 #include <string>
 #include <functional>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include <llvm/ADT/DenseMap.h>
@@ -175,6 +176,10 @@ private:
   llvm::DenseMap<mlir::Value, std::string> valueNames;
   llvm::DenseMap<mlir::Block *, std::string> blockLabels;
   llvm::DenseSet<mlir::Value> directAccessValues;
+  // Every C identifier handed out (freshName temps + source-derived names from
+  // setName). freshName skips anything already here so a generated temp like
+  // `c17` cannot collide with a source variable that is literally named `c17`.
+  std::unordered_set<std::string> usedNames_;
   unsigned counter;
   // Mapping from original (mangled) symbol -> chosen output name
   std::unordered_map<std::string, std::string> functionOutputNames;

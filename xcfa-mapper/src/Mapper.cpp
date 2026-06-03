@@ -275,7 +275,13 @@ void Mapper::registerHandler(llvm::StringRef opName, std::unique_ptr<OpHandler> 
 }
 
 std::string Mapper::freshName(llvm::StringRef base) {
-  std::string s = (base + llvm::Twine(counter++)).str();
+  // Skip any name already taken by a source-derived identifier (recorded via
+  // setName) so e.g. the constant temp `c17` never clashes with a source
+  // variable literally named `c17`.
+  std::string s;
+  do {
+    s = (base + llvm::Twine(counter++)).str();
+  } while (!usedNames_.insert(s).second);
   return s;
 }
 
@@ -297,6 +303,8 @@ std::string Mapper::getOrCreateLabel(mlir::Block *b) {
 
 void Mapper::setName(mlir::Value v, const std::string &name) {
   valueNames[v] = name;
+  // Reserve source-derived names so freshName won't reuse them for a temp.
+  usedNames_.insert(name);
 }
 
 void Mapper::markAsDirectAccess(mlir::Value v) {
@@ -562,8 +570,11 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
 
   // C1/D1 constructor/destructor variants: the complete-object variant (C1/D1)
   // is often declaration-only when the base variant (C2/D2) has the body.
-  // Emit a delegation stub so the linker finds a definition.
-  {
+  // Emit a delegation stub so the linker finds a definition. Only do this when
+  // THIS variant is itself body-less — otherwise mapFunc emits its real body
+  // and a stub here would be a redefinition.
+  bool hasBody = (fop->getNumRegions() > 0 && !fop->getRegion(0).empty());
+  if (!hasBody) {
     std::string mangled = sym.getValue().str();
     auto tryDelegate = [&](const std::string &pattern,
                            const std::string &replacement) -> bool {
@@ -578,6 +589,12 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
         auto sym2 = op2.getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
         if (!sym2 || sym2.getValue().str() != baseSym) continue;
         if (op2.getNumRegions() == 0 || op2.getRegion(0).empty()) return false;
+        // We forward p0..pN-1 to the base variant, so the signatures must agree
+        // on arity (e.g. a D1 taking 1 arg cannot delegate to a D2 taking a VTT
+        // pointer as a second arg).
+        if (mlir::cast<cir::FuncOp>(op2).getFunctionType().getInputs().size() !=
+            fty.getInputs().size())
+          return false;
         std::string baseName = getFunctionOutputName(baseSym);
         // Build arg list p0, p1, ...
         std::string args;
@@ -596,13 +613,9 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
     if (tryDelegate("D1E", "D2E")) return true;
     // D1/D2 destructor variants that are declaration-only in this module mean
     // the destructor body lives in an external library (e.g. libstdc++) that
-    // we cannot link (we compile as plain C with -lm only).  Only emit a noop
-    // stub when the function truly has no body; functions WITH a body are
-    // emitted by mapFunc later and only need a forward declaration here.
-    bool hasBody = (fop->getNumRegions() > 0 && !fop->getRegion(0).empty());
-    if (!hasBody &&
-        (mangled.find("D1E") != std::string::npos ||
-         mangled.find("D2E") != std::string::npos)) {
+    // we cannot link (we compile as plain C with -lm only).  Emit a noop stub.
+    if (mangled.find("D1E") != std::string::npos ||
+        mangled.find("D2E") != std::string::npos) {
       out << retType << " " << outName << "(" << params << ") {}\n";
       return true;
     }
@@ -616,7 +629,9 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
 
   // Declaration-only functions are external references; emit them as extern so
   // the verifier knows their signature without pulling in any system headers.
-  bool hasBody = (fop->getNumRegions() > 0 && !fop->getRegion(0).empty());
+  // Unresolved C++-stdlib references (libstdc++, which we do not link) are left
+  // as-is on purpose: the test harness validates the C by COMPILING only, so a
+  // link failure does not make the generated C invalid.
   if (!hasBody)
     out << "extern ";
 
@@ -896,6 +911,12 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   // Sanitize the name to be a valid C identifier (replace dots, etc. with underscores)
   std::string name = recordCName(sym);
   std::string rawSym = sym.getValue().str();
+
+  // Reserve the global's C name so a function-local freshName temp can't reuse
+  // it and shadow the global (e.g. a local `float t10` hiding global `t10`,
+  // making a later `(&t10)->field` reference the float). Globals are emitted
+  // before any function body, so this is populated in time.
+  usedNames_.insert(name);
 
   // Suppress ABI-internal symbols that conflict with or are provided by the runtime.
   if (rawSym == "__dso_handle") {

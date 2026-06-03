@@ -129,10 +129,27 @@ bool emitRegionBody(Region &region, Mapper &m, std::ostream &out,
   if (terminatorKind) *terminatorKind = CaseTerminatorKind::Other;
   if (region.empty()) return true;
 
+  // A block that defines a cir.label is a cir.goto target. In CIR a goto does
+  // not create a CFG edge, so such a block can have no predecessors yet still
+  // be reachable — it must be emitted even when it follows a definitive
+  // terminator (otherwise `goto bi;` dangles with no `bi:` label).
+  auto blockIsGotoTarget = [](Block &b) {
+    for (Operation &op : b.getOperations())
+      if (llvm::isa<cir::LabelOp>(op)) return true;
+    return false;
+  };
+
   std::ostringstream regionOut;
   bool isFirstBlock = true;
+  bool fallthroughDead = false; // current block unreachable by fall-through?
 
   for (Block &block : region.getBlocks()) {
+    // Skip a block only if it is unreachable by fall-through AND is not a
+    // goto target. A goto target resumes a reachable region of code.
+    if (fallthroughDead && !blockIsGotoTarget(block))
+      continue;
+    fallthroughDead = false;
+
     // Non-first blocks need a label so gotos from the first block can reach them.
     if (!isFirstBlock) {
       std::string lbl = Mapper::sanitizeIdentifier(m.getOrCreateLabel(&block));
@@ -163,18 +180,19 @@ bool emitRegionBody(Region &region, Mapper &m, std::ostream &out,
         break;
       }
     }
-    if (yieldSeen) break;
+    // A yield is the region's fall-through exit: stop unless a later block is a
+    // goto target (handled by the skip logic at the top of the loop).
+    if (yieldSeen) { fallthroughDead = true; continue; }
 
     // If this block ended with a definitive region-exit op (goto, return,
-    // continue — NOT cir.br which is an intra-region branch), subsequent
-    // blocks are unreachable.  Stop iterating so their cir.yield does not
-    // incorrectly set termKind=Yield and trigger spurious cleanup emission.
+    // continue — NOT cir.br which is an intra-region branch), the next block is
+    // unreachable by fall-through; only emit it if it is a goto target.
     if (lastOp && (llvm::isa<cir::GotoOp>(lastOp) ||
                    llvm::isa<cir::ReturnOp>(lastOp) ||
                    llvm::isa<cir::ContinueOp>(lastOp) ||
                    llvm::isa<cir::UnreachableOp>(lastOp) ||
                    llvm::isa<cir::TrapOp>(lastOp)))
-      break;
+      fallthroughDead = true;
   }
 
   out << indentText(regionOut.str());
@@ -541,23 +559,34 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// Returns a C expression that uses `v` as the pointer its CIR pointer type
+// denotes. A direct-access value's C name is bound to the pointee lvalue, so:
+//   - scalar lvalue           -> &name  (take its address)
+//   - array / VLA / array-alloca -> name (the name already decays to a pointer;
+//                                   taking '&' would give a pointer-to-array)
+//   - anything else (real pointer SSA value, non-pointer type) -> name
+// Shared by handlers that must treat a possibly-direct-access value as the
+// pointer the CIR intends (comparisons, ?: branches yielding pointers, …).
+static std::string pointerOperandExpr(mlir::Value v, Mapper &m) {
+  std::string n = m.getOrCreateName(v);
+  if (!m.isDirectAccess(v) || !mlir::isa<cir::PointerType>(v.getType()))
+    return n;
+  bool decays = false;
+  if (auto pt = mlir::dyn_cast<cir::PointerType>(v.getType()))
+    decays = mlir::isa<cir::ArrayType>(pt.getPointee());
+  if (auto al = v.getDefiningOp<cir::AllocaOp>())
+    decays = decays || al.getDynAllocSize() ||
+             mlir::isa<cir::ArrayType>(al.getAllocaType());
+  return decays ? n : ("&" + n);
+}
+
 bool handleCmp(cir::CmpOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (o->getNumOperands() < 2) return false;
   Value lhs = o->getOperand(0);
   Value rhs = o->getOperand(1);
-  // A pointer-typed operand that is "direct access" has its C name bound to the
-  // pointee lvalue (not a pointer), e.g. a by-value struct parameter `q` of CIR
-  // type !cir.ptr<!rec_S>. Comparing it as the pointer the CIR intends requires
-  // taking its address; otherwise we'd emit `p == q` with q a struct value.
-  auto cmpOperand = [&](Value v) {
-    std::string n = m.getOrCreateName(v);
-    if (m.isDirectAccess(v) && mlir::isa<cir::PointerType>(v.getType()))
-      return "&" + n;
-    return n;
-  };
-  std::string l = cmpOperand(lhs);
-  std::string r = cmpOperand(rhs);
+  std::string l = pointerOperandExpr(lhs, m);
+  std::string r = pointerOperandExpr(rhs, m);
   std::string pred;
   bool predFound = false;
   
@@ -760,13 +789,7 @@ static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
       if (!firstArg) args += ", ";
       firstArg = false;
       Value argV = o->getOperand(i);
-      std::string argName = m.getOrCreateName(argV);
-      if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(argV.getType())) {
-        bool pointeeIsArray = mlir::isa<cir::ArrayType>(ptrTy.getPointee());
-        if (m.isDirectAccess(argV) && !pointeeIsArray)
-          argName = "&" + argName;
-      }
-      args += argName;
+      args += pointerOperandExpr(argV, m);
     }
 
     m.setHasVirtualCalls();
@@ -787,13 +810,7 @@ static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
       if (!firstArg2) argsWithLabel += ", ";
       firstArg2 = false;
       Value argV = o->getOperand(i);
-      std::string argName = m.getOrCreateName(argV);
-      if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(argV.getType())) {
-        bool pointeeIsArray = mlir::isa<cir::ArrayType>(ptrTy.getPointee());
-        if (m.isDirectAccess(argV) && !pointeeIsArray)
-          argName = "&" + argName;
-      }
-      argsWithLabel += argName;
+      argsWithLabel += pointerOperandExpr(argV, m);
       // After the first arg (this ptr), insert the label.
       if (i == 1) argsWithLabel += ", " + labelArg;
     }
@@ -847,18 +864,10 @@ static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
   for (unsigned i = startIdx; i < o->getNumOperands(); ++i) {
     if (i > startIdx) args += ", ";
     Value argV = o->getOperand(i);
-    std::string argName = m.getOrCreateName(argV);
-    // If argument type is a pointer AND the value is a direct-access variable representing
-    // the memory cell (alloca of base type, struct, or pointer), we must take its address
-    // unless the pointee is an array (which decays automatically).
-    if (auto ptrTy = llvm::dyn_cast<cir::PointerType>(argV.getType())) {
-      mlir::Type pointee = ptrTy.getPointee();
-      bool pointeeIsArray = llvm::isa<cir::ArrayType>(pointee);
-      if (m.isDirectAccess(argV) && !pointeeIsArray) {
-        argName = "&" + argName;
-      }
-    }
-    args += argName;
+    // pointerOperandExpr takes the address of a direct-access scalar lvalue but
+    // leaves an array/VLA name to decay (a VLA alloca is CIR ptr<scalar>, so a
+    // naive pointee-array check would wrongly emit `&v` = pointer-to-VLA).
+    args += pointerOperandExpr(argV, m);
   }
   
   // For indirect calls, we need to cast the void* back to a function pointer
@@ -953,7 +962,11 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
         out << "    return;\n";
       } else {
         std::string ctype = m.mapTypeToC(rty);
-        out << "    " << ctype << " __cir_eh_ret = (" << ctype << ")0;\n";
+        // A struct/union return type cannot be produced by casting 0
+        // (`(struct X)0` is invalid C); zero-initialise it instead.
+        std::string init = mlir::isa<cir::RecordType>(rty) ? "{0}"
+                                                           : ("(" + ctype + ")0");
+        out << "    " << ctype << " __cir_eh_ret = " << init << ";\n";
         out << "    return __cir_eh_ret;\n";
       }
     }
@@ -1208,6 +1221,33 @@ bool handleCast(cir::CastOp op, Mapper &m, std::ostream &out) {
     opnd = "&(" + opnd + ")";
   }
 
+  // Reinterpreting a pointer as a pointer-to-multidimensional-array: mapTypeToC
+  // decays `!cir.ptr<!array<!array<…>>>` to a flat `char*`, but a following
+  // cir.get_element chain indexes it as `base[i][j]…`, which is invalid on a
+  // char*. When the result actually feeds a get_element, emit a pointer-to-array
+  // cast dereferenced to an array lvalue (`(*(char(*)[3][9])p)`) and mark it
+  // direct-access so `base[i][j]…` resolves through the real array type. We gate
+  // on a get_element user because the flat-pointer form is what other uses (a
+  // function argument expecting `int*`, pointer arithmetic, …) require.
+  if (o->getNumResults() > 0) {
+    if (auto resPtr = mlir::dyn_cast<cir::PointerType>(o->getResult(0).getType()))
+      if (auto arrTy = mlir::dyn_cast<cir::ArrayType>(resPtr.getPointee()))
+        if (mlir::isa<cir::ArrayType>(arrTy.getElementType())) {
+          bool feedsGetElement =
+              llvm::any_of(o->getResult(0).getUsers(), [](mlir::Operation *u) {
+                return llvm::isa<cir::GetElementOp>(u);
+              });
+          if (feedsGetElement) {
+            std::string dims;
+            std::string baseTy = m.arrayBaseTypeAndDims(arrTy, dims);
+            std::string expr = "(*(" + baseTy + "(*)" + dims + ")(" + opnd + "))";
+            m.setName(o->getResult(0), expr);
+            m.markAsDirectAccess(o->getResult(0));
+            return true;
+          }
+        }
+  }
+
   std::string tmp = m.freshName("cast");
   std::string ctype = "int";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
@@ -1384,18 +1424,26 @@ bool handleTernary(cir::TernaryOp op, Mapper &m, std::ostream &out) {
 
   std::string condName = m.getOrCreateName(o->getOperand(0));
   std::vector<std::string> resultNames;
+  std::vector<std::string> resultTypes;
   resultNames.reserve(o->getNumResults());
+  resultTypes.reserve(o->getNumResults());
 
   for (Value result : o->getResults()) {
     std::string tmp = m.freshName("ternary");
-    out << "  " << m.mapTypeToC(result.getType()) << " " << tmp << ";\n";
+    std::string ctype = m.mapTypeToC(result.getType());
+    out << "  " << ctype << " " << tmp << ";\n";
     resultNames.push_back(tmp);
+    resultTypes.push_back(ctype);
     m.setName(result, tmp);
   }
 
   std::vector<Value> trueYieldedValues;
   std::vector<Value> falseYieldedValues;
 
+  // Cast each yielded branch value to the result type. The two arms of a
+  // ?: can have differently-typed C expressions even when CIR agrees — most
+  // commonly a null-pointer constant materialised as an integer (`0`) feeding
+  // a pointer-typed result ("makes pointer from integer without a cast").
   out << "  if (" << condName << ") {\n";
   if (!emitRegionBody(o->getRegion(0), m, out,
                       o->getNumResults() > 0 ? &trueYieldedValues : nullptr)) {
@@ -1404,7 +1452,8 @@ bool handleTernary(cir::TernaryOp op, Mapper &m, std::ostream &out) {
   if (!resultNames.empty()) {
     if (trueYieldedValues.size() != resultNames.size()) return false;
     for (size_t i = 0; i < resultNames.size(); ++i) {
-      out << "    " << resultNames[i] << " = " << m.getOrCreateName(trueYieldedValues[i]) << ";\n";
+      out << "    " << resultNames[i] << " = (" << resultTypes[i] << ")"
+          << pointerOperandExpr(trueYieldedValues[i], m) << ";\n";
     }
   }
   out << "  } else {\n";
@@ -1415,7 +1464,8 @@ bool handleTernary(cir::TernaryOp op, Mapper &m, std::ostream &out) {
   if (!resultNames.empty()) {
     if (falseYieldedValues.size() != resultNames.size()) return false;
     for (size_t i = 0; i < resultNames.size(); ++i) {
-      out << "    " << resultNames[i] << " = " << m.getOrCreateName(falseYieldedValues[i]) << ";\n";
+      out << "    " << resultNames[i] << " = (" << resultTypes[i] << ")"
+          << pointerOperandExpr(falseYieldedValues[i], m) << ";\n";
     }
   }
   out << "  }\n";
@@ -1935,16 +1985,21 @@ bool handlePtrStride(cir::PtrStrideOp op, Mapper &m, std::ostream &out) {
   std::string strideName = m.getOrCreateName(stride);
 
   // A direct-access base has its C name bound to the pointee lvalue rather than
-  // a pointer. If the pointee is a *scalar* (e.g. a get_element result `s1[c]`
-  // is the element), the pointer we stride from is its address, so qualify with
-  // '&'; otherwise we'd index a scalar (`&(s1[c])[i]` — "subscripted value is
-  // not a pointer"). If the pointee is an *array*, the name already decays to a
-  // pointer, so taking '&' would wrongly yield a pointer-to-array.
+  // a pointer. If that name is a *scalar lvalue* (e.g. a get_element result
+  // `s1[c]` is the element), the pointer we stride from is its address, so
+  // qualify with '&'; otherwise we'd index a scalar (`&(s1[c])[i]` —
+  // "subscripted value is not a pointer"). But a name that already *decays* to
+  // a pointer — an array, or an array/VLA alloca declared `T name[...]` — must
+  // be used as-is; taking '&' there yields a wrong pointer-to-array.
   if (m.isDirectAccess(base)) {
-    bool pointeeIsArray = false;
+    bool decaysAsPointer = false;
     if (auto bpt = mlir::dyn_cast<cir::PointerType>(base.getType()))
-      pointeeIsArray = mlir::isa<cir::ArrayType>(bpt.getPointee());
-    if (!pointeeIsArray)
+      decaysAsPointer = mlir::isa<cir::ArrayType>(bpt.getPointee());
+    if (auto al = base.getDefiningOp<cir::AllocaOp>())
+      // VLA (dynamic size) or array-typed alloca is declared as a C array.
+      decaysAsPointer = decaysAsPointer || al.getDynAllocSize() ||
+                        mlir::isa<cir::ArrayType>(al.getAllocaType());
+    if (!decaysAsPointer)
       baseName = "&(" + baseName + ")";
   }
 
@@ -2799,8 +2854,11 @@ static void emitExceptionReturn(mlir::Operation *op, Mapper &m,
     return;
   }
   std::string ctype = m.mapTypeToC(rty);
-  out << "  { " << ctype << " __cir_eh_ret = (" << ctype
-      << ")0; return __cir_eh_ret; }\n";
+  // A struct/union return type cannot be produced by casting 0; zero-init it.
+  std::string init = mlir::isa<cir::RecordType>(rty) ? "{0}"
+                                                     : ("(" + ctype + ")0");
+  out << "  { " << ctype << " __cir_eh_ret = " << init
+      << "; return __cir_eh_ret; }\n";
 }
 
 // cir.eh.inflight_exception is the first op in a try_call unwind block.

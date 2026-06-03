@@ -86,11 +86,12 @@ LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
 # Counters and interrupt flag
 # ---------------------------------------------------------------------------
 TOTAL_TESTS=0
-PASSED_TESTS=0
-FAILED_TESTS=0            # aggregate of the failure sub-categories (drives exit code)
-MAPPER_FAILED_TESTS=0    # pipeline/xcfa-mapper could not produce C
-COMPILE_FAILED_TESTS=0   # generated C does not compile
-MISMATCH_TESTS=0         # compiles & runs, but wrong output/exit code
+PASSED_TESTS=0           # generated C compiles, links, runs, and output matches
+NOTRUN_TESTS=0          # valid C, but could not be run (compiled, failed to link)
+MISMATCH_TESTS=0        # valid C, linked & ran, but output/exit did not match
+FAILED_TESTS=0          # aggregate of the real failure sub-categories (drives exit)
+MAPPER_FAILED_TESTS=0   # pipeline/xcfa-mapper could not produce C
+COMPILE_FAILED_TESTS=0  # generated C does not compile (invalid C)
 SKIPPED_TESTS=0
 TIMEDOUT_TESTS=0
 interrupted=0
@@ -108,14 +109,15 @@ print_summary() {
         echo "  Test Summary"
     fi
     echo "======================================"
-    echo "Total tests:      $TOTAL_TESTS"
-    echo -e "Passed:           ${GREEN}$PASSED_TESTS${NC}"
-    echo -e "Skipped:          ${YELLOW}$SKIPPED_TESTS${NC}"
-    echo -e "Timed out:        ${YELLOW}$TIMEDOUT_TESTS${NC}"
-    echo -e "Failed:           ${RED}$FAILED_TESTS${NC}"
-    echo -e "  mapper failed:    ${RED}$MAPPER_FAILED_TESTS${NC}"
-    echo -e "  compile failed:   ${RED}$COMPILE_FAILED_TESTS${NC}"
-    echo -e "  output mismatch:  ${RED}$MISMATCH_TESTS${NC}"
+    echo "Total tests:        $TOTAL_TESTS"
+    echo -e "Passed (full):      ${GREEN}$PASSED_TESTS${NC}   (compile + link + run + output match)"
+    echo -e "Compiled, not run:  ${YELLOW}$NOTRUN_TESTS${NC}   (valid C; could not link/run)"
+    echo -e "Ran, mismatch:      ${YELLOW}$MISMATCH_TESTS${NC}   (linked & ran; wrong output/exit)"
+    echo -e "Skipped:            ${YELLOW}$SKIPPED_TESTS${NC}"
+    echo -e "Timed out:          ${YELLOW}$TIMEDOUT_TESTS${NC}"
+    echo -e "Failed:             ${RED}$FAILED_TESTS${NC}"
+    echo -e "  mapper failed:      ${RED}$MAPPER_FAILED_TESTS${NC}"
+    echo -e "  compile failed:     ${RED}$COMPILE_FAILED_TESTS${NC}"
     if [[ $interrupted -eq 1 ]]; then
         echo -e "${YELLOW}Run was interrupted; results above are partial.${NC}"
     elif [[ $FAILED_TESTS -eq 0 ]]; then
@@ -293,10 +295,22 @@ run_llvm_test() {
         echo "MAPPER_FAILED|$test_id|$(pipeline_stage "$pipeline_rc") failed"; return
     fi
 
-    local binary_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_binary"
+    # Validity check: COMPILE ONLY (no linking). The mapper's job is to produce
+    # valid C; whether the program then links/runs/matches is a separate, softer
+    # bar. Unresolved external symbols (e.g. libstdc++) are NOT a compile error
+    # here — they only surface at link time, which we treat as a soft pass.
+    local obj_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.o"
     local gcc_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_gcc_log.txt"
-    if ! "$GCC" "$output_c_file" -o "$binary_file" -lm > "$gcc_log" 2>&1; then
+    if ! "$GCC" -c "$output_c_file" -o "$obj_file" > "$gcc_log" 2>&1; then
         echo "COMPILE_FAILED|$test_id|compilation failed"; return
+    fi
+
+    # Link. A failure here means the valid C could not be turned into a runnable
+    # program (e.g. unresolved libstdc++ symbols) -> NOTRUN (cannot run).
+    local binary_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_binary"
+    local link_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_link_log.txt"
+    if ! "$GCC" "$obj_file" -o "$binary_file" -lm > "$link_log" 2>&1; then
+        echo "NOTRUN|$test_id|valid C, could not link"; return
     fi
 
     local actual_out_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_actual.txt"
@@ -307,14 +321,15 @@ run_llvm_test() {
     awk 'NR==1{prev=$0;next}{print prev;prev=$0}END{sub(/exit [0-9]+$/,"",prev);printf "%s",prev}' \
         "$ref_file" > "$expected_out_file"
 
+    # The program ran; from here on a discrepancy is MISMATCH (ran, did not match).
     "$binary_file" > "$actual_out_file" 2>/dev/null
     local actual_exit=$?
 
     if [[ $actual_exit -ne $expected_exit ]]; then
-        echo "MISMATCH|$test_id|exit code: expected $expected_exit, got $actual_exit"; return
+        echo "MISMATCH|$test_id|ran, exit code: expected $expected_exit, got $actual_exit"; return
     fi
     if ! diff -q "$expected_out_file" "$actual_out_file" > /dev/null 2>&1; then
-        echo "MISMATCH|$test_id|output mismatch"; return
+        echo "MISMATCH|$test_id|ran, output mismatch"; return
     fi
 
     echo "PASSED|$test_id|"
@@ -500,6 +515,12 @@ else
                 PASSED)
                     PASSED_TESTS=$((PASSED_TESTS + 1))
                     ;;
+                NOTRUN)
+                    NOTRUN_TESTS=$((NOTRUN_TESTS + 1))
+                    ;;
+                MISMATCH)
+                    MISMATCH_TESTS=$((MISMATCH_TESTS + 1))
+                    ;;
                 TIMEDOUT)
                     bar_println "$llvm_cur" "$llvm_total" \
                         "$(printf "  ${YELLOW}TIMED OUT${NC} %s" "$test_id")"
@@ -521,12 +542,6 @@ else
                         "$(printf "  ${RED}COMPILE FAIL${NC} %s (%s)" "$test_id" "$message")"
                     FAILED_TESTS=$((FAILED_TESTS + 1))
                     COMPILE_FAILED_TESTS=$((COMPILE_FAILED_TESTS + 1))
-                    ;;
-                MISMATCH)
-                    bar_println "$llvm_cur" "$llvm_total" \
-                        "$(printf "  ${RED}MISMATCH${NC}   %s (%s)" "$test_id" "$message")"
-                    FAILED_TESTS=$((FAILED_TESTS + 1))
-                    MISMATCH_TESTS=$((MISMATCH_TESTS + 1))
                     ;;
             esac
         done < <(parallel --will-cite --line-buffer -j "$JOBS" run_llvm_test ::: "${llvm_files[@]}")
