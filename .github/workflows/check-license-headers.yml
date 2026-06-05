@@ -45,10 +45,15 @@ jobs:
             .github/scripts/license-header-apache
           
           git restore backend/examples/esbmc-eval
+          git restore backend/examples/llvm-test-suite
 
           python .github/scripts/add-license-header.py \
             .github/scripts/license-header-cc \
             backend/examples/esbmc-eval/
+
+          python .github/scripts/add-license-header.py \
+            .github/scripts/license-header-apache-llvm \
+            backend/examples/llvm-test-suite/
           
           # Check if any files were modified using git diff
           MODIFIED_FILES=$(git diff --name-only)
