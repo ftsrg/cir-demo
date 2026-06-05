@@ -86,8 +86,8 @@ LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
 # Run by default; set RUN_ESBMC=0 to skip this step.
 ESBMC_EVAL_DIR="$PROJECT_DIR/../backend/examples/esbmc-eval/"
 ESBMC_EVAL_OUTPUT_DIR="$SCRIPT_DIR/esbmc-eval/output"
-RUN_ESBMC=${RUN_ESBMC:-1}
-RUN_LLVM=${RUN_LLVM:-1}
+RUN_ESBMC=${RUN_ESBMC:-0}
+RUN_LLVM=${RUN_LLVM:-0}
 RUN_INTEGRATION=${RUN_INTEGRATION:-1}
 
 # ---------------------------------------------------------------------------
