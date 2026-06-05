@@ -58,7 +58,6 @@ add_executable(xcfa-mapper
   src/main.cpp
   src/Mapper.cpp
   src/Traceability.cpp
-  src/VtableLayoutParser.cpp
   src/handlers/Handlers.cpp
 )
 

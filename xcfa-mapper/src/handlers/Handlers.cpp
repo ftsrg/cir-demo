@@ -304,12 +304,59 @@ bool handleAlloca(cir::AllocaOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
+// Render an APFloat as an exact C literal. Uses the value's predicates rather
+// than toString string-matching (which can mis-render a finite value near
+// LDBL_MAX as "Inf", turning __LDBL_MAX__ into infinity), and an exact hex-float
+// literal for finite values so there is no decimal rounding or double-overflow.
+// The f/L suffix pins the literal to its C type.
+static std::string apFloatToCLiteral(const llvm::APFloat &v,
+                                     const std::string &ctype) {
+  auto pick = [&](const char *f, const char *l, const char *d) {
+    return std::string(ctype == "float" ? f : ctype == "long double" ? l : d);
+  };
+  if (v.isNaN()) {
+    std::string s = pick("__builtin_nanf(\"\")", "__builtin_nanl(\"\")",
+                         "__builtin_nan(\"\")");
+    return v.isNegative() ? "-" + s : s;
+  }
+  if (v.isInfinity()) {
+    std::string s = pick("__builtin_inff()", "__builtin_infl()", "__builtin_inf()");
+    return v.isNegative() ? "-" + s : s;
+  }
+  char buf[64];
+  v.convertToHexString(buf, /*hexDigits=*/0, /*upperCase=*/false,
+                       llvm::APFloat::rmNearestTiesToEven);
+  return std::string(buf) + pick("f", "L", "");
+}
+
 bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   std::optional<std::string> litVal;
+  std::optional<llvm::APFloat> fpVal; // set for float/FP attrs; rendered post-type
   bool isZeroInit = false;
   mlir::Type resultType = o->getNumResults() > 0 ? o->getResult(0).getType() : mlir::Type();
-  
+
+  // Complex constant (e.g. the imaginary unit 1.0iF, attribute {0,1}). There is
+  // no portable single-expression _Complex literal, so emit the __real__/__imag__
+  // form; this also covers integer complex (_Complex char) where __builtin_complex
+  // is not applicable.
+  for (NamedAttribute a : o->getAttrs()) {
+    if (auto cca = llvm::dyn_cast<cir::ConstComplexAttr>(a.getValue())) {
+      mlir::Type elemTy;
+      if (auto cplxTy = mlir::dyn_cast<cir::ComplexType>(resultType))
+        elemTy = cplxTy.getElementType();
+      std::string ctype = m.mapTypeToC(resultType);
+      std::string tmp   = m.freshName("c");
+      std::string re    = m.formatConstInit(cca.getReal(), elemTy);
+      std::string im    = m.formatConstInit(cca.getImag(), elemTy);
+      out << "  " << ctype << " " << tmp << ";\n";
+      out << "  __real__ " << tmp << " = " << re << ";\n";
+      out << "  __imag__ " << tmp << " = " << im << ";\n";
+      if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
+      return true;
+    }
+  }
+
   // Try to find literals: integers, floats, or bools
   for (NamedAttribute a : o->getAttrs()) {
     // Integer literals
@@ -330,17 +377,16 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
       litVal = ba.getValue() ? "1" : "0";
       break;
     }
-    // Float literals
+    // Float literals — defer rendering until the C type is known (the literal
+    // form depends on float/double/long double).
     if (auto fa = llvm::dyn_cast<mlir::FloatAttr>(a.getValue())) {
-      llvm::SmallString<32> buf;
-      fa.getValue().toString(buf);
-      litVal = buf.str().str();
+      fpVal = fa.getValue();
+      litVal = ""; // placeholder; replaced below once ctype is known
       break;
     }
     if (auto fpa = llvm::dyn_cast<cir::FPAttr>(a.getValue())) {
-      llvm::SmallString<32> buf;
-      fpa.getValue().toString(buf);
-      litVal = buf.str().str();
+      fpVal = fpa.getValue();
+      litVal = "";
       break;
     }
     // Zero attribute (for zero-initialization)
@@ -354,29 +400,11 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
       litVal = "((void*)0)"; // "NULL"; - NULL would need to be included
       break;
     }
-    // Struct/record constant (e.g. Itanium member-function-pointer {fnptr, adj})
-    if (auto cra = llvm::dyn_cast<cir::ConstRecordAttr>(a.getValue())) {
-      std::string init = "{";
-      bool firstMember = true;
-      for (mlir::Attribute member : cra.getMembers()) {
-        if (!firstMember) init += ", ";
-        firstMember = false;
-        if (auto ia = mlir::dyn_cast<cir::IntAttr>(member)) {
-          init += std::to_string(ia.getValue().getSExtValue());
-        } else if (auto za2 = mlir::dyn_cast<cir::ZeroAttr>(member)) {
-          init += "0";
-        } else if (auto gva2 = mlir::dyn_cast<cir::GlobalViewAttr>(member)) {
-          std::string rawSym = gva2.getSymbol().getValue().str();
-          // Member-function-pointer field0: function address encoded as ptrdiff_t.
-          // Use the demangled output name so it matches the emitted function definition.
-          std::string outSym = m.getFunctionOutputName(rawSym);
-          init += "(long)&" + outSym;
-        } else {
-          init += "0"; // fallback for unknown member types
-        }
-      }
-      init += "}";
-      litVal = init;
+    // Struct/array constant: render via the shared recursive formatter, which
+    // handles nested aggregates, strings, FP and member-fn-ptr encodings.
+    if (mlir::isa<cir::ConstRecordAttr>(a.getValue()) ||
+        mlir::isa<cir::ConstArrayAttr>(a.getValue())) {
+      litVal = m.formatConstInit(a.getValue(), resultType);
       break;
     }
     if (auto gva = llvm::dyn_cast<cir::GlobalViewAttr>(a.getValue())) {
@@ -421,29 +449,30 @@ bool handleConst(cir::ConstantOp op, Mapper &m, std::ostream &out) {
     ctype = m.mapTypeToC(resultType);
   }
 
-  // Normalize special floating-point literal values that are not valid C
-  // expressions (LLVM APFloat::toString() may emit "+Inf", "-Inf", "+NaN", etc.)
-  if (literal == "+Inf" || literal == "Inf") {
-    if (ctype == "float")       literal = "__builtin_inff()";
-    else if (ctype == "long double") literal = "__builtin_infl()";
-    else                        literal = "__builtin_inf()";
-  } else if (literal == "-Inf") {
-    if (ctype == "float")       literal = "-__builtin_inff()";
-    else if (ctype == "long double") literal = "-__builtin_infl()";
-    else                        literal = "-__builtin_inf()";
-  } else if (literal == "+NaN" || literal == "NaN") {
-    if (ctype == "float")       literal = "__builtin_nanf(\"\")";
-    else if (ctype == "long double") literal = "__builtin_nanl(\"\")";
-    else                        literal = "__builtin_nan(\"\")";
-  } else if (literal == "-NaN") {
-    if (ctype == "float")       literal = "-__builtin_nanf(\"\")";
-    else if (ctype == "long double") literal = "-__builtin_nanl(\"\")";
-    else                        literal = "-__builtin_nan(\"\")";
-  }
+  // Floating constant: now that the C type is known, render exactly from the
+  // APFloat — inf/nan via the value's own predicates and an exact hex-float
+  // literal (with f/L suffix) for finite values.
+  if (fpVal)
+    literal = apFloatToCLiteral(*fpVal, ctype);
 
   if (isZeroInit && resultType &&
       (mlir::isa<cir::RecordType>(resultType) || mlir::isa<cir::ArrayType>(resultType))) {
     literal = "{0}";
+  }
+
+  // Array-typed constants must be declared with their full type `T name[N]`; a
+  // plain `T* name = {0}` is invalid C (can't initialise a pointer with a braced
+  // list). Use the same arrayBaseTypeAndDims helper that alloca/globals use.
+  if (resultType && mlir::isa<cir::ArrayType>(resultType)) {
+    auto at = mlir::cast<cir::ArrayType>(resultType);
+    std::string dims;
+    std::string elemCType = m.arrayBaseTypeAndDims(resultType, dims);
+    out << "  " << elemCType << " " << tmp << dims << " = " << literal << ";\n";
+    if (o->getNumResults() > 0) {
+      m.setName(o->getResult(0), tmp);
+      m.markAsDirectAccess(o->getResult(0));
+    }
+    return true;
   }
 
   out << "  " << ctype << " " << tmp << " = " << literal << ";\n";
@@ -472,9 +501,9 @@ bool handleLoad(cir::LoadOp op, Mapper &m, std::ostream &out) {
         if (mlir::isa<cir::FuncType>(ptrTy.getPointee())) {
           isFnPtr = true;
           m.markVirtualFnPtr(result);
-          // Propagate the virtual function label from the ptr-to-fn-ptr value.
-          std::string lbl = m.getVirtualFnLabel(ptr);
-          if (!lbl.empty()) m.setVirtualFnLabel(result, lbl);
+          // Propagate the vtable slot from the ptr-to-fn-ptr value.
+          int slot = m.getVirtualFnSlot(ptr);
+          if (slot >= 0) m.setVirtualFnSlot(result, slot);
         }
       std::string name = m.getOrCreateName(result);
       if (!isFnPtr) {
@@ -517,16 +546,34 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
   Value val = o->getOperand(0);
   Value ptr = o->getOperand(1);
 
-  // Suppress vtable-initialisation stores: when a constructor writes a
-  // !cir.vptr value (produced by cir.vtable.address_point) into the object's
-  // __vptr slot.  These are internals of the C++ ABI and must not appear in
-  // the verification-targeted output.
-  if (mlir::isa<cir::VPtrType>(val.getType()))
+  // Vtable-pointer install: a constructor stores a !cir.vptr (from
+  // cir.vtable.address_point, i.e. `&_ZTV[k]`) into the object's __vptr slot at
+  // offset 0. We now emit a real vtable array and install the pointer so virtual
+  // dispatch (and member-function-pointer-to-virtual) works at runtime: the slot
+  // address `ptr` is the get_vptr result (a void**), so store the vptr value
+  // through it.
+  if (mlir::isa<cir::VPtrType>(val.getType())) {
+    std::string vn = m.getOrCreateName(val);
+    std::string pn = m.getOrCreateName(ptr);
+    out << "  *(void**)(" << pn << ") = (void*)" << vn << ";\n";
     return true;
+  }
+
+  // Array-typed value: C does not allow array assignment; use __builtin_memcpy.
+  if (mlir::isa<cir::ArrayType>(val.getType())) {
+    std::string vn = m.getOrCreateName(val);
+    std::string pn = m.getOrCreateName(ptr);
+    // pn is a pointer to the array; vn is the array lvalue (direct access).
+    std::string src = (m.isDirectAccess(val) && !vn.empty() && vn[0] != '&')
+                          ? ("&(" + vn + ")") : vn;
+    out << "  __builtin_memcpy(" << pn << ", " << src
+        << ", sizeof(*" << pn << "));\n";
+    return true;
+  }
 
   std::string vname = m.getOrCreateName(val);
   std::string pname = m.getOrCreateName(ptr);
-  
+
   // Determine if we need to take the address of val when storing
   // We need & if:
   // 1. val is a direct access lvalue (variable from alloca, array element from get_element)
@@ -588,8 +635,9 @@ bool handleCmp(cir::CmpOp op, Mapper &m, std::ostream &out) {
   std::string l = pointerOperandExpr(lhs, m);
   std::string r = pointerOperandExpr(rhs, m);
   std::string pred;
+  std::string fullExpr;  // set for predicates that aren't a simple binary op
   bool predFound = false;
-  
+
   if (auto kindAttr = o->getAttrOfType<cir::CmpOpKindAttr>("kind")) {
     switch (kindAttr.getValue()) {
       case cir::CmpOpKind::lt: pred = "<"; predFound = true; break;
@@ -598,19 +646,31 @@ bool handleCmp(cir::CmpOp op, Mapper &m, std::ostream &out) {
       case cir::CmpOpKind::ge: pred = ">="; predFound = true; break;
       case cir::CmpOpKind::eq: pred = "=="; predFound = true; break;
       case cir::CmpOpKind::ne: pred = "!="; predFound = true; break;
-      default: predFound = false; break;
+      // Floating-point ordered/unordered predicates:
+      //   uno = unordered: true iff either operand is NaN.
+      //   one = ordered and not equal: false if either is NaN.
+      // C's relational operators are already false for unordered operands, so
+      // `(a<b)||(a>b)` is exactly the ordered-not-equal test.
+      case cir::CmpOpKind::uno:
+        fullExpr = "__builtin_isunordered(" + l + ", " + r + ")";
+        predFound = true; break;
+      case cir::CmpOpKind::one:
+        fullExpr = "((" + l + ") < (" + r + ") || (" + l + ") > (" + r + "))";
+        predFound = true; break;
     }
   }
-  
+
   if (!predFound) {
     out << "  // " << ERR_CMP_NO_PRED << "\n";
     pred = "==";
   }
-  
+  if (fullExpr.empty())
+    fullExpr = "(" + l + " " + pred + " " + r + ")";
+
   std::string tmp = m.freshName("c");
   std::string ctype = "int";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
-  out << "  " << ctype << " " << tmp << " = (" << l << " " << pred << " " << r << ") ? 1 : 0;\n";
+  out << "  " << ctype << " " << tmp << " = (" << fullExpr << ") ? 1 : 0;\n";
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
 }
@@ -783,48 +843,41 @@ static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
   // simply skip operand 0 (the fn pointer itself) and forward all remaining
   // operands as arguments.
   if (o->getNumOperands() > 0 && m.isVirtualFnPtr(o->getOperand(0))) {
-    std::string args;
-    bool firstArg = true;
-    for (unsigned i = 1; i < o->getNumOperands(); ++i) {
-      if (!firstArg) args += ", ";
-      firstArg = false;
-      Value argV = o->getOperand(i);
-      args += pointerOperandExpr(argV, m);
+    Value fnptr = o->getOperand(0);
+    int slot = m.getVirtualFnSlot(fnptr);
+    if (slot < 0) {
+      llvm::errs() << "xcfa-mapper: error: virtual call without a resolved "
+                      "vtable slot.\n";
+      return false;
     }
-
+    // The callee signature lives in the fn-ptr type: ptr<func<(this,args)->ret>>.
+    cir::FuncType ft;
+    if (auto pt = mlir::dyn_cast<cir::PointerType>(fnptr.getType()))
+      ft = mlir::dyn_cast<cir::FuncType>(pt.getPointee());
+    if (!ft) {
+      llvm::errs() << "xcfa-mapper: error: virtual call fn-ptr is not a function "
+                      "pointer.\n";
+      return false;
+    }
+    std::string retType;
+    std::vector<std::string> argTypes;
+    std::string suffix = m.registerVirtualCallSig(ft, retType, argTypes);
+    std::string intrinsic = "__VERIFIER_virtual_call_" + suffix;
     m.setHasVirtualCalls();
-    std::string retType = "void";
-    if (o->getNumResults() > 0)
-      retType = m.mapTypeToC(o->getResult(0).getType());
-    std::string intrinsic = "__VERIFIER_virtual_call_" + Mapper::virtualCallTypeSuffix(retType);
 
-    // Build the argument list: this-ptr first, then the virtual fn label as a
-    // string literal, then the remaining call arguments.
-    std::string fnLabel = m.getVirtualFnLabel(o->getOperand(0));
-    std::string labelArg = "\"" + fnLabel + "\"";
-    // args already has 'this' + remaining args; prepend the label after 'this'.
-    // Re-build: first operand (i=1) is 'this', then label, then rest (i>=2).
-    std::string argsWithLabel;
-    bool firstArg2 = true;
-    for (unsigned i = 1; i < o->getNumOperands(); ++i) {
-      if (!firstArg2) argsWithLabel += ", ";
-      firstArg2 = false;
-      Value argV = o->getOperand(i);
-      argsWithLabel += pointerOperandExpr(argV, m);
-      // After the first arg (this ptr), insert the label.
-      if (i == 1) argsWithLabel += ", " + labelArg;
-    }
-    // Edge case: no operands beyond fn ptr (i.e. no this or args).
-    if (o->getNumOperands() <= 1) argsWithLabel = labelArg;
+    // Argument list: this-ptr, slot index, then the remaining call arguments.
+    std::string args = pointerOperandExpr(o->getOperand(1), m) + ", " +
+                       std::to_string(slot);
+    for (unsigned i = 2; i < o->getNumOperands(); ++i)
+      args += ", " + pointerOperandExpr(o->getOperand(i), m);
 
     if (o->getNumResults() > 0) {
-      std::string tmp   = m.freshName("vcall");
-      std::string ctype = retType;
-      out << "  " << ctype << " " << tmp
-          << " = (" << ctype << ")" << intrinsic << "(" << argsWithLabel << ");\n";
+      std::string tmp = m.freshName("vcall");
+      out << "  " << retType << " " << tmp
+          << " = (" << retType << ")" << intrinsic << "(" << args << ");\n";
       m.setName(o->getResult(0), tmp);
     } else {
-      out << "  " << intrinsic << "(" << argsWithLabel << ");\n";
+      out << "  " << intrinsic << "(" << args << ");\n";
     }
     return true;
   }
@@ -938,8 +991,11 @@ bool handleCall(cir::CallOp op, Mapper &m, std::ostream &out) {
     // Run any pending RAII destructors before propagating the exception.
     // emitPendingCleanups writes to `out` with its own indentation; we wrap
     // the whole guard in a block so the cleanup statements are scoped.
+    // consume=false: this is the CONDITIONAL exceptional path; the normal
+    // (no-exception) fall-through still needs handleCleanupScope to emit the
+    // same destructors at scope exit.
     std::ostringstream cleanupOut;
-    m.emitPendingCleanups(cleanupOut, 0);
+    m.emitPendingCleanups(cleanupOut, 0, /*consume=*/false);
     // Re-indent: the cleanups were produced at "  " indent; inside the if-block
     // we want one extra level.
     {
@@ -1955,6 +2011,8 @@ bool handleExtractMember(cir::ExtractMemberOp op, Mapper &m, std::ostream &out) 
   return true;
 }
 
+static uint64_t flatArrayElementCount(cir::ArrayType at); // defined below
+
 bool handleGetElement(cir::GetElementOp op, Mapper &m, std::ostream &out) {
   Operation *o = op.getOperation();
   if (o->getNumOperands() < 2) return false;
@@ -1962,11 +2020,34 @@ bool handleGetElement(cir::GetElementOp op, Mapper &m, std::ostream &out) {
   Value index = o->getOperand(1);
   std::string baseName = m.getOrCreateName(base);
   std::string indexName = m.getOrCreateName(index);
-  
+
+  // Index scaling (mirrors handlePtrStride): when the base is a flat decayed
+  // pointer (e.g. the loaded value of a pointer-to-array variable, typed `E*`
+  // in C) rather than a real multidimensional array lvalue, `base[index]` strides
+  // by the scalar element. If the get_element steps over an array-typed element
+  // (`ptr<array<array<E x N> x M>>` -> row), scale by that element's flat count.
+  std::string idxExpr = indexName;
+  bool baseIsRealArray = false;
+  if (m.isDirectAccess(base)) {
+    if (auto bpt = mlir::dyn_cast<cir::PointerType>(base.getType()))
+      if (mlir::isa<cir::ArrayType>(bpt.getPointee())) baseIsRealArray = true;
+    if (auto al = base.getDefiningOp<cir::AllocaOp>())
+      baseIsRealArray = baseIsRealArray || al.getDynAllocSize() ||
+                        mlir::isa<cir::ArrayType>(al.getAllocaType());
+  }
+  if (!baseIsRealArray) {
+    if (auto bpt = mlir::dyn_cast<cir::PointerType>(base.getType()))
+      if (auto at = mlir::dyn_cast<cir::ArrayType>(bpt.getPointee()))
+        if (auto elemArr = mlir::dyn_cast<cir::ArrayType>(at.getElementType())) {
+          uint64_t mult = flatArrayElementCount(elemArr);
+          if (mult > 1) idxExpr = "(" + indexName + ") * " + std::to_string(mult);
+        }
+  }
+
   // cir.get_element returns a pointer to the element, so we need to generate base[index]
   // The result will be used by load/store operations
   // For get_element, build up chained array access expression
-  std::string expr = baseName + "[" + indexName + "]";
+  std::string expr = baseName + "[" + idxExpr + "]";
   if (o->getNumResults() > 0) {
     m.setName(o->getResult(0), expr);
     // get_element always produces base[index] which is the element lvalue;
@@ -1974,6 +2055,18 @@ bool handleGetElement(cir::GetElementOp op, Mapper &m, std::ostream &out) {
     m.markAsDirectAccess(o->getResult(0));
   }
   return true;
+}
+
+// Flat element count of a (possibly nested) array type: 41 for int[41],
+// 41*41 for int[41][41]. Used to scale pointer strides over array pointees.
+static uint64_t flatArrayElementCount(cir::ArrayType at) {
+  uint64_t n = at.getSize();
+  mlir::Type el = at.getElementType();
+  while (auto inner = mlir::dyn_cast<cir::ArrayType>(el)) {
+    n *= inner.getSize();
+    el = inner.getElementType();
+  }
+  return n;
 }
 
 bool handlePtrStride(cir::PtrStrideOp op, Mapper &m, std::ostream &out) {
@@ -1991,6 +2084,7 @@ bool handlePtrStride(cir::PtrStrideOp op, Mapper &m, std::ostream &out) {
   // "subscripted value is not a pointer"). But a name that already *decays* to
   // a pointer — an array, or an array/VLA alloca declared `T name[...]` — must
   // be used as-is; taking '&' there yields a wrong pointer-to-array.
+  bool baseIsRealArray = false; // C name strides by the array's row size for free
   if (m.isDirectAccess(base)) {
     bool decaysAsPointer = false;
     if (auto bpt = mlir::dyn_cast<cir::PointerType>(base.getType()))
@@ -2001,14 +2095,34 @@ bool handlePtrStride(cir::PtrStrideOp op, Mapper &m, std::ostream &out) {
                         mlir::isa<cir::ArrayType>(al.getAllocaType());
     if (!decaysAsPointer)
       baseName = "&(" + baseName + ")";
+    else
+      baseIsRealArray = true;
   }
+
+  // Stride scaling for an array pointee `ptr<array<E x N>>`, where a unit stride
+  // advances by the whole pointee array. The C form `&base[stride]` strides by
+  // base's decayed element, which differs by how `base` is spelled:
+  //   * Flat decayed pointer (e.g. a 2-D array param `int a[41][41]` lowered to
+  //     `int*`): `base[stride]` strides by the scalar element, so scale by the
+  //     pointee's FULL flat element count (product of all dims).
+  //   * Direct-access array lvalue (e.g. `a[0][0]` of type `char[28]` from a
+  //     get_element): `base[stride]` peels one dimension, so scale by just the
+  //     pointee's OUTERMOST dimension size.
+  // A scalar pointee (VLA element, ordinary `int*`) needs no scaling.
+  std::string strideExpr = strideName;
+  if (auto bpt = mlir::dyn_cast<cir::PointerType>(base.getType()))
+    if (auto at = mlir::dyn_cast<cir::ArrayType>(bpt.getPointee())) {
+      uint64_t mult = baseIsRealArray ? at.getSize() : flatArrayElementCount(at);
+      if (mult > 1)
+        strideExpr = "(" + strideName + ") * " + std::to_string(mult);
+    }
 
   // Default policy: prefer array-style indexing syntax over raw pointer
   // arithmetic because downstream verifiers generally support indexing better.
   // Keep a conservative fallback to `base + stride` for unsupported pointer
   // categories (e.g., void/function pointers).
   static constexpr bool kPreferIndexedPtrStride = true;
-  
+
   std::string tmp = m.freshName("ptr");
   std::string ctype = "int*";
   if (o->getNumResults() > 0) ctype = m.mapTypeToC(o->getResult(0).getType());
@@ -2023,9 +2137,9 @@ bool handlePtrStride(cir::PtrStrideOp op, Mapper &m, std::ostream &out) {
   }
 
   if (kPreferIndexedPtrStride && canUseIndexedForm) {
-    out << "  " << ctype << " " << tmp << " = &(" << baseName << ")[" << strideName << "];\n";
+    out << "  " << ctype << " " << tmp << " = &(" << baseName << ")[" << strideExpr << "];\n";
   } else {
-    out << "  " << ctype << " " << tmp << " = " << baseName << " + " << strideName << ";\n";
+    out << "  " << ctype << " " << tmp << " = " << baseName << " + " << strideExpr << ";\n";
   }
   if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
   return true;
@@ -2163,18 +2277,23 @@ static bool isArrayBitfieldStorage(mlir::Value addr) {
   return false;
 }
 
-// Emit a `unsigned long <name>` holding the bitfield storage bits. For scalar
-// storage this is a plain cast; for array storage it memcpys min(8, sizeof)
-// bytes so offset+width<=64 fields are read correctly without over-reading.
+// Emit a `unsigned long <name>` holding the bitfield storage bits, loaded from
+// `byteOff` bytes into the storage. For scalar storage this is a plain cast; for
+// array storage it memcpys up to 8 bytes (capped at the bytes remaining after
+// byteOff) so the 64-bit window covers the field. `byteOff` lets a field whose
+// bit offset+width exceeds 64 (wide packed bitfield) be read through a window
+// that starts at its own byte, keeping offset%8+width <= 64.
 static std::string loadBitfieldStorage(const std::string &storageExpr,
-                                       bool arrayStorage, Mapper &m,
-                                       std::ostream &out) {
+                                       bool arrayStorage, uint64_t byteOff,
+                                       Mapper &m, std::ostream &out) {
   std::string s = m.freshName("bf_st");
   if (arrayStorage) {
+    std::string base  = "((unsigned char*)(" + storageExpr + ") + " + std::to_string(byteOff) + ")";
+    std::string avail = "(sizeof(" + storageExpr + ") - " + std::to_string(byteOff) + ")";
     out << "  unsigned long " << s << " = 0;\n";
-    out << "  __builtin_memcpy(&" << s << ", " << storageExpr
-        << ", sizeof(" << s << ") < sizeof(" << storageExpr << ") ? sizeof("
-        << s << ") : sizeof(" << storageExpr << "));\n";
+    out << "  __builtin_memcpy(&" << s << ", " << base
+        << ", sizeof(" << s << ") < " << avail << " ? sizeof(" << s << ") : "
+        << avail << ");\n";
   } else {
     out << "  unsigned long " << s << " = (unsigned long)(" << storageExpr << ");\n";
   }
@@ -2209,11 +2328,16 @@ bool handleGetBitfield(cir::GetBitfieldOp op, Mapper &m, std::ostream &out) {
   std::string ctype = m.mapTypeToC(op.getResult().getType());
   bool arrayStorage = isArrayBitfieldStorage(addr);
   std::string storageExpr = m.isDirectAccess(addr) ? addrName : ("(*" + addrName + ")");
+  // A wide packed bitfield over byte-array storage can have offset+width > 64
+  // (e.g. #pragma pack(1) field at bit 45, width 25). Read through a 64-bit
+  // window that starts at the field's own byte so all its bits are covered.
+  uint64_t byteOff = 0, bitOff = offset;
+  if (arrayStorage && offset + width > 64) { byteOff = offset / 8; bitOff = offset % 8; }
   // Guard against width==64 to avoid UB in shift (1ULL<<64).
   uint64_t mask = (width >= 64) ? ~0ULL : ((1ULL << width) - 1);
-  std::string st = loadBitfieldStorage(storageExpr, arrayStorage, m, out);
+  std::string st = loadBitfieldStorage(storageExpr, arrayStorage, byteOff, m, out);
   std::string tmp = m.freshName("bf");
-  extractBitfield(tmp, ctype, st, offset, width, mask, isSigned, m, out);
+  extractBitfield(tmp, ctype, st, bitOff, width, mask, isSigned, m, out);
   m.setName(op.getResult(), tmp);
   return true;
 }
@@ -2230,22 +2354,30 @@ bool handleSetBitfield(cir::SetBitfieldOp op, Mapper &m, std::ostream &out) {
   std::string ctype = m.mapTypeToC(op.getResult().getType());
   bool arrayStorage = isArrayBitfieldStorage(addr);
   std::string storageExpr = m.isDirectAccess(addr) ? addrName : ("(*" + addrName + ")");
+  // Wide packed bitfield (offset+width > 64) over byte-array storage: operate on
+  // a 64-bit window starting at the field's own byte (see handleGetBitfield).
+  uint64_t byteOff = 0, bitOff = offset;
+  if (arrayStorage && offset + width > 64) { byteOff = offset / 8; bitOff = offset % 8; }
   uint64_t mask = (width >= 64) ? ~0ULL : ((1ULL << width) - 1);
-  // Load storage, clear the field bits, OR in the new value.
-  std::string st = loadBitfieldStorage(storageExpr, arrayStorage, m, out);
-  out << "  " << st << " = " << st << " & ~(" << mask << "ULL << " << offset
+  // Load storage. cir.set_bitfield's result is the field's PREVIOUS value (e.g.
+  // a post-decrement `s.f--` reads this for its condition), so extract it BEFORE
+  // modifying the storage.
+  std::string st = loadBitfieldStorage(storageExpr, arrayStorage, byteOff, m, out);
+  std::string tmp = m.freshName("bf");
+  extractBitfield(tmp, ctype, st, bitOff, width, mask, isSigned, m, out);
+  // Clear the field bits, OR in the new value, store back.
+  out << "  " << st << " = " << st << " & ~(" << mask << "ULL << " << bitOff
       << ") | ((unsigned long)(" << srcName << ") & " << mask << "ULL) << "
-      << offset << ";\n";
+      << bitOff << ";\n";
   if (arrayStorage) {
-    out << "  __builtin_memcpy(" << storageExpr << ", &" << st
-        << ", sizeof(unsigned long) < sizeof(" << storageExpr
-        << ") ? sizeof(unsigned long) : sizeof(" << storageExpr << "));\n";
+    std::string base  = "((unsigned char*)(" + storageExpr + ") + " + std::to_string(byteOff) + ")";
+    std::string avail = "(sizeof(" + storageExpr + ") - " + std::to_string(byteOff) + ")";
+    out << "  __builtin_memcpy(" << base << ", &" << st
+        << ", sizeof(unsigned long) < " << avail
+        << " ? sizeof(unsigned long) : " << avail << ");\n";
   } else {
     out << "  " << storageExpr << " = " << st << ";\n";
   }
-  // Result: new bitfield value read back (with possible sign extension).
-  std::string tmp = m.freshName("bf");
-  extractBitfield(tmp, ctype, st, offset, width, mask, isSigned, m, out);
   m.setName(op.getResult(), tmp);
   return true;
 }
@@ -2374,13 +2506,20 @@ bool handleGlobal(cir::GlobalOp op, Mapper &m, std::ostream &out) {
 // VTable / virtual dispatch operations
 // ============================================================================
 
-// cir.vtable.address_point: produces a !cir.vptr used to initialise the
-// __vptr field of an object in a constructor.  The value is only ever stored
-// into the __vptr slot (which we suppress in handleStore), so we just give
-// the result a name and emit nothing.
+// cir.vtable.address_point(@_ZTV, <index, offset>): the value installed into an
+// object's __vptr field by a constructor. The vtable is emitted as a flat
+// `void* _ZTV[]` array, so the address point is `&_ZTV[flat]`, where `flat` is
+// the element offset (for multiple inheritance, the size of the preceding
+// sub-vtable components plus `offset`). The result is a vptr (mapped to void*).
 bool handleVTableAddrPoint(cir::VTableAddrPointOp op, Mapper &m, std::ostream &out) {
-  if (op->getNumResults() > 0)
-    m.getOrCreateName(op->getResult(0));
+  if (op->getNumResults() < 1) return false;
+  std::string sym = Mapper::sanitizeIdentifier(op.getNameAttr().getValue().str());
+  cir::AddressPointAttr ap = op.getAddressPoint();
+  uint64_t flat = m.vtableFlatOffset(op.getOperation(),
+                                     op.getNameAttr().getValue().str(),
+                                     ap.getIndex(), ap.getOffset());
+  std::string name = m.getOrCreateName(op->getResult(0));
+  out << "  void* " << name << " = (void*)&" << sym << "[" << flat << "];\n";
   return true;
 }
 
@@ -2403,9 +2542,10 @@ bool handleVTableGetVPtr(cir::VTableGetVPtrOp op, Mapper &m, std::ostream &out) 
   return true;
 }
 
-// cir.vtable.get_virtual_fn_addr: index into the vtable to get the address
-// of a specific virtual function pointer.  We extend the dispatch chain and
-// emit nothing.
+// cir.vtable.get_virtual_fn_addr: indexes into the vtable to get the address of
+// a specific virtual function pointer slot. We extend the dispatch chain and
+// record the slot index so handleCall can pass it to __VERIFIER_virtual_call.
+// Emits nothing (the slot is consumed by the eventual call).
 bool handleVTableGetVirtualFnAddr(cir::VTableGetVirtualFnAddrOp op, Mapper &m, std::ostream &out) {
   if (op->getNumResults() > 0) {
     Value vptr   = op.getVptr();
@@ -2415,26 +2555,7 @@ bool handleVTableGetVirtualFnAddr(cir::VTableGetVirtualFnAddrOp op, Mapper &m, s
                                 : vptr;
     m.trackVtableDispatch(result, chainRoot);
     m.getOrCreateName(result);
-
-    // Determine a label for this virtual slot so handleCall can pass it as
-    // the second argument to __VERIFIER_virtual_call_<type>.
-    int slot = static_cast<int>(op.getIndex());
-    std::string rec_name;
-    if (chainRoot) {
-      mlir::Type objTy = chainRoot.getType();
-      if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(objTy))
-        if (auto recTy = mlir::dyn_cast<cir::RecordType>(ptrTy.getPointee()))
-          if (recTy.getName())
-            rec_name = recTy.getName().getValue().str();
-    }
-    if (rec_name.empty()) {
-      llvm::errs() << "xcfa-mapper: error: cannot determine static type for "
-                      "virtual call (slot " << slot << "); cannot emit label.\n";
-      return false;
-    }
-    std::string label = m.getVtableSlotLabel(rec_name, slot);
-    if (label.empty()) return false; // error already printed by getVtableSlotLabel
-    m.setVirtualFnLabel(result, label);
+    m.setVirtualFnSlot(result, static_cast<int>(op.getIndex()));
   }
   return true;
 }
@@ -3046,10 +3167,14 @@ bool handleBeginCatch(cir::BeginCatchOp op, Mapper &m, std::ostream &out) {
   return true;
 }
 
-// cir.end_catch closes a catch handler.  In our model the catch entry has
-// already cleared __cir_exc_active; nothing more to do here.
+// cir.end_catch closes a catch handler.  The catch entry already cleared
+// __cir_exc_active; here we destroy the exception object using the destructor
+// recorded by cir.throw (Itanium __cxa_end_catch), then clear it so a nested or
+// subsequent handler does not double-destroy.
 bool handleEndCatch(cir::EndCatchOp op, Mapper &m, std::ostream &out) {
   m.setHasExceptions();
+  out << "  if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); "
+         "__cir_exc_dtor = (void*)0; }\n";
   return true;
 }
 
@@ -3069,6 +3194,16 @@ bool handleThrow(cir::ThrowOp op, Mapper &m, std::ostream &out) {
       out << "  __cir_exc_ptr = (void*)" << excName << ";\n";
     } else {
       out << "  __cir_exc_ptr = (void*)0;\n";
+    }
+    // Record the exception object's destructor (if any) so cir.end_catch can
+    // destroy the object when the handler finishes (Itanium __cxa_throw stores
+    // the dtor; __cxa_end_catch invokes it). A throw with no dtor (trivial type)
+    // clears it.
+    if (auto dtor = op.getDtorAttr()) {
+      std::string dtorName = m.getFunctionOutputName(dtor.getValue().str());
+      out << "  __cir_exc_dtor = (void*)&" << dtorName << ";\n";
+    } else {
+      out << "  __cir_exc_dtor = (void*)0;\n";
     }
     if (auto ti = op.getTypeInfoAttr()) {
       std::string sym = ti.getValue().str();

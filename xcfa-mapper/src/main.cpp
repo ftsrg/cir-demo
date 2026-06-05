@@ -15,7 +15,6 @@
  */
 
 #include "Mapper.h"
-#include "VtableLayoutParser.h"
 #include "handlers/Handlers.h"
 #include "version.h"
 
@@ -42,7 +41,6 @@ using namespace xcfa;
 
 int main(int argc, char **argv) {
   const char *monitorJsonFile = nullptr;
-  const char *vtlayoutFile = nullptr;
   std::vector<std::string> positional;
 
   for (int i = 1; i < argc; ++i) {
@@ -53,25 +51,17 @@ int main(int argc, char **argv) {
     }
     if (arg == "--monitor-json") {
       if (i + 1 >= argc) {
-        llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
+        llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
         return 2;
       }
       monitorJsonFile = argv[++i];
-      continue;
-    }
-    if (arg == "--vtlayout") {
-      if (i + 1 >= argc) {
-        llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
-        return 2;
-      }
-      vtlayoutFile = argv[++i];
       continue;
     }
     positional.push_back(arg);
   }
 
   if (positional.size() != 2) {
-    llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] [--vtlayout <file>] <input.mlir> <output.c>\n";
+    llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
     return 2;
   }
 
@@ -121,13 +111,6 @@ int main(int argc, char **argv) {
 
   Mapper mapper;
   registerBuiltinHandlers(mapper);
-
-  if (vtlayoutFile) {
-    if (!mapper.loadVtableLayoutDump(vtlayoutFile)) {
-      llvm::errs() << "xcfa-mapper: warning: could not parse vtable layout dump '"
-                   << vtlayoutFile << "'; virtual call labels may be incorrect.\n";
-    }
-  }
 
   std::ofstream ofs(outFile);
   if (!ofs) {

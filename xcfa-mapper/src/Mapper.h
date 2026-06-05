@@ -132,6 +132,13 @@ public:
   /// simple C declarations used by handlers.
   std::string mapTypeToC(mlir::Type t) const;
 
+  /// Stable unique C struct/union tag for an anonymous record type.
+  std::string anonRecordCName(mlir::Type recordType) const;
+
+  /// Render a constant attribute as a C initializer, recursing through nested
+  /// array/struct/union constants (int/fp/string/pointer/member-fn-ptr leaves).
+  std::string formatConstInit(mlir::Attribute attr, mlir::Type type) const;
+
   /// Record the canonical C field name chosen for a struct/union member at a
   /// given index (the first name seen wins, matching the struct emitter's
   /// dedup). Used so that bitfields sharing a storage member all resolve to
@@ -196,6 +203,14 @@ private:
   // Canonical C field name per (record name, member index), so bitfield
   // accesses that share a storage member resolve to the emitted member name.
   std::map<std::string, std::map<int, std::string>> recordFieldNames_;
+  // Stable unique C name per distinct anonymous record type. Without this all
+  // anonymous records collapsed to one "anon_struct" and clobbered each other's
+  // layout (e.g. a bitfield const-init's byte layout vs an Itanium member
+  // pointer's {long,long}).
+  mutable llvm::DenseMap<mlir::Type, std::string> anonRecordNames_;
+  // Symbol -> declared type for each global, so GlobalViewAttr access indices
+  // (`&g[i].field`) can be resolved while formatting constant initializers.
+  std::unordered_map<std::string, mlir::Type> globalSymbolTypes_;
   // Set once the malloc/free externs needed by synthesised operator
   // new/delete stubs have been emitted, so they appear at most once.
   bool mallocFreeDeclEmitted_ = false;
@@ -217,21 +232,21 @@ private:
   // when used as a callee in cir.call.
   llvm::DenseSet<mlir::Value> virtualFnPtrSet;
   bool anyVirtualCalls_ = false;
-  // Maps a virtual fn-ptr SSA value to a human-readable label that identifies
-  // which virtual function slot is being called (e.g. "ClassName::method(args)").
-  llvm::DenseMap<mlir::Value, std::string> virtualFnLabels_;
+  // Maps a virtual fn-ptr SSA value (and the chain it flows through) to the
+  // vtable slot index, passed to __VERIFIER_virtual_call_<sig> at the call site.
+  llvm::DenseMap<mlir::Value, int> virtualFnSlots_;
+  // All distinct virtual-call wrapper signatures: suffix -> (retCtype, argCtypes).
+  // Drives emission of one default __VERIFIER_virtual_call_<suffix> per signature.
+  std::map<std::string, std::pair<std::string, std::vector<std::string>>> virtualCallSigs_;
 
-  // ── Vtable layout dump data (populated from --vtlayout file) ─────────────
-  // class_name → [slot0_label, slot1_label, ...]
-  // Labels are "ClassName::method(args)" matching __VERIFIER_virtual_call labels.
-  // TODO(multi-TU): currently populated from a single TU's layout dump; when
-  //   extending to multi-TU builds, all TU dumps must be merged before
-  //   populating this map.
-  std::map<std::string, std::vector<std::string>> vtableIndexMap_;
-
-  // class_name → [direct_base_class_names, ...]
-  // Derived from "-- (Base, offset) vtable address --" lines in the dump.
-  std::map<std::string, std::vector<std::string>> classHierarchy_;
+  // Set when the module dispatches through a pointer-to-member-function (the
+  // Itanium {ptr,adj} encoding casts an integer to a function pointer via
+  // cir.cast int_to_ptr). That encoding distinguishes virtual from non-virtual
+  // by `ptr & 1`, which requires every function address to be even — so when
+  // set, every emitted function is force-aligned (GCC otherwise packs functions
+  // onto odd addresses, misreading a non-virtual member pointer as virtual).
+  bool usesMemberFnPtr_ = false;
+  mlir::ModuleOp currentModule_;  // set at the start of mapModule for use in helpers
 
   // Exception handling: set if any cir.try / cir.throw / cir.try_call /
   // cir.eh.* op was seen in the module.  Drives emission of the EH state
@@ -319,10 +334,33 @@ public:
   /// whether to emit the __VERIFIER_virtual_call declaration).
   void setHasVirtualCalls();
 
-  /// Associate a virtual-function label string with the fn-ptr SSA value.
-  void setVirtualFnLabel(mlir::Value v, const std::string &label);
-  /// Return the label for a virtual fn-ptr value, or "" if unknown.
-  std::string getVirtualFnLabel(mlir::Value v) const;
+  /// Associate the vtable slot index of a virtual dispatch with an SSA value
+  /// (the get_virtual_fn_addr result and any value it flows into). The slot is
+  /// passed as the second argument to __VERIFIER_virtual_call_<sig>.
+  void setVirtualFnSlot(mlir::Value v, int slot) { virtualFnSlots_[v] = slot; }
+  /// Return the slot for a virtual fn-ptr value, or -1 if unknown.
+  int getVirtualFnSlot(mlir::Value v) const {
+    auto it = virtualFnSlots_.find(v);
+    return it == virtualFnSlots_.end() ? -1 : it->second;
+  }
+
+  /// Derive the C signature of a virtual-call wrapper from the vtable function
+  /// type. `ft` is the `cir.func<(this, args...) -> ret>` stored in the vtable.
+  /// Returns a unique suffix and outputs the wrapper's return C type and the
+  /// argument C types (the callee's params minus the leading `this`). Also
+  /// records the signature so a default __VERIFIER_virtual_call_<suffix>
+  /// implementation is emitted.
+  std::string registerVirtualCallSig(mlir::Type funcType, std::string &retOut,
+                                     std::vector<std::string> &argsOut);
+  /// All distinct virtual-call signatures seen: suffix -> (retCtype, argCtypes).
+  const std::map<std::string, std::pair<std::string, std::vector<std::string>>> &
+  virtualCallSigs() const { return virtualCallSigs_; }
+
+  /// Flat element offset of a vtable address point into the emitted
+  /// `void* <sym>[]` array: the sizes of sub-vtable components [0, index) plus
+  /// `offset`. `op` is any op in the module (used to find the vtable global).
+  uint64_t vtableFlatOffset(mlir::Operation *op, const std::string &symbol,
+                            int index, int offset) const;
 
   // ── Exception handling helpers ─────────────────────────────────────────
   /// Record that the module uses exception handling.
@@ -365,7 +403,14 @@ public:
   /// its own braces block.  Used by handleReturn (fromDepth=0 → all),
   /// handleBreak/handleContinue (fromDepth=loopDepth_ → only the cleanups
   /// inside the current loop iteration).
-  void emitPendingCleanups(std::ostream &out, int fromDepth = 0);
+  /// `consume` controls whether the emitted regions are marked so that
+  /// handleCleanupScope won't re-emit them on normal fall-through. Pass true
+  /// for UNCONDITIONAL exits (return/break/continue/goto — control leaves for
+  /// good). Pass false for a CONDITIONAL emission such as the `if
+  /// (__cir_exc_active)` EH guard, where the normal (no-exception) path still
+  /// falls through and must run the cleanup itself.
+  void emitPendingCleanups(std::ostream &out, int fromDepth = 0,
+                           bool consume = true);
   /// Returns true if the given cleanup region was already emitted by a
   /// previous emitPendingCleanups call (e.g. from handleGoto).
   bool isCleanupConsumed(mlir::Region *r) const {
@@ -394,15 +439,6 @@ public:
     return forStepLabelStack_.empty() ? empty : forStepLabelStack_.back();
   }
 
-  /// Load the vtable layout dump produced by
-  /// `clang++ -Xclang -fdump-vtable-layouts`. Populates vtableIndexMap_ and
-  /// classHierarchy_. Returns false on error (diagnostic printed to stderr).
-  bool loadVtableLayoutDump(const std::string &filename);
-
-  /// Look up the correct __VERIFIER_virtual_call label for the given static
-  /// type name and virtual slot index. Uses vtableIndexMap_ when available;
-  /// falls back to a deterministic "RecName_virtual_N" label with a warning.
-  std::string getVtableSlotLabel(const std::string &rec_name, int slot) const;
 };
 
 } // namespace xcfa

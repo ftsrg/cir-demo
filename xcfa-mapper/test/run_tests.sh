@@ -50,7 +50,6 @@ JOBS=${JOBS:-$(nproc)}
 # (grep -F) against the .mlir text. Add or remove entries freely.
 BLOCKLIST_OPS=(
     "cir.asm"                          # inline assembly — not mappable
-    "cir.vtable.get_virtual_fn_addr"   # C++ virtual dispatch (vtable) — unimplemented
     "cir.vec."                         # SIMD vector ops (create/splat/extract/insert/cmp/…)
     "!cir.vector<"                     # SIMD vector types
     "cir.is_fp_class"                  # FP classification — no portable C builtin
@@ -82,6 +81,13 @@ export -f blocklisted_op_in
 LLVM_EVAL_DIR="$PROJECT_DIR/../backend/examples/llvm-test-suite/"
 LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
 
+# ESBMC-eval coverage corpus (C++ programs, no reference outputs). The pass
+# condition is just that the mapper produced C that COMPILES (linking optional).
+# Run by default; set RUN_ESBMC=0 to skip this step.
+ESBMC_EVAL_DIR="$PROJECT_DIR/../backend/examples/esbmc-eval/"
+ESBMC_EVAL_OUTPUT_DIR="$SCRIPT_DIR/esbmc-eval/output"
+RUN_ESBMC=${RUN_ESBMC:-1}
+
 # ---------------------------------------------------------------------------
 # Counters and interrupt flag
 # ---------------------------------------------------------------------------
@@ -93,8 +99,41 @@ FAILED_TESTS=0          # aggregate of the real failure sub-categories (drives e
 MAPPER_FAILED_TESTS=0   # pipeline/xcfa-mapper could not produce C
 COMPILE_FAILED_TESTS=0  # generated C does not compile (invalid C)
 SKIPPED_TESTS=0
+# Skipped sub-categories (root cause of the skip).
+SKIP_BLOCKLIST_TESTS=0  # contains a blocklisted (out-of-scope) CIR op
+SKIP_HEADER_TESTS=0     # CIR gen: missing header (file not found)
+SKIP_NYI_TESTS=0        # CIR gen: ClangIR feature not yet implemented
+SKIP_SIMD_TESTS=0       # CIR gen: arch-specific SIMD vector intrinsic types
+SKIP_TARGET_TESTS=0     # CIR gen: other unsupported target feature (AltiVec/asm/…)
+SKIP_GNUEXT_TESTS=0     # CIR gen: GNU/MSVC extension not in strict ISO mode
+SKIP_TYPE_TESTS=0       # CIR gen: unknown type name
+SKIP_OTHER_TESTS=0      # CIR gen: other parse/compile error
+SKIP_UPSTREAM_TESTS=0   # clang's own -fclangir also diverges (upstream ClangIR bug)
 TIMEDOUT_TESTS=0
 interrupted=0
+
+# Classify a SKIPPED test's message into a sub-category counter. Order matters:
+# the most specific patterns are matched first.
+count_skip() {
+    SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+    case "$1" in
+        *"upstream ClangIR"*)    SKIP_UPSTREAM_TESTS=$((SKIP_UPSTREAM_TESTS + 1)) ;;
+        *"blocklisted op"*)      SKIP_BLOCKLIST_TESTS=$((SKIP_BLOCKLIST_TESTS + 1)) ;;
+        *"file not found"*)      SKIP_HEADER_TESTS=$((SKIP_HEADER_TESTS + 1)) ;;
+        *"Not Yet Implemented"*) SKIP_NYI_TESTS=$((SKIP_NYI_TESTS + 1)) ;;
+        # Architecture-specific SIMD vector types: __m128i/__m256i/__m512* are the
+        # x86 *and* LoongArch (LSX/LASX) intrinsic types, undefined off-target.
+        *__m128*|*__m256*|*__m512*|*__vector*|*vector_size*)
+                                 SKIP_SIMD_TESTS=$((SKIP_SIMD_TESTS + 1)) ;;
+        *AltiVec*|*"target feature"*|*"support not enabled"*|*"identifier 'asm'"*)
+                                 SKIP_TARGET_TESTS=$((SKIP_TARGET_TESTS + 1)) ;;
+        # GNU/MSVC extensions rejected by strict -std=c23.
+        *"identifier 'typeof'"*|*__int64*|*__bitwidthof__*|*__builtin_va_arg_pack*|*"identifier '__label__'"*)
+                                 SKIP_GNUEXT_TESTS=$((SKIP_GNUEXT_TESTS + 1)) ;;
+        *"unknown type name"*)   SKIP_TYPE_TESTS=$((SKIP_TYPE_TESTS + 1)) ;;
+        *)                       SKIP_OTHER_TESTS=$((SKIP_OTHER_TESTS + 1)) ;;
+    esac
+}
 
 # ---------------------------------------------------------------------------
 # Summary — called by EXIT trap, always runs
@@ -112,18 +151,27 @@ print_summary() {
     echo "Total tests:        $TOTAL_TESTS"
     echo -e "Passed (full):      ${GREEN}$PASSED_TESTS${NC}   (compile + link + run + output match)"
     echo -e "Compiled, not run:  ${YELLOW}$NOTRUN_TESTS${NC}   (valid C; could not link/run)"
-    echo -e "Ran, mismatch:      ${YELLOW}$MISMATCH_TESTS${NC}   (linked & ran; wrong output/exit)"
     echo -e "Skipped:            ${YELLOW}$SKIPPED_TESTS${NC}"
+    echo -e "  blocklisted op:     ${YELLOW}$SKIP_BLOCKLIST_TESTS${NC}   (out-of-scope CIR op)"
+    echo -e "  arch SIMD intrinsic:${YELLOW}$SKIP_SIMD_TESTS${NC}   (__m128i/__m256i/… — wrong target arch)"
+    echo -e "  unsupported target: ${YELLOW}$SKIP_TARGET_TESTS${NC}   (AltiVec / inline asm / …)"
+    echo -e "  GNU/MSVC extension: ${YELLOW}$SKIP_GNUEXT_TESTS${NC}   (typeof/__int64/… not in ISO c23)"
+    echo -e "  missing header:     ${YELLOW}$SKIP_HEADER_TESTS${NC}   (CIR gen: header not found)"
+    echo -e "  unknown type name:  ${YELLOW}$SKIP_TYPE_TESTS${NC}   (CIR gen)"
+    echo -e "  CIR not implemented:${YELLOW}$SKIP_NYI_TESTS${NC}   (ClangIR feature NYI)"
+    echo -e "  other CIR-gen error:${YELLOW}$SKIP_OTHER_TESTS${NC}   (parse/compile error)"
+    echo -e "  upstream ClangIR:   ${YELLOW}$SKIP_UPSTREAM_TESTS${NC}   (clang -fclangir also wrong — not our bug)"
     echo -e "Timed out:          ${YELLOW}$TIMEDOUT_TESTS${NC}"
     echo -e "Failed:             ${RED}$FAILED_TESTS${NC}"
     echo -e "  mapper failed:      ${RED}$MAPPER_FAILED_TESTS${NC}"
     echo -e "  compile failed:     ${RED}$COMPILE_FAILED_TESTS${NC}"
+    echo -e "  output mismatch:    ${RED}$MISMATCH_TESTS${NC}   (linked & ran; wrong output/exit)"
     if [[ $interrupted -eq 1 ]]; then
         echo -e "${YELLOW}Run was interrupted; results above are partial.${NC}"
     elif [[ $FAILED_TESTS -eq 0 ]]; then
         echo -e "${GREEN}All tests passed!${NC}"
     else
-        echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR and $LLVM_EVAL_OUTPUT_DIR${NC}"
+        echo -e "${RED}Some tests failed. Check output files in $INTEGRATION_OUTPUT_DIR, $LLVM_EVAL_OUTPUT_DIR and $ESBMC_EVAL_OUTPUT_DIR${NC}"
     fi
 }
 
@@ -169,6 +217,86 @@ pipeline_stage() {
 }
 
 # ---------------------------------------------------------------------------
+# Helper: extract a concise root-cause line from a pipeline log (for SKIPPED
+# tests, so the report explains *why* CIR generation / the pipeline failed).
+# Prefers a ClangIR "Not Yet Implemented" note, else the first compiler error.
+# ---------------------------------------------------------------------------
+skip_reason() {
+    local log="$1" r=""
+    [ -f "$log" ] || { echo "no log"; return; }
+    r=$(grep -oE 'ClangIR code gen Not Yet Implemented: .*' "$log" 2>/dev/null | head -1)
+    [ -z "$r" ] && r=$(grep -oE 'error: .*' "$log" 2>/dev/null | head -1 | sed -E 's/^error: //')
+    [ -z "$r" ] && r=$(grep -iE 'fatal error|unsupported|not supported' "$log" 2>/dev/null | head -1 | sed -E 's/^.*(fatal error|error)[: ]*//I')
+    [ -z "$r" ] && r="unknown (see $(basename "$log"))"
+    # single line, no pipes (our record separator), bounded length
+    printf '%s' "$r" | tr '\n|' '  ' | cut -c1-120
+}
+export -f skip_reason
+
+# ---------------------------------------------------------------------------
+# Helper: header include dirs for a test source (one directory per line). The
+# LLVM test-suite build puts shared utility headers on the include path per
+# test; the bare CIR-generation clang call does not, so e.g.
+# UnitTests/Vector/m512_test_util.h (a parent dir) or
+# Benchmarks/Polybench/utilities/polybench.h would be "not found". Emit the
+# test's own dir, its ancestors up to the test-suite root, and the PolyBench
+# utilities subtree. (Passed to run-xcfa-mapper.sh via --include.)
+# ---------------------------------------------------------------------------
+compute_includes() {
+    local src="$1" dir d parent util
+    dir=$(cd "$(dirname "$src")" 2>/dev/null && pwd) || return 0
+    [ -n "$dir" ] || return 0
+    echo "$dir"
+    case "$dir" in
+        */llvm-test-suite/*)
+            d="$dir"
+            while [ "$d" != "/" ]; do
+                parent=$(dirname "$d")
+                echo "$parent"
+                case "$parent" in */llvm-test-suite) break ;; esac
+                d="$parent"
+            done
+            case "$dir" in
+                */Polybench/*)
+                    util="${dir%%/Polybench/*}/Polybench/utilities"
+                    [ -d "$util" ] && echo "$util" ;;
+            esac
+            ;;
+    esac
+}
+export -f compute_includes
+
+# ---------------------------------------------------------------------------
+# Upstream-ClangIR discriminator: compile the ORIGINAL source with clang's own
+# CIR pipeline (-fclangir) and compare to the reference. If clang -fclangir ALSO
+# diverges, the mismatch is an upstream ClangIR codegen bug, not the mapper's, so
+# it should be SKIPPED rather than counted as a failure. Returns 0 (true) when
+# -fclangir also diverges; 1 when -fclangir matches the reference (genuine mapper
+# bug) or the -fclangir build itself fails (inconclusive — don't hide it).
+# Args: <src> <ext: c|cpp> <expected_out_file> <expected_exit>
+clangir_also_diverges() {
+    local src="$1" ext="$2" exp_out="$3" exp_exit="$4"
+    local cc="$GCC"; [ "$ext" = cpp ] && cc="$CLANGPP"
+    local -a inc=(); local _d
+    while IFS= read -r _d; do [ -n "$_d" ] && inc+=(-I "$_d"); done < <(compute_includes "$src")
+    local bin cir_out; bin=$(mktemp); cir_out=$(mktemp)
+    if ! timeout "$TIMEOUT" "$cc" -w -fclangir ${inc[@]+"${inc[@]}"} "$src" -o "$bin" -lm \
+            </dev/null >/dev/null 2>&1; then
+        rm -f "$bin" "$cir_out"; return 1   # inconclusive -> treat as our bug
+    fi
+    timeout "$TIMEOUT" "$bin" </dev/null >"$cir_out" 2>/dev/null
+    local ec=$?
+    rm -f "$bin"
+    local diverges=1
+    if [ "$ec" != "$exp_exit" ]; then diverges=0
+    elif ! diff -q "$exp_out" "$cir_out" >/dev/null 2>&1; then diverges=0
+    fi
+    rm -f "$cir_out"
+    return $diverges
+}
+export -f clangir_also_diverges
+
+# ---------------------------------------------------------------------------
 # Worker: C integration test
 # Outputs exactly one line: RESULT|test_name|message
 # ---------------------------------------------------------------------------
@@ -180,15 +308,18 @@ run_c_test() {
     local pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
 
     local mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
+    local -a inc=(); local _d
+    while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$c_file")
     timeout "$TIMEOUT" "$RUNNER" --lang c \
         --mlir "$mlir_file" \
+        ${inc[@]+"${inc[@]}"} \
         "$c_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
 
     if [[ $pipeline_rc -eq 124 ]]; then
         echo "TIMEDOUT|$test_name|"; return
     fi
     if [[ $pipeline_rc -eq 2 ]]; then
-        echo "SKIPPED|$test_name|CIR generation failed"; return
+        echo "SKIPPED|$test_name|CIR generation failed: $(skip_reason "$pipeline_log")"; return
     fi
     # Blocklisted CIR ops: skip rather than judge the mapper on them.
     local blocked
@@ -219,15 +350,18 @@ run_cpp_test() {
     local pipeline_log="$INTEGRATION_OUTPUT_DIR/${test_name}_pipeline_log.txt"
 
     local mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
+    local -a inc=(); local _d
+    while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$cpp_file")
     timeout "$TIMEOUT" "$RUNNER" \
         --mlir "$mlir_file" \
+        ${inc[@]+"${inc[@]}"} \
         "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
 
     if [[ $pipeline_rc -eq 124 ]]; then
         echo "TIMEDOUT|$test_name|"; return
     fi
     if [[ $pipeline_rc -eq 2 ]]; then
-        echo "SKIPPED|$test_name|CIR generation failed"; return
+        echo "SKIPPED|$test_name|CIR generation failed: $(skip_reason "$pipeline_log")"; return
     fi
     # Blocklisted CIR ops: skip rather than judge the mapper on them.
     local blocked
@@ -269,21 +403,22 @@ run_llvm_test() {
     local ref_file="${src_file%.$ext}.reference_output"
 
     local mlir_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.mlir"
-    local vtlayout_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}.vtlayout.txt"
     local output_c_file="$LLVM_EVAL_OUTPUT_DIR/${test_id}_output.c"
     local pipeline_log="$LLVM_EVAL_OUTPUT_DIR/${test_id}_pipeline_log.txt"
 
+    local -a inc=(); local _d
+    while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$src_file")
     # shellcheck disable=SC2086
     timeout "$TIMEOUT" "$RUNNER" $lang_flag \
         --mlir "$mlir_file" \
-        --vtlayout "$vtlayout_file" \
+        ${inc[@]+"${inc[@]}"} \
         "$src_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
 
     if [[ $pipeline_rc -eq 124 ]]; then
         echo "TIMEDOUT|$test_id|"; return
     fi
     if [[ $pipeline_rc -eq 2 ]]; then
-        echo "SKIPPED|$test_id|CIR generation failed"; return
+        echo "SKIPPED|$test_id|CIR generation failed: $(skip_reason "$pipeline_log")"; return
     fi
     # Blocklisted CIR ops: skip rather than judge the mapper on them.
     local blocked
@@ -325,19 +460,84 @@ run_llvm_test() {
     "$binary_file" > "$actual_out_file" 2>/dev/null
     local actual_exit=$?
 
+    local mismatch_reason=""
     if [[ $actual_exit -ne $expected_exit ]]; then
-        echo "MISMATCH|$test_id|ran, exit code: expected $expected_exit, got $actual_exit"; return
+        mismatch_reason="ran, exit code: expected $expected_exit, got $actual_exit"
+    elif ! diff -q "$expected_out_file" "$actual_out_file" > /dev/null 2>&1; then
+        mismatch_reason="ran, output mismatch"
     fi
-    if ! diff -q "$expected_out_file" "$actual_out_file" > /dev/null 2>&1; then
-        echo "MISMATCH|$test_id|ran, output mismatch"; return
+    if [[ -n "$mismatch_reason" ]]; then
+        # An output/exit mismatch is only OUR bug if clang's own -fclangir matches
+        # the reference. When -fclangir also diverges, it is an upstream ClangIR
+        # codegen defect -> SKIPPED, not a failure.
+        if clangir_also_diverges "$src_file" "$ext" "$expected_out_file" "$expected_exit"; then
+            echo "SKIPPED|$test_id|upstream ClangIR bug ($mismatch_reason)"; return
+        fi
+        echo "MISMATCH|$test_id|$mismatch_reason"; return
+    fi
+
+    echo "PASSED|$test_id|"
+}
+
+# ---------------------------------------------------------------------------
+# Worker: esbmc-eval test
+# Pass condition: the mapper produces a C file that COMPILES (no reference
+# output exists, so we cannot check run behaviour). Linking is attempted but
+# only used to produce a NOTRUN soft-pass, not a failure.
+# ---------------------------------------------------------------------------
+run_esbmc_test() {
+    local src_file="$1"
+    local pipeline_rc=0
+
+    local rel_path="${src_file#$ESBMC_EVAL_DIR}"
+    local base="${rel_path%.cpp}"
+    local test_id="${base//\//__}"
+
+    local mlir_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}.mlir"
+    local output_c_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_output.c"
+    local pipeline_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_pipeline_log.txt"
+
+    # Include the test's own directory so any sibling header files are found.
+    local src_dir
+    src_dir=$(cd "$(dirname "$src_file")" 2>/dev/null && pwd)
+    timeout "$TIMEOUT" "$RUNNER" \
+        --mlir "$mlir_file" \
+        --include "$src_dir" \
+        "$src_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
+
+    if [[ $pipeline_rc -eq 124 ]]; then
+        echo "TIMEDOUT|$test_id|"; return
+    fi
+    if [[ $pipeline_rc -eq 2 ]]; then
+        echo "SKIPPED|$test_id|CIR generation failed: $(skip_reason "$pipeline_log")"; return
+    fi
+    # Blocklisted CIR ops: skip rather than judge the mapper on them.
+    local blocked
+    blocked=$(blocklisted_op_in "$mlir_file")
+    if [[ -n "$blocked" ]]; then
+        echo "SKIPPED|$test_id|blocklisted op: $blocked"; return
+    fi
+    if [[ $pipeline_rc -ne 0 ]] || [ ! -f "$output_c_file" ]; then
+        echo "MAPPER_FAILED|$test_id|$(pipeline_stage "$pipeline_rc") failed"; return
+    fi
+
+    # Pass condition: generated C COMPILES. The esbmc programs are not run
+    # (their source behaviour is verified by a separate verifier tool; running
+    # them here would exercise implementation details unrelated to translation
+    # correctness, and many take far too long to run).
+    local obj_file="$ESBMC_EVAL_OUTPUT_DIR/${test_id}.o"
+    local gcc_log="$ESBMC_EVAL_OUTPUT_DIR/${test_id}_gcc_log.txt"
+    if ! "$GCC" -c "$output_c_file" -o "$obj_file" >"$gcc_log" 2>&1; then
+        echo "COMPILE_FAILED|$test_id|compilation failed"; return
     fi
 
     echo "PASSED|$test_id|"
 }
 
 # Export everything workers need
-export TIMEOUT RUNNER GCC INTEGRATION_OUTPUT_DIR LLVM_EVAL_DIR LLVM_EVAL_OUTPUT_DIR
-export -f pipeline_stage run_c_test run_cpp_test run_llvm_test
+export TIMEOUT RUNNER GCC CLANGPP INTEGRATION_OUTPUT_DIR LLVM_EVAL_DIR LLVM_EVAL_OUTPUT_DIR
+export ESBMC_EVAL_DIR ESBMC_EVAL_OUTPUT_DIR
+export -f pipeline_stage run_c_test run_cpp_test run_llvm_test run_esbmc_test
 
 # ---------------------------------------------------------------------------
 # Preflight checks
@@ -393,7 +593,7 @@ if [[ $c_total -gt 0 ]]; then
                 ;;
             SKIPPED)
                 echo -e "${YELLOW}SKIPPED${NC} ($message)"
-                SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+                count_skip "$message"
                 ;;
             MAPPER_FAILED)
                 echo -e "${RED}FAILED${NC} ($message)"
@@ -448,7 +648,7 @@ else
                     ;;
                 SKIPPED)
                     echo -e "${YELLOW}SKIPPED${NC} ($message)"
-                    SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+                    count_skip "$message"
                     ;;
                 MAPPER_FAILED)
                     echo -e "${RED}FAILED${NC} ($message)"
@@ -519,7 +719,10 @@ else
                     NOTRUN_TESTS=$((NOTRUN_TESTS + 1))
                     ;;
                 MISMATCH)
+                    bar_println "$llvm_cur" "$llvm_total" \
+                        "$(printf "  ${RED}MISMATCH${NC}   %s (%s)" "$test_id" "$message")"
                     MISMATCH_TESTS=$((MISMATCH_TESTS + 1))
+                    FAILED_TESTS=$((FAILED_TESTS + 1))
                     ;;
                 TIMEDOUT)
                     bar_println "$llvm_cur" "$llvm_total" \
@@ -529,7 +732,7 @@ else
                 SKIPPED)
                     bar_println "$llvm_cur" "$llvm_total" \
                         "$(printf "  ${YELLOW}SKIPPED${NC}  %s (%s)" "$test_id" "$message")"
-                    SKIPPED_TESTS=$((SKIPPED_TESTS + 1))
+                    count_skip "$message"
                     ;;
                 MAPPER_FAILED)
                     bar_println "$llvm_cur" "$llvm_total" \
@@ -547,6 +750,78 @@ else
         done < <(parallel --will-cite --line-buffer -j "$JOBS" run_llvm_test ::: "${llvm_files[@]}")
 
         printf "\n"  # move past the bar line
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# ESBMC-eval Tests
+# ---------------------------------------------------------------------------
+if [[ "${RUN_ESBMC:-1}" -eq 0 ]]; then
+    echo ""
+    echo -e "${YELLOW}Skipping esbmc-eval tests (RUN_ESBMC=0).${NC}"
+elif [ ! -d "$ESBMC_EVAL_DIR" ]; then
+    echo ""
+    echo -e "${YELLOW}SKIPPED: esbmc-eval directory not found at $ESBMC_EVAL_DIR${NC}"
+elif [ ! -f "$CLANGPP" ]; then
+    echo ""
+    echo -e "${YELLOW}SKIPPED: clang++ not found at $CLANGPP${NC}"
+else
+    echo ""
+    echo "======================================"
+    echo "  Running esbmc-eval Tests"
+    echo "======================================"
+    echo ""
+    mkdir -p "$ESBMC_EVAL_OUTPUT_DIR"
+
+    printf "  Scanning test files..."
+    mapfile -t esbmc_files < <(
+        find "$ESBMC_EVAL_DIR" -name 'main.cpp' | sort
+    )
+    printf "\r%-30s\r" ""
+    esbmc_total=${#esbmc_files[@]}
+    esbmc_cur=0
+
+    if [[ $esbmc_total -gt 0 ]]; then
+        bar_draw 0 "$esbmc_total"
+
+        while IFS='|' read -r result test_id message; do
+            esbmc_cur=$((esbmc_cur + 1))
+            TOTAL_TESTS=$((TOTAL_TESTS + 1))
+            bar_draw "$esbmc_cur" "$esbmc_total"
+
+            case "$result" in
+                PASSED)
+                    PASSED_TESTS=$((PASSED_TESTS + 1))
+                    ;;
+                NOTRUN)
+                    NOTRUN_TESTS=$((NOTRUN_TESTS + 1))
+                    ;;
+                TIMEDOUT)
+                    bar_println "$esbmc_cur" "$esbmc_total" \
+                        "$(printf "  ${YELLOW}TIMED OUT${NC} %s" "$test_id")"
+                    TIMEDOUT_TESTS=$((TIMEDOUT_TESTS + 1))
+                    ;;
+                SKIPPED)
+                    bar_println "$esbmc_cur" "$esbmc_total" \
+                        "$(printf "  ${YELLOW}SKIPPED${NC}  %s (%s)" "$test_id" "$message")"
+                    count_skip "$message"
+                    ;;
+                MAPPER_FAILED)
+                    bar_println "$esbmc_cur" "$esbmc_total" \
+                        "$(printf "  ${RED}MAPPER FAIL${NC} %s (%s)" "$test_id" "$message")"
+                    FAILED_TESTS=$((FAILED_TESTS + 1))
+                    MAPPER_FAILED_TESTS=$((MAPPER_FAILED_TESTS + 1))
+                    ;;
+                COMPILE_FAILED)
+                    bar_println "$esbmc_cur" "$esbmc_total" \
+                        "$(printf "  ${RED}COMPILE FAIL${NC} %s (%s)" "$test_id" "$message")"
+                    FAILED_TESTS=$((FAILED_TESTS + 1))
+                    COMPILE_FAILED_TESTS=$((COMPILE_FAILED_TESTS + 1))
+                    ;;
+            esac
+        done < <(parallel --will-cite --line-buffer -j "$JOBS" run_esbmc_test ::: "${esbmc_files[@]}")
+
+        printf "\n"
     fi
 fi
 

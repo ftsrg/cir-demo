@@ -12,7 +12,6 @@
 #   --lang c|c++         Language (default: infer from file extension)
 #   --std STD            Standard (default: c23 or c++23)
 #   --flatten            Run cir-opt -cir-flatten-cfg before xcfa-mapper
-#   --vtlayout FILE      Save the vtable layout dump to FILE (always generated internally)
 #   --mlir FILE          Save intermediate CIR MLIR to FILE (default: temp)
 #   --flat-mlir FILE     Save flattened MLIR to FILE (implies --flatten)
 
@@ -28,14 +27,15 @@ XCFA_MAPPER="$SCRIPT_DIR/../build/xcfa-mapper"
 LANG=""
 STD=""
 FLATTEN=false
-VTLAYOUT_OUT=""
 MLIR_OUT=""
 FLAT_MLIR_OUT=""
+INCLUDE_FLAGS=()   # -I dirs for CIR generation, supplied by the caller
 
 usage() {
     echo "Usage: $0 [OPTIONS] <input-file> <output.c>" >&2
     echo "  --lang c|c++, --std STD, --flatten" >&2
-    echo "  --vtlayout FILE, --mlir FILE, --flat-mlir FILE" >&2
+    echo "  --mlir FILE, --flat-mlir FILE" >&2
+    echo "  --include DIR   add -I DIR to CIR generation (repeatable)" >&2
     exit 1
 }
 
@@ -44,9 +44,9 @@ while [[ $# -gt 0 ]]; do
         --lang)      LANG="$2"; shift 2 ;;
         --std)       STD="$2"; shift 2 ;;
         --flatten)   FLATTEN=true; shift ;;
-        --vtlayout)  VTLAYOUT_OUT="$2"; shift 2 ;;
         --mlir)      MLIR_OUT="$2"; shift 2 ;;
         --flat-mlir) FLAT_MLIR_OUT="$2"; FLATTEN=true; shift 2 ;;
+        --include)   INCLUDE_FLAGS+=(-I "$2"); shift 2 ;;
         --) shift; break ;;
         -*) usage ;;
         *) break ;;
@@ -88,18 +88,12 @@ _tmpmlir() {
 
 mkdir -p "$(dirname "$OUTPUT_C")"
 
-# Vtlayout file: always generated; saved to user path if --vtlayout given.
-if [[ -n "$VTLAYOUT_OUT" ]]; then
-    VTLAYOUT_FILE="$VTLAYOUT_OUT"
-else
-    VTLAYOUT_FILE=$(mktemp --suffix=.vtlayout)
-    _TEMPS+=("$VTLAYOUT_FILE")
-fi
-
-# Step 1: Generate CIR + vtable layout dump
+# Step 1: Generate CIR.
+# Include dirs (-I) come from the caller via --include (see run_tests.sh, which
+# knows the test-suite layout for shared utility headers).
 CIR_FILE=$(_tmpmlir "$MLIR_OUT")
 "$CLANG_BIN" -x "$LANG" "-std=$STD" -S -emit-cir "$INPUT_FILE" -o "$CIR_FILE" \
-    -Xclang -fdump-vtable-layouts > "$VTLAYOUT_FILE" || exit 2
+    ${INCLUDE_FLAGS[@]+"${INCLUDE_FLAGS[@]}"} || exit 2
 
 # Step 2: Preprocess — strip alloca qualifiers the tablegen AllocaOp parser
 # can't handle: ", cleanup_dest_slot" (C++ EH slot) and ", const"
@@ -120,6 +114,5 @@ fi
 
 # Step 4: xcfa-mapper
 MAPPER_CMD=("$XCFA_MAPPER")
-MAPPER_CMD+=(--vtlayout "$VTLAYOUT_FILE")
 MAPPER_CMD+=("$MAPPER_INPUT" "$OUTPUT_C")
 "${MAPPER_CMD[@]}" || exit 4
