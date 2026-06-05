@@ -87,6 +87,8 @@ LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
 ESBMC_EVAL_DIR="$PROJECT_DIR/../backend/examples/esbmc-eval/"
 ESBMC_EVAL_OUTPUT_DIR="$SCRIPT_DIR/esbmc-eval/output"
 RUN_ESBMC=${RUN_ESBMC:-1}
+RUN_LLVM=${RUN_LLVM:-1}
+RUN_INTEGRATION=${RUN_INTEGRATION:-1}
 
 # ---------------------------------------------------------------------------
 # Counters and interrupt flag
@@ -175,8 +177,31 @@ print_summary() {
     fi
 }
 
+JSON_OUT=""    # set via --json-out FILE to write machine-readable summary at exit
+if [[ "${1:-}" == "--json-out" ]]; then JSON_OUT="$2"; shift 2; fi
+
+# Write a JSON file summarising the run (used by the GitHub Actions workflow to
+# build the PR comment table without fragile text parsing).
+_write_json_summary() {
+    [[ -z "$JSON_OUT" ]] && return
+    printf '{
+  "total": %d,
+  "passed": %d,
+  "compiled_not_run": %d,
+  "skipped": %d,
+  "timed_out": %d,
+  "failed": %d,
+  "mapper_failed": %d,
+  "compile_failed": %d,
+  "mismatch": %d
+}\n' \
+        "$TOTAL_TESTS" "$PASSED_TESTS" "$NOTRUN_TESTS" "$SKIPPED_TESTS" \
+        "$TIMEDOUT_TESTS" "$FAILED_TESTS" "$MAPPER_FAILED_TESTS" \
+        "$COMPILE_FAILED_TESTS" "$MISMATCH_TESTS" > "$JSON_OUT"
+}
+
 trap 'interrupted=1' INT TERM
-trap 'print_summary' EXIT
+trap 'print_summary; _write_json_summary' EXIT
 
 # ---------------------------------------------------------------------------
 # Progress bar helpers (used only in the main process, not in workers)
@@ -568,6 +593,9 @@ echo ""
 # ---------------------------------------------------------------------------
 # C Integration Tests
 # ---------------------------------------------------------------------------
+if [[ "${RUN_INTEGRATION:-1}" -eq 0 ]]; then
+    echo -e "${YELLOW}Skipping integration tests (RUN_INTEGRATION=0).${NC}"
+else
 echo "======================================"
 echo "  Running Integration Tests"
 echo "======================================"
@@ -671,12 +699,17 @@ else
     fi
 fi
 
+fi   # end RUN_INTEGRATION
+
 [[ $interrupted -eq 1 ]] && exit 130
 echo ""
 
 # ---------------------------------------------------------------------------
 # LLVM SingleSource Tests
 # ---------------------------------------------------------------------------
+if [[ "${RUN_LLVM:-1}" -eq 0 ]]; then
+    echo -e "${YELLOW}Skipping LLVM tests (RUN_LLVM=0).${NC}"
+else
 echo "======================================"
 echo "  Running LLVM SingleSource Tests"
 echo "======================================"
@@ -752,6 +785,8 @@ else
         printf "\n"  # move past the bar line
     fi
 fi
+
+fi   # end RUN_LLVM
 
 # ---------------------------------------------------------------------------
 # ESBMC-eval Tests

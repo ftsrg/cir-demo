@@ -580,15 +580,24 @@ bool handleStore(cir::StoreOp op, Mapper &m, std::ostream &out) {
   // 2. ptr expects a pointer value (ptr's pointed-to type is a pointer)
   bool needAddressOf = false;
   if (m.isDirectAccess(val) && ptr.getType()) {
-    // val is direct access (a variable or lvalue)
-    // Check if we're storing into a pointer variable
-    Type ptrType = ptr.getType();
-    if (auto ptrTy = llvm::dyn_cast<cir::PointerType>(ptrType)) {
-      Type pointee = ptrTy.getPointee();
-      std::string pointeeCType = m.mapTypeToC(pointee);
-      bool pointeeIsPointer = !pointeeCType.empty() && pointeeCType.back() == '*';
-      if (pointeeIsPointer) {
-        needAddressOf = true;
+    // val is a direct-access lvalue. We need & when the destination slot holds
+    // a pointer AND the value itself is a scalar lvalue (not a pointer type).
+    // Exception: when val is a ptr-to-array alloca (e.g. char[6]), the C name
+    // is declared as `T name[N]` and decays to `T*` — adding & would give
+    // `T(*)[N]` (pointer-to-array), the wrong type for a `T**` destination.
+    // Only skip & for this specific case; all other pointer types still need it.
+    bool valIsArrayPtr = false;
+    if (auto al = val.getDefiningOp<cir::AllocaOp>())
+      valIsArrayPtr = mlir::isa<cir::ArrayType>(al.getAllocaType());
+    if (!valIsArrayPtr) {
+      Type ptrType = ptr.getType();
+      if (auto ptrTy = llvm::dyn_cast<cir::PointerType>(ptrType)) {
+        Type pointee = ptrTy.getPointee();
+        std::string pointeeCType = m.mapTypeToC(pointee);
+        bool pointeeIsPointer = !pointeeCType.empty() && pointeeCType.back() == '*';
+        if (pointeeIsPointer) {
+          needAddressOf = true;
+        }
       }
     }
   }
