@@ -16,7 +16,7 @@ limitations under the License.
 
 # Building Static Binaries
 
-This directory contains configuration for building static binaries of `clang` (with ClangIR support) and `xcfa-mapper`.
+This directory contains configuration for building static binaries of `clang` (with ClangIR support) and `cir2c`.
 
 ## Building Locally
 
@@ -28,7 +28,7 @@ To build the static binaries on your local machine:
 
 This will:
 1. Build LLVM with ClangIR support statically
-2. Build xcfa-mapper statically
+2. Build cir2c statically
 3. Strip the binaries
 4. Output them to `./output/` directory
 
@@ -50,7 +50,7 @@ docker build -f docker/static-build.Dockerfile --target=builder -o type=local,de
 
 # The binaries will be in:
 # - ./output/build/llvm-install/bin/clang
-# - ./output/build/xcfa-mapper/build/xcfa-mapper
+# - ./output/build/cir2c/build/cir2c
 ```
 
 ## CI/CD
@@ -69,13 +69,13 @@ Built binaries are uploaded as artifacts and retained for 90 days.
 2. Click on a successful workflow run
 3. Download the artifacts:
    - `clang-static-*`
-   - `xcfa-mapper-static-*`
+   - `cir2c-static-*`
 
 ## Dockerfile Details
 
 The `docker/static-build.Dockerfile` uses a multi-stage build:
 
-1. **builder**: Builds LLVM and xcfa-mapper with static linking
+1. **builder**: Builds LLVM and cir2c with static linking
 2. **export**: Contains only the stripped binaries (for extraction)
 3. **runtime**: Optional runtime image for testing
 
@@ -98,7 +98,7 @@ docker run -it cir-static-test bash
 
 # Inside the container:
 clang --version
-xcfa-mapper --help
+cir2c --help
 ```
 
 ## Troubleshooting

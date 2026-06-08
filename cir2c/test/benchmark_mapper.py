@@ -29,7 +29,7 @@ from typing import TextIO
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent.parent
-RUNNER = SCRIPT_DIR / "run-xcfa-mapper.sh"
+RUNNER = SCRIPT_DIR / "run-cir2c.sh"
 GCC = "gcc"
 DEFAULT_YML_PATTERNS = ["**/*.yml"]
 DEFAULT_JOBS = 8
@@ -40,7 +40,7 @@ ERROR_MARKERS = (
     "ERROR",
 )
 
-# Pipeline exit codes from run-xcfa-mapper.sh
+# Pipeline exit codes from run-cir2c.sh
 _EXIT_STAGE = {2: "clang_failed", 3: "flatten_failed", 4: "mapper_failed"}
 
 def read_text(path: Path) -> str:
@@ -163,7 +163,7 @@ def parse_args() -> argparse.Namespace:
         "-f",
         "--flatten",
         action="store_true",
-        help="Run cir-opt -cir-flatten-cfg on the CIR before passing it to xcfa-mapper.",
+        help="Run cir-opt -cir-flatten-cfg on the CIR before passing it to cir2c.",
     )
     parser.add_argument(
         "-o",
@@ -258,7 +258,7 @@ def benchmark_case(yml_path: Path, root_dir: Path, c_mode: bool, output_dir: Pat
 
 def validate_tools() -> None:
     if not RUNNER.exists():
-        raise SystemExit(f"run-xcfa-mapper.sh not found: {RUNNER}")
+        raise SystemExit(f"run-cir2c.sh not found: {RUNNER}")
 
 def main() -> int:
     args = parse_args()

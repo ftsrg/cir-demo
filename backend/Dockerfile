@@ -29,14 +29,14 @@ RUN ln -s /opt/cir /app/backend/bin
 WORKDIR /app/backend
 RUN npm install --production
 
-# Build the xcfa-mapper C++ tool so the backend can call it. We copy the
-# source tree and invoke CMake to produce the binary at xcfa-mapper/build/xcfa-mapper
-COPY xcfa-mapper /app/xcfa-mapper
+# Build the cir2c C++ tool so the backend can call it. We copy the
+# source tree and invoke CMake to produce the binary at cir2c/build/cir2c
+COPY cir2c /app/cir2c
 COPY .git /app/.git
-WORKDIR /app/xcfa-mapper
+WORKDIR /app/cir2c
 RUN mkdir -p build \
  && cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
- && cmake --build build --target xcfa-mapper -j $(nproc)
+ && cmake --build build --target cir2c -j $(nproc)
 
 
 WORKDIR /app/backend

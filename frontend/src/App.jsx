@@ -50,13 +50,13 @@ export default function App() {
   const [code, setCode] = useState('// select an example or start typing...')
   const [outputs, setOutputs] = useState({ llvm: '', clang: '', flat_clang: '', xcfa: '', c: '', comparison: {} })
   const [clangVersion, setClangVersion] = useState('')
-  const [xcfaMapperVersion, setXcfaMapperVersion] = useState('')
+  const [cir2cVersion, setCir2cVersion] = useState('')
   const [position, setPosition] = useState({ line: 1, column: 1 })
 
   useEffect(() => {
     api.get('api/examples').then(r => setExamples(r.data || [])).catch(() => {})
     api.get('api/clang-version').then(r => setClangVersion(r.data.version || 'unknown')).catch(() => {})
-    api.get('api/xcfa-mapper-version').then(r => setXcfaMapperVersion(r.data.version || 'unknown')).catch(() => {})
+    api.get('api/cir2c-version').then(r => setCir2cVersion(r.data.version || 'unknown')).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -148,7 +148,7 @@ export default function App() {
       </Box>
 
       <Box component="footer" className="footer" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="caption">Using clang: {clangVersion} &nbsp;|&nbsp; xcfa-mapper: {xcfaMapperVersion}</Typography>
+        <Typography variant="caption">Using clang: {clangVersion} &nbsp;|&nbsp; cir2c: {cir2cVersion}</Typography>
         <Typography variant="caption">Ln {position.line}, Col {position.column}</Typography>
       </Box>
     </Box>

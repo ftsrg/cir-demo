@@ -45,9 +45,9 @@ jobs:
           file binaries/clang || true
           ls -lh binaries/clang
           
-          echo "=== xcfa-mapper binary info ==="
-          file binaries/xcfa-mapper || true
-          ls -lh binaries/xcfa-mapper
+          echo "=== cir2c binary info ==="
+          file binaries/cir2c || true
+          ls -lh binaries/cir2c
 
       - name: Get ClangIR commit hash
         id: clangir-commit
@@ -62,11 +62,11 @@ jobs:
           path: binaries/clang
           retention-days: 90
 
-      - name: Upload xcfa-mapper binary
+      - name: Upload cir2c binary
         uses: actions/upload-artifact@v4
         with:
-          name: xcfa-mapper-static-${{ github.sha }}
-          path: binaries/xcfa-mapper
+          name: cir2c-static-${{ github.sha }}
+          path: binaries/cir2c
           retention-days: 90
 
       - name: Create release on tag
@@ -75,6 +75,6 @@ jobs:
         with:
           files: |
             binaries/clang
-            binaries/xcfa-mapper
+            binaries/cir2c
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -15,7 +15,7 @@
 # limitations under the License.
 
 
-# Test runner script for xcfa-mapper
+# Test runner script for cir2c
 # Runs integration tests and LLVM SingleSource end-to-end tests
 
 # Colors for output
@@ -33,10 +33,10 @@ INTEGRATION_INPUT_DIR="$INTEGRATION_TEST_DIR/input"
 INTEGRATION_OUTPUT_DIR="$INTEGRATION_TEST_DIR/output"
 
 # Tools
-XCFA_MAPPER="$BUILD_DIR/xcfa-mapper"
+CIR2C="$BUILD_DIR/cir2c"
 CLANGPP="$PROJECT_DIR/../backend/bin/bin/clang++"
 GCC="$PROJECT_DIR/../backend/bin/bin/clang"  # Use same clang for compilation checks
-RUNNER="$SCRIPT_DIR/run-xcfa-mapper.sh"
+RUNNER="$SCRIPT_DIR/run-cir2c.sh"
 TIMEOUT=60
 JOBS=${JOBS:-$(nproc)}
 
@@ -98,7 +98,7 @@ PASSED_TESTS=0           # generated C compiles, links, runs, and output matches
 NOTRUN_TESTS=0          # valid C, but could not be run (compiled, failed to link)
 MISMATCH_TESTS=0        # valid C, linked & ran, but output/exit did not match
 FAILED_TESTS=0          # aggregate of the real failure sub-categories (drives exit)
-MAPPER_FAILED_TESTS=0   # pipeline/xcfa-mapper could not produce C
+MAPPER_FAILED_TESTS=0   # pipeline/cir2c could not produce C
 COMPILE_FAILED_TESTS=0  # generated C does not compile (invalid C)
 SKIPPED_TESTS=0
 # Skipped sub-categories (root cause of the skip).
@@ -236,7 +236,7 @@ pipeline_stage() {
     case "$1" in
         2) echo "CIR generation" ;;
         3) echo "flatten" ;;
-        4) echo "xcfa-mapper" ;;
+        4) echo "cir2c" ;;
         *) echo "pipeline" ;;
     esac
 }
@@ -265,7 +265,7 @@ export -f skip_reason
 # UnitTests/Vector/m512_test_util.h (a parent dir) or
 # Benchmarks/Polybench/utilities/polybench.h would be "not found". Emit the
 # test's own dir, its ancestors up to the test-suite root, and the PolyBench
-# utilities subtree. (Passed to run-xcfa-mapper.sh via --include.)
+# utilities subtree. (Passed to run-cir2c.sh via --include.)
 # ---------------------------------------------------------------------------
 compute_includes() {
     local src="$1" dir d parent util
@@ -574,19 +574,19 @@ fi
 
 mkdir -p "$INTEGRATION_OUTPUT_DIR"
 echo "======================================"
-echo "  XCFA-Mapper Test Suite"
+echo "  cir2c Test Suite"
 echo "======================================"
 echo ""
 
-if [ ! -f "$XCFA_MAPPER" ]; then
-    echo -e "${RED}ERROR: xcfa-mapper not found at $XCFA_MAPPER${NC}"
-    echo "Please build the project first: cmake -S .. -B ../build && cmake --build ../build --target xcfa-mapper"
+if [ ! -f "$CIR2C" ]; then
+    echo -e "${RED}ERROR: cir2c not found at $CIR2C${NC}"
+    echo "Please build the project first: cmake -S .. -B ../build && cmake --build ../build --target cir2c"
     exit 1
 fi
 
 echo "Using tools:"
-echo "  xcfa-mapper: $XCFA_MAPPER"
-echo "  runner:      $RUNNER"
+echo "  cir2c:  $CIR2C"
+echo "  runner: $RUNNER"
 echo "  jobs:        $JOBS"
 echo ""
 

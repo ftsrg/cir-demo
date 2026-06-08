@@ -23,7 +23,7 @@
 
 #include <llvm/ADT/StringRef.h>
 
-namespace xcfa {
+namespace cir2c {
 
 struct OperationMonitorEntry {
   bool isRegistered = false;
@@ -61,4 +61,4 @@ private:
   std::vector<OperationTraceEntry> operationTrace;
 };
 
-} // namespace xcfa
+} // namespace cir2c

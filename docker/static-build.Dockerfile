@@ -65,8 +65,8 @@ RUN . /build/zlib-config.env && \
 RUN cmake --build llvm-build -j$(nproc) && \
     cmake --install llvm-build
 
-# Copy xcfa-mapper source
-COPY xcfa-mapper /build/xcfa-mapper
+# Copy cir2c source
+COPY cir2c /build/cir2c
 COPY .git /build/.git
 
 # Verify MLIRCIR was built and installed
@@ -76,9 +76,9 @@ RUN echo "=== Checking for CIR dialect libraries ===" && \
      echo "Checking build directory:" && \
      find /build/llvm-build -name "libMLIRCIR*")
 
-# Configure and build xcfa-mapper statically
-RUN rm -rf /build/xcfa-mapper/build && \
-    cd /build/xcfa-mapper && \
+# Configure and build cir2c statically
+RUN rm -rf /build/cir2c/build && \
+    cd /build/cir2c && \
     mkdir -p build && \
     cd build && \
     cmake .. \
@@ -95,14 +95,14 @@ RUN CLANG_BIN="$(find /build/llvm-install/bin -maxdepth 1 -type f \( -name 'clan
     test -n "$CLANG_BIN" && \
     strip "$CLANG_BIN" && \
     ln -sf "$(basename "$CLANG_BIN")" /build/llvm-install/bin/clang-static && \
-    strip /build/xcfa-mapper/build/xcfa-mapper
+    strip /build/cir2c/build/cir2c
 
 # Verify binaries
 RUN echo "=== Clang binary info ===" && \
     ls -lh /build/llvm-install/bin/clang-static && \
     /build/llvm-install/bin/clang-static --version && \
-    echo "\n=== xcfa-mapper binary info ===" && \
-    ls -lh /build/xcfa-mapper/build/xcfa-mapper
+    echo "\n=== cir2c binary info ===" && \
+    ls -lh /build/cir2c/build/cir2c
 
 # Final stage - copy only the binaries
 FROM scratch AS export
@@ -110,11 +110,11 @@ COPY --from=builder /build/llvm-install/bin/clang-static /clang
 COPY --from=builder /build/llvm-install/bin/cir-opt /cir-opt
 COPY --from=builder /build/llvm-install/bin/clang++ /clang++
 COPY --from=builder /build/llvm-install/lib/clang/*/include /include
-COPY --from=builder /build/xcfa-mapper/build/xcfa-mapper /xcfa-mapper
+COPY --from=builder /build/cir2c/build/cir2c /cir2c
 
 # Runtime stage for testing (optional)
 FROM debian:trixie-slim AS runtime
 COPY --from=builder /build/llvm-install/bin/clang /usr/local/bin/clang
-COPY --from=builder /build/xcfa-mapper/build/xcfa-mapper /usr/local/bin/xcfa-mapper
-RUN clang --version && xcfa-mapper --help || true
+COPY --from=builder /build/cir2c/build/cir2c /usr/local/bin/cir2c
+RUN clang --version && cir2c --help || true
 CMD ["/bin/bash"]

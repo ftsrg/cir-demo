@@ -11,7 +11,7 @@ set(VERSION "unknown")
 
 if(GIT_EXECUTABLE)
   # Detect whether SOURCE_DIR is inside any git repository (the .git directory
-  # may be in a parent directory when xcfa-mapper is a subdirectory of a larger
+  # may be in a parent directory when cir2c is a subdirectory of a larger
   # repo, which is the typical layout of this project).
   execute_process(
     COMMAND "${GIT_EXECUTABLE}" rev-parse --git-dir
@@ -53,7 +53,7 @@ endif()
 
 # Only rewrite the file when the content has actually changed so that
 # dependent compilation units are not unnecessarily rebuilt.
-set(HEADER_CONTENT "#pragma once\n#define XCFA_MAPPER_VERSION \"${VERSION}\"\n")
+set(HEADER_CONTENT "#pragma once\n#define CIR2C_VERSION \"${VERSION}\"\n")
 
 if(EXISTS "${OUTPUT_FILE}")
   file(READ "${OUTPUT_FILE}" EXISTING_CONTENT)

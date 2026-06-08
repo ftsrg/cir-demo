@@ -14,7 +14,7 @@
 # limitations under the License.
 
 cmake_minimum_required(VERSION 3.13)
-project(xcfa-mapper LANGUAGES C CXX)
+project(cir2c LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -44,7 +44,7 @@ find_package(Git QUIET)
 
 set(VERSION_HEADER "${CMAKE_BINARY_DIR}/version.h")
 
-add_custom_target(xcfa_version ALL
+add_custom_target(cir2c_version ALL
   BYPRODUCTS "${VERSION_HEADER}"
   COMMAND ${CMAKE_COMMAND}
     -DGIT_EXECUTABLE=${GIT_EXECUTABLE}
@@ -54,16 +54,35 @@ add_custom_target(xcfa_version ALL
   COMMENT "Generating version header"
 )
 
-add_executable(xcfa-mapper
+add_executable(cir2c
   src/main.cpp
   src/Mapper.cpp
+  src/ModuleEmitter.cpp
+  src/ConstantEmitter.cpp
+  src/TypeMapper.cpp
   src/Traceability.cpp
   src/handlers/Handlers.cpp
+  src/handlers/HandlerModule.cpp
+  src/handlers/HandlerSupport.cpp
+  src/handlers/FloatMathHandlers.cpp
+  src/handlers/ComplexHandlers.cpp
+  src/handlers/BuiltinHandlers.cpp
+  src/handlers/ArithmeticHandlers.cpp
+  src/handlers/CastHandlers.cpp
+  src/handlers/VariadicHandlers.cpp
+  src/handlers/MemoryHandlers.cpp
+  src/handlers/ConstantHandlers.cpp
+  src/handlers/RecordHandlers.cpp
+  src/handlers/GlobalHandlers.cpp
+  src/handlers/CallHandlers.cpp
+  src/handlers/ControlFlowHandlers.cpp
+  src/handlers/VTableHandlers.cpp
+  src/handlers/ExceptionHandlers.cpp
 )
 
-add_dependencies(xcfa-mapper xcfa_version)
+add_dependencies(cir2c cir2c_version)
 
-target_include_directories(xcfa-mapper PRIVATE
+target_include_directories(cir2c PRIVATE
   ${LLVM_INCLUDE_DIRS}
   ${MLIR_INCLUDE_DIRS}
   # Some local trees put headers under backend/bin/include
@@ -75,7 +94,7 @@ target_include_directories(xcfa-mapper PRIVATE
 add_definitions(${LLVM_DEFINITIONS})
 
 # Link to core MLIR libraries; additional dialect libs can be appended when needed.
-target_link_libraries(xcfa-mapper PRIVATE
+target_link_libraries(cir2c PRIVATE
   MLIRIR
   MLIRParser
   MLIRSupport
@@ -111,7 +130,7 @@ file(GLOB MLIRCIR_STATIC_LIBS CONFIGURE_DEPENDS "${LLVM_LIB_DIR}/libMLIRCIR.a")
 
 if(MLIRCIR_SHARED_LIBS)
   message(STATUS "Found MLIRCIR shared libs: ${MLIRCIR_SHARED_LIBS}")
-  target_link_libraries(xcfa-mapper PRIVATE ${MLIRCIR_SHARED_LIBS})
+  target_link_libraries(cir2c PRIVATE ${MLIRCIR_SHARED_LIBS})
 elseif(MLIRCIR_STATIC_LIBS)
   message(STATUS "Found MLIRCIR static libs: ${MLIRCIR_STATIC_LIBS}")
   
@@ -123,24 +142,24 @@ elseif(MLIRCIR_STATIC_LIBS)
   
   if(NUM_STATIC_LIBS GREATER 0)
     # Use linker groups to handle circular dependencies in static libraries
-    target_link_libraries(xcfa-mapper PRIVATE
+    target_link_libraries(cir2c PRIVATE
       -Wl,--start-group
       ${ALL_STATIC_LIBS}
       -Wl,--end-group
     )
   else()
     message(WARNING "No static libraries found in ${LLVM_LIB_DIR}, linking may fail")
-    target_link_libraries(xcfa-mapper PRIVATE ${MLIRCIR_STATIC_LIBS})
+    target_link_libraries(cir2c PRIVATE ${MLIRCIR_STATIC_LIBS})
   endif()
 else()
   message(STATUS "libMLIRCIR not found in ${LLVM_LIB_DIR}; continuing without linking CIR runtime.")
 endif()
 
-install(TARGETS xcfa-mapper RUNTIME DESTINATION bin)
+install(TARGETS cir2c RUNTIME DESTINATION bin)
 
 enable_testing()
 
 # CTest: run the mapper on the sample input and compare with expected output
 add_test(NAME map_sample
-  COMMAND /bin/sh -c "$<TARGET_FILE:xcfa-mapper> ${CMAKE_SOURCE_DIR}/test/sample.mlir ${CMAKE_BINARY_DIR}/out.c && ${CMAKE_COMMAND} -E compare_files ${CMAKE_SOURCE_DIR}/test/expected.c ${CMAKE_BINARY_DIR}/out.c"
+  COMMAND /bin/sh -c "$<TARGET_FILE:cir2c> ${CMAKE_SOURCE_DIR}/test/sample.mlir ${CMAKE_BINARY_DIR}/out.c && ${CMAKE_COMMAND} -E compare_files ${CMAKE_SOURCE_DIR}/test/expected.c ${CMAKE_BINARY_DIR}/out.c"
 )

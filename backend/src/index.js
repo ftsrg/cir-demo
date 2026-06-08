@@ -177,11 +177,11 @@ app.get('/api/clang-version', async (req, res) => {
   }
 });
 
-// xcfa-mapper version endpoint
-app.get('/api/xcfa-mapper-version', async (req, res) => {
+// cir2c version endpoint
+app.get('/api/cir2c-version', async (req, res) => {
   try {
-    const xcfaMapperBin = path.join(__dirname, '..', '..', 'xcfa-mapper', 'build', 'xcfa-mapper');
-    const out = await execFileAsync(xcfaMapperBin, ['--version']);
+    const cir2cBin = path.join(__dirname, '..', '..', 'cir2c', 'build', 'cir2c');
+    const out = await execFileAsync(cir2cBin, ['--version']);
     let text = '';
     if (out && typeof out === 'object') {
       text = (out.stdout || '').toString();
@@ -198,14 +198,14 @@ app.get('/api/xcfa-mapper-version', async (req, res) => {
 });
 
 // generation endpoint: runs clang to produce LLVM IR and CIR, then optionally
-// flattens CIR with cir-opt before passing it to xcfa-mapper.
+// flattens CIR with cir-opt before passing it to cir2c.
 // Request body: { code, language, flatten? }
 // flatten defaults to false (non-flat/structured CIR path); set to true to run cir-opt -cir-flatten-cfg first.
 app.post('/api/generate', async (req, res) => {
   const code = req.body.code || '';
   const language = req.body.language === 'c' ? 'c' : 'cpp';
-  // flatten=false (default): skip flattening; xcfa-mapper receives structured CIR directly.
-  // flatten=true: run cir-opt -cir-flatten-cfg before xcfa-mapper.
+  // flatten=false (default): skip flattening; cir2c receives structured CIR directly.
+  // flatten=true: run cir-opt -cir-flatten-cfg before cir2c.
   const flatten = req.body.flatten === true;
   const ext = language === 'c' ? 'c' : 'cpp';
   const clangBin = language === 'c' ? CLANG_BIN : CLANGPP_BIN;
@@ -305,7 +305,7 @@ app.post('/api/generate', async (req, res) => {
       };
     }
 
-  const xcfaMapperBin = path.join(__dirname, '..', '..', 'xcfa-mapper', 'build', 'xcfa-mapper');
+  const cir2cBin = path.join(__dirname, '..', '..', 'cir2c', 'build', 'cir2c');
   const cOutput = { stdout: '', stderr: '', code: 0 };
   let trace = [];
   try {
@@ -317,7 +317,7 @@ app.post('/api/generate', async (req, res) => {
       const outC = path.join(tmpDir, `${base}.c`);
       const outTrace = path.join(tmpDir, `${base}.trace.json`);
       const mapArgs = ['--monitor-json', outTrace, '--vtlayout', vtlayoutPath, mlirPath, outC];
-      const mapResult = await execFileAsync(xcfaMapperBin, mapArgs);
+      const mapResult = await execFileAsync(cir2cBin, mapArgs);
       cOutput.code = (mapResult && typeof mapResult.code !== 'undefined') ? mapResult.code : 1;
       cOutput.stderr = (mapResult && mapResult.stderr) ? mapResult.stderr : '';
       if (mapResult && mapResult.code === 0) {
@@ -330,10 +330,10 @@ app.post('/api/generate', async (req, res) => {
         filesToCleanup.push(outTrace);
       } catch (_) {}
     } else {
-      console.debug('Skipping xcfa-mapper: no CIR output available');
+      console.debug('Skipping cir2c: no CIR output available');
     }
   } catch (err) {
-    console.debug('xcfa-mapper run failed:', String(err));
+    console.debug('cir2c run failed:', String(err));
   }
 
   const thetaBin = path.join(__dirname, '..', '..', 'Theta', 'theta-start.sh');
@@ -355,7 +355,7 @@ app.post('/api/generate', async (req, res) => {
       }
 
     } else {
-      console.debug('Skipping xcfa-mapper: no flattened CIR output available');
+      console.debug('Skipping cir2c: no flattened CIR output available');
     }
   } catch (err) {
     console.debug('Theta run failed:', String(err));

@@ -22,7 +22,7 @@ An interactive web-based platform for exploring C/C++ code analysis using Clang 
 
 - **Web Interface**: React-based UI with Monaco editor for C++ code editing
 - **Analysis Backend**: Node.js server that processes code using Clang/LLVM toolchain and Theta
-- **XCFA Mapper**: Converts Clang IR to extended control flow automata (XCFA) format (in C syntax currently)
+- **cir2c**: Translates C/C++ via ClangIR to verifier-friendly C with formal-verification intrinsics
 - **Example Library**: Pre-loaded C++ examples demonstrating various language features (templates, inheritance, STL containers, etc.)
 
 ## Getting Started

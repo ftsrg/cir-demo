@@ -52,7 +52,7 @@ sudo docker buildx build \
   .
 
 # The export stage places the stripped binaries at the root of ./output
-if [[ ! -f ./output/clang || ! -f ./output/xcfa-mapper ]]; then
+if [[ ! -f ./output/clang || ! -f ./output/cir2c ]]; then
   echo "Error: Expected binaries not found in ./output."
   echo "Contents of ./output:" >&2
   ls -lah ./output || true
@@ -64,11 +64,11 @@ echo "✓ Build complete!"
 echo
 echo "Binaries are available in ./output/"
 echo "  - clang:        ./output/clang"
-echo "  - xcfa-mapper:  ./output/xcfa-mapper"
+echo "  - cir2c:        ./output/cir2c"
 echo
 echo "Binary information:"
 file ./output/clang || true
-file ./output/xcfa-mapper || true
+file ./output/cir2c || true
 echo
 sudo chown -R "$(id -u):$(id -g)" ./output
 ls -lh ./output/

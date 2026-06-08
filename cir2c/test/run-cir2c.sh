@@ -14,19 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Central CIR pipeline: source file → CIR → preprocess → [flatten] → xcfa-mapper → C
+# Central CIR pipeline: source file → CIR → preprocess → [flatten] → cir2c → C
 #
-# Vtable layout is always dumped from clang and passed to xcfa-mapper so that
+# Vtable layout is always dumped from clang and passed to cir2c so that
 # virtual-call labels are correct for C++ inputs. For C inputs the dump is
-# empty and xcfa-mapper ignores it harmlessly.
+# empty and cir2c ignores it harmlessly.
 #
-# Exit codes: 0 success, 2 clang failed, 3 cir-opt failed, 4 xcfa-mapper failed
+# Exit codes: 0 success, 2 clang failed, 3 cir-opt failed, 4 cir2c failed
 #
-# Usage: run-xcfa-mapper.sh [OPTIONS] <input-file> <output.c>
+# Usage: run-cir2c.sh [OPTIONS] <input-file> <output.c>
 # Options:
 #   --lang c|c++         Language (default: infer from file extension)
 #   --std STD            Standard (default: c23 or c++23)
-#   --flatten            Run cir-opt -cir-flatten-cfg before xcfa-mapper
+#   --flatten            Run cir-opt -cir-flatten-cfg before cir2c
 #   --mlir FILE          Save intermediate CIR MLIR to FILE (default: temp)
 #   --flat-mlir FILE     Save flattened MLIR to FILE (implies --flatten)
 
@@ -37,7 +37,7 @@ SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 CLANG="$SCRIPT_DIR/../../backend/bin/bin/clang"
 CLANGPP="$SCRIPT_DIR/../../backend/bin/bin/clang++"
 CIR_OPT="$SCRIPT_DIR/../../backend/bin/bin/cir-opt"
-XCFA_MAPPER="$SCRIPT_DIR/../build/xcfa-mapper"
+CIR2C="$SCRIPT_DIR/../build/cir2c"
 
 LANG=""
 STD=""
@@ -86,7 +86,7 @@ CLANG_BIN="$CLANG"
 [[ "$LANG" == "c++" ]] && CLANG_BIN="$CLANGPP"
 
 # Validate tools
-for tool in "$CLANG_BIN" "$XCFA_MAPPER"; do
+for tool in "$CLANG_BIN" "$CIR2C"; do
     [[ -x "$tool" ]] || { echo "Error: tool not found: $tool" >&2; exit 1; }
 done
 [[ "$FLATTEN" == true ]] && { [[ -x "$CIR_OPT" ]] || { echo "Error: cir-opt not found: $CIR_OPT" >&2; exit 1; }; }
@@ -127,7 +127,7 @@ else
     MAPPER_INPUT="$PRE_FILE"
 fi
 
-# Step 4: xcfa-mapper
-MAPPER_CMD=("$XCFA_MAPPER")
+# Step 4: cir2c
+MAPPER_CMD=("$CIR2C")
 MAPPER_CMD+=("$MAPPER_INPUT" "$OUTPUT_C")
 "${MAPPER_CMD[@]}" || exit 4
