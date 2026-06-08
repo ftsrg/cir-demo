@@ -67,6 +67,8 @@ export default function App() {
 
   const [language, setLanguage] = useState('cpp')
   const [flatten, setFlatten] = useState(false)
+  const [externalizeIo, setExternalizeIo] = useState(true)
+  const [externalizeContainers, setExternalizeContainers] = useState(false)
   const [examplesAnchor, setExamplesAnchor] = useState(null)
   const openExamples = Boolean(examplesAnchor)
   const onOpenExamples = (e) => setExamplesAnchor(e.currentTarget)
@@ -74,7 +76,7 @@ export default function App() {
   const onSelectExample = (path) => { setSelectedExample(path); onCloseExamples(); }
 
   const onGenerate = async () => {
-    const resp = await api.post('api/generate', { code, language, flatten })
+    const resp = await api.post('api/generate', { code, language, flatten, externalizeIo, externalizeContainers })
     // Ensure missing keys are present to avoid undefined in OutputTabs
     const data = resp.data || {}
     setOutputs({
@@ -128,6 +130,26 @@ export default function App() {
             >
               <MenuItem value="nonflat">Non-flat CIR</MenuItem>
               <MenuItem value="flat">Flat CIR</MenuItem>
+            </Select>
+            <Select
+              value={externalizeIo ? 'io-ext' : 'io-keep'}
+              onChange={(e) => setExternalizeIo(e.target.value === 'io-ext')}
+              size="small"
+              variant="outlined"
+              sx={{ color: 'inherit', '.MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.5)' }, '.MuiSvgIcon-root': { color: 'inherit' }, fontSize: 14, height: 32 }}
+            >
+              <MenuItem value="io-ext">I/O: __VERIFIER_log</MenuItem>
+              <MenuItem value="io-keep">I/O: keep</MenuItem>
+            </Select>
+            <Select
+              value={externalizeContainers ? 'cont-ext' : 'cont-keep'}
+              onChange={(e) => setExternalizeContainers(e.target.value === 'cont-ext')}
+              size="small"
+              variant="outlined"
+              sx={{ color: 'inherit', '.MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.5)' }, '.MuiSvgIcon-root': { color: 'inherit' }, fontSize: 14, height: 32 }}
+            >
+              <MenuItem value="cont-keep">Containers: keep</MenuItem>
+              <MenuItem value="cont-ext">Containers: nondet</MenuItem>
             </Select>
             <Button color="inherit" onClick={onGenerate}>Generate</Button>
           </Box>

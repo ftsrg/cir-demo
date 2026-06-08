@@ -207,6 +207,9 @@ app.post('/api/generate', async (req, res) => {
   // flatten=false (default): skip flattening; cir2c receives structured CIR directly.
   // flatten=true: run cir-opt -cir-flatten-cfg before cir2c.
   const flatten = req.body.flatten === true;
+  // Issue #7: externalize std I/O (cout << ...) by default; container ops opt-in.
+  const externalizeIo = req.body.externalizeIo !== false;
+  const externalizeContainers = req.body.externalizeContainers === true;
   const ext = language === 'c' ? 'c' : 'cpp';
   const clangBin = language === 'c' ? CLANG_BIN : CLANGPP_BIN;
   const tmpDir = path.join(__dirname, '..', 'tmp');
@@ -309,7 +312,10 @@ app.post('/api/generate', async (req, res) => {
 
       const outC = path.join(tmpDir, `${base}.c`);
       const outTrace = path.join(tmpDir, `${base}.trace.json`);
-      const mapArgs = ['--monitor-json', outTrace, mlirPath, outC];
+      const mapArgs = ['--monitor-json', outTrace];
+      mapArgs.push(externalizeIo ? '--externalize-io' : '--no-externalize-io');
+      if (externalizeContainers) mapArgs.push('--externalize-containers');
+      mapArgs.push(mlirPath, outC);
       const mapResult = await execFileAsync(cir2cBin, mapArgs);
       cOutput.code = (mapResult && typeof mapResult.code !== 'undefined') ? mapResult.code : 1;
       cOutput.stderr = (mapResult && mapResult.stderr) ? mapResult.stderr : '';

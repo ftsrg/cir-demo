@@ -92,6 +92,31 @@ public:
   /// declared them.
   void ensureMallocFreeDeclared(std::ostream &out);
 
+  // ── STD/STL externalization options (issue #7) ──────────────────────────
+  /// When enabled (default), calls to std::ostream's operator<< are modelled
+  /// as __VERIFIER_log(value) calls instead of emitting the real I/O.
+  void setExternalizeIO(bool v) { externalizeIO_ = v; }
+  bool externalizeIO() const { return externalizeIO_; }
+  /// When enabled (default off), calls to common STL container methods become
+  /// no-ops (void result) or nondeterministic values (non-void result).
+  void setExternalizeContainers(bool v) { externalizeContainers_ = v; }
+  bool externalizeContainers() const { return externalizeContainers_; }
+
+  /// Set by the call handler when a call was replaced by an externalized model
+  /// (e.g. __VERIFIER_log); lets the caller skip the post-call unwind guard.
+  void setLastCallExternalized(bool v) { lastCallExternalized_ = v; }
+  bool lastCallExternalized() const { return lastCallExternalized_; }
+
+  /// Demangle an Itanium C++ symbol (returns the input unchanged when it is not
+  /// a mangled C++ name).
+  std::string demangle(llvm::StringRef mangled) const;
+
+  /// Emit `extern void __VERIFIER_log();` at most once.
+  void ensureVerifierLogDeclared(std::ostream &out);
+  /// Emit `extern <ctype> __VERIFIER_nondet_<suffix>(void);` once per suffix.
+  void ensureVerifierNondetDeclared(std::ostream &out, const std::string &ctype,
+                                    const std::string &suffix);
+
   /// Map a single function. Returns true on success, false on unrecoverable error.
   bool mapFunc(mlir::Operation *fop, std::ostream &out);
 
@@ -223,6 +248,12 @@ private:
   // Set once the malloc/free externs needed by synthesised operator
   // new/delete stubs have been emitted, so they appear at most once.
   bool mallocFreeDeclEmitted_ = false;
+  // STD/STL externalization (issue #7). IO on by default; containers off.
+  bool externalizeIO_ = true;
+  bool externalizeContainers_ = false;
+  bool lastCallExternalized_ = false;
+  bool verifierLogDeclEmitted_ = false;
+  std::set<std::string> verifierNondetDeclared_;
   // Alloca result Values that are accessed atomically / volatilely.
   llvm::DenseSet<mlir::Value> atomicAllocaValues_;
   llvm::DenseSet<mlir::Value> volatileAllocaValues_;

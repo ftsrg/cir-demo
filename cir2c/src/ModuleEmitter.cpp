@@ -181,6 +181,24 @@ void Mapper::ensureMallocFreeDeclared(std::ostream &out) {
   mallocFreeDeclEmitted_ = true;
 }
 
+std::string Mapper::demangle(llvm::StringRef mangled) const {
+  return demangleSymbol(mangled.str());
+}
+
+void Mapper::ensureVerifierLogDeclared(std::ostream &out) {
+  if (verifierLogDeclEmitted_) return;
+  // Unspecified parameter list so any inserted value type is accepted.
+  out << "extern void __VERIFIER_log();\n";
+  verifierLogDeclEmitted_ = true;
+}
+
+void Mapper::ensureVerifierNondetDeclared(std::ostream &out,
+                                          const std::string &ctype,
+                                          const std::string &suffix) {
+  if (!verifierNondetDeclared_.insert(suffix).second) return;
+  out << "extern " << ctype << " __VERIFIER_nondet_" << suffix << "(void);\n";
+}
+
 bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
   auto sym = fop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
   if (!sym) return true;
