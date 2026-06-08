@@ -310,7 +310,7 @@ app.post('/api/generate', async (req, res) => {
       const outC = path.join(tmpDir, `${base}.c`);
       const outTrace = path.join(tmpDir, `${base}.trace.json`);
       const mapArgs = ['--monitor-json', outTrace, mlirPath, outC];
-      const mapResult = await execFileAsync(cir2cbin, mapArgs);
+      const mapResult = await execFileAsync(cir2cBin, mapArgs);
       cOutput.code = (mapResult && typeof mapResult.code !== 'undefined') ? mapResult.code : 1;
       cOutput.stderr = (mapResult && mapResult.stderr) ? mapResult.stderr : '';
       if (mapResult && mapResult.code === 0) {
