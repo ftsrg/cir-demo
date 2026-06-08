@@ -18,9 +18,27 @@ set -euo pipefail
 
 # Build static binaries using Docker Buildx (BuildKit)
 # This script mirrors the GitHub Actions workflow using the Dockerfile in docker/static-build.Dockerfile
+#
+# Usage: build-static-binaries.sh [--fast]
+#   --fast  Skip the LLVM rebuild; build only cir2c against the shared LLVM in the
+#           base image (FULL_STATIC=false).  Much faster but clang/cir-opt in the
+#           output are the pre-built dynamic binaries from ghcr.io/ftsrg/cir-demo-llvm.
 
-echo "Building static binaries with Docker Buildx…"
-echo "This may take a while (1-2 hours depending on your hardware)."
+FULL_STATIC=true
+for arg in "$@"; do
+  case "$arg" in
+    --fast) FULL_STATIC=false ;;
+    *) echo "Unknown argument: $arg" >&2; exit 1 ;;
+  esac
+done
+
+if [[ "$FULL_STATIC" == "true" ]]; then
+  echo "Building static binaries with Docker Buildx…"
+  echo "This may take a while (1-2 hours depending on your hardware)."
+else
+  echo "Building static binaries with Docker Buildx (fast / cir2c-only mode)…"
+  echo "Skipping LLVM rebuild; clang/cir-opt will be the pre-built dynamic binaries."
+fi
 echo
 
 # Ensure docker is available
@@ -47,9 +65,12 @@ fi
 rm -rf ./output
 sudo docker buildx build \
   -f docker/static-build.Dockerfile \
+  --build-arg FULL_STATIC="$FULL_STATIC" \
   --target=export \
   --output type=local,dest=./output \
   .
+
+sudo chown -R "$(id -u):$(id -g)" ./output 
 
 # The export stage places the stripped binaries at the root of ./output
 if [[ ! -f ./output/clang || ! -f ./output/cir2c ]]; then

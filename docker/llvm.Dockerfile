@@ -9,7 +9,7 @@ RUN apt-get update \
     clang lld wget curl ca-certificates libstdc++6 libgomp1 libmpfr-dev \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /tmp
+WORKDIR /app
 
 # Clone ClangIR (shallow) and build LLVM with CLANG_ENABLE_CIR
 RUN git clone --depth=1 https://github.com/llvm/llvm-project.git && \
@@ -25,8 +25,7 @@ RUN git clone --depth=1 https://github.com/llvm/llvm-project.git && \
         -DCMAKE_INSTALL_PREFIX=/opt/cir \
         -DLLVM_FORCE_VC_REVISION=$(head -c7 llvm-project/.git/refs/heads/main)-ftsrg && \
     cmake --build build -j$(nproc) && \
-    cmake --install build && \
-    rm -rf /tmp/llvm-project /tmp/build
+    cmake --install build
 
 ENV PATH="/opt/cir/bin:${PATH}"
 

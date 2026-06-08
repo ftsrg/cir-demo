@@ -72,3 +72,39 @@ Notes:
 - Building LLVM is resource- and time-intensive. Building it once locally and pushing it to ghcr is usually faster overall.
 - The `docker/llvm.Dockerfile` installs LLVM into `/opt/cir` (this is what the backend copies into its final image).
 
+Building static binaries
+------------------------
+
+`docker/static-build.Dockerfile` produces self-contained binaries (`clang`, `cir-opt`, `clang++`, `cir2c`) by building on top of `ghcr.io/ftsrg/cir-demo-llvm:latest`.
+
+It has two modes controlled by the `FULL_STATIC` build argument:
+
+| `FULL_STATIC` | What happens | Typical use |
+|---|---|---|
+| `true` (default) | Rebuilds LLVM with `BUILD_SHARED_LIBS=OFF` and installs to `/opt/cir-static`; builds cir2c against the resulting `.a` archives. All exported binaries are statically linked against LLVM. | Release / CI artifacts |
+| `false` | Skips the LLVM rebuild entirely; builds only cir2c linked against the shared LLVM already in `/opt/cir`. clang/cir-opt in the export are the pre-built dynamic binaries from the base image. | Fast iteration / local testing |
+
+In both modes `-static-libgcc -static-libstdc++` is applied, so the C++ runtime is never a dynamic dependency.
+
+Export the binaries directly to the current directory with `--output`:
+
+```sh
+# Full static build (default) — slow, suitable for release artifacts
+docker build -f docker/static-build.Dockerfile \
+    --target export --output . .
+
+# cir2c-only static — skips the LLVM rebuild, much faster
+docker build -f docker/static-build.Dockerfile \
+    --build-arg FULL_STATIC=false \
+    --target export --output . .
+```
+
+The output directory will contain: `clang`, `clang++`, `cir-opt`, `cir2c`, and an `include/` tree with the Clang resource headers.
+
+To run a quick smoke-test instead of exporting, use `--target runtime`:
+
+```sh
+docker build -f docker/static-build.Dockerfile --target runtime -t cir2c-test .
+docker run --rm cir2c-test clang --version
+```
+
