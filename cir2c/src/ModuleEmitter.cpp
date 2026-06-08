@@ -152,16 +152,24 @@ void Mapper::prepareFunctionNames(mlir::ModuleOp module) {
       list.emplace_back(mangled, san);
     }
   });
-  // Count usages of each demangled/sanitized name
-  std::unordered_map<std::string,int> counts;
-  for (auto &p : list) counts[p.second]++;
-  // Decide final output name: if demangled name is unique use it, otherwise
-  // keep the mangled name to avoid collisions.
+  // Assign a unique, readable output name to every symbol. A demangled name
+  // that does not clash is used verbatim. When several distinct symbols
+  // demangle to the same identifier — e.g. a class' default, copy and move
+  // constructors (which all demangle to `Class::Class`) or overloaded
+  // functions whose argument lists were stripped — a deterministic numeric
+  // suffix is appended so each function keeps a readable *and* unique name
+  // instead of reverting to the raw mangled symbol. Names are assigned in
+  // sorted mangled-name order so the result is stable across runs.
+  std::sort(list.begin(), list.end());
+  std::set<std::string> used;
   for (auto &p : list) {
-    const auto &mangled = p.first;
-    const auto &demSan = p.second;
-    if (counts[demSan] == 1) functionOutputNames[mangled] = demSan;
-    else functionOutputNames[mangled] = mangled;
+    const std::string &mangled = p.first;
+    std::string base = p.second.empty() ? mangleLabel(mangled) : p.second;
+    std::string chosen = base;
+    for (unsigned n = 2; used.count(chosen); ++n)
+      chosen = base + "_" + std::to_string(n);
+    used.insert(chosen);
+    functionOutputNames[mangled] = chosen;
   }
 }
 
