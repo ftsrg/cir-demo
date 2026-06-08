@@ -111,6 +111,21 @@ public:
   /// a mangled C++ name).
   std::string demangle(llvm::StringRef mangled) const;
 
+  /// Name-based predicates for STD/STL externalization, shared by the call
+  /// handler and the dead-code elision pass so both agree on which calls are
+  /// modelled away. Operate on a *demangled* symbol name.
+  static bool isIoInsertionName(const std::string &demangled);
+  static bool isStlContainerMethodName(const std::string &demangled,
+                                       std::string &method);
+
+  /// Compute which function definitions are reachable, so unreachable inline /
+  /// weak definitions (e.g. the std I/O machinery left dead after I/O
+  /// externalization) can be elided from the output. Computed once.
+  void computeReachableDefs(mlir::ModuleOp module);
+  /// True when a function definition should be dropped: it is an inline/weak
+  /// definition that is not reachable from any retained root.
+  bool funcDefElided(llvm::StringRef sym) const;
+
   /// Emit `extern void __VERIFIER_log();` at most once.
   void ensureVerifierLogDeclared(std::ostream &out);
   /// Emit `extern <ctype> __VERIFIER_nondet_<suffix>(void);` once per suffix.
@@ -254,6 +269,10 @@ private:
   bool lastCallExternalized_ = false;
   bool verifierLogDeclEmitted_ = false;
   std::set<std::string> verifierNondetDeclared_;
+  // Dead-code elision state (issue #7 follow-up).
+  bool reachabilityComputed_ = false;
+  std::set<std::string> reachableDefs_;   // function symbols to retain
+  std::set<std::string> droppableDefs_;   // inline/weak defs eligible to drop
   // Alloca result Values that are accessed atomically / volatilely.
   llvm::DenseSet<mlir::Value> atomicAllocaValues_;
   llvm::DenseSet<mlir::Value> volatileAllocaValues_;
