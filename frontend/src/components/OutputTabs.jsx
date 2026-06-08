@@ -23,13 +23,13 @@ import ComparisonView from './ComparisonView'
 export default function OutputTabs({ outputs = {}, flatten = false }) {
   const [tab, setTab] = useState(0)
   const [stderrOpen, setStderrOpen] = useState(true)
+  // The Comparison view already shows the CIR (and its C output) side by side,
+  // so the standalone LLVM IR and Clang IR tabs are redundant. Comparison is the
+  // default (first) view.
   const tabDefs = [
-    { key: 'llvm', label: 'LLVM IR' },
-    { key: 'clang', label: 'Clang IR' },
-    ...(flatten ? [{ key: 'flat_clang', label: 'Flat Clang IR' }] : []),
+    { key: 'comparison', label: 'Comparison' },
     { key: 'c', label: 'C' },
-    { key: 'xcfa', label: 'XCFA' },
-    { key: 'comparison', label: 'Comparison' }
+    { key: 'xcfa', label: 'XCFA' }
   ]
   const safeTab = Math.min(tab, tabDefs.length - 1)
   const activeKey = tabDefs[safeTab].key
