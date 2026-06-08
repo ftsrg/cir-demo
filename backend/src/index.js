@@ -138,23 +138,65 @@ const execFileAsync = (file, args, opts = {}) => new Promise((resolve) => {
   });
 });
 
-function buildComparisonPayload(mlirText, cText, traceEntries) {
+// Build a resolver that maps a 1-based CIR/MLIR line number to the original
+// source line it originated from, using the `loc(...)` debug info clang embeds
+// in the CIR. Aliases (`#locN = loc("file":L:C)`) and fused locations
+// (`#locN = loc(fused[#locA, #locB])`) are resolved to a concrete source line.
+function buildMlirToSourceResolver(mlirText) {
+  const lines = String(mlirText || '').split('\n');
+  const concrete = new Map(); // locName -> source line
+  const fused = new Map();     // locName -> [locName]
+  for (const line of lines) {
+    let m = line.match(/^\s*#(loc\w*)\s*=\s*loc\("[^"]*":(\d+):\d+\)/);
+    if (m) { concrete.set(m[1], parseInt(m[2], 10)); continue; }
+    m = line.match(/^\s*#(loc\w*)\s*=\s*loc\(fused\[([^\]]*)\]\)/);
+    if (m) fused.set(m[1], [...m[2].matchAll(/#(loc\w*)/g)].map(x => x[1]));
+  }
+  const resolveName = (name, seen) => {
+    if (seen.has(name)) return null;
+    seen.add(name);
+    if (concrete.has(name)) return concrete.get(name);
+    for (const child of fused.get(name) || []) {
+      const r = resolveName(child, seen);
+      if (r) return r;
+    }
+    return null;
+  };
+  return (mlirLine) => {
+    if (!Number.isInteger(mlirLine) || mlirLine < 1 || mlirLine > lines.length) return null;
+    const text = lines[mlirLine - 1];
+    let m = text.match(/loc\(#(loc\w*)\)/);
+    if (m) return resolveName(m[1], new Set());
+    m = text.match(/loc\("[^"]*":(\d+):\d+\)/);
+    return m ? parseInt(m[1], 10) : null;
+  };
+}
+
+function buildComparisonPayload(mlirText, cText, traceEntries, sourceText) {
   const mlir = String(mlirText || '');
   const c = String(cText || '');
+  const source = String(sourceText || '');
   const entries = Array.isArray(traceEntries) ? traceEntries : [];
-  const mappings = entries.map((entry, idx) => ({
-    index: typeof entry.index === 'number' ? entry.index : idx,
-    opName: entry.opName || '',
-    mapped: Boolean(entry.mapped),
-    inputText: entry.inputText || '',
-    outputText: entry.outputText || '',
-    mlirStartLine: Number.isInteger(entry.mlirStartLine) ? entry.mlirStartLine : null,
-    mlirEndLine: Number.isInteger(entry.mlirEndLine) ? entry.mlirEndLine : null,
-    cStartLine: Number.isInteger(entry.cStartLine) ? entry.cStartLine : null,
-    cEndLine: Number.isInteger(entry.cEndLine) ? entry.cEndLine : null
-  }));
+  const mlirToSource = buildMlirToSourceResolver(mlir);
+  const mappings = entries.map((entry, idx) => {
+    const mlirStartLine = Number.isInteger(entry.mlirStartLine) ? entry.mlirStartLine : null;
+    const srcLine = mlirToSource(mlirStartLine);
+    return {
+      index: typeof entry.index === 'number' ? entry.index : idx,
+      opName: entry.opName || '',
+      mapped: Boolean(entry.mapped),
+      inputText: entry.inputText || '',
+      outputText: entry.outputText || '',
+      mlirStartLine,
+      mlirEndLine: Number.isInteger(entry.mlirEndLine) ? entry.mlirEndLine : null,
+      cStartLine: Number.isInteger(entry.cStartLine) ? entry.cStartLine : null,
+      cEndLine: Number.isInteger(entry.cEndLine) ? entry.cEndLine : null,
+      srcStartLine: srcLine,
+      srcEndLine: srcLine
+    };
+  });
 
-  return { mlir, c, mappings };
+  return { source, mlir, c, mappings };
 }
 
 // clang version endpoint: execute the local clang binary --version
@@ -369,9 +411,9 @@ app.post('/api/generate', async (req, res) => {
     xcfa: { code: xcfa.code, stderrLength: (xcfa.stderr || '').length, stdoutLength: (xcfa.stdout || '').length }
   });
 
-  let comparison = { mlir: flatOut?.stdout || '', c: '', mappings: [] };
+  let comparison = { source: code, mlir: flatOut?.stdout || '', c: '', mappings: [] };
   if (cOutput.code === 0 && cOutput.stdout) {
-    comparison = buildComparisonPayload(flatOut?.stdout || '', cOutput.stdout, trace);
+    comparison = buildComparisonPayload(flatOut?.stdout || '', cOutput.stdout, trace, code);
   }
 
   res.json({ llvm: llvmOut, clang: clangOut, flat_clang: flatOut, xcfa: xcfa, c: cOutput, comparison });
