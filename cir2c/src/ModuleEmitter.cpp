@@ -25,8 +25,10 @@
 #include <mlir/IR/Operation.h>
 #include <mlir/IR/Attributes.h>
 #include <mlir/IR/Types.h>
+#include <mlir/IR/SymbolTable.h>
 
 #include <clang/CIR/Dialect/IR/CIRDialect.h>
+#include <clang/CIR/Dialect/IR/CIROpsEnums.h>
 
 #include <cxxabi.h>
 #include <cctype>
@@ -187,6 +189,162 @@ void Mapper::ensureMallocFreeDeclared(std::ostream &out) {
   out << "extern void *malloc(unsigned long);\n";
   out << "extern void free(void*);\n";
   mallocFreeDeclEmitted_ = true;
+}
+
+std::string Mapper::demangle(llvm::StringRef mangled) const {
+  return demangleSymbol(mangled.str());
+}
+
+void Mapper::ensureVerifierLogDeclared(std::ostream &out) {
+  if (verifierLogDeclEmitted_) return;
+  // Unspecified parameter list so any inserted value type is accepted.
+  out << "extern void __VERIFIER_log();\n";
+  verifierLogDeclEmitted_ = true;
+}
+
+void Mapper::ensureVerifierNondetDeclared(std::ostream &out,
+                                          const std::string &ctype,
+                                          const std::string &suffix) {
+  if (!verifierNondetDeclared_.insert(suffix).second) return;
+  out << "extern " << ctype << " __VERIFIER_nondet_" << suffix << "(void);\n";
+}
+
+bool Mapper::isIoInsertionName(const std::string &dem) {
+  // std::ostream's operator<< (member or free) — the building block of cout<<.
+  return dem.find("operator<<") != std::string::npos &&
+         dem.find("ostream") != std::string::npos;
+}
+
+bool Mapper::isStlContainerMethodName(const std::string &dem,
+                                      std::string &method) {
+  static const char *containers[] = {
+    "std::vector<", "std::deque<", "std::list<", "std::forward_list<",
+    "std::stack<", "std::queue<", "std::priority_queue<",
+    "std::set<", "std::map<", "std::unordered_set<", "std::unordered_map<",
+    "std::basic_string<"
+  };
+  bool isContainer = false;
+  for (const char *c : containers)
+    if (dem.find(c) != std::string::npos) { isContainer = true; break; }
+  if (!isContainer) return false;
+  // Trailing method name: "std::vector<int,...>::push_back(int&&)" -> push_back.
+  std::string::size_type paren = dem.find('(');
+  std::string head = paren == std::string::npos ? dem : dem.substr(0, paren);
+  std::string::size_type cc = head.rfind("::");
+  method = cc == std::string::npos ? std::string() : head.substr(cc + 2);
+  static const std::set<std::string> ops = {
+    "push_back", "emplace_back", "push_front", "emplace_front", "push",
+    "emplace", "insert", "pop_back", "pop_front", "pop", "clear", "reserve",
+    "resize", "shrink_to_fit", "assign", "erase",
+    "back", "front", "top", "at", "data", "size", "length", "empty",
+    "capacity", "count", "find", "begin", "end", "rbegin", "rend", "peek"
+  };
+  return ops.count(method) > 0;
+}
+
+bool Mapper::funcDefElided(llvm::StringRef sym) const {
+  std::string s = sym.str();
+  if (reachableDefs_.count(s)) return false;
+  // Unreachable inline/weak definitions, and declaration-only functions that
+  // nothing emitted references (dead prototypes), are both elided.
+  return droppableDefs_.count(s) || declOnlyFuncs_.count(s);
+}
+
+void Mapper::computeReachableDefs(mlir::ModuleOp module) {
+  if (reachabilityComputed_) return;
+  reachabilityComputed_ = true;
+
+  std::unordered_map<std::string, std::set<std::string>> edges; // caller -> callees
+  std::vector<std::string> work;                                // reachable frontier
+
+  auto symOf = [](cir::FuncOp f) -> std::string {
+    auto s = f->getAttrOfType<mlir::StringAttr>(
+        mlir::SymbolTable::getSymbolAttrName());
+    return s ? s.getValue().str() : std::string();
+  };
+  auto markRoot = [&](const std::string &s) {
+    if (!s.empty() && reachableDefs_.insert(s).second) work.push_back(s);
+  };
+
+  auto calleeOf = [](mlir::Operation *op) -> std::string {
+    if (auto sa = op->getAttrOfType<mlir::StringAttr>("callee"))
+      return sa.getValue().str();
+    if (auto sa2 = op->getAttrOfType<mlir::SymbolRefAttr>("callee"))
+      return sa2.getRootReference().str();
+    return std::string();
+  };
+
+  // A call edge is dropped when the call is externalized (issue #7), because
+  // the emitted code no longer references the callee.
+  auto callIsExternalized = [&](mlir::Operation *user, const std::string &sym) {
+    if (!mlir::isa<cir::CallOp>(user) && !mlir::isa<cir::TryCallOp>(user))
+      return false;
+    std::string callee = calleeOf(user);
+    if (callee != sym) return false; // sym used as an argument, not the callee
+    std::string dem = demangleSymbol(sym), method;
+    return (externalizeIO_ && isIoInsertionName(dem)) ||
+           (externalizeContainers_ && isStlContainerMethodName(dem, method));
+  };
+
+  // A `cir.get_global @f` whose result feeds *only* externalized I/O calls is a
+  // stream manipulator (e.g. std::endl) that the emitter discards, so it never
+  // references @f. Drop that edge too, otherwise the whole manipulator chain
+  // would be kept alive although it is absent from the output.
+  auto refIsDiscardedManipulator = [&](mlir::Operation *user) {
+    if (!externalizeIO_) return false;
+    auto gg = mlir::dyn_cast<cir::GetGlobalOp>(user);
+    if (!gg || gg.getResult().use_empty()) return false;
+    for (mlir::Operation *cu : gg.getResult().getUsers()) {
+      if (!mlir::isa<cir::CallOp>(cu) && !mlir::isa<cir::TryCallOp>(cu))
+        return false;
+      std::string callee = calleeOf(cu);
+      if (callee.empty() || !isIoInsertionName(demangleSymbol(callee)))
+        return false;
+    }
+    return true;
+  };
+
+  // Index defined functions; non-inline definitions are always-kept roots,
+  // inline/weak ones are elision candidates reached only through edges.
+  module->walk([&](cir::FuncOp f) {
+    std::string sym = symOf(f);
+    if (sym.empty()) return;
+    mlir::Operation *fop = f.getOperation();
+    bool hasBody = fop->getNumRegions() > 0 && !fop->getRegion(0).empty();
+    if (!hasBody) { declOnlyFuncs_.insert(sym); return; }
+    cir::GlobalLinkageKind lk = f.getLinkage();
+    bool droppable = cir::isLinkOnceLinkage(lk) || cir::isWeakLinkage(lk) ||
+                     cir::isAvailableExternallyLinkage(lk);
+    if (droppable) droppableDefs_.insert(sym);
+    else markRoot(sym);
+    if (auto uses = mlir::SymbolTable::getSymbolUses(f.getOperation())) {
+      for (const auto &u : *uses) {
+        std::string callee = u.getSymbolRef().getRootReference().str();
+        if (callIsExternalized(u.getUser(), callee) ||
+            refIsDiscardedManipulator(u.getUser()))
+          continue;
+        edges[sym].insert(callee);
+      }
+    }
+  });
+
+  // `main` and any function referenced by a global initializer (vtables,
+  // function-pointer tables) are roots regardless of linkage.
+  markRoot("main");
+  module->walk([&](cir::GlobalOp g) {
+    if (auto uses = mlir::SymbolTable::getSymbolUses(g.getOperation()))
+      for (const auto &u : *uses)
+        markRoot(u.getSymbolRef().getRootReference().str());
+  });
+
+  // Propagate reachability across the call graph.
+  while (!work.empty()) {
+    std::string cur = work.back();
+    work.pop_back();
+    auto it = edges.find(cur);
+    if (it == edges.end()) continue;
+    for (const std::string &callee : it->second) markRoot(callee);
+  }
 }
 
 bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
@@ -783,6 +941,11 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // emitting any function declarations/definitions so we can avoid name
   // collisions when demangling.
   prepareFunctionNames(module);
+
+  // Determine which function definitions are reachable so unreachable inline /
+  // weak definitions (e.g. the std I/O machinery left dead after I/O
+  // externalization) can be elided. Computed once for the whole module tree.
+  computeReachableDefs(module);
 
   // Pre-scan: detect _Atomic and volatile qualifiers on global variables and
   // local allocas by inspecting cir.load / cir.store operations.  When a
@@ -1469,6 +1632,9 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     bool anyDecl = false;
     for (auto &op : module.getOps()) {
       if (llvm::isa<cir::FuncOp>(op)) {
+        if (auto sym = op.getAttrOfType<mlir::StringAttr>(
+                mlir::SymbolTable::getSymbolAttrName()))
+          if (funcDefElided(sym.getValue())) continue; // unreachable inline def
         emitFuncForwardDecl(&op, out);
         anyDecl = true;
       }
@@ -1518,6 +1684,9 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     if (llvm::isa<cir::FuncOp>(op)) {
       bool hasBody = (op.getNumRegions() > 0 && !op.getRegion(0).empty());
       if (hasBody) {
+        if (auto sym = op.getAttrOfType<mlir::StringAttr>(
+                mlir::SymbolTable::getSymbolAttrName()))
+          if (funcDefElided(sym.getValue())) continue; // unreachable inline def
         if (!mapFunc(&op, out)) return false;
       }
     }

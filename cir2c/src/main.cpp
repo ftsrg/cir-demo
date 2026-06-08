@@ -42,6 +42,14 @@ using namespace cir2c;
 int main(int argc, char **argv) {
   const char *monitorJsonFile = nullptr;
   std::vector<std::string> positional;
+  // Issue #7: I/O externalization on by default; container externalization off.
+  bool externalizeIO = true;
+  bool externalizeContainers = false;
+
+  const char *usage =
+      "Usage: cir2c [--monitor-json <trace.json>] "
+      "[--[no-]externalize-io] [--[no-]externalize-containers] "
+      "<input.mlir> <output.c>\n";
 
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
@@ -49,9 +57,13 @@ int main(int argc, char **argv) {
       llvm::outs() << "cir2c " << CIR2C_VERSION << "\n";
       return 0;
     }
+    if (arg == "--externalize-io") { externalizeIO = true; continue; }
+    if (arg == "--no-externalize-io") { externalizeIO = false; continue; }
+    if (arg == "--externalize-containers") { externalizeContainers = true; continue; }
+    if (arg == "--no-externalize-containers") { externalizeContainers = false; continue; }
     if (arg == "--monitor-json") {
       if (i + 1 >= argc) {
-        llvm::errs() << "Usage: cir2c [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
+        llvm::errs() << usage;
         return 2;
       }
       monitorJsonFile = argv[++i];
@@ -61,7 +73,7 @@ int main(int argc, char **argv) {
   }
 
   if (positional.size() != 2) {
-    llvm::errs() << "Usage: cir2c [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
+    llvm::errs() << usage;
     return 2;
   }
 
@@ -110,6 +122,8 @@ int main(int argc, char **argv) {
   }
 
   Mapper mapper;
+  mapper.setExternalizeIO(externalizeIO);
+  mapper.setExternalizeContainers(externalizeContainers);
   registerBuiltinHandlers(mapper);
 
   std::ofstream ofs(outFile);

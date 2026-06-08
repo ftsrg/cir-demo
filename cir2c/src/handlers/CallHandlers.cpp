@@ -30,6 +30,14 @@ using namespace mlir;
 
 namespace cir2c {
 
+// std::ostream / STL method recognition lives on Mapper so the call handler and
+// the dead-code elision pass agree (Mapper::isIoInsertionName / ...).
+static bool isFuncPtrType(mlir::Type t) {
+  if (auto pt = llvm::dyn_cast<cir::PointerType>(t))
+    return llvm::isa<cir::FuncType>(pt.getPointee());
+  return false;
+}
+
 /// Handlers for function call, return, and termination ops (cir.call,
 /// cir.try_call, cir.return, cir.unreachable, cir.trap).
 class CallHandlers : public HandlerModule {
@@ -51,6 +59,7 @@ private:
   static bool handleCallLikeOp(Operation *o, Mapper &m, std::ostream &out) {
     std::string callee;
     bool isIndirectCall = false;
+    m.setLastCallExternalized(false);
 
     // ── Virtual dispatch: check BEFORE the generic indirect-call path ────────
     // If the first operand is a tracked virtual function pointer (produced by
@@ -125,6 +134,45 @@ private:
     if (callee.empty()) {
       out << "  // " << ERR_CALL_NO_CALLEE << "\n";
       callee = "unknown_fn";
+    }
+
+    // ── STD/STL externalization (issue #7) ──────────────────────────────────
+    // Model standard-library operations a verifier does not care about instead
+    // of emitting their real (inlined) bodies' calls.
+    if (!isIndirectCall) {
+      std::string dem = m.demangle(callee);
+      // I/O: `cout << x` -> __VERIFIER_log(x). operator<< returns the stream,
+      // so bind the result to the stream operand to keep the chain working.
+      if (m.externalizeIO() && Mapper::isIoInsertionName(dem) && o->getNumOperands() >= 2) {
+        Value streamV = o->getOperand(0);
+        Value valueV = o->getOperand(o->getNumOperands() - 1);
+        if (!isFuncPtrType(valueV.getType())) { // skip manipulators (endl/flush)
+          m.ensureVerifierLogDeclared(out);
+          out << "  __VERIFIER_log(" << m.getOrCreateName(valueV) << ");\n";
+        }
+        if (o->getNumResults() > 0)
+          m.setName(o->getResult(0), m.getOrCreateName(streamV));
+        m.setLastCallExternalized(true);
+        return true;
+      }
+      // Containers (opt-in): value-returning ops become nondeterministic, void
+      // ops (insertions, pops) become no-ops.
+      std::string method;
+      if (m.externalizeContainers() && Mapper::isStlContainerMethodName(dem, method)) {
+        if (o->getNumResults() > 0) {
+          std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+          std::string suffix = Mapper::virtualCallTypeSuffix(ctype);
+          m.ensureVerifierNondetDeclared(out, ctype, suffix);
+          std::string tmp = m.freshName("stl");
+          out << "  " << ctype << " " << tmp << " = __VERIFIER_nondet_"
+              << suffix << "();\n";
+          m.setName(o->getResult(0), tmp);
+        } else {
+          out << "  // externalized STL op: " << method << "\n";
+        }
+        m.setLastCallExternalized(true);
+        return true;
+      }
     }
 
     // Map the callee to the chosen output name (demangled when unique) for direct calls
@@ -205,7 +253,7 @@ private:
     // Only emit the guard when the module actually uses EH ops: if no
     // cir.throw / cir.try / cir.try_call / etc. exist then __cir_exc_active
     // is never declared and the reference would produce a compile error.
-    if (!op.getNothrow() && m.hasExceptions()) {
+    if (!op.getNothrow() && m.hasExceptions() && !m.lastCallExternalized()) {
       out << "  if (__cir_exc_active) {\n";
       // Run any pending RAII destructors before propagating the exception.
       // emitPendingCleanups writes to `out` with its own indentation; we wrap
