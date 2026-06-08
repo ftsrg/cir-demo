@@ -93,6 +93,9 @@ export default function App() {
         <Toolbar>
           <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="h6" sx={{ fontSize: 16 }}>CIR Demo</Typography>
+            <Typography variant="caption" sx={{ opacity: 0.7, display: { xs: 'none', md: 'block' } }}>
+              C/C++ &rarr; verifier-friendly C via ClangIR
+            </Typography>
             <Button
               size="small"
               color="inherit"
@@ -101,6 +104,17 @@ export default function App() {
               aria-label="examples"
             >
               Examples
+            </Button>
+            <Button
+              size="small"
+              color="inherit"
+              component="a"
+              href="https://github.com/ftsrg/cir-demo"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="source repository"
+            >
+              GitHub
             </Button>
             <Popover open={openExamples} anchorEl={examplesAnchor} onClose={onCloseExamples} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
               <Box sx={{ width: 360 }}>
