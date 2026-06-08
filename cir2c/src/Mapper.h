@@ -273,6 +273,7 @@ private:
   bool reachabilityComputed_ = false;
   std::set<std::string> reachableDefs_;   // function symbols to retain
   std::set<std::string> droppableDefs_;   // inline/weak defs eligible to drop
+  std::set<std::string> declOnlyFuncs_;   // body-less declarations
   // Alloca result Values that are accessed atomically / volatilely.
   llvm::DenseSet<mlir::Value> atomicAllocaValues_;
   llvm::DenseSet<mlir::Value> volatileAllocaValues_;

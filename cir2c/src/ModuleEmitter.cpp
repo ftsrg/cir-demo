@@ -236,7 +236,10 @@ bool Mapper::isStlContainerMethodName(const std::string &dem,
 
 bool Mapper::funcDefElided(llvm::StringRef sym) const {
   std::string s = sym.str();
-  return droppableDefs_.count(s) && !reachableDefs_.count(s);
+  if (reachableDefs_.count(s)) return false;
+  // Unreachable inline/weak definitions, and declaration-only functions that
+  // nothing emitted references (dead prototypes), are both elided.
+  return droppableDefs_.count(s) || declOnlyFuncs_.count(s);
 }
 
 void Mapper::computeReachableDefs(mlir::ModuleOp module) {
@@ -255,20 +258,42 @@ void Mapper::computeReachableDefs(mlir::ModuleOp module) {
     if (!s.empty() && reachableDefs_.insert(s).second) work.push_back(s);
   };
 
+  auto calleeOf = [](mlir::Operation *op) -> std::string {
+    if (auto sa = op->getAttrOfType<mlir::StringAttr>("callee"))
+      return sa.getValue().str();
+    if (auto sa2 = op->getAttrOfType<mlir::SymbolRefAttr>("callee"))
+      return sa2.getRootReference().str();
+    return std::string();
+  };
+
   // A call edge is dropped when the call is externalized (issue #7), because
   // the emitted code no longer references the callee.
   auto callIsExternalized = [&](mlir::Operation *user, const std::string &sym) {
     if (!mlir::isa<cir::CallOp>(user) && !mlir::isa<cir::TryCallOp>(user))
       return false;
-    std::string callee;
-    if (auto sa = user->getAttrOfType<mlir::StringAttr>("callee"))
-      callee = sa.getValue().str();
-    else if (auto sa2 = user->getAttrOfType<mlir::SymbolRefAttr>("callee"))
-      callee = sa2.getRootReference().str();
+    std::string callee = calleeOf(user);
     if (callee != sym) return false; // sym used as an argument, not the callee
     std::string dem = demangleSymbol(sym), method;
     return (externalizeIO_ && isIoInsertionName(dem)) ||
            (externalizeContainers_ && isStlContainerMethodName(dem, method));
+  };
+
+  // A `cir.get_global @f` whose result feeds *only* externalized I/O calls is a
+  // stream manipulator (e.g. std::endl) that the emitter discards, so it never
+  // references @f. Drop that edge too, otherwise the whole manipulator chain
+  // would be kept alive although it is absent from the output.
+  auto refIsDiscardedManipulator = [&](mlir::Operation *user) {
+    if (!externalizeIO_) return false;
+    auto gg = mlir::dyn_cast<cir::GetGlobalOp>(user);
+    if (!gg || gg.getResult().use_empty()) return false;
+    for (mlir::Operation *cu : gg.getResult().getUsers()) {
+      if (!mlir::isa<cir::CallOp>(cu) && !mlir::isa<cir::TryCallOp>(cu))
+        return false;
+      std::string callee = calleeOf(cu);
+      if (callee.empty() || !isIoInsertionName(demangleSymbol(callee)))
+        return false;
+    }
+    return true;
   };
 
   // Index defined functions; non-inline definitions are always-kept roots,
@@ -278,7 +303,7 @@ void Mapper::computeReachableDefs(mlir::ModuleOp module) {
     if (sym.empty()) return;
     mlir::Operation *fop = f.getOperation();
     bool hasBody = fop->getNumRegions() > 0 && !fop->getRegion(0).empty();
-    if (!hasBody) return;
+    if (!hasBody) { declOnlyFuncs_.insert(sym); return; }
     cir::GlobalLinkageKind lk = f.getLinkage();
     bool droppable = cir::isLinkOnceLinkage(lk) || cir::isWeakLinkage(lk) ||
                      cir::isAvailableExternallyLinkage(lk);
@@ -287,8 +312,10 @@ void Mapper::computeReachableDefs(mlir::ModuleOp module) {
     if (auto uses = mlir::SymbolTable::getSymbolUses(f.getOperation())) {
       for (const auto &u : *uses) {
         std::string callee = u.getSymbolRef().getRootReference().str();
-        if (!callIsExternalized(u.getUser(), callee))
-          edges[sym].insert(callee);
+        if (callIsExternalized(u.getUser(), callee) ||
+            refIsDiscardedManipulator(u.getUser()))
+          continue;
+        edges[sym].insert(callee);
       }
     }
   });
