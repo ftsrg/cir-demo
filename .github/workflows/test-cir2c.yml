@@ -70,7 +70,7 @@ jobs:
         id: llvm
         run: |
           mkdir -p cir2c/test/llvm-eval/output
-          JOBS=4 RUN_INTEGRATION=0 RUN_ESBMC=0 \
+          JOBS=4 RUN_INTEGRATION=0 RUN_ESBMC=0 RUN_LLVM=1 \
             bash cir2c/test/run_tests.sh \
               --json-out /tmp/llvm.json \
             || true
@@ -81,7 +81,7 @@ jobs:
         id: esbmc
         run: |
           mkdir -p cir2c/test/esbmc-eval/output
-          JOBS=4 RUN_INTEGRATION=0 RUN_LLVM=0 \
+          JOBS=4 RUN_INTEGRATION=0 RUN_LLVM=0 RUN_ESBMC=1 \
             bash cir2c/test/run_tests.sh \
               --json-out /tmp/esbmc.json \
             || true

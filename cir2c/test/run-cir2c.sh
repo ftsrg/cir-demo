@@ -16,9 +16,6 @@
 
 # Central CIR pipeline: source file → CIR → preprocess → [flatten] → cir2c → C
 #
-# Vtable layout is always dumped from clang and passed to cir2c so that
-# virtual-call labels are correct for C++ inputs. For C inputs the dump is
-# empty and cir2c ignores it harmlessly.
 #
 # Exit codes: 0 success, 2 clang failed, 3 cir-opt failed, 4 cir2c failed
 #

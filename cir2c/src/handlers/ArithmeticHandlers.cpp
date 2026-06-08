@@ -57,6 +57,14 @@ public:
     m.registerTypedHandler<cir::AddOverflowOp>(handleAddOverflow);
     m.registerTypedHandler<cir::SubOverflowOp>(handleSubOverflow);
     m.registerTypedHandler<cir::MulOverflowOp>(handleMulOverflow);
+
+    // Floating-point arithmetic (separated from integer ops upstream)
+    m.registerTypedHandler<cir::FAddOp>(handleFAdd);
+    m.registerTypedHandler<cir::FSubOp>(handleFSub);
+    m.registerTypedHandler<cir::FMulOp>(handleFMul);
+    m.registerTypedHandler<cir::FDivOp>(handleFDiv);
+    m.registerTypedHandler<cir::FRemOp>(handleFRem);
+    m.registerTypedHandler<cir::FNegOp>(handleFNeg);
   }
 
 private:
@@ -260,6 +268,31 @@ private:
     if (o->getNumResults() > 0) m.setName(o->getResult(0), tmp);
     return true;
   }
+
+  // Floating-point binary arithmetic ops map to the same C operators as their
+  // integer counterparts; frem maps to __builtin_fmod (with f/l suffix).
+  static bool handleFAdd(cir::FAddOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "+"); }
+  static bool handleFSub(cir::FSubOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "-"); }
+  static bool handleFMul(cir::FMulOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "*"); }
+  static bool handleFDiv(cir::FDivOp op, Mapper &m, std::ostream &out) { return handleBinaryOpImpl(op.getOperation(), m, out, "/"); }
+
+  // cir.frem is IEEE-754 remainder with truncation semantics, equivalent to fmod.
+  static bool handleFRem(cir::FRemOp op, Mapper &m, std::ostream &out) {
+    Operation *o = op.getOperation();
+    if (o->getNumOperands() < 2 || o->getNumResults() < 1) return false;
+    std::string ctype = m.mapTypeToC(o->getResult(0).getType());
+    std::string fname = std::string("__builtin_fmod");
+    if (ctype == "float")            fname += "f";
+    else if (ctype == "long double") fname += "l";
+    std::string lhs = m.getOrCreateName(o->getOperand(0));
+    std::string rhs = m.getOrCreateName(o->getOperand(1));
+    std::string tmp = m.freshName("frem");
+    out << "  " << ctype << " " << tmp << " = " << fname << "(" << lhs << ", " << rhs << ");\n";
+    m.setName(o->getResult(0), tmp);
+    return true;
+  }
+
+  static bool handleFNeg(cir::FNegOp op, Mapper &m, std::ostream &out) { return handleUnaryOpImpl(op.getOperation(), m, out, "-"); }
 };
 
 REGISTER_HANDLER_MODULE(ArithmeticHandlers)
