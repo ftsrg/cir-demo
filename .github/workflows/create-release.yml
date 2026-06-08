@@ -1,0 +1,62 @@
+#
+# Copyright 2025 Budapest University of Technology and Economics
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        description: Release notes (optional)
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build static binaries
+        run: |
+          chmod +x build-static-binaries.sh
+          ./build-static-binaries.sh
+
+      - name: Package output
+        run: |
+          cp LICENSE output/LICENSE
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          zip -r "cir2c-${SHORT_SHA}.zip" output/
+          echo "SHORT_SHA=${SHORT_SHA}" >> "$GITHUB_ENV"
+          echo "ARCHIVE=cir2c-${SHORT_SHA}.zip" >> "$GITHUB_ENV"
+
+      - name: Create tag and release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
+        run: |
+          gh release create "${SHORT_SHA}" \
+            --title "Release ${SHORT_SHA}" \
+            --notes "${RELEASE_NOTES}" \
+            --target "${{ github.sha }}" \
+            "${ARCHIVE}"

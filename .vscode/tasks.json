@@ -2,9 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "xcfa-mapper: Prepare algorithm1 CIR",
+      "label": "cir2c: Prepare algorithm1 CIR",
       "type": "shell",
-      "command": "set -e && \"${workspaceFolder}/backend/bin/bin/clang++\" -x c++ -std=c++11 -S -emit-cir \"${workspaceFolder}/backend/examples/esbmc-eval/algorithm/algorithm1/main.cpp\" -o \"${workspaceFolder}/xcfa-mapper/build/algorithm1.mlir\" && \"${workspaceFolder}/backend/bin/bin/cir-opt\" \"${workspaceFolder}/xcfa-mapper/build/algorithm1.mlir\" -cir-flatten-cfg -o \"${workspaceFolder}/xcfa-mapper/build/algorithm1.flat.mlir\" && cmake -S \"${workspaceFolder}/xcfa-mapper\" -B \"${workspaceFolder}/xcfa-mapper/build\" -DCMAKE_BUILD_TYPE=Debug && cmake --build \"${workspaceFolder}/xcfa-mapper/build\" -- -j$(nproc)",
+      "command": "set -e && \"${workspaceFolder}/backend/bin/bin/clang++\" -x c++ -std=c++11 -S -emit-cir \"${workspaceFolder}/backend/examples/esbmc-eval/algorithm/algorithm1/main.cpp\" -o \"${workspaceFolder}/cir2c/build/algorithm1.mlir\" && \"${workspaceFolder}/backend/bin/bin/cir-opt\" \"${workspaceFolder}/cir2c/build/algorithm1.mlir\" -cir-flatten-cfg -o \"${workspaceFolder}/cir2c/build/algorithm1.flat.mlir\" && cmake -S \"${workspaceFolder}/cir2c\" -B \"${workspaceFolder}/cir2c/build\" -DCMAKE_BUILD_TYPE=Debug && cmake --build \"${workspaceFolder}/cir2c/build\" -- -j$(nproc)",
       "group": "build",
       "presentation": {
         "reveal": "always",

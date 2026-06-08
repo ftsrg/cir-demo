@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: xcfa-mapper Test Suite
+name: cir2c Test Suite
 
 on:
   pull_request:
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       # The llvm image is the base for cir-demo-backend and has clang+cir-opt
-      # at /opt/cir/bin (on PATH), cmake, ninja, and python3.  xcfa-mapper is
+      # at /opt/cir/bin (on PATH), cmake, ninja, and python3.  cir2c is
       # built from the PR's source tree below; the test data and pre-built
       # backend/bin tools come from the checkout itself.
       image: ghcr.io/ftsrg/cir-demo-llvm:latest
@@ -40,16 +40,16 @@ jobs:
         uses: actions/checkout@v4
 
       # The llvm image installs clang+cir-opt to /opt/cir.  Mirror what
-      # backend/Dockerfile does so that run_tests.sh and run-xcfa-mapper.sh
+      # backend/Dockerfile does so that run_tests.sh and run-cir2c.sh
       # find the tools at their expected path (backend/bin/bin/clang++ etc.).
       - name: Link /opt/cir to backend/bin
         run: ln -s /opt/cir backend/bin
 
-      - name: Build xcfa-mapper
+      - name: Build cir2c
         run: |
-          cmake -S xcfa-mapper -B xcfa-mapper/build -G Ninja \
+          cmake -S cir2c -B cir2c/build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release
-          cmake --build xcfa-mapper/build --target xcfa-mapper -j $(nproc)
+          cmake --build cir2c/build --target cir2c -j $(nproc)
 
       - name: Install GNU parallel
         run: |
@@ -58,9 +58,9 @@ jobs:
       - name: Run integration tests
         id: integration
         run: |
-          mkdir -p xcfa-mapper/test/integration/output
+          mkdir -p cir2c/test/integration/output
           JOBS=4 RUN_LLVM=0 RUN_ESBMC=0 \
-            bash xcfa-mapper/test/run_tests.sh \
+            bash cir2c/test/run_tests.sh \
               --json-out /tmp/integration.json \
             || true   # exit code checked via JSON below
           cat /tmp/integration.json
@@ -69,9 +69,9 @@ jobs:
       - name: Run LLVM SingleSource tests
         id: llvm
         run: |
-          mkdir -p xcfa-mapper/test/llvm-eval/output
-          JOBS=4 RUN_INTEGRATION=0 RUN_ESBMC=0 \
-            bash xcfa-mapper/test/run_tests.sh \
+          mkdir -p cir2c/test/llvm-eval/output
+          JOBS=4 RUN_INTEGRATION=0 RUN_ESBMC=0 RUN_LLVM=1 \
+            bash cir2c/test/run_tests.sh \
               --json-out /tmp/llvm.json \
             || true
           cat /tmp/llvm.json
@@ -80,9 +80,9 @@ jobs:
       - name: Run esbmc-eval tests
         id: esbmc
         run: |
-          mkdir -p xcfa-mapper/test/esbmc-eval/output
-          JOBS=4 RUN_INTEGRATION=0 RUN_LLVM=0 \
-            bash xcfa-mapper/test/run_tests.sh \
+          mkdir -p cir2c/test/esbmc-eval/output
+          JOBS=4 RUN_INTEGRATION=0 RUN_LLVM=0 RUN_ESBMC=1 \
+            bash cir2c/test/run_tests.sh \
               --json-out /tmp/esbmc.json \
             || true
           cat /tmp/esbmc.json
@@ -126,7 +126,7 @@ jobs:
               return f"| {label} | {vals} |"
 
           table = "\n".join([
-              "## xcfa-mapper Test Results",
+              "## cir2c Test Results",
               "",
               header, sep,
               row("Total",             "total"),
@@ -159,7 +159,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: xcfa-mapper-test-results
+          header: cir2c-test-results
           message: ${{ steps.report.outputs.table }}
 
       - name: Fail if any tests failed

@@ -47,13 +47,13 @@
       ]
     },
     {
-      "name": "xcfa-mapper: Debug algorithm1/main.cpp",
+      "name": "cir2c: Debug algorithm1/main.cpp",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/xcfa-mapper/build/xcfa-mapper",
+      "program": "${workspaceFolder}/cir2c/build/cir2c",
       "args": [
-        "${workspaceFolder}/xcfa-mapper/build/algorithm1.flat.mlir",
-        "${workspaceFolder}/xcfa-mapper/build/algorithm1.out.c"
+        "${workspaceFolder}/cir2c/build/algorithm1.flat.mlir",
+        "${workspaceFolder}/cir2c/build/algorithm1.out.c"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -61,7 +61,7 @@
       "externalConsole": false,
       "MIMode": "gdb",
       "miDebuggerPath": "/usr/bin/gdb",
-      "preLaunchTask": "xcfa-mapper: Prepare algorithm1 CIR",
+      "preLaunchTask": "cir2c: Prepare algorithm1 CIR",
       "setupCommands": [
         {
           "description": "Enable pretty-printing for gdb",

@@ -16,7 +16,9 @@
 
 #pragma once
 
+#include "ConstantEmitter.h"
 #include "Traceability.h"
+#include "TypeMapper.h"
 
 #include <mlir/IR/Operation.h>
 #include <mlir/IR/BuiltinOps.h>
@@ -39,7 +41,7 @@ namespace mlir {
 class Block;
 }
 
-namespace xcfa {
+namespace cir2c {
 
 class Mapper;
 
@@ -165,6 +167,14 @@ public:
 
   /// Get the chosen output name for a mangled symbol (after prepareFunctionNames).
   std::string getFunctionOutputName(llvm::StringRef mangled) const;
+
+  /// Look up the declared CIR type for a global symbol (raw, unsanitized name).
+  /// Returns a null (default-constructed) mlir::Type when the symbol is unknown.
+  /// Used by ConstantEmitter to resolve GlobalViewAttr access indices.
+  mlir::Type globalSymbolType(const std::string &sym) const {
+    auto it = globalSymbolTypes_.find(sym);
+    return it == globalSymbolTypes_.end() ? mlir::Type() : it->second;
+  }
   
   /// Sanitize a string to be a valid C identifier by replacing invalid
   /// characters with underscores.
@@ -203,11 +213,10 @@ private:
   // Canonical C field name per (record name, member index), so bitfield
   // accesses that share a storage member resolve to the emitted member name.
   std::map<std::string, std::map<int, std::string>> recordFieldNames_;
-  // Stable unique C name per distinct anonymous record type. Without this all
-  // anonymous records collapsed to one "anon_struct" and clobbered each other's
-  // layout (e.g. a bitfield const-init's byte layout vs an Itanium member
-  // pointer's {long,long}).
-  mutable llvm::DenseMap<mlir::Type, std::string> anonRecordNames_;
+  // CIR->C type mapping service (owns anonRecordNames_ state).
+  mutable TypeMapper typeMapper_;
+  // Constant-to-C-initializer rendering service.
+  ConstantEmitter constantEmitter_;
   // Symbol -> declared type for each global, so GlobalViewAttr access indices
   // (`&g[i].field`) can be resolved while formatting constant initializers.
   std::unordered_map<std::string, mlir::Type> globalSymbolTypes_;
@@ -441,4 +450,4 @@ public:
 
 };
 
-} // namespace xcfa
+} // namespace cir2c

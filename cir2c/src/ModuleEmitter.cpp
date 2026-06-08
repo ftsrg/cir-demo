@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
+// Module-level emission methods of `Mapper` (split out of Mapper.cpp to keep
+// that file small): top-level module/function/global emission, prototype
+// emission, and the pre-scans + preamble.
+
 #include "Mapper.h"
+#include "ConstantEmitter.h"
 
 #include <mlir/IR/Block.h>
 #include <mlir/IR/Operation.h>
@@ -40,55 +45,7 @@
 
 using namespace mlir;
 
-namespace xcfa {
-
-std::string Mapper::sanitizeIdentifier(const std::string &s) {
-  std::string out;
-  out.reserve(s.size());
-  for (char c : s) {
-    if (std::isalnum((unsigned char)c) || c == '_') out.push_back(c);
-    else out.push_back('_');
-  }
-  if (!out.empty() && std::isdigit((unsigned char)out[0])) out = std::string("_") + out;
-  return out;
-}
-
-// Strip CIR's ".base" suffix before sanitizing a record type name.
-// CIR emits "X.base" as the internal name for the base subobject layout of
-// class X when it is embedded in a derived class. Stripping it ensures the
-// generated C reuses the same struct tag as the complete class, which is
-// correct because: (a) the '.' character is impossible in any user-defined
-// C++ class name so there is no ambiguity, and (b) the base subobject layout
-// is layout-compatible with the complete type for verification purposes.
-static std::string recordCName(mlir::StringAttr nameAttr) {
-  if (!nameAttr || nameAttr.getValue().empty()) return "anon_struct";
-  llvm::StringRef raw = nameAttr.getValue();
-  if (raw.ends_with(".base"))
-    raw = raw.drop_back(5);
-  return Mapper::sanitizeIdentifier(raw.str());
-}
-
-std::string Mapper::virtualCallTypeSuffix(const std::string &ctype) {
-  std::string raw;
-  for (char c : ctype) {
-    if (std::isalnum((unsigned char)c) || c == '_') raw += c;
-    else if (c == '*') raw += "_ptr";
-    else raw += '_';
-  }
-  // Collapse runs of underscores and strip leading/trailing ones.
-  std::string clean;
-  bool prevUnderscore = false;
-  for (char c : raw) {
-    if (c == '_') {
-      if (!prevUnderscore && !clean.empty()) { clean += '_'; prevUnderscore = true; }
-    } else {
-      clean += c;
-      prevUnderscore = false;
-    }
-  }
-  while (!clean.empty() && clean.back() == '_') clean.pop_back();
-  return clean.empty() ? "any" : clean;
-}
+namespace cir2c {
 
 static std::string mangleLabel(const std::string &s) {
   return Mapper::sanitizeIdentifier(s);
@@ -147,8 +104,8 @@ static std::string stripEmptyArgList(const std::string &s) {
   return s;
 }
 
-Mapper::Mapper() : counter(0) {}
-
+// Needed by mapFunc (same logic as in Mapper.cpp; static in each TU so no ODR
+// violation — the two copies are identical).
 static std::string oneLineOperationText(mlir::Operation &op) {
   std::string text;
   llvm::raw_string_ostream rso(text);
@@ -177,59 +134,6 @@ static std::string oneLineOperationText(mlir::Operation &op) {
   if (start == std::string::npos) return std::string();
   size_t end = compact.find_last_not_of(' ');
   return compact.substr(start, end - start + 1);
-}
-
-void Mapper::printMonitorReport(std::ostream &out) const {
-  traceability.printReport(out);
-}
-
-// Emit pending cleanup regions (from innermost to outermost), stopping at
-// fromDepth.  Each cleanup body is wrapped in a C block `{ ... }` to avoid
-// name collisions when a region is emitted more than once (e.g. early-return
-// and normal fall-through both need the same cleanup).
-void Mapper::emitPendingCleanups(std::ostream &out, int fromDepth, bool consume) {
-  // Walk innermost → outermost (back → front).
-  for (int i = static_cast<int>(cleanupStack_.size()) - 1; i >= 0; --i) {
-    if (cleanupStack_[i].loopDepth < fromDepth) break;
-    mlir::Region *cleanupRegion = cleanupStack_[i].region;
-    if (!cleanupRegion || cleanupRegion->empty()) continue;
-    // Skip cleanups already emitted by a previous *consuming* emitPendingCleanups
-    // call (e.g. an earlier goto in the same scope).  Mark newly-emitted ones so
-    // handleCleanupScope won't emit them again on normal-yield exit — but only
-    // when `consume` is set (an unconditional exit). A conditional EH-guard
-    // emission must not consume, since the no-exception path still falls through.
-    if (consumedCleanups_.count(cleanupRegion)) continue;
-    if (consume) consumedCleanups_.insert(cleanupRegion);
-    out << "  {\n";
-    // Walk the first (and only) block of the cleanup region, emitting all ops
-    // except the trailing cir.yield.
-    mlir::Block &block = cleanupRegion->front();
-    std::ostringstream cleanupOut;
-    for (mlir::Operation &cop : block.getOperations()) {
-      if (llvm::isa<cir::YieldOp>(cop)) break;
-      if (!mapOperation(&cop, cleanupOut)) {
-        // Best-effort: emit a comment and continue.
-        cleanupOut << "  // (cleanup op could not be mapped)\n";
-      }
-    }
-    // Indent the cleanup body by one extra level (we are inside the `{ }`).
-    std::string cleanupText = cleanupOut.str();
-    std::istringstream lines(cleanupText);
-    std::string line;
-    while (std::getline(lines, line)) {
-      if (!line.empty()) out << "  ";
-      out << line << "\n";
-    }
-    out << "  }\n";
-  }
-}
-
-void Mapper::writeMonitorJson(std::ostream &out) const {
-  traceability.writeJson(out);
-}
-
-void Mapper::computeTraceLineMappings(llvm::StringRef mlirText, llvm::StringRef cText) {
-  traceability.computeLineMappings(mlirText, cText);
 }
 
 void Mapper::prepareFunctionNames(mlir::ModuleOp module) {
@@ -268,255 +172,6 @@ std::string Mapper::getFunctionOutputName(llvm::StringRef mangled) const {
   std::string dem = demangleSymbol(mangled.str());
   dem = stripEmptyArgList(dem);
   return mangleLabel(dem);
-}
-
-void Mapper::registerHandler(llvm::StringRef opName, std::unique_ptr<OpHandler> handler) {
-  handlers[opName.str()] = std::move(handler);
-  traceability.registerOperation(opName);
-}
-
-std::string Mapper::freshName(llvm::StringRef base) {
-  // Skip any name already taken by a source-derived identifier (recorded via
-  // setName) so e.g. the constant temp `c17` never clashes with a source
-  // variable literally named `c17`.
-  std::string s;
-  do {
-    s = (base + llvm::Twine(counter++)).str();
-  } while (!usedNames_.insert(s).second);
-  return s;
-}
-
-std::string Mapper::getOrCreateName(Value v) {
-  auto it = valueNames.find(v);
-  if (it != valueNames.end()) return it->second;
-  std::string name = freshName("v");
-  valueNames[v] = name;
-  return name;
-}
-
-std::string Mapper::getOrCreateLabel(mlir::Block *b) {
-  auto it = blockLabels.find(b);
-  if (it != blockLabels.end()) return it->second;
-  std::string name = freshName("bb");
-  blockLabels[b] = name;
-  return name;
-}
-
-void Mapper::setName(mlir::Value v, const std::string &name) {
-  valueNames[v] = name;
-  // Reserve source-derived names so freshName won't reuse them for a temp.
-  usedNames_.insert(name);
-}
-
-void Mapper::markAsDirectAccess(mlir::Value v) {
-  directAccessValues.insert(v);
-}
-
-bool Mapper::isDirectAccess(mlir::Value v) const {
-  return directAccessValues.count(v) > 0;
-}
-
-std::string Mapper::anonRecordCName(mlir::Type recordType) const {
-  auto it = anonRecordNames_.find(recordType);
-  if (it != anonRecordNames_.end())
-    return it->second;
-  std::string name = "anon_struct_" + std::to_string(anonRecordNames_.size());
-  anonRecordNames_[recordType] = name;
-  return name;
-}
-
-std::string Mapper::mapTypeToC(mlir::Type t) const {
-  // Handle MLIR built-in integer types
-  if (auto it = mlir::dyn_cast<mlir::IntegerType>(t)) {
-    unsigned w = it.getWidth();
-    switch (w) {
-    case 1:
-      return "bool";
-    case 8:
-      return "signed char";
-    case 16:
-      return "short";
-    case 32:
-      return "int";
-    case 64:
-      return "long";
-    default:
-      return "long";
-    }
-  }
-  
-  // Handle MLIR built-in float types
-  if (auto ft = mlir::dyn_cast<mlir::FloatType>(t)) {
-    unsigned w = ft.getWidth();
-    switch (w) {
-    case 16:
-      return "float"; // half precision, approximate as float
-    case 32:
-      return "float";
-    case 64:
-      return "double";
-    case 80:
-      return "long double"; // x87 extended precision
-    case 128:
-      return "long double"; // quad precision, approximate as long double
-    default:
-      return "double";
-    }
-  }
-  
-  // Handle MLIR NoneType (sometimes used for void)
-  if (mlir::isa<mlir::NoneType>(t)) {
-    return "void";
-  }
-  
-  // Handle CIR void type
-  if (mlir::isa<cir::VoidType>(t)) {
-    return "void";
-  }
-  
-  // Handle CIR bool type
-  if (mlir::isa<cir::BoolType>(t)) {
-    return "_Bool";
-  }
-  
-  // Handle CIR integer types
-  if (auto intTy = mlir::dyn_cast<cir::IntType>(t)) {
-    unsigned width = intTy.getWidth();
-    bool isSigned = intTy.isSigned();
-    
-    if (width == 8) {
-      return isSigned ? "char" : "unsigned char";
-    } else if (width == 16) {
-      return isSigned ? "short" : "unsigned short";
-    } else if (width == 32) {
-      return isSigned ? "int" : "unsigned int";
-    } else if (width == 64) {
-      return isSigned ? "long" : "unsigned long";
-    }
-    return "int"; // fallback
-  }
-  
-  // Handle CIR floating-point types
-  if (mlir::isa<cir::SingleType>(t)) {
-    return "float";
-  }
-  if (mlir::isa<cir::DoubleType>(t)) {
-    return "double";
-  }
-  if (mlir::isa<cir::LongDoubleType>(t)) {
-    return "long double";
-  }
-  if (mlir::isa<cir::FP80Type>(t)) {
-    return "long double";
-  }
-  if (mlir::isa<cir::FP16Type>(t)) {
-    return "_Float16";
-  }
-  if (mlir::isa<cir::BF16Type>(t)) {
-    return "__bf16";
-  }
-
-  // CIR complex type -> C99 `_Complex`. Element type drives the base (e.g.
-  // !cir.complex<!cir.double> becomes "double _Complex").
-  if (auto cplx = mlir::dyn_cast<cir::ComplexType>(t)) {
-    return mapTypeToC(cplx.getElementType()) + " _Complex";
-  }
-
-  // Handle CIR pointer types
-  if (auto ptrTy = mlir::dyn_cast<cir::PointerType>(t)) {
-    mlir::Type pointee = ptrTy.getPointee();
-    
-    // Handle pointer to function
-    if (mlir::isa<cir::FuncType>(pointee)) {
-      return "void*"; // Simplify function pointers to void*
-    }
-    
-    // Handle pointer to record (struct/union)
-    if (auto recordTy = mlir::dyn_cast<cir::RecordType>(pointee)) {
-      mlir::StringAttr nameAttr = recordTy.getName();
-      std::string name = (nameAttr && !nameAttr.getValue().empty())
-                             ? recordCName(nameAttr)
-                             : anonRecordCName(recordTy);
-      if (recordTy.isUnion()) {
-        return "union " + name + "*";
-      }
-      return "struct " + name + "*";
-    }
-
-    // Handle pointer to vptr (!cir.ptr<!cir.vptr>) -- address of the __vptr
-    // slot. The vptr value itself is a void* (vtable pointer), so its address
-    // is void**. Mapping this to void* would make subsequent loads through it
-    // a dereference of void* (illegal in C).
-    if (mlir::isa<cir::VPtrType>(pointee)) {
-      return "void**";
-    }
-    
-    // Handle pointer to array (decays to pointer to element)
-    if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(pointee)) {
-      mlir::Type elemType = arrayTy.getElementType();
-      std::string elemCType = mapTypeToC(elemType);
-      return elemCType + "*";
-    }
-    
-    // For other pointer types, recursively map the pointee and add *
-    std::string pointeeType = mapTypeToC(pointee);
-    return pointeeType + "*";
-  }
-  
-  // Handle CIR vptr type (!cir.vptr) -- vtable pointer value
-  if (mlir::isa<cir::VPtrType>(t)) {
-    return "void*";
-  }
-
-  // Handle CIR record types (struct/union)
-  if (auto recordTy = mlir::dyn_cast<cir::RecordType>(t)) {
-    mlir::StringAttr nameAttr = recordTy.getName();
-    std::string name = (nameAttr && !nameAttr.getValue().empty())
-                           ? recordCName(nameAttr)
-                           : anonRecordCName(recordTy);
-    if (recordTy.isUnion()) {
-      return "union " + name;
-    }
-    return "struct " + name;
-  }
-  
-  // Handle CIR array types
-  if (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(t)) {
-    // Arrays in C declarations require the element type, not the full array type
-    // This should only be called when we need the base element type
-    // Proper array handling should be done at the declaration site where we can
-    // properly format "type name[size]"
-    mlir::Type elemType = arrayTy.getElementType();
-    return mapTypeToC(elemType);
-  }
-  
-  // Conservative default for unknown types
-  return "int";
-}
-
-void Mapper::recordFieldName(const std::string &recordName, int index,
-                             const std::string &fieldName) {
-  if (index < 0) return;
-  auto &byIndex = recordFieldNames_[recordName];
-  // First name wins, matching the struct emitter's dedup behaviour.
-  byIndex.emplace(index, fieldName);
-}
-
-std::string Mapper::lookupFieldName(const std::string &recordName, int index) const {
-  auto it = recordFieldNames_.find(recordName);
-  if (it == recordFieldNames_.end()) return "";
-  auto jt = it->second.find(index);
-  return jt == it->second.end() ? "" : jt->second;
-}
-
-std::string Mapper::arrayBaseTypeAndDims(mlir::Type t, std::string &dimsOut) const {
-  dimsOut.clear();
-  mlir::Type cur = t;
-  while (auto arrayTy = mlir::dyn_cast<cir::ArrayType>(cur)) {
-    dimsOut += "[" + std::to_string(arrayTy.getSize()) + "]";
-    cur = arrayTy.getElementType();
-  }
-  return mapTypeToC(cur);
 }
 
 void Mapper::ensureMallocFreeDeclared(std::ostream &out) {
@@ -684,7 +339,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   auto cirFuncOp = mlir::cast<cir::FuncOp>(fop);
   cir::FuncType fty = cirFuncOp.getFunctionType();
   mlir::Type rty = fty.getReturnType();
-  
+
   std::string retType;
   if (mlir::isa<mlir::NoneType>(rty) || mlir::isa<cir::VoidType>(rty)) {
     retType = "void";
@@ -695,7 +350,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   out << "// function: " << sym.getValue().str() << "\n";
   // Use the chosen output name (demangled when unique, otherwise mangled).
   std::string outName = getFunctionOutputName(sym.getValue().str());
-  
+
   // Extract function parameters from cir::FuncOp
   std::string params;
   bool hasBody = (fop->getNumRegions() > 0 && !fop->getRegion(0).empty());
@@ -711,7 +366,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
     for (BlockArgument arg : entryBlock.getArguments()) {
       if (!first) params += ", ";
       first = false;
-      
+
       // Generate parameter name
       std::string paramName = freshName("v");
       setName(arg, paramName);
@@ -720,7 +375,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
         if (!mlir::isa<cir::PointerType>(arg.getType())) {
           markAsDirectAccess(arg);
         }
-      
+
       params += mapParamTypeToC(*this, arg.getType(), paramName);
       // Track the last named parameter for va_start.
       if (fty.isVarArg()) lastVarargParamName_ = paramName;
@@ -732,7 +387,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
     for (mlir::Type paramType : inputs) {
       if (!first) params += ", ";
       first = false;
-      
+
       // Map parameter type to C type
       std::string paramName = "p" + std::to_string(paramIndex++);
       std::string cParamType = mapParamTypeToC(*this, paramType, paramName);
@@ -747,7 +402,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
     // declaration that accepts any arguments — instead of "(...)".
     if (!params.empty()) params += ", ...";
   }
-  
+
   // Tag _GLOBAL__sub_I_* trampolines as constructor so they run before main.
   std::string ctorAttr;
   if (sym.getValue().str().rfind("_GLOBAL__sub_I_", 0) == 0)
@@ -795,7 +450,7 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   traceability.recordOperationTrace(fop->getName().getStringRef(), funcInputText, funcHeaderText + " {\n", true);
 
   Region &r = fop->getRegion(0);
-  
+
   // Declare all block arguments upfront (these act like phi nodes in SSA form)
   // We need to collect all block arguments from all blocks (except entry block which uses function params)
   bool isFirstBlock = true;
@@ -804,13 +459,13 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
       isFirstBlock = false;
       continue; // Skip entry block - its arguments are function parameters
     }
-    
+
     for (BlockArgument arg : b.getArguments()) {
       std::string argName = getOrCreateName(arg);
       out << "  " << mapParamTypeToC(*this, arg.getType(), argName) << ";\n";
     }
   }
-  
+
   for (Block &b : r.getBlocks()) getOrCreateLabel(&b);
   for (Block &b : r.getBlocks()) {
     out << mangleLabel(getOrCreateLabel(&b)) << ":\n";
@@ -823,326 +478,15 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   return true;
 }
 
-bool Mapper::mapOperation(mlir::Operation *op, std::ostream &out) {
-  auto opName = op->getName().getStringRef();
-  std::string inputText = oneLineOperationText(*op);
-  traceability.recordOperationVisit(opName);
-
-  auto it = handlers.find(opName.str());
-  std::ostringstream opOut;
-  bool mapped = false;
-
-  if (it != handlers.end()) {
-    bool handled = it->second->handle(op, *this, opOut);
-    if (handled) {
-      traceability.recordOperationHandled(opName);
-      out << opOut.str();
-      traceability.recordOperationTrace(opName, inputText, opOut.str(), true);
-      return true;
-    }
-    // The handler failed. It may already have emitted partial output (e.g. an
-    // opening brace of a control-flow construct whose body could not be
-    // mapped). Continuing would leave that output unbalanced and unsound, so
-    // hard-fail: surface the failure and stop mapping this function.
-    out << opOut.str();
-    opOut << "  // " << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
-    traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
-    llvm::errs() << ERR_HANDLER_FAILED_PREFIX << opName.str() << "\n";
-    return false;
-  }
-
-  // No handler registered for this op. We must not emit a placeholder value
-  // for its results: a default-initialised declaration would be an unsound
-  // mapping (the generated C would compile but compute the wrong result
-  // silently). Hard-fail instead so the unsupported op is surfaced and the
-  // test is reported as a mapper failure rather than producing wrong output.
-  out << opOut.str();
-  traceability.recordOperationTrace(opName, inputText, opOut.str(), false);
-  llvm::errs() << ERR_NO_HANDLER_PREFIX << opName.str() << "\n";
-  return false;
-}
-
-// ── Vtable dispatch tracking ───────────────────────────────────────────────
-
-void Mapper::trackVtableDispatch(mlir::Value chainValue, mlir::Value objectValue) {
-  vtableDispatchChain[chainValue] = objectValue;
-}
-
-bool Mapper::isVtableDispatchValue(mlir::Value v) const {
-  return vtableDispatchChain.count(v) > 0;
-}
-
-mlir::Value Mapper::getVtableDispatchObject(mlir::Value v) const {
-  auto it = vtableDispatchChain.find(v);
-  if (it != vtableDispatchChain.end()) return it->second;
-  return {};
-}
-
-void Mapper::markVirtualFnPtr(mlir::Value v) {
-  virtualFnPtrSet.insert(v);
-}
-
-bool Mapper::isVirtualFnPtr(mlir::Value v) const {
-  return virtualFnPtrSet.count(v) > 0;
-}
-
-void Mapper::setHasVirtualCalls() {
-  anyVirtualCalls_ = true;
-}
-
-uint64_t Mapper::vtableFlatOffset(mlir::Operation *op, const std::string &symbol,
-                                  int index, int offset) const {
-  uint64_t flat = static_cast<uint64_t>(offset);
-  if (index <= 0) return flat;
-  // Find the vtable global and sum the element counts of components [0, index).
-  // Use the provided op's parent module, or fall back to the stored module.
-  mlir::ModuleOp module;
-  if (op) module = op->getParentOfType<mlir::ModuleOp>();
-  if (!module) module = currentModule_;
-  if (!module) return flat;
-  for (auto &g : module.getOps()) {
-    auto gop = mlir::dyn_cast<cir::GlobalOp>(g);
-    if (!gop) continue;
-    auto s = gop->getAttrOfType<mlir::StringAttr>(
-        mlir::SymbolTable::getSymbolAttrName());
-    if (!s || s.getValue().str() != symbol) continue;
-    auto iv = gop.getInitialValue();
-    if (!iv) break;
-    auto vt = mlir::dyn_cast<cir::VTableAttr>(*iv);
-    if (!vt) break;
-    mlir::ArrayAttr data = vt.getData();
-    for (int i = 0; i < index && i < static_cast<int>(data.size()); ++i) {
-      if (auto ca = mlir::dyn_cast<cir::ConstArrayAttr>(data[i]))
-        if (auto at = mlir::dyn_cast<cir::ArrayType>(ca.getType()))
-          flat += at.getSize();
-    }
-    break;
-  }
-  return flat;
-}
-
-std::string Mapper::registerVirtualCallSig(mlir::Type funcType, std::string &retOut,
-                                           std::vector<std::string> &argsOut) {
-  retOut = "void";
-  argsOut.clear();
-  auto ft = mlir::dyn_cast<cir::FuncType>(funcType);
-  if (!ft) return virtualCallTypeSuffix("void");
-  // The vtable function type is (this, args...) -> ret. The wrapper exposes
-  // (void* obj, int slot, args...) -> ret, so drop the leading `this` param.
-  retOut = ft.getReturnType() && !mlir::isa<cir::VoidType>(ft.getReturnType())
-               ? mapTypeToC(ft.getReturnType())
-               : "void";
-  llvm::ArrayRef<mlir::Type> ins = ft.getInputs();
-  for (size_t i = 1; i < ins.size(); ++i) // skip `this`
-    argsOut.push_back(mapTypeToC(ins[i]));
-  // Build a unique suffix from the return type and argument types.
-  std::string sig = retOut;
-  for (const auto &a : argsOut) sig += "_" + a;
-  if (ft.isVarArg()) sig += "_va";
-  std::string suffix = virtualCallTypeSuffix(sig);
-  virtualCallSigs_[suffix] = {retOut, argsOut};
-  return suffix;
-}
-
-// ── Global variables ───────────────────────────────────────────────────────
-
-// Format an APFloat as a C literal, normalising the +Inf/-Inf/+NaN/-NaN spellings
-// that APFloat::toString() emits (which are not valid C) into builtins.
-static std::string formatFpLiteral(const llvm::APFloat &v,
-                                   const std::string &ctype) {
-  auto pick = [&](const char *f, const char *l, const char *d) -> std::string {
-    return ctype == "float" ? f : ctype == "long double" ? l : d;
-  };
-  if (v.isNaN()) {
-    std::string s = pick("__builtin_nanf(\"\")", "__builtin_nanl(\"\")",
-                         "__builtin_nan(\"\")");
-    return v.isNegative() ? "-" + s : s;
-  }
-  if (v.isInfinity()) {
-    std::string s = pick("__builtin_inff()", "__builtin_infl()", "__builtin_inf()");
-    return v.isNegative() ? "-" + s : s;
-  }
-  // Exact hex float (with f/L suffix) — no decimal rounding, and a value near
-  // LDBL_MAX is preserved rather than mis-rendered as +inf.
-  char buf[64];
-  v.convertToHexString(buf, /*hexDigits=*/0, /*upperCase=*/false,
-                       llvm::APFloat::rmNearestTiesToEven);
-  return std::string(buf) + pick("f", "L", "");
-}
-
-// Escape raw bytes for a C string literal. Uses 3-digit octal for non-printing
-// bytes (a \xHH escape greedily eats following hex digits).
-static std::string escapeCString(const std::string &bytes) {
-  std::string escaped;
-  escaped.reserve(bytes.size() * 4 + 4);
-  for (unsigned char c : bytes) {
-    switch (c) {
-    case '\\': escaped += "\\\\"; break;
-    case '"': escaped += "\\\""; break;
-    case '\n': escaped += "\\n"; break;
-    case '\r': escaped += "\\r"; break;
-    case '\t': escaped += "\\t"; break;
-    default:
-      if (c < 32 || c > 126) {
-        escaped.push_back('\\');
-        escaped.push_back(static_cast<char>('0' + ((c >> 6) & 7)));
-        escaped.push_back(static_cast<char>('0' + ((c >> 3) & 7)));
-        escaped.push_back(static_cast<char>('0' + (c & 7)));
-      } else {
-        escaped.push_back(static_cast<char>(c));
-      }
-    }
-  }
-  return escaped;
-}
-
-// Render a constant attribute as a C initializer, recursing through aggregate
-// (struct/array) constants. `type` is the CIR type of the value being
-// initialised, used for FP literal typing and zero-fill decisions. Previously
-// only flat int globals and int/char arrays were handled, so struct/union and
-// nested constant globals lost their initializer and defaulted to zero.
-std::string Mapper::formatConstInit(mlir::Attribute attr, mlir::Type type) const {
-  if (mlir::isa<cir::ZeroAttr>(attr)) {
-    if (type && (mlir::isa<cir::RecordType>(type) || mlir::isa<cir::ArrayType>(type)))
-      return "{0}";
-    return "0";
-  }
-  if (auto ia = mlir::dyn_cast<cir::IntAttr>(attr))
-    return std::to_string(ia.getValue().getSExtValue());
-  if (auto ba = mlir::dyn_cast<cir::BoolAttr>(attr))
-    return ba.getValue() ? "1" : "0";
-  if (auto fp = mlir::dyn_cast<cir::FPAttr>(attr))
-    return formatFpLiteral(fp.getValue(), type ? mapTypeToC(type) : "double");
-  if (auto fa = mlir::dyn_cast<mlir::FloatAttr>(attr))
-    return formatFpLiteral(fa.getValue(), type ? mapTypeToC(type) : "double");
-  // Complex constant in a static initializer: there is no brace form for
-  // _Complex (GCC silently drops the imaginary part), so build one with
-  // __builtin_complex. It needs equal floating args; for integer complex
-  // (_Complex char) build a double complex and convert to the target type.
-  if (auto cca = mlir::dyn_cast<cir::ConstComplexAttr>(attr)) {
-    mlir::Type elemTy;
-    if (auto cplxTy = mlir::dyn_cast<cir::ComplexType>(type))
-      elemTy = cplxTy.getElementType();
-    std::string re = formatConstInit(cca.getReal(), elemTy);
-    std::string im = formatConstInit(cca.getImag(), elemTy);
-    if (mlir::isa<cir::FPAttr, mlir::FloatAttr>(cca.getReal())) {
-      std::string et = elemTy ? mapTypeToC(elemTy) : "double";
-      return "__builtin_complex((" + et + ")(" + re + "), (" + et + ")(" + im + "))";
-    }
-    std::string ctype = type ? mapTypeToC(type) : "int _Complex";
-    return "(" + ctype + ")__builtin_complex((double)(" + re + "), (double)(" + im + "))";
-  }
-  if (auto gv = mlir::dyn_cast<cir::GlobalViewAttr>(attr)) {
-    std::string rawSym = gv.getSymbol().getValue().str();
-    // An integer-typed field holding an address is the Itanium member-function
-    // pointer encoding (function address as a ptrdiff_t).
-    if (!(type && mlir::isa<cir::PointerType>(type)))
-      return "(long)&" + getFunctionOutputName(rawSym);
-    // Pointer field: build the addressed lvalue, applying any access indices
-    // (`&t.b[5]` is global_view<@t,[1,5]>) by walking the target's type. Use
-    // the output name (demangled) for functions so references are consistent.
-    // For ABI globals (vtables, RTTI, VTTs — _ZTV/_ZTC/_ZTI/_ZTT/_ZTS) use the
-    // raw sanitized name: getFunctionOutputName demangles them to human-readable
-    // forms ("vtable for X") that don't match the emitted array name.
-    bool isAbiGlobal = rawSym.rfind("_ZTV", 0) == 0 || rawSym.rfind("_ZTC", 0) == 0 ||
-                       rawSym.rfind("_ZTI", 0) == 0 || rawSym.rfind("_ZTT", 0) == 0 ||
-                       rawSym.rfind("_ZTS", 0) == 0;
-    // Vtable/construction-vtable address points: indices [component, element]
-    // must be flattened into the void*[] array emitted by mapGlobal.
-    bool isVtableRef2 = rawSym.rfind("_ZTV", 0) == 0 || rawSym.rfind("_ZTC", 0) == 0;
-    if (isVtableRef2 && gv.getIndices() && !gv.getIndices().empty()) {
-      auto idxs2 = gv.getIndices();
-      int64_t comp = 0, elem = 0;
-      if (!idxs2.empty()) { if (auto i=mlir::dyn_cast<cir::IntAttr>(idxs2[0])) comp=i.getValue().getSExtValue(); else if (auto i=mlir::dyn_cast<mlir::IntegerAttr>(idxs2[0])) comp=i.getInt(); }
-      if (idxs2.size()>1) { if (auto i=mlir::dyn_cast<cir::IntAttr>(idxs2[1])) elem=i.getValue().getSExtValue(); else if (auto i=mlir::dyn_cast<mlir::IntegerAttr>(idxs2[1])) elem=i.getInt(); }
-      uint64_t flat = static_cast<uint64_t>(elem);
-      if (comp > 0)
-        flat = vtableFlatOffset(nullptr, rawSym, static_cast<int>(comp), static_cast<int>(elem));
-      std::string ctype = type ? mapTypeToC(type) : "unsigned char*";
-      return "(" + ctype + ")(&" + sanitizeIdentifier(rawSym) + "[" + std::to_string(flat) + "])";
-    }
-    std::string access;
-    if (isAbiGlobal) {
-      access = sanitizeIdentifier(rawSym);
-    } else {
-      std::string outName = getFunctionOutputName(rawSym);
-      access = outName.empty() ? sanitizeIdentifier(rawSym) : outName;
-    }
-    mlir::Type curType;
-    auto it = globalSymbolTypes_.find(rawSym);
-    if (it != globalSymbolTypes_.end()) curType = it->second;
-    bool indexed = false;
-    if (auto idxs = gv.getIndices()) {
-      for (mlir::Attribute ia : idxs) {
-        int64_t idx = 0;
-        if (auto i1 = mlir::dyn_cast<cir::IntAttr>(ia)) idx = i1.getValue().getSExtValue();
-        else if (auto i2 = mlir::dyn_cast<mlir::IntegerAttr>(ia)) idx = i2.getInt();
-        if (auto at = mlir::dyn_cast_if_present<cir::ArrayType>(curType)) {
-          access += "[" + std::to_string(idx) + "]";
-          curType = at.getElementType();
-        } else if (auto rt = mlir::dyn_cast_if_present<cir::RecordType>(curType)) {
-          std::string recN = rt.getName() && !rt.getName().getValue().empty()
-                                 ? recordCName(rt.getName()) : anonRecordCName(rt);
-          std::string fn = lookupFieldName(recN, (int)idx);
-          access += "." + (fn.empty() ? ("__field" + std::to_string(idx)) : fn);
-          curType = (idx >= 0 && (size_t)idx < rt.getMembers().size())
-                        ? rt.getMembers()[idx] : mlir::Type();
-        } else break;
-        indexed = true;
-      }
-    }
-    bool targetIsArray = !indexed && curType && mlir::isa<cir::ArrayType>(curType);
-    std::string e = targetIsArray ? access : ("&" + access);
-    return "(" + mapTypeToC(type) + ")(" + e + ")";
-  }
-  if (auto ca = mlir::dyn_cast<cir::ConstArrayAttr>(attr)) {
-    mlir::Type elemTy;
-    if (auto at = mlir::dyn_cast_if_present<cir::ArrayType>(type))
-      elemTy = at.getElementType();
-    if (auto str = mlir::dyn_cast<mlir::StringAttr>(ca.getElts())) {
-      std::string bytes = str.getValue().str();
-      if (!bytes.empty() && bytes.back() == '\0') bytes.pop_back();
-      return '"' + escapeCString(bytes) + '"';
-    }
-    if (auto arr = mlir::dyn_cast<mlir::ArrayAttr>(ca.getElts())) {
-      std::string s = "{";
-      bool first = true;
-      for (auto e : arr.getValue()) {
-        if (!first) s += ", ";
-        first = false;
-        s += formatConstInit(e, elemTy);
-      }
-      return s + "}"; // C zero-fills any trailing elements
-    }
-    return "{0}";
-  }
-  if (auto cr = mlir::dyn_cast<cir::ConstRecordAttr>(attr)) {
-    llvm::ArrayRef<mlir::Type> members;
-    if (auto rt = mlir::dyn_cast_if_present<cir::RecordType>(type))
-      members = rt.getMembers();
-    std::string s = "{";
-    bool first = true;
-    unsigned i = 0;
-    for (auto mem : cr.getMembers()) {
-      if (!first) s += ", ";
-      first = false;
-      s += formatConstInit(mem, i < members.size() ? members[i] : mlir::Type());
-      ++i;
-    }
-    return s + "}";
-  }
-  return "0"; // unknown constant kind
-}
-
 bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   auto sym = gop->getAttrOfType<StringAttr>(SymbolTable::getSymbolAttrName());
   if (!sym) {
     out << "// Global variable with missing name\n";
     return true;
   }
-  
+
   // Sanitize the name to be a valid C identifier (replace dots, etc. with underscores)
-  std::string name = recordCName(sym);
+  std::string name = TypeMapper::recordCName(sym);
   std::string rawSym = sym.getValue().str();
 
   // Reserve the global's C name so a function-local freshName temp can't reuse
@@ -1267,7 +611,7 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
     }
     return mlir::Type();
   };
-  
+
   // Recover initializer using the typed attribute API -- no text manipulation required.
   std::string initExpr;
   if (auto initVal = globalOp.getInitialValue()) {
@@ -1277,9 +621,9 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
     } else if (auto fpAttr = mlir::dyn_cast<cir::FPAttr>(attr)) {
       // Floating-point constant initializer (e.g. `double d = 1.5;`). Without
       // this the initializer was dropped and the global defaulted to 0.
-      initExpr = formatFpLiteral(fpAttr.getValue(), mapTypeToC(symType));
+      initExpr = ConstantEmitter::formatFpLiteral(fpAttr.getValue(), mapTypeToC(symType));
     } else if (auto fAttr = mlir::dyn_cast<mlir::FloatAttr>(attr)) {
-      initExpr = formatFpLiteral(fAttr.getValue(), mapTypeToC(symType));
+      initExpr = ConstantEmitter::formatFpLiteral(fAttr.getValue(), mapTypeToC(symType));
     } else if (auto gvAttr = mlir::dyn_cast<cir::GlobalViewAttr>(attr)) {
       std::string target = gvAttr.getSymbol().getValue().str();
       std::string targetName = sanitizeIdentifier(target);
@@ -1330,7 +674,7 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
               curType = at.getElementType();
             } else if (auto rt = mlir::dyn_cast_if_present<cir::RecordType>(curType)) {
               std::string recN = rt.getName() && !rt.getName().getValue().empty()
-                                     ? recordCName(rt.getName()) : anonRecordCName(rt);
+                                     ? TypeMapper::recordCName(rt.getName()) : anonRecordCName(rt);
               std::string fn = lookupFieldName(recN, (int)idx);
               access += "." + (fn.empty() ? ("__field" + std::to_string(idx)) : fn);
               curType = (idx >= 0 && (size_t)idx < rt.getMembers().size())
@@ -1504,7 +848,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       // collapse together. They are then collected like any named record so
       // their members are emitted.
       std::string recordName = (nameAttr && !nameAttr.getValue().empty())
-                                   ? recordCName(nameAttr)
+                                   ? TypeMapper::recordCName(nameAttr)
                                    : anonRecordCName(recordType);
 
       // Cycle guard: if we already have a complete type recorded for this name,
@@ -1568,17 +912,17 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   if (auto gm = llvm::dyn_cast<cir::GetMemberOp>(genericOp)) {
       // Base is pointer to struct; extract struct name using API
       mlir::Type baseType = gm.getOperation()->getOperand(0).getType();
-      
+
       // Check if base is a pointer type
       auto ptrType = mlir::dyn_cast<cir::PointerType>(baseType);
       if (!ptrType) return; // Not a pointer, skip
-      
+
       // Check if pointee is a record type
       auto recordType = mlir::dyn_cast<cir::RecordType>(ptrType.getPointee());
       if (!recordType) return; // Not pointing to a record, skip
-      
+
       // Get struct name using API
-      std::string structName = recordCName(recordType.getName());
+      std::string structName = TypeMapper::recordCName(recordType.getName());
 
       // Track unions
       if (recordType.isUnion()) {
@@ -1593,10 +937,10 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       // Check if result is pointer to struct
       if (auto resPtrType = mlir::dyn_cast<cir::PointerType>(resType)) {
         mlir::Type resPointee = resPtrType.getPointee();
-        
+
         if (auto resRecordType = mlir::dyn_cast<cir::RecordType>(resPointee)) {
-          std::string fieldStructName = recordCName(resRecordType.getName());
-          
+          std::string fieldStructName = TypeMapper::recordCName(resRecordType.getName());
+
           if (resRecordType.isUnion()) {
             info.baseType = "union " + fieldStructName;
           } else {
@@ -1607,18 +951,18 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         // Check if result is pointer to array(s)
         else if (auto resArrayType = mlir::dyn_cast<cir::ArrayType>(resPointee)) {
           info.isArray = true;
-          
+
           // Handle nested arrays
           mlir::Type currentType = resPointee;
           while (auto arrayType = mlir::dyn_cast<cir::ArrayType>(currentType)) {
             info.dims.push_back(std::to_string(arrayType.getSize()));
             currentType = arrayType.getElementType();
           }
-          
+
           // Get the final element type
           if (auto elemRecordType = mlir::dyn_cast<cir::RecordType>(currentType)) {
-            std::string arrayStructName = recordCName(elemRecordType.getName());
-            
+            std::string arrayStructName = TypeMapper::recordCName(elemRecordType.getName());
+
             if (elemRecordType.isUnion()) {
               info.baseType = "union " + arrayStructName;
             } else {
@@ -1728,7 +1072,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
             // Anonymous nested records have no name; give them their stable
             // synthetic name so the field isn't dropped (empty baseType below).
             std::string fn = (recTy.getName() && !recTy.getName().getValue().empty())
-                                 ? recordCName(recTy.getName())
+                                 ? TypeMapper::recordCName(recTy.getName())
                                  : anonRecordCName(recTy);
             info.baseType = (recTy.isUnion() ? "union " : "struct ") + fn;
             info.isStruct = true;
@@ -1737,7 +1081,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
           }
         } else if (auto recTy = mlir::dyn_cast<cir::RecordType>(memberType)) {
           std::string fn = (recTy.getName() && !recTy.getName().getValue().empty())
-                               ? recordCName(recTy.getName())
+                               ? TypeMapper::recordCName(recTy.getName())
                                : anonRecordCName(recTy);
           info.baseType = (recTy.isUnion() ? "union " : "struct ") + fn;
           info.isStruct = true;
@@ -2025,7 +1369,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     out << "\n";
     structsEmitted = true;
   }
-  
+
   // Does an initializer attribute (recursively) take the address of another
   // symbol? Such a global references functions or other globals declared later,
   // so it must be emitted AFTER the function declarations — even when the
@@ -2154,7 +1498,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
   // Third pass: emit function definitions only. A false return from mapFunc
   // means an operation could not be mapped soundly (e.g. no handler for the
-  // op); propagate it so xcfa-mapper exits non-zero instead of emitting
+  // op); propagate it so cir2c exits non-zero instead of emitting
   // partial/unsound C.
   for (auto &op : module.getOps()) {
     if (llvm::isa<mlir::ModuleOp>(op)) {
@@ -2175,4 +1519,4 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   return true;
 }
 
-} // namespace xcfa
+} // namespace cir2c

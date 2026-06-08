@@ -20,7 +20,7 @@
 #include <cctype>
 #include <sstream>
 
-namespace xcfa {
+namespace cir2c {
 
 void TraceabilityTracker::registerOperation(llvm::StringRef opName) {
   auto &entry = operationMonitor[opName.str()];
@@ -314,4 +314,4 @@ void TraceabilityTracker::computeLineMappings(llvm::StringRef mlirText, llvm::St
   }
 }
 
-} // namespace xcfa
+} // namespace cir2c

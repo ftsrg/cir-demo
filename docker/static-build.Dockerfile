@@ -1,52 +1,46 @@
-FROM debian:trixie-slim AS builder
+FROM ghcr.io/ftsrg/cir-demo-llvm:latest AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive
-ENV LC_ALL=C.UTF-8
+# FULL_STATIC=true  (default): rebuild LLVM as static archives, then build cir2c
+#                               against them — clang/cir-opt/cir2c are all static.
+# FULL_STATIC=false           : skip the LLVM rebuild; build only cir2c, linking it
+#                               against the shared LLVM already in /opt/cir.
+#                               clang/cir-opt in the export are the pre-built dynamic
+#                               binaries from the base image.
+ARG FULL_STATIC=true
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    git \
-    cmake \
-    ninja-build \
-    build-essential \
-    pkg-config \
-    python3 \
-    clang \
-    lld \
-    wget \
-    curl \
     zlib1g-dev \
     libstdc++-13-dev \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /build
+WORKDIR /app
 
-# Clone ClangIR (shallow) for LLVM with CIR support
-RUN git clone --depth=1 https://github.com/llvm/llvm-project.git clangir
-
-# Find zlib for static linking
 RUN ZLIB_LIBRARY=$(find /usr/lib /lib -name libz.a | head -n 1) && \
     ZLIB_INCLUDE_DIR=$(find /usr/include -name zlib.h | head -n 1 | xargs dirname) && \
-    echo "ZLIB_LIBRARY=$ZLIB_LIBRARY" > /build/zlib-config.env && \
-    echo "ZLIB_INCLUDE_DIR=$ZLIB_INCLUDE_DIR" >> /build/zlib-config.env
+    echo "ZLIB_LIBRARY=$ZLIB_LIBRARY" > /app/zlib-config.env && \
+    echo "ZLIB_INCLUDE_DIR=$ZLIB_INCLUDE_DIR" >> /app/zlib-config.env
 
-# Configure LLVM with static build flags
-RUN . /build/zlib-config.env && \
-    cmake -S clangir/llvm -B llvm-build -GNinja \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/build/llvm-install \
-        -DCMAKE_C_COMPILER=clang \
-        -DCMAKE_CXX_COMPILER=clang++ \
-        -DLLVM_USE_LINKER=lld \
+# Full static mode only: reconfigure /app/build (reuses /app/llvm-project, no re-clone)
+# with BUILD_SHARED_LIBS=OFF and install to /opt/cir-static.
+# Keeps RelWithDebInfo to match base-image compile flags so Ninja can reuse .o files
+# and mostly just re-archives/re-links instead of recompiling.
+RUN if [ "$FULL_STATIC" = "true" ]; then \
+    . /app/zlib-config.env && \
+    cmake -S llvm-project/llvm -B build -GNinja \
         -DCLANG_ENABLE_CIR=ON \
         -DLLVM_ENABLE_PROJECTS="clang;mlir" \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DLLVM_TARGETS_TO_BUILD=host \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_C_COMPILER=clang \
+        -DLLVM_USE_LINKER=lld \
+        -DCMAKE_INSTALL_PREFIX=/opt/cir-static \
         -DLIBCLANG_BUILD_STATIC=ON \
         -DLLVM_BUILD_LLVM_DYLIB=OFF \
         -DLLVM_LINK_LLVM_DYLIB=OFF \
         -DBUILD_SHARED_LIBS=OFF \
-        -DLLVM_ENABLE_PIC=OFF \
         -DLLVM_ENABLE_TERMINFO=OFF \
         -DLLVM_ENABLE_ZLIB=FORCE_ON \
         -DLLVM_ENABLE_ZSTD=OFF \
@@ -59,62 +53,68 @@ RUN . /build/zlib-config.env && \
         -DLLVM_INCLUDE_TESTS=OFF \
         -DLLVM_TOOL_REMARKS_SHLIB_BUILD=OFF \
         -DZLIB_LIBRARY="$ZLIB_LIBRARY" \
-        -DZLIB_INCLUDE_DIR="$ZLIB_INCLUDE_DIR"
+        -DZLIB_INCLUDE_DIR="$ZLIB_INCLUDE_DIR" && \
+    cmake --build build -j$(nproc) && \
+    cmake --install build; \
+    fi
 
-# Build and install LLVM
-RUN cmake --build llvm-build -j$(nproc) && \
-    cmake --install llvm-build
+COPY cir2c /app/cir2c
+COPY .git /app/.git
 
-# Copy xcfa-mapper source
-COPY xcfa-mapper /build/xcfa-mapper
-COPY .git /build/.git
-
-# Verify MLIRCIR was built and installed
-RUN echo "=== Checking for CIR dialect libraries ===" && \
-    ls -lh /build/llvm-install/lib/libMLIRCIR* || \
-    (echo "WARNING: libMLIRCIR not found in install directory" && \
-     echo "Checking build directory:" && \
-     find /build/llvm-build -name "libMLIRCIR*")
-
-# Configure and build xcfa-mapper statically
-RUN rm -rf /build/xcfa-mapper/build && \
-    cd /build/xcfa-mapper && \
-    mkdir -p build && \
-    cd build && \
-    cmake .. \
+# Build cir2c against the appropriate LLVM install.
+# -static-libgcc/-static-libstdc++ eliminates the C++ runtime dep in both modes.
+# In full static mode the LLVM cmake config resolves to .a archives, so LLVM itself
+# is also statically linked without any extra linker flags.
+RUN LLVM_INSTALL=$([ "$FULL_STATIC" = "true" ] && echo "/opt/cir-static" || echo "/opt/cir") && \
+    rm -rf /app/cir2c/build && \
+    cmake -S /app/cir2c -B /app/cir2c/build \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ \
         -DCMAKE_EXE_LINKER_FLAGS="-static-libgcc -static-libstdc++" \
-        -DLLVM_DIR=/build/llvm-install/lib/cmake/llvm \
-        -DMLIR_DIR=/build/llvm-install/lib/cmake/mlir && \
-    make -j$(nproc)
+        -DLLVM_DIR="$LLVM_INSTALL/lib/cmake/llvm" \
+        -DMLIR_DIR="$LLVM_INSTALL/lib/cmake/mlir" && \
+    cmake --build /app/cir2c/build -j$(nproc)
 
-# Strip binaries
-RUN CLANG_BIN="$(find /build/llvm-install/bin -maxdepth 1 -type f \( -name 'clang-[0-9]*' -o -name clang \) | sort -V | tail -n 1)" && \
-    test -n "$CLANG_BIN" && \
-    strip "$CLANG_BIN" && \
-    ln -sf "$(basename "$CLANG_BIN")" /build/llvm-install/bin/clang-static && \
-    strip /build/xcfa-mapper/build/xcfa-mapper
+# Stage all exported artifacts under /export/ so the scratch and runtime stages
+# can use identical COPY paths regardless of mode.
+RUN LLVM_BIN=$([ "$FULL_STATIC" = "true" ] && echo "/opt/cir-static/bin" || echo "/opt/cir/bin") && \
+    LLVM_LIB=$([ "$FULL_STATIC" = "true" ] && echo "/opt/cir-static/lib" || echo "/opt/cir/lib") && \
+    mkdir -p /export/lib && \
+    CLANG_BIN="$(find "$LLVM_BIN" -maxdepth 1 -type f \( -name 'clang-[0-9]*' -o -name clang \) | sort -V | tail -n 1)" && \
+    if [ "$FULL_STATIC" = "true" ]; then strip "$CLANG_BIN"; fi && \
+    cp -L "$CLANG_BIN"         /export/clang && \
+    cp -L "$LLVM_BIN/cir-opt"  /export/cir-opt && \
+    cp -L "$LLVM_BIN/clang++"  /export/clang++ && \
+    cp -rL "$LLVM_LIB/clang"   /export/clang-resource && \
+    strip /app/cir2c/build/cir2c && \
+    cp /app/cir2c/build/cir2c  /export/cir2c && \
+    cp /app/llvm-project/LICENSE.TXT /export/LICENSE.LLVM && \
+    if [ "$FULL_STATIC" = "false" ]; then \
+        find /opt/cir/lib -maxdepth 1 -name '*.so*' -exec cp -aP {} /export/lib/ \; ; \
+    fi
 
-# Verify binaries
-RUN echo "=== Clang binary info ===" && \
-    ls -lh /build/llvm-install/bin/clang-static && \
-    /build/llvm-install/bin/clang-static --version && \
-    echo "\n=== xcfa-mapper binary info ===" && \
-    ls -lh /build/xcfa-mapper/build/xcfa-mapper
+ENV LD_LIBRARY_PATH=/opt/cir/lib
 
-# Final stage - copy only the binaries
+RUN echo "=== clang ===" && /export/clang --version && \
+    printf "\n=== cir2c ===\n" && ls -lh /export/cir2c
+
+# Export only the binaries (works for both modes; clang/cir-opt may be dynamic
+# in FULL_STATIC=false mode).  /lib is empty in full static mode and contains
+# the LLVM shared libraries in FULL_STATIC=false mode.
 FROM scratch AS export
-COPY --from=builder /build/llvm-install/bin/clang-static /clang
-COPY --from=builder /build/llvm-install/bin/cir-opt /cir-opt
-COPY --from=builder /build/llvm-install/bin/clang++ /clang++
-COPY --from=builder /build/llvm-install/lib/clang/*/include /include
-COPY --from=builder /build/xcfa-mapper/build/xcfa-mapper /xcfa-mapper
+COPY --from=builder /export/clang          /clang
+COPY --from=builder /export/cir-opt        /cir-opt
+COPY --from=builder /export/clang++        /clang++
+COPY --from=builder /export/clang-resource /include
+COPY --from=builder /export/cir2c          /cir2c
+COPY --from=builder /export/lib            /lib
 
-# Runtime stage for testing (optional)
-FROM debian:trixie-slim AS runtime
-COPY --from=builder /build/llvm-install/bin/clang /usr/local/bin/clang
-COPY --from=builder /build/xcfa-mapper/build/xcfa-mapper /usr/local/bin/xcfa-mapper
-RUN clang --version && xcfa-mapper --help || true
+# Runtime stage for testing.
+# Based on the LLVM image so that shared libs in /opt/cir/lib are present when
+# FULL_STATIC=false produces dynamically linked binaries.
+FROM ghcr.io/ftsrg/cir-demo-llvm:latest AS runtime
+COPY --from=builder /export/clang  /usr/local/bin/clang
+COPY --from=builder /export/cir2c  /usr/local/bin/cir2c
+RUN clang --version && cir2c --help || true
 CMD ["/bin/bash"]

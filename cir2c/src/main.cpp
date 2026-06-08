@@ -37,7 +37,7 @@
 #include "ErrorMessages.h"
 
 using namespace mlir;
-using namespace xcfa;
+using namespace cir2c;
 
 int main(int argc, char **argv) {
   const char *monitorJsonFile = nullptr;
@@ -46,12 +46,12 @@ int main(int argc, char **argv) {
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
     if (arg == "--version") {
-      llvm::outs() << "xcfa-mapper " << XCFA_MAPPER_VERSION << "\n";
+      llvm::outs() << "cir2c " << CIR2C_VERSION << "\n";
       return 0;
     }
     if (arg == "--monitor-json") {
       if (i + 1 >= argc) {
-        llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
+        llvm::errs() << "Usage: cir2c [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
         return 2;
       }
       monitorJsonFile = argv[++i];
@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
   }
 
   if (positional.size() != 2) {
-    llvm::errs() << "Usage: xcfa-mapper [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
+    llvm::errs() << "Usage: cir2c [--monitor-json <trace.json>] <input.mlir> <output.c>\n";
     return 2;
   }
 
