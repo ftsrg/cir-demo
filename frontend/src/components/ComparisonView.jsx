@@ -19,26 +19,35 @@ import Split from 'react-split'
 import * as monaco from 'monaco-editor'
 import { Box, Typography } from '@mui/material'
 
-// The three linked views, in display order. `id` selects the line fields from
-// each trace mapping; `cls` is the decoration CSS class.
+// The linked views rendered inside the comparison tab, in display order. `id`
+// selects the line fields from each trace mapping; `cls` is the decoration CSS
+// class. The source is *not* rendered here — its highlight is pushed up to the
+// main editor in the leftmost pane (see onSrcHighlight / onSrcReveal).
 const VIEWS = [
-  { id: 'src', title: 'Source', language: 'cpp', cls: 'cmp-highlight-src' },
   { id: 'mlir', title: 'CIR', language: 'plaintext', cls: 'cmp-highlight-mlir' },
   { id: 'c', title: 'C', language: 'cpp', cls: 'cmp-highlight-c' }
 ]
 
-export default function ComparisonView({ data = {} }) {
-  const srcText = data?.source || ''
+// All ids tracked in a mapping group, including the source line that lives in
+// the main editor rather than in one of the VIEWS above.
+const GROUP_IDS = ['src', 'mlir', 'c']
+
+export default function ComparisonView({ data = {}, onSrcHighlight = () => {}, onSrcReveal = () => {} }) {
   const mlirText = data?.mlir || ''
   const cText = data?.c || ''
   const mappings = Array.isArray(data?.mappings) ? data.mappings : []
 
-  const text = { src: srcText, mlir: mlirText, c: cText }
+  const text = { mlir: mlirText, c: cText }
 
   // Container + editor refs, keyed by view id.
-  const containerRefs = { src: useRef(null), mlir: useRef(null), c: useRef(null) }
-  const editorRefs = useRef({ src: null, mlir: null, c: null })
-  const decorRefs = useRef({ src: [], mlir: [], c: [] })
+  const containerRefs = { mlir: useRef(null), c: useRef(null) }
+  const editorRefs = useRef({ mlir: null, c: null })
+  const decorRefs = useRef({ mlir: [], c: [] })
+
+  // The source highlight/reveal callbacks are recreated on each App render, so
+  // keep them in a ref for the once-registered Monaco handlers to read.
+  const cbRef = useRef({ onSrcHighlight, onSrcReveal })
+  useEffect(() => { cbRef.current = { onSrcHighlight, onSrcReveal } }, [onSrcHighlight, onSrcReveal])
 
   // Each "group" links the lines that belong to one mapped operation across the
   // three views. From the groups we build, per view, a lookup from a line
@@ -54,8 +63,9 @@ export default function ComparisonView({ data = {} }) {
       }
       if (src.length || mlir.length || c.length) groups.push({ src, mlir, c })
     }
-    // lineToGroups[viewId] = Map(line -> Set(groupIndex))
-    const lineToGroups = { src: new Map(), mlir: new Map(), c: new Map() }
+    // lineToGroups[viewId] = Map(line -> Set(groupIndex)); only the hoverable
+    // views (CIR, C) need a reverse index — the source is never hovered here.
+    const lineToGroups = { mlir: new Map(), c: new Map() }
     groups.forEach((g, gi) => {
       for (const v of VIEWS) {
         for (const line of g[v.id]) {
@@ -100,21 +110,27 @@ export default function ComparisonView({ data = {} }) {
       decorRefs.current[viewId] = editor.deltaDecorations(decorRefs.current[viewId], decos)
     }
 
-    const clearAll = () => { for (const v of VIEWS) setDecorations(v.id, []) }
+    const clearAll = () => {
+      for (const v of VIEWS) setDecorations(v.id, [])
+      cbRef.current.onSrcHighlight([])
+    }
 
-    // Given a hovered (view, line), highlight every linked line in all views.
+    // Given a hovered (view, line), highlight every linked line: the CIR/C lines
+    // here, and the source lines in the main editor on the left.
     const highlightFrom = (viewId, line) => {
       const { groups, lineToGroups } = linkageRef.current
       const gidx = lineToGroups[viewId].get(line)
       if (!gidx) { clearAll(); return }
       const lines = { src: new Set(), mlir: new Set(), c: new Set() }
       for (const gi of gidx) {
-        for (const v of VIEWS) groups[gi][v.id].forEach(l => lines[v.id].add(l))
+        for (const id of GROUP_IDS) groups[gi][id].forEach(l => lines[id].add(l))
       }
       for (const v of VIEWS) setDecorations(v.id, [...lines[v.id]])
+      cbRef.current.onSrcHighlight([...lines.src])
     }
 
-    // On click, scroll the other two views to the first linked line.
+    // On click, scroll the other view here, and the main source editor, to the
+    // first linked line.
     const revealFrom = (viewId, line) => {
       const { groups, lineToGroups } = linkageRef.current
       const gidx = lineToGroups[viewId].get(line)
@@ -127,6 +143,8 @@ export default function ComparisonView({ data = {} }) {
           editorRefs.current[v.id].revealLineInCenter(target, monaco.editor.ScrollType.Smooth)
         }
       }
+      const srcTarget = first.src[0]
+      if (srcTarget) cbRef.current.onSrcReveal(srcTarget)
     }
 
     const subs = []
@@ -150,6 +168,8 @@ export default function ComparisonView({ data = {} }) {
         if (editorRefs.current[v.id]) editorRefs.current[v.id].dispose()
         editorRefs.current[v.id] = null
       }
+      // Don't leave a stale highlight in the main editor after this tab unmounts.
+      cbRef.current.onSrcHighlight([])
     }
   }, [])
 
@@ -159,20 +179,27 @@ export default function ComparisonView({ data = {} }) {
       const model = editorRefs.current[v.id]?.getModel()
       if (model && model.getValue() !== text[v.id]) model.setValue(text[v.id])
     }
-  }, [srcText, mlirText, cText])
+  }, [mlirText, cText])
 
-  if (!srcText && !mlirText && !cText) {
-    return <Typography sx={{ color: '#9aa4b2', fontSize: 12 }}>no comparison data generated yet</Typography>
-  }
+  // Always render the editor containers so the create-on-mount effect above can
+  // attach to them; otherwise the editors are never created on first load and
+  // only appear after a tab switch forces a remount. The empty state is shown
+  // as an overlay instead of replacing the layout.
+  const hasData = Boolean(mlirText || cText)
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1, py: 0.5, color: '#9aa4b2', fontSize: 11 }}>
-        <span>Hover to highlight mapped lines across source, CIR and C; click to scroll the others to the match.</span>
+        <span>Hover over CIR or C to highlight the mapped source line on the left and across the views; click to scroll to the match.</span>
         <span>{mappings.length} mapped operations</span>
       </Box>
-      <Box sx={{ flex: 1, minHeight: 0 }}>
-        <Split sizes={[34, 33, 33]} minSize={120} gutterSize={6} gutterAlign="center" className="split" style={{ display: 'flex', width: '100%', height: '100%' }}>
+      <Box sx={{ flex: 1, minHeight: 0, position: 'relative' }}>
+        {!hasData && (
+          <Box sx={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, bgcolor: '#0f1115' }}>
+            <Typography sx={{ color: '#9aa4b2', fontSize: 12 }}>no comparison data generated yet</Typography>
+          </Box>
+        )}
+        <Split sizes={[50, 50]} minSize={120} gutterSize={6} gutterAlign="center" className="split" style={{ display: 'flex', width: '100%', height: '100%' }}>
           {VIEWS.map(v => (
             <div key={v.id} style={{ width: '100%', height: '100%', minHeight: 0, display: 'flex', flexDirection: 'column' }}>
               <div style={{ color: '#9aa4b2', fontSize: 10, padding: '2px 6px' }}>{v.title}</div>
