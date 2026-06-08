@@ -20,7 +20,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import ComparisonView from './ComparisonView'
 
-export default function OutputTabs({ outputs = {}, flatten = false }) {
+export default function OutputTabs({ outputs = {}, flatten = false, onSrcHighlight, onSrcReveal }) {
   const [tab, setTab] = useState(0)
   const [stderrOpen, setStderrOpen] = useState(true)
   // The Comparison view already shows the CIR (and its C output) side by side,
@@ -59,7 +59,7 @@ export default function OutputTabs({ outputs = {}, flatten = false }) {
 
   <Box sx={{ p: 1, flex: 1, display: 'flex', flexDirection: 'column', bgcolor: '#0f1115', color: '#ddd', fontFamily: 'monospace', fontSize: 12, minHeight: 0 }}>
         {activeKey === 'comparison' ? (
-          <ComparisonView data={active} />
+          <ComparisonView data={active} onSrcHighlight={onSrcHighlight} onSrcReveal={onSrcReveal} />
         ) : (
         <Box sx={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
           {getStderr(active) ? (

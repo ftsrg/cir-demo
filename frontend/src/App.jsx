@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Split from 'react-split'
 import Editor from './components/Editor'
 import OutputTabs from './components/OutputTabs'
@@ -52,6 +52,11 @@ export default function App() {
   const [clangVersion, setClangVersion] = useState('')
   const [cir2cVersion, setCir2cVersion] = useState('')
   const [position, setPosition] = useState({ line: 1, column: 1 })
+  // Source lines / scroll target for the comparison view to drive in the main
+  // editor on the left.
+  const [srcHighlight, setSrcHighlight] = useState([])
+  const [srcReveal, setSrcReveal] = useState(null)
+  const onSrcReveal = useCallback((line) => setSrcReveal({ line, nonce: Date.now() }), [])
 
   useEffect(() => {
     api.get('api/examples').then(r => setExamples(r.data || [])).catch(() => {})
@@ -76,6 +81,9 @@ export default function App() {
   const onSelectExample = (path) => { setSelectedExample(path); onCloseExamples(); }
 
   const onGenerate = async () => {
+    // Clear previous results from all views before the new ones arrive.
+    setOutputs({ llvm: '', clang: '', flat_clang: '', xcfa: '', c: '', comparison: {} })
+    setSrcHighlight([])
     const resp = await api.post('api/generate', { code, language, flatten, externalizeIo, externalizeContainers })
     // Ensure missing keys are present to avoid undefined in OutputTabs
     const data = resp.data || {}
@@ -95,9 +103,6 @@ export default function App() {
         <Toolbar>
           <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="h6" sx={{ fontSize: 16 }}>CIR Demo</Typography>
-            <Typography variant="caption" sx={{ opacity: 0.7, display: { xs: 'none', md: 'block' } }}>
-              C/C++ &rarr; verifier-friendly C via ClangIR
-            </Typography>
             <Button
               size="small"
               color="inherit"
@@ -106,17 +111,6 @@ export default function App() {
               aria-label="examples"
             >
               Examples
-            </Button>
-            <Button
-              size="small"
-              color="inherit"
-              component="a"
-              href="https://github.com/ftsrg/cir-demo"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="source repository"
-            >
-              GitHub
             </Button>
             <Popover open={openExamples} anchorEl={examplesAnchor} onClose={onCloseExamples} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
               <Box sx={{ width: 360 }}>
@@ -173,11 +167,11 @@ export default function App() {
       <Box sx={{ flex: 1, display: 'flex', minHeight: 0 }}>
         <Split sizes={[50, 50]} minSize={200} gutterSize={8} gutterAlign="center" className="split" style={{ display: 'flex', width: '100%', height: '100%' }}>
           <div style={{ width: '100%', height: '100%' }}>
-            <Editor code={code} onChange={setCode} onPositionChange={setPosition} />
+            <Editor code={code} onChange={setCode} onPositionChange={setPosition} highlightLines={srcHighlight} revealLine={srcReveal} />
           </div>
           <div style={{ width: '100%', height: '100%' }}>
               <div className="no-focus-outline" style={{ height: '100%' }}>
-              <OutputTabs outputs={outputs} flatten={flatten} />
+              <OutputTabs outputs={outputs} flatten={flatten} onSrcHighlight={setSrcHighlight} onSrcReveal={onSrcReveal} />
             </div>
           </div>
         </Split>
