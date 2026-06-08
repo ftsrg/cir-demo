@@ -247,13 +247,6 @@ app.post('/api/generate', async (req, res) => {
 
     let flatOut = { stdout: '', stderr: '', code: 0 };
 
-    // Save the vtable layout dump (from clang stdout via -fdump-vtable-layouts)
-    // BEFORE we overwrite clangOut.stdout with the CIR file content below.
-    const vtlayoutPath = path.join(tmpDir, `${base}.vtlayout.txt`);
-    const vtlayoutText = (clangOut && clangOut.stdout) ? clangOut.stdout : '';
-    await fs.writeFile(vtlayoutPath, vtlayoutText, 'utf8').catch(() => {});
-    filesToCleanup.push(vtlayoutPath);
-
     // Read the generated CIR file. Keep a fallback probe for toolchains that ignore -o.
     const cirCandidates = [cirMlirPath, ...generatedMlirCandidates(tmpFileCir)];
     let resolvedCirMlirPath = null;
@@ -316,8 +309,8 @@ app.post('/api/generate', async (req, res) => {
 
       const outC = path.join(tmpDir, `${base}.c`);
       const outTrace = path.join(tmpDir, `${base}.trace.json`);
-      const mapArgs = ['--monitor-json', outTrace, '--vtlayout', vtlayoutPath, mlirPath, outC];
-      const mapResult = await execFileAsync(cir2cBin, mapArgs);
+      const mapArgs = ['--monitor-json', outTrace, mlirPath, outC];
+      const mapResult = await execFileAsync(cir2cbin, mapArgs);
       cOutput.code = (mapResult && typeof mapResult.code !== 'undefined') ? mapResult.code : 1;
       cOutput.stderr = (mapResult && mapResult.stderr) ? mapResult.stderr : '';
       if (mapResult && mapResult.code === 0) {
