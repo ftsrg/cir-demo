@@ -204,9 +204,9 @@ jobs:
           mkdir -p cir2c/test/esbmc-eval/output
           JOBS=4 RUN_INTEGRATION=0 RUN_LLVM=0 RUN_ESBMC=1 \
             bash cir2c/test/run_tests.sh \
-              --json-out /tmp/esbmc.json \
+              --json-out /tmp/esbmc-std.json \
             || true
-          cat /tmp/esbmc.json
+          cat /tmp/esbmc-std.json
 
       - name: Upload results
         if: always()
