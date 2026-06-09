@@ -1,0 +1,142 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTISt9exception[] = "_ZTISt9exception";
+
+// Struct definitions (auto-parsed)
+struct anon_struct_0 { unsigned char* __field0[5]; };
+struct std__exception { void* __field0; };
+
+extern void *_ZTVSt9exception[];
+static const char _ZTISt9exception__n_[] = "_ZTISt9exception";
+static void* _ZTISt9exception[2] = {(void*)0, (void*)_ZTISt9exception__n_};
+char _str[7] = "a != 2";
+char _str_1[121] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/try_catch/try-catch_simple_04_bug/main.cpp";
+char __PRETTY_FUNCTION____Z14throwExceptionv[22] = "void throwException()";
+extern void *_ZTVSt9exception[];
+extern int __gxx_personality_v0();
+void std__exception__exception(struct std__exception* p0);
+void std__exception___exception(struct std__exception* p0) {}
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+void throwException();
+int main();
+
+// function: _ZNSt9exceptionC2Ev
+void std__exception__exception(struct std__exception* v0) {
+bb1:
+  struct std__exception* this2;
+  this2 = v0;
+  struct std__exception* t3 = this2;
+  void* v4 = (void*)&_ZTVSt9exception[2];
+  void** v5 = (void**)t3;
+  *(void**)(v5) = (void*)v4;
+  return;
+}
+
+// function: _Z14throwExceptionv
+void throwException() {
+bb6:
+    struct std__exception* caughtException7;
+    int a8;
+      static char exc_buf10[8] = {0};
+      struct std__exception* exc11 = (struct std__exception*)exc_buf10;
+      std__exception__exception(exc11);
+      __cir_exc_ptr = (void*)exc11;
+      __cir_exc_dtor = (void*)&std__exception___exception;
+      __cir_exc_type = (const void*)__cir_eh_type__ZTISt9exception;
+      __cir_exc_type_id = (unsigned long)__cir_eh_type__ZTISt9exception;
+      __cir_exc_active = 1;
+      goto cir_try_dispatch9;
+      __builtin_unreachable();
+    cir_try_dispatch9: ;
+    if (__cir_exc_active) {
+    if (__cir_exc_type == (const void*)__cir_eh_type__ZTISt9exception) {
+      int ca_tok12 = 0;
+      void* ca_exn13 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        caughtException7 = (struct std__exception*)__cir_exc_ptr;
+        int c14 = 2;
+        a8 = c14;
+        int t15 = a8;
+        int c16 = 2;
+        _Bool c17 = ((t15 != c16)) ? 1 : 0;
+        if (c17) {
+        } else {
+          char* cast18 = (char*)&(_str);
+          char* c19 = _str_1;
+          unsigned int c20 = 20;
+          char* cast21 = (char*)&(__PRETTY_FUNCTION____Z14throwExceptionv);
+          __assert_fail(cast18, c19, c20, cast21);
+        }
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    else {
+      __cir_exc_active = 1;
+      return;
+    return;
+    }
+    }
+  return;
+}
+
+// function: main
+int main() {
+bb22:
+  int __retval23;
+  int c24 = 0;
+  __retval23 = c24;
+    struct std__exception* caughtException25;
+      throwException();
+      if (__cir_exc_active) {
+        goto cir_try_dispatch26;
+      }
+    cir_try_dispatch26: ;
+    if (__cir_exc_active) {
+    if (__cir_exc_type == (const void*)__cir_eh_type__ZTISt9exception) {
+      int ca_tok27 = 0;
+      void* ca_exn28 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        caughtException25 = (struct std__exception*)__cir_exc_ptr;
+      {
+        if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+      }
+    }
+    else {
+      __cir_exc_active = 1;
+      { int __cir_eh_ret = (int)0; return __cir_eh_ret; }
+    { int __cir_eh_ret = (int)0; return __cir_eh_ret; }
+    }
+    }
+  int c29 = 0;
+  __retval23 = c29;
+  int t30 = __retval23;
+  return t30;
+}
+

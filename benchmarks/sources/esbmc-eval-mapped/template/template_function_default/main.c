@@ -1,0 +1,70 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+char _str[5] = "s==0";
+char _str_1[122] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/template/template_function_default/main.cpp";
+char __PRETTY_FUNCTION____Z1fIicEvT_T0_[33] = "void f(S, T) [S = int, T = char]";
+char _str_2[5] = "t==0";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+void void_f_int__char_(int p0, char p1);
+int main();
+
+// function: _Z1fIicEvT_T0_
+void void_f_int__char_(int v0, char v1) {
+bb2:
+  int s3;
+  char t4;
+  s3 = v0;
+  t4 = v1;
+  int t5 = s3;
+  int c6 = 0;
+  _Bool c7 = ((t5 == c6)) ? 1 : 0;
+  if (c7) {
+  } else {
+    char* cast8 = (char*)&(_str);
+    char* c9 = _str_1;
+    unsigned int c10 = 13;
+    char* cast11 = (char*)&(__PRETTY_FUNCTION____Z1fIicEvT_T0_);
+    __assert_fail(cast8, c9, c10, cast11);
+  }
+  char t12 = t4;
+  int cast13 = (int)t12;
+  int c14 = 0;
+  _Bool c15 = ((cast13 == c14)) ? 1 : 0;
+  if (c15) {
+  } else {
+    char* cast16 = (char*)&(_str_2);
+    char* c17 = _str_1;
+    unsigned int c18 = 14;
+    char* cast19 = (char*)&(__PRETTY_FUNCTION____Z1fIicEvT_T0_);
+    __assert_fail(cast16, c17, c18, cast19);
+  }
+  return;
+}
+
+// function: main
+int main() {
+bb20:
+  int __retval21;
+  int c22 = 0;
+  __retval21 = c22;
+  int c23 = 0;
+  char c24 = 0;
+  void_f_int__char_(c23, c24);
+  int t25 = __retval21;
+  return t25;
+}
+

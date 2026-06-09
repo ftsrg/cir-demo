@@ -1,0 +1,98 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Source: https://doi.org/10.5281/zenodo.14824495
+ *
+ * This work is licensed under Creative Commons Attribution 4.0 International.
+ * To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+ */
+
+#include <iostream>
+#include <map>
+#include <cstring>
+#include <cassert>
+using namespace std;
+
+class StringClass {
+  char str[20];
+public:
+  StringClass() { 
+     strcpy(str, ""); 
+  }
+  StringClass(char *s) { 
+     strcpy(str, s); 
+  }
+  char *get() { 
+     return str; 
+  }
+};
+
+// must define less than relative to StringClass objects
+bool operator<(StringClass a, StringClass b)
+{
+   return strcmp(a.get(), b.get()) < 0;
+}
+bool operator==(StringClass a, StringClass b)
+{
+   return (strcmp(a.get(), b.get()) == 0);
+}
+bool operator!=(StringClass a, StringClass b)
+{
+   return (strcmp(a.get(), b.get()) != 0);
+}
+
+class opposite {
+  char str[20];
+public:
+  opposite() { 
+     strcmp(str, ""); 
+  }
+  opposite(char *s) { 
+     strcpy(str, s); 
+  }
+  char *get() { 
+     return str; 
+  }
+};
+
+bool operator<(opposite a, opposite b)
+{
+   return strcmp(a.get(), b.get()) < 0;
+}
+bool operator==(opposite a, opposite b)
+{
+   return (strcmp(a.get(), b.get()) == 0);
+}
+bool operator!=(opposite a, opposite b)
+{
+   return (strcmp(a.get(), b.get()) != 0);
+}
+
+int main()
+{
+  map<StringClass, opposite> mapObject;
+
+  mapObject.insert( map<StringClass, opposite>::value_type(StringClass("y"),opposite("n")) );
+
+  map<StringClass, opposite>::iterator it = mapObject.begin();
+  assert(it->first == StringClass("y"));
+  assert(it->second == opposite("y"));
+  assert(mapObject.size() == 1);
+
+  return 0;
+}
+

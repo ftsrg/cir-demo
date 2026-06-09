@@ -1,0 +1,130 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Struct definitions (auto-parsed)
+struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
+union anon_0 { char _M_local_buf[16]; unsigned long _M_allocated_capacity; };
+struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider { char* _M_p; };
+struct std____new_allocator_char_;
+struct std__allocator_char_ { unsigned char __field0; };
+struct std__forward_iterator_tag { unsigned char __field0; };
+struct std__random_access_iterator_tag { unsigned char __field0; };
+struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
+
+char _str[12] = "Test string";
+char _str_1[12] = "Text string";
+char _str_2[22] = "str1 == \"Text string\"";
+char _str_3[110] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/string/string_at_4_bug/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_4[50] = "basic_string: construction from null is not valid";
+char _str_5[24] = "basic_string::_M_create";
+_Bool _ZNSt17integral_constantIbLb1EE5valueE;
+char _str_6[68] = "basic_string::at: __n (which is %zu) >= this->size() (which is %zu)";
+char _str_7[93] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/basic_string.h";
+char __PRETTY_FUNCTION____ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEixEm[138] = "reference std::basic_string<char>::operator[](size_type) [_CharT = char, _Traits = std::char_traits<char>, _Alloc = std::allocator<char>]";
+char _str_8[16] = "__pos <= size()";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str12;
+  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ ref_tmp03;
+  struct std__allocator_char_ ref_tmp14;
+  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* tmp_exprcleanup5;
+  char str26;
+  int c7 = 0;
+  __retval1 = c7;
+  // externalized std:: op: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC2EvQ26is_default_constructible_vIT1_E
+  __VERIFIER_nondet_memory(&str12, sizeof(str12));
+    char* cast8 = (char*)&(_str);
+    // externalized std:: op: std::allocator<char>::allocator()
+    __VERIFIER_nondet_memory(&ref_tmp14, sizeof(ref_tmp14));
+      // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string<std::allocator<char> >(char const*, std::allocator<char> const&)
+      __VERIFIER_nondet_memory(&ref_tmp03, sizeof(ref_tmp03));
+      __VERIFIER_nondet_memory(cast8, sizeof(*cast8));
+      __VERIFIER_nondet_memory(&ref_tmp14, sizeof(ref_tmp14));
+        struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std9;
+        __VERIFIER_nondet_memory(&std9, sizeof(std9));
+        tmp_exprcleanup5 = std9;
+      {
+        // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+        __VERIFIER_nondet_memory(&ref_tmp03, sizeof(ref_tmp03));
+      }
+    {
+      // externalized std:: op: std::allocator<char>::~allocator()
+      __VERIFIER_nondet_memory(&ref_tmp14, sizeof(ref_tmp14));
+    }
+    struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* t10 = tmp_exprcleanup5;
+    char c11 = 120;
+    str26 = c11;
+      int i12;
+      int c13 = 0;
+      i12 = c13;
+      while (1) {
+        int t15 = i12;
+        int c16 = 11;
+        _Bool c17 = ((t15 < c16)) ? 1 : 0;
+        if (!c17) break;
+            int t18 = i12;
+            unsigned long cast19 = (unsigned long)t18;
+            char* std20;
+            __VERIFIER_nondet_memory(&std20, sizeof(std20));
+            char t21 = *std20;
+            int cast22 = (int)t21;
+            int c23 = 115;
+            _Bool c24 = ((cast22 == c23)) ? 1 : 0;
+            if (c24) {
+              char t25 = str26;
+              int t26 = i12;
+              unsigned long cast27 = (unsigned long)t26;
+              char* std28;
+              __VERIFIER_nondet_memory(&std28, sizeof(std28));
+              *std28 = t25;
+            }
+      for_step14: ;
+        int t29 = i12;
+        int u30 = t29 + 1;
+        i12 = u30;
+      }
+    char* cast31 = (char*)&(_str_1);
+    _Bool std32;
+    __VERIFIER_nondet_memory(&std32, sizeof(std32));
+    if (std32) {
+    } else {
+      char* cast33 = (char*)&(_str_2);
+      char* c34 = _str_3;
+      unsigned int c35 = 28;
+      char* cast36 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast33, c34, c35, cast36);
+    }
+    int c37 = 0;
+    __retval1 = c37;
+    int t38 = __retval1;
+    int ret_val39 = t38;
+    {
+      // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+      __VERIFIER_nondet_memory(&str12, sizeof(str12));
+    }
+    return ret_val39;
+  int t40 = __retval1;
+  return t40;
+}
+

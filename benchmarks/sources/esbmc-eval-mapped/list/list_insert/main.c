@@ -1,0 +1,308 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std___List_const_iterator_int_ { struct std____detail___List_node_base* _M_node; };
+struct std___List_iterator_int_ { struct std____detail___List_node_base* _M_node; };
+struct std___UninitDestroyGuard_int____void_ { int* _M_first; int** _M_cur; };
+struct std___Vector_base_int__std__allocator_int_____Vector_impl_data { int* _M_start; int* _M_finish; int* _M_end_of_storage; };
+struct std____allocated_ptr_std__allocator_std___List_node_int___ { struct std__allocator_std___List_node_int__* _M_alloc; struct std___List_node_int_* _M_ptr; };
+struct std____detail___List_node_base { struct std____detail___List_node_base* _M_next; struct std____detail___List_node_base* _M_prev; };
+struct std____detail___List_size { unsigned long _M_size; };
+struct std____false_type { unsigned char __field0; };
+struct std____new_allocator_int_;
+struct std____new_allocator_std___List_node_int__;
+struct std__allocator_int_ { unsigned char __field0; };
+struct std__allocator_std___List_node_int__ { unsigned char __field0; };
+struct std___List_node_int_;
+struct std___Vector_base_int__std__allocator_int_____Vector_impl { struct std___Vector_base_int__std__allocator_int_____Vector_impl_data __field0; };
+struct std____allocated_obj_std__allocator_std___List_node_int___ { struct std____allocated_ptr_std__allocator_std___List_node_int___ __field0; };
+struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
+struct std__ctype_char_;
+struct std__ios_base;
+struct std___Vector_base_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int_____Vector_impl _M_impl; };
+struct std____cxx11___List_base_int__std__allocator_int_____List_impl { struct std____detail___List_node_header _M_node; };
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+struct std__vector_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int__ __field0; };
+struct std____cxx11___List_base_int__std__allocator_int__ { struct std____cxx11___List_base_int__std__allocator_int_____List_impl _M_impl; };
+struct std____cxx11__list_int__std__allocator_int__ { struct std____cxx11___List_base_int__std__allocator_int__ __field0; };
+
+struct std____detail___List_size __const__ZNSt8__detail17_List_node_header7_M_initEv_ref_tmp0;
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+char _str[9] = "*it == 2";
+char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/list/list_insert/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[19] = "mylist.size() == 6";
+char _str_3[10] = "*it == 20";
+char _str_4[19] = "mylist.size() == 8";
+char _str_5[20] = "mylist.size() == 10";
+char _str_6[10] = "*it == 30";
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str_7[17] = "mylist contains:";
+char _str_8[2] = " ";
+char _str_9[49] = "cannot create std::vector larger than max_size()";
+char _str_10[98] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_uninitialized.h";
+char __PRETTY_FUNCTION____ZSt18__do_uninit_fill_nIPimiET_S1_T0_RKT1_[140] = "_ForwardIterator std::__do_uninit_fill_n(_ForwardIterator, _Size _Tp &) [_ForwardIterator = int *, _Size = unsigned long, _Tp = int]";
+char _str_11[9] = "__n >= 0";
+char _str_12[89] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_list.h";
+char __PRETTY_FUNCTION____ZNSt7__cxx114listIiSaIiEE4backEv[75] = "reference std::list<int>::back() [_Tp = int, _Alloc = std::allocator<int>]";
+char _str_13[15] = "!this->empty()";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+extern unsigned long __VERIFIER_nondet_unsigned_long(void);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std____cxx11__list_int__std__allocator_int__ mylist2;
+  struct std___List_iterator_int_ it3;
+  struct std___List_iterator_int_ ref_tmp04;
+  struct std___List_const_iterator_int_ agg_tmp05;
+  int ref_tmp16;
+  struct std___List_iterator_int_ agg_tmp17;
+  struct std___List_const_iterator_int_ agg_tmp28;
+  int ref_tmp29;
+  struct std___List_iterator_int_ agg_tmp310;
+  struct std__vector_int__std__allocator_int__ myvector11;
+  int ref_tmp312;
+  struct std__allocator_int_ ref_tmp413;
+  struct std___List_const_iterator_int_ agg_tmp414;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ agg_tmp515;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ agg_tmp616;
+  struct std___List_iterator_int_ agg_tmp717;
+  struct std___List_iterator_int_ agg_tmp818;
+  int c19 = 0;
+  __retval1 = c19;
+  // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::list()
+  __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
+    // externalized std:: op: std::_List_iterator<int>::_List_iterator()
+    __VERIFIER_nondet_memory(&it3, sizeof(it3));
+      int i20;
+      int c21 = 1;
+      i20 = c21;
+      while (1) {
+        int t23 = i20;
+        int c24 = 5;
+        _Bool c25 = ((t23 <= c24)) ? 1 : 0;
+        if (!c25) break;
+        // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::push_back(int const&)
+        __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
+        __VERIFIER_nondet_memory(&i20, sizeof(i20));
+      for_step22: ;
+        int t26 = i20;
+        int u27 = t26 + 1;
+        i20 = u27;
+      }
+    struct std___List_iterator_int_ std28;
+    __VERIFIER_nondet_memory(&std28, sizeof(std28));
+    ref_tmp04 = std28;
+    struct std___List_iterator_int_* std29;
+    __VERIFIER_nondet_memory(&std29, sizeof(std29));
+    struct std___List_iterator_int_* std30;
+    __VERIFIER_nondet_memory(&std30, sizeof(std30));
+    // externalized std:: op: std::_List_const_iterator<int>::_List_const_iterator(std::_List_iterator<int> const&)
+    __VERIFIER_nondet_memory(&agg_tmp05, sizeof(agg_tmp05));
+    __VERIFIER_nondet_memory(&it3, sizeof(it3));
+    int c31 = 10;
+    ref_tmp16 = c31;
+    struct std___List_const_iterator_int_ t32 = agg_tmp05;
+    struct std___List_iterator_int_ std33;
+    __VERIFIER_nondet_memory(&std33, sizeof(std33));
+    agg_tmp17 = std33;
+    int* std34;
+    __VERIFIER_nondet_memory(&std34, sizeof(std34));
+    int t35 = *std34;
+    int c36 = 2;
+    _Bool c37 = ((t35 == c36)) ? 1 : 0;
+    if (c37) {
+    } else {
+      char* cast38 = (char*)&(_str);
+      char* c39 = _str_1;
+      unsigned int c40 = 27;
+      char* cast41 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast38, c39, c40, cast41);
+    }
+    unsigned long std42 = __VERIFIER_nondet_unsigned_long();
+    unsigned long c43 = 6;
+    _Bool c44 = ((std42 == c43)) ? 1 : 0;
+    if (c44) {
+    } else {
+      char* cast45 = (char*)&(_str_2);
+      char* c46 = _str_1;
+      unsigned int c47 = 28;
+      char* cast48 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast45, c46, c47, cast48);
+    }
+    // externalized std:: op: std::_List_const_iterator<int>::_List_const_iterator(std::_List_iterator<int> const&)
+    __VERIFIER_nondet_memory(&agg_tmp28, sizeof(agg_tmp28));
+    __VERIFIER_nondet_memory(&it3, sizeof(it3));
+    unsigned long c49 = 2;
+    int c50 = 20;
+    ref_tmp29 = c50;
+    struct std___List_const_iterator_int_ t51 = agg_tmp28;
+    struct std___List_iterator_int_ std52;
+    __VERIFIER_nondet_memory(&std52, sizeof(std52));
+    agg_tmp310 = std52;
+    struct std___List_iterator_int_* std53;
+    __VERIFIER_nondet_memory(&std53, sizeof(std53));
+    int* std54;
+    __VERIFIER_nondet_memory(&std54, sizeof(std54));
+    int t55 = *std54;
+    int c56 = 20;
+    _Bool c57 = ((t55 == c56)) ? 1 : 0;
+    if (c57) {
+    } else {
+      char* cast58 = (char*)&(_str_3);
+      char* c59 = _str_1;
+      unsigned int c60 = 34;
+      char* cast61 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast58, c59, c60, cast61);
+    }
+    unsigned long std62 = __VERIFIER_nondet_unsigned_long();
+    unsigned long c63 = 8;
+    _Bool c64 = ((std62 == c63)) ? 1 : 0;
+    if (c64) {
+    } else {
+      char* cast65 = (char*)&(_str_4);
+      char* c66 = _str_1;
+      unsigned int c67 = 35;
+      char* cast68 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast65, c66, c67, cast68);
+    }
+    unsigned long c69 = 2;
+    int c70 = 30;
+    ref_tmp312 = c70;
+    // externalized std:: op: std::allocator<int>::allocator()
+    __VERIFIER_nondet_memory(&ref_tmp413, sizeof(ref_tmp413));
+      // externalized std:: op: std::vector<int, std::allocator<int> >::vector(unsigned long, int const&, std::allocator<int> const&)
+      __VERIFIER_nondet_memory(&myvector11, sizeof(myvector11));
+      __VERIFIER_nondet_memory(&ref_tmp312, sizeof(ref_tmp312));
+      __VERIFIER_nondet_memory(&ref_tmp413, sizeof(ref_tmp413));
+    {
+      // externalized std:: op: std::allocator<int>::~allocator()
+      __VERIFIER_nondet_memory(&ref_tmp413, sizeof(ref_tmp413));
+    }
+      // externalized std:: op: std::_List_const_iterator<int>::_List_const_iterator(std::_List_iterator<int> const&)
+      __VERIFIER_nondet_memory(&agg_tmp414, sizeof(agg_tmp414));
+      __VERIFIER_nondet_memory(&it3, sizeof(it3));
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std71;
+      __VERIFIER_nondet_memory(&std71, sizeof(std71));
+      agg_tmp515 = std71;
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std72;
+      __VERIFIER_nondet_memory(&std72, sizeof(std72));
+      agg_tmp616 = std72;
+      struct std___List_const_iterator_int_ t73 = agg_tmp414;
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ t74 = agg_tmp515;
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ t75 = agg_tmp616;
+      struct std___List_iterator_int_ std76;
+      __VERIFIER_nondet_memory(&std76, sizeof(std76));
+      agg_tmp717 = std76;
+      int c77 = 0;
+      struct std___List_iterator_int_ std78;
+      __VERIFIER_nondet_memory(&std78, sizeof(std78));
+      agg_tmp818 = std78;
+      unsigned long std79 = __VERIFIER_nondet_unsigned_long();
+      unsigned long c80 = 10;
+      _Bool c81 = ((std79 == c80)) ? 1 : 0;
+      if (c81) {
+      } else {
+        char* cast82 = (char*)&(_str_5);
+        char* c83 = _str_1;
+        unsigned int c84 = 42;
+        char* cast85 = (char*)&(__PRETTY_FUNCTION___main);
+        __assert_fail(cast82, c83, c84, cast85);
+      }
+      int* std86;
+      __VERIFIER_nondet_memory(&std86, sizeof(std86));
+      int t87 = *std86;
+      int c88 = 30;
+      _Bool c89 = ((t87 == c88)) ? 1 : 0;
+      if (c89) {
+      } else {
+        char* cast90 = (char*)&(_str_6);
+        char* c91 = _str_1;
+        unsigned int c92 = 43;
+        char* cast93 = (char*)&(__PRETTY_FUNCTION___main);
+        __assert_fail(cast90, c91, c92, cast93);
+      }
+      char* cast94 = (char*)&(_str_7);
+      struct std__basic_ostream_char__std__char_traits_char__* std95;
+      __VERIFIER_nondet_memory(&std95, sizeof(std95));
+        struct std___List_iterator_int_ ref_tmp596;
+        struct std___List_iterator_int_ ref_tmp697;
+        struct std___List_iterator_int_ agg_tmp998;
+        struct std___List_iterator_int_ std99;
+        __VERIFIER_nondet_memory(&std99, sizeof(std99));
+        ref_tmp596 = std99;
+        struct std___List_iterator_int_* std100;
+        __VERIFIER_nondet_memory(&std100, sizeof(std100));
+        while (1) {
+          struct std___List_iterator_int_ std102;
+          __VERIFIER_nondet_memory(&std102, sizeof(std102));
+          ref_tmp697 = std102;
+          _Bool std103;
+          __VERIFIER_nondet_memory(&std103, sizeof(std103));
+          _Bool u104 = !std103;
+          if (!u104) break;
+          char* cast105 = (char*)&(_str_8);
+          struct std__basic_ostream_char__std__char_traits_char__* std106;
+          __VERIFIER_nondet_memory(&std106, sizeof(std106));
+          int* std107;
+          __VERIFIER_nondet_memory(&std107, sizeof(std107));
+          int t108 = *std107;
+          struct std__basic_ostream_char__std__char_traits_char__* std109;
+          __VERIFIER_nondet_memory(&std109, sizeof(std109));
+        for_step101: ;
+          int c110 = 0;
+          struct std___List_iterator_int_ std111;
+          __VERIFIER_nondet_memory(&std111, sizeof(std111));
+          agg_tmp998 = std111;
+        }
+      struct std__basic_ostream_char__std__char_traits_char__* std112;
+      __VERIFIER_nondet_memory(&std112, sizeof(std112));
+      int c113 = 0;
+      __retval1 = c113;
+      int t114 = __retval1;
+      int ret_val115 = t114;
+      {
+        // externalized std:: op: std::vector<int, std::allocator<int> >::~vector()
+        __VERIFIER_nondet_memory(&myvector11, sizeof(myvector11));
+      }
+      {
+        // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::~list()
+        __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
+      }
+      return ret_val115;
+  int t116 = __retval1;
+  return t116;
+}
+

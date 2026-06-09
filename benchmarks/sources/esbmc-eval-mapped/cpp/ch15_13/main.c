@@ -1,0 +1,341 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+union anon_0 { char _M_local_buf[16]; unsigned long _M_allocated_capacity; };
+struct std____cmp_cat____unspec { unsigned char __field0; };
+struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider { char* _M_p; };
+struct std____new_allocator_char_;
+struct std__allocator_char_ { unsigned char __field0; };
+struct std__forward_iterator_tag { unsigned char __field0; };
+struct std__random_access_iterator_tag { unsigned char __field0; };
+struct std__strong_ordering { char _M_value; };
+struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
+struct std__ctype_char_;
+struct std__ios_base;
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+
+struct std____cmp_cat____unspec __const_main_agg_tmp1;
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+char _str[34] = "Testing the comparison functions.";
+char _str_1[6] = "Hello";
+char _str_2[8] = "stinger";
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str_3[10] = "string1: ";
+char _str_4[11] = "\nstring2: ";
+char _str_5[11] = "\nstring3: ";
+char _str_6[11] = "\nstring4: ";
+char _str_7[3] = "\n\n";
+char _str_8[19] = "string1 == string2";
+char _str_9[99] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/ch15_13/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_10[20] = "string1 == string4\n";
+char _str_11[19] = "string1 > string4\n";
+char _str_12[19] = "string1 < string4\n";
+char _str_13[33] = "string1.compare( string2 ) == 0\n";
+char _str_14[32] = "string1.compare( string2 ) > 0\n";
+char _str_15[32] = "string1.compare( string2 ) < 0\n";
+char _str_16[45] = "string1.compare( 2, 5, string3, 0, 5 ) == 0\n";
+char _str_17[44] = "string1.compare( 2, 5, string3, 0, 5 ) > 0\n";
+char _str_18[44] = "string1.compare( 2, 5, string3, 0, 5 ) < 0\n";
+char _str_19[39] = "string4.compare( 0, string2.length(), ";
+char _str_20[15] = "string2 ) == 0";
+char _str_21[14] = "string2 ) > 0";
+char _str_22[14] = "string2 ) < 0";
+char _str_23[38] = "string2.compare( 0, 3, string4 ) == 0";
+char _str_24[37] = "string2.compare( 0, 3, string4 ) > 0";
+char _str_25[37] = "string2.compare( 0, 3, string4 ) < 0";
+char _str_26[50] = "basic_string: construction from null is not valid";
+char _str_27[24] = "basic_string::_M_create";
+int _ZN9__gnu_cxx24__numeric_traits_integerIiE5__maxE __attribute__((aligned(4))) = 2147483647;
+int _ZN9__gnu_cxx24__numeric_traits_integerIiE5__minE __attribute__((aligned(4))) = -2147483648;
+char _str_28[22] = "basic_string::compare";
+char _str_29[55] = "%s: __pos (which is %zu) > this->size() (which is %zu)";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+extern int __VERIFIER_nondet_int(void);
+extern unsigned long __VERIFIER_nondet_unsigned_long(void);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ string12;
+  struct std__allocator_char_ ref_tmp03;
+  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ string24;
+  struct std__allocator_char_ ref_tmp15;
+  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ string36;
+  struct std__allocator_char_ ref_tmp27;
+  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ string48;
+  int result9;
+  int c10 = 0;
+  __retval1 = c10;
+  char* cast11 = (char*)&(_str);
+  // externalized std:: op: std::allocator<char>::allocator()
+  __VERIFIER_nondet_memory(&ref_tmp03, sizeof(ref_tmp03));
+    // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string<std::allocator<char> >(char const*, std::allocator<char> const&)
+    __VERIFIER_nondet_memory(&string12, sizeof(string12));
+    __VERIFIER_nondet_memory(cast11, sizeof(*cast11));
+    __VERIFIER_nondet_memory(&ref_tmp03, sizeof(ref_tmp03));
+  {
+    // externalized std:: op: std::allocator<char>::~allocator()
+    __VERIFIER_nondet_memory(&ref_tmp03, sizeof(ref_tmp03));
+  }
+    char* cast12 = (char*)&(_str_1);
+    // externalized std:: op: std::allocator<char>::allocator()
+    __VERIFIER_nondet_memory(&ref_tmp15, sizeof(ref_tmp15));
+      // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string<std::allocator<char> >(char const*, std::allocator<char> const&)
+      __VERIFIER_nondet_memory(&string24, sizeof(string24));
+      __VERIFIER_nondet_memory(cast12, sizeof(*cast12));
+      __VERIFIER_nondet_memory(&ref_tmp15, sizeof(ref_tmp15));
+    {
+      // externalized std:: op: std::allocator<char>::~allocator()
+      __VERIFIER_nondet_memory(&ref_tmp15, sizeof(ref_tmp15));
+    }
+      char* cast13 = (char*)&(_str_2);
+      // externalized std:: op: std::allocator<char>::allocator()
+      __VERIFIER_nondet_memory(&ref_tmp27, sizeof(ref_tmp27));
+        // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string<std::allocator<char> >(char const*, std::allocator<char> const&)
+        __VERIFIER_nondet_memory(&string36, sizeof(string36));
+        __VERIFIER_nondet_memory(cast13, sizeof(*cast13));
+        __VERIFIER_nondet_memory(&ref_tmp27, sizeof(ref_tmp27));
+      {
+        // externalized std:: op: std::allocator<char>::~allocator()
+        __VERIFIER_nondet_memory(&ref_tmp27, sizeof(ref_tmp27));
+      }
+        // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+        __VERIFIER_nondet_memory(&string48, sizeof(string48));
+        __VERIFIER_nondet_memory(&string24, sizeof(string24));
+          char* cast14 = (char*)&(_str_3);
+          struct std__basic_ostream_char__std__char_traits_char__* std15;
+          __VERIFIER_nondet_memory(&std15, sizeof(std15));
+          struct std__basic_ostream_char__std__char_traits_char__* std16;
+          __VERIFIER_nondet_memory(&std16, sizeof(std16));
+          char* cast17 = (char*)&(_str_4);
+          struct std__basic_ostream_char__std__char_traits_char__* std18;
+          __VERIFIER_nondet_memory(&std18, sizeof(std18));
+          struct std__basic_ostream_char__std__char_traits_char__* std19;
+          __VERIFIER_nondet_memory(&std19, sizeof(std19));
+          char* cast20 = (char*)&(_str_5);
+          struct std__basic_ostream_char__std__char_traits_char__* std21;
+          __VERIFIER_nondet_memory(&std21, sizeof(std21));
+          struct std__basic_ostream_char__std__char_traits_char__* std22;
+          __VERIFIER_nondet_memory(&std22, sizeof(std22));
+          char* cast23 = (char*)&(_str_6);
+          struct std__basic_ostream_char__std__char_traits_char__* std24;
+          __VERIFIER_nondet_memory(&std24, sizeof(std24));
+          struct std__basic_ostream_char__std__char_traits_char__* std25;
+          __VERIFIER_nondet_memory(&std25, sizeof(std25));
+          char* cast26 = (char*)&(_str_7);
+          struct std__basic_ostream_char__std__char_traits_char__* std27;
+          __VERIFIER_nondet_memory(&std27, sizeof(std27));
+          _Bool std28;
+          __VERIFIER_nondet_memory(&std28, sizeof(std28));
+          if (std28) {
+          } else {
+            char* cast29 = (char*)&(_str_8);
+            char* c30 = _str_9;
+            unsigned int c31 = 31;
+            char* cast32 = (char*)&(__PRETTY_FUNCTION___main);
+            __assert_fail(cast29, c30, c31, cast32);
+          }
+            _Bool std33;
+            __VERIFIER_nondet_memory(&std33, sizeof(std33));
+            if (std33) {
+              char* cast34 = (char*)&(_str_10);
+              struct std__basic_ostream_char__std__char_traits_char__* std35;
+              __VERIFIER_nondet_memory(&std35, sizeof(std35));
+            } else {
+                struct std__strong_ordering agg_tmp036;
+                struct std____cmp_cat____unspec agg_tmp137;
+                struct std__strong_ordering std38;
+                __VERIFIER_nondet_memory(&std38, sizeof(std38));
+                agg_tmp036 = std38;
+                agg_tmp137 = *&__const_main_agg_tmp1; // copy
+                struct std__strong_ordering t39 = agg_tmp036;
+                struct std____cmp_cat____unspec t40 = agg_tmp137;
+                _Bool std41;
+                __VERIFIER_nondet_memory(&std41, sizeof(std41));
+                if (std41) {
+                  char* cast42 = (char*)&(_str_11);
+                  struct std__basic_ostream_char__std__char_traits_char__* std43;
+                  __VERIFIER_nondet_memory(&std43, sizeof(std43));
+                } else {
+                  char* cast44 = (char*)&(_str_12);
+                  struct std__basic_ostream_char__std__char_traits_char__* std45;
+                  __VERIFIER_nondet_memory(&std45, sizeof(std45));
+                }
+            }
+          int std46 = __VERIFIER_nondet_int();
+          result9 = std46;
+            int t47 = result9;
+            int c48 = 0;
+            _Bool c49 = ((t47 == c48)) ? 1 : 0;
+            if (c49) {
+              char* cast50 = (char*)&(_str_13);
+              struct std__basic_ostream_char__std__char_traits_char__* std51;
+              __VERIFIER_nondet_memory(&std51, sizeof(std51));
+            } else {
+                int t52 = result9;
+                int c53 = 0;
+                _Bool c54 = ((t52 > c53)) ? 1 : 0;
+                if (c54) {
+                  char* cast55 = (char*)&(_str_14);
+                  struct std__basic_ostream_char__std__char_traits_char__* std56;
+                  __VERIFIER_nondet_memory(&std56, sizeof(std56));
+                } else {
+                  char* cast57 = (char*)&(_str_15);
+                  struct std__basic_ostream_char__std__char_traits_char__* std58;
+                  __VERIFIER_nondet_memory(&std58, sizeof(std58));
+                }
+            }
+          unsigned long c59 = 2;
+          unsigned long c60 = 5;
+          unsigned long c61 = 0;
+          unsigned long c62 = 5;
+          int std63 = __VERIFIER_nondet_int();
+          result9 = std63;
+            int t64 = result9;
+            int c65 = 0;
+            _Bool c66 = ((t64 == c65)) ? 1 : 0;
+            if (c66) {
+              char* cast67 = (char*)&(_str_16);
+              struct std__basic_ostream_char__std__char_traits_char__* std68;
+              __VERIFIER_nondet_memory(&std68, sizeof(std68));
+            } else {
+                int t69 = result9;
+                int c70 = 0;
+                _Bool c71 = ((t69 > c70)) ? 1 : 0;
+                if (c71) {
+                  char* cast72 = (char*)&(_str_17);
+                  struct std__basic_ostream_char__std__char_traits_char__* std73;
+                  __VERIFIER_nondet_memory(&std73, sizeof(std73));
+                } else {
+                  char* cast74 = (char*)&(_str_18);
+                  struct std__basic_ostream_char__std__char_traits_char__* std75;
+                  __VERIFIER_nondet_memory(&std75, sizeof(std75));
+                }
+            }
+          unsigned long c76 = 0;
+          unsigned long std77 = __VERIFIER_nondet_unsigned_long();
+          int std78 = __VERIFIER_nondet_int();
+          result9 = std78;
+            int t79 = result9;
+            int c80 = 0;
+            _Bool c81 = ((t79 == c80)) ? 1 : 0;
+            if (c81) {
+              char* cast82 = (char*)&(_str_19);
+              struct std__basic_ostream_char__std__char_traits_char__* std83;
+              __VERIFIER_nondet_memory(&std83, sizeof(std83));
+              char* cast84 = (char*)&(_str_20);
+              struct std__basic_ostream_char__std__char_traits_char__* std85;
+              __VERIFIER_nondet_memory(&std85, sizeof(std85));
+              struct std__basic_ostream_char__std__char_traits_char__* std86;
+              __VERIFIER_nondet_memory(&std86, sizeof(std86));
+            } else {
+                int t87 = result9;
+                int c88 = 0;
+                _Bool c89 = ((t87 > c88)) ? 1 : 0;
+                if (c89) {
+                  char* cast90 = (char*)&(_str_19);
+                  struct std__basic_ostream_char__std__char_traits_char__* std91;
+                  __VERIFIER_nondet_memory(&std91, sizeof(std91));
+                  char* cast92 = (char*)&(_str_21);
+                  struct std__basic_ostream_char__std__char_traits_char__* std93;
+                  __VERIFIER_nondet_memory(&std93, sizeof(std93));
+                  struct std__basic_ostream_char__std__char_traits_char__* std94;
+                  __VERIFIER_nondet_memory(&std94, sizeof(std94));
+                } else {
+                  char* cast95 = (char*)&(_str_19);
+                  struct std__basic_ostream_char__std__char_traits_char__* std96;
+                  __VERIFIER_nondet_memory(&std96, sizeof(std96));
+                  char* cast97 = (char*)&(_str_22);
+                  struct std__basic_ostream_char__std__char_traits_char__* std98;
+                  __VERIFIER_nondet_memory(&std98, sizeof(std98));
+                  struct std__basic_ostream_char__std__char_traits_char__* std99;
+                  __VERIFIER_nondet_memory(&std99, sizeof(std99));
+                }
+            }
+          unsigned long c100 = 0;
+          unsigned long c101 = 3;
+          int std102 = __VERIFIER_nondet_int();
+          result9 = std102;
+            int t103 = result9;
+            int c104 = 0;
+            _Bool c105 = ((t103 == c104)) ? 1 : 0;
+            if (c105) {
+              char* cast106 = (char*)&(_str_23);
+              struct std__basic_ostream_char__std__char_traits_char__* std107;
+              __VERIFIER_nondet_memory(&std107, sizeof(std107));
+              struct std__basic_ostream_char__std__char_traits_char__* std108;
+              __VERIFIER_nondet_memory(&std108, sizeof(std108));
+            } else {
+                int t109 = result9;
+                int c110 = 0;
+                _Bool c111 = ((t109 > c110)) ? 1 : 0;
+                if (c111) {
+                  char* cast112 = (char*)&(_str_24);
+                  struct std__basic_ostream_char__std__char_traits_char__* std113;
+                  __VERIFIER_nondet_memory(&std113, sizeof(std113));
+                  struct std__basic_ostream_char__std__char_traits_char__* std114;
+                  __VERIFIER_nondet_memory(&std114, sizeof(std114));
+                } else {
+                  char* cast115 = (char*)&(_str_25);
+                  struct std__basic_ostream_char__std__char_traits_char__* std116;
+                  __VERIFIER_nondet_memory(&std116, sizeof(std116));
+                  struct std__basic_ostream_char__std__char_traits_char__* std117;
+                  __VERIFIER_nondet_memory(&std117, sizeof(std117));
+                }
+            }
+          int c118 = 0;
+          __retval1 = c118;
+          int t119 = __retval1;
+          int ret_val120 = t119;
+          {
+            // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+            __VERIFIER_nondet_memory(&string48, sizeof(string48));
+          }
+          {
+            // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+            __VERIFIER_nondet_memory(&string36, sizeof(string36));
+          }
+          {
+            // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+            __VERIFIER_nondet_memory(&string24, sizeof(string24));
+          }
+          {
+            // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+            __VERIFIER_nondet_memory(&string12, sizeof(string12));
+          }
+          return ret_val120;
+  int t121 = __retval1;
+  return t121;
+}
+

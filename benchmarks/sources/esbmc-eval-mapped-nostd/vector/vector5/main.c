@@ -1,0 +1,1451 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ { int* _M_current; };
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
+struct std___UninitDestroyGuard_int____void_ { int* _M_first; int** _M_cur; };
+struct std___Vector_base_int__std__allocator_int_____Vector_impl_data { int* _M_start; int* _M_finish; int* _M_end_of_storage; };
+struct std____new_allocator_int_ { unsigned char __field0; };
+struct std__allocator_int_ { unsigned char __field0; };
+struct std___Vector_base_int__std__allocator_int_____Vector_impl { struct std___Vector_base_int__std__allocator_int_____Vector_impl_data __field0; };
+struct std___Vector_base_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int_____Vector_impl _M_impl; };
+struct std__vector_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int__ __field0; };
+
+char _str[24] = "vectorTwo.front() == 10";
+char _str_1[102] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/vector/vector5/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[49] = "cannot create std::vector larger than max_size()";
+char _str_3[98] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_uninitialized.h";
+char __PRETTY_FUNCTION____ZSt18__do_uninit_fill_nIPimiET_S1_T0_RKT1_[140] = "_ForwardIterator std::__do_uninit_fill_n(_ForwardIterator, _Size _Tp &) [_ForwardIterator = int *, _Size = unsigned long, _Tp = int]";
+char _str_4[9] = "__n >= 0";
+char _str_5[91] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_vector.h";
+char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEE5frontEv[78] = "reference std::vector<int>::front() [_Tp = int, _Alloc = std::allocator<int>]";
+char _str_6[15] = "!this->empty()";
+void std__allocator_int___allocator_2(struct std__allocator_int_* p0);
+void std__vector_int__std__allocator_int_____vector_2(struct std__vector_int__std__allocator_int__* p0, unsigned long p1, int* p2, struct std__allocator_int_* p3);
+void std__allocator_int____allocator(struct std__allocator_int_* p0);
+void std__vector_int__std__allocator_int_____vector(struct std__vector_int__std__allocator_int__* p0, struct std__vector_int__std__allocator_int__* p1);
+_Bool std__vector_int__std__allocator_int_____empty___const(struct std__vector_int__std__allocator_int__* p0);
+void __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________normal_iterator(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, int** p1);
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin(struct std__vector_int__std__allocator_int__* p0);
+int* __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______operator____const(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0);
+int* std__vector_int__std__allocator_int_____front(struct std__vector_int__std__allocator_int__* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
+int main();
+void std____new_allocator_int_____new_allocator_2(struct std____new_allocator_int_* p0);
+unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* p0, unsigned long* p1);
+unsigned long std__vector_int__std__allocator_int______S_max_size(struct std__allocator_int_* p0);
+void std__allocator_int___allocator(struct std__allocator_int_* p0, struct std__allocator_int_* p1);
+extern void std____throw_length_error(char* p0);
+unsigned long std__vector_int__std__allocator_int______S_check_init_len(unsigned long p0, struct std__allocator_int_* p1);
+void std___Vector_base_int__std__allocator_int______Vector_impl___Vector_impl(struct std___Vector_base_int__std__allocator_int_____Vector_impl* p0, struct std__allocator_int_* p1);
+_Bool std____is_constant_evaluated();
+extern void std____throw_bad_array_new_length();
+extern void *malloc(unsigned long);
+extern void free(void*);
+void* operator_new(unsigned long p0) { return malloc(p0); }
+unsigned long std____new_allocator_int____M_max_size___const(struct std____new_allocator_int_* p0);
+extern void std____throw_bad_alloc();
+void* operator_new_2(unsigned long p0, unsigned long p1) { return malloc(p0); }
+int* std____new_allocator_int___allocate(struct std____new_allocator_int_* p0, unsigned long p1, void* p2);
+int* std__allocator_int___allocate(struct std__allocator_int_* p0, unsigned long p1);
+int* std__allocator_traits_std__allocator_int_____allocate(struct std__allocator_int_* p0, unsigned long p1);
+int* std___Vector_base_int__std__allocator_int______M_allocate(struct std___Vector_base_int__std__allocator_int__* p0, unsigned long p1);
+void std___Vector_base_int__std__allocator_int______M_create_storage(struct std___Vector_base_int__std__allocator_int__* p0, unsigned long p1);
+void std___Vector_base_int__std__allocator_int______Vector_impl____Vector_impl(struct std___Vector_base_int__std__allocator_int_____Vector_impl* p0);
+void std___Vector_base_int__std__allocator_int______Vector_base(struct std___Vector_base_int__std__allocator_int__* p0, unsigned long p1, struct std__allocator_int_* p2);
+_Bool std__is_constant_evaluated();
+void std___UninitDestroyGuard_int___void____UninitDestroyGuard(struct std___UninitDestroyGuard_int____void_* p0, int** p1);
+extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
+int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* p0, int* p1);
+void void_std___Construct_int__int_const__(int* p0, int* p1);
+void std___UninitDestroyGuard_int___void___release(struct std___UninitDestroyGuard_int____void_* p0);
+void std___UninitDestroyGuard_int___void_____UninitDestroyGuard(struct std___UninitDestroyGuard_int____void_* p0);
+int* int__std____do_uninit_fill_n_int___unsigned_long__int_(int* p0, unsigned long p1, int* p2);
+int* int__std__uninitialized_fill_n_int___unsigned_long__int_(int* p0, unsigned long p1, int* p2);
+int* int__std____uninitialized_fill_n_a_int___unsigned_long__int__int_(int* p0, unsigned long p1, int* p2, struct std__allocator_int_* p3);
+struct std__allocator_int_* std___Vector_base_int__std__allocator_int______M_get_Tp_allocator(struct std___Vector_base_int__std__allocator_int__* p0);
+void std__vector_int__std__allocator_int______M_fill_initialize(struct std__vector_int__std__allocator_int__* p0, unsigned long p1, int* p2);
+void operator_delete(void* p0) { free(p0); }
+void operator_delete_3(void* p0, unsigned long p1, unsigned long p2) { free(p0); }
+void operator_delete_2(void* p0, unsigned long p1) { free(p0); }
+void std____new_allocator_int___deallocate(struct std____new_allocator_int_* p0, int* p1, unsigned long p2);
+void std__allocator_int___deallocate(struct std__allocator_int_* p0, int* p1, unsigned long p2);
+void std__allocator_traits_std__allocator_int_____deallocate(struct std__allocator_int_* p0, int* p1, unsigned long p2);
+void std___Vector_base_int__std__allocator_int______M_deallocate(struct std___Vector_base_int__std__allocator_int__* p0, int* p1, unsigned long p2);
+void std___Vector_base_int__std__allocator_int_______Vector_base(struct std___Vector_base_int__std__allocator_int__* p0);
+void std____new_allocator_int_____new_allocator(struct std____new_allocator_int_* p0, struct std____new_allocator_int_* p1);
+void std___Vector_base_int__std__allocator_int______Vector_impl_data___Vector_impl_data(struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* p0);
+void void_std__destroy_at_int_(int* p0);
+void void_std___Destroy_int__(int* p0, int* p1);
+unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
+struct std__allocator_int_ std__allocator_traits_std__allocator_int_____select_on_container_copy_construction(struct std__allocator_int_* p0);
+struct std__allocator_int_ __gnu_cxx____alloc_traits_std__allocator_int___int____S_select_on_copy(struct std__allocator_int_* p0);
+struct std__allocator_int_* std___Vector_base_int__std__allocator_int______M_get_Tp_allocator___const(struct std___Vector_base_int__std__allocator_int__* p0);
+int** __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______base___const(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0);
+_Bool _ZN9__gnu_cxxeqIPKiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESB_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p1);
+int* __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______operator____const(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0);
+struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______operator__(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0);
+int* int__std____do_uninit_copy___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int__(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p1, int* p2);
+long __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______difference_type___gnu_cxx__operator__int_const___std__vector_int__std__allocator_int_____(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p1);
+extern void* memcpy(void* p0, void* p1, unsigned long p2);
+int* int__std____niter_base_int__(int* p0);
+int* int_const__std____niter_base_int_const___std__vector_int__std__allocator_int_____(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p0);
+int* int__std__uninitialized_copy___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int__(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p1, int* p2);
+int* int__std____uninitialized_copy_a___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int___int_(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p1, int* p2, struct std__allocator_int_* p3);
+void __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________normal_iterator(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0, int** p1);
+struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin___const(struct std__vector_int__std__allocator_int__* p0);
+struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____end___const(struct std__vector_int__std__allocator_int__* p0);
+void void_std___Destroy_int___int_(int* p0, int* p1, struct std__allocator_int_* p2);
+
+// function: _ZNSaIiEC2Ev
+void std__allocator_int___allocator_2(struct std__allocator_int_* v0) {
+bb1:
+  struct std__allocator_int_* this2;
+  this2 = v0;
+  struct std__allocator_int_* t3 = this2;
+  struct std____new_allocator_int_* base4 = (struct std____new_allocator_int_*)((char *)t3 + 0);
+  std____new_allocator_int_____new_allocator_2(base4);
+  return;
+}
+
+// function: _ZNSt6vectorIiSaIiEEC2EmRKiRKS0_
+void std__vector_int__std__allocator_int_____vector_2(struct std__vector_int__std__allocator_int__* v5, unsigned long v6, int* v7, struct std__allocator_int_* v8) {
+bb9:
+  struct std__vector_int__std__allocator_int__* this10;
+  unsigned long __n11;
+  int* __value12;
+  struct std__allocator_int_* __a13;
+  this10 = v5;
+  __n11 = v6;
+  __value12 = v7;
+  __a13 = v8;
+  struct std__vector_int__std__allocator_int__* t14 = this10;
+  struct std___Vector_base_int__std__allocator_int__* base15 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t14 + 0);
+  unsigned long t16 = __n11;
+  struct std__allocator_int_* t17 = __a13;
+  unsigned long r18 = std__vector_int__std__allocator_int______S_check_init_len(t16, t17);
+  struct std__allocator_int_* t19 = __a13;
+  std___Vector_base_int__std__allocator_int______Vector_base(base15, r18, t19);
+    unsigned long t20 = __n11;
+    int* t21 = __value12;
+    std__vector_int__std__allocator_int______M_fill_initialize(t14, t20, t21);
+  return;
+}
+
+// function: _ZNSaIiED2Ev
+void std__allocator_int____allocator(struct std__allocator_int_* v22) {
+bb23:
+  struct std__allocator_int_* this24;
+  this24 = v22;
+  struct std__allocator_int_* t25 = this24;
+  return;
+}
+
+// function: _ZNSt6vectorIiSaIiEEC2ERKS1_
+void std__vector_int__std__allocator_int_____vector(struct std__vector_int__std__allocator_int__* v26, struct std__vector_int__std__allocator_int__* v27) {
+bb28:
+  struct std__vector_int__std__allocator_int__* this29;
+  struct std__vector_int__std__allocator_int__* __x30;
+  struct std__allocator_int_ ref_tmp031;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ agg_tmp032;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ agg_tmp133;
+  this29 = v26;
+  __x30 = v27;
+  struct std__vector_int__std__allocator_int__* t34 = this29;
+  struct std___Vector_base_int__std__allocator_int__* base35 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t34 + 0);
+  struct std__vector_int__std__allocator_int__* t36 = __x30;
+  unsigned long r37 = std__vector_int__std__allocator_int_____size___const(t36);
+  struct std__vector_int__std__allocator_int__* t38 = __x30;
+  struct std___Vector_base_int__std__allocator_int__* base39 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t38 + 0);
+  struct std__allocator_int_* r40 = std___Vector_base_int__std__allocator_int______M_get_Tp_allocator___const(base39);
+  struct std__allocator_int_ r41 = __gnu_cxx____alloc_traits_std__allocator_int___int____S_select_on_copy(r40);
+  ref_tmp031 = r41;
+    std___Vector_base_int__std__allocator_int______Vector_base(base35, r37, &ref_tmp031);
+  {
+    std__allocator_int____allocator(&ref_tmp031);
+  }
+    struct std__vector_int__std__allocator_int__* t42 = __x30;
+    struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ r43 = std__vector_int__std__allocator_int_____begin___const(t42);
+    agg_tmp032 = r43;
+    struct std__vector_int__std__allocator_int__* t44 = __x30;
+    struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ r45 = std__vector_int__std__allocator_int_____end___const(t44);
+    agg_tmp133 = r45;
+    struct std___Vector_base_int__std__allocator_int__* base46 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t34 + 0);
+    struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base47 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base46->_M_impl) + 0);
+    int* t48 = base47->_M_start;
+    struct std___Vector_base_int__std__allocator_int__* base49 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t34 + 0);
+    struct std__allocator_int_* r50 = std___Vector_base_int__std__allocator_int______M_get_Tp_allocator(base49);
+    struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t51 = agg_tmp032;
+    struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t52 = agg_tmp133;
+    int* r53 = int__std____uninitialized_copy_a___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int___int_(t51, t52, t48, r50);
+    struct std___Vector_base_int__std__allocator_int__* base54 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t34 + 0);
+    struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base55 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base54->_M_impl) + 0);
+    base55->_M_finish = r53;
+  return;
+}
+
+// function: _ZNKSt6vectorIiSaIiEE5emptyEv
+_Bool std__vector_int__std__allocator_int_____empty___const(struct std__vector_int__std__allocator_int__* v56) {
+bb57:
+  struct std__vector_int__std__allocator_int__* this58;
+  _Bool __retval59;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ ref_tmp060;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ ref_tmp161;
+  this58 = v56;
+  struct std__vector_int__std__allocator_int__* t62 = this58;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ r63 = std__vector_int__std__allocator_int_____begin___const(t62);
+  ref_tmp060 = r63;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ r64 = std__vector_int__std__allocator_int_____end___const(t62);
+  ref_tmp161 = r64;
+  _Bool r65 = _ZN9__gnu_cxxeqIPKiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESB_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(&ref_tmp060, &ref_tmp161);
+  __retval59 = r65;
+  _Bool t66 = __retval59;
+  return t66;
+}
+
+// function: _ZN9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEC2ERKS1_
+void __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________normal_iterator(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* v67, int** v68) {
+bb69:
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* this70;
+  int** __i71;
+  this70 = v67;
+  __i71 = v68;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* t72 = this70;
+  int** t73 = __i71;
+  int* t74 = *t73;
+  t72->_M_current = t74;
+  return;
+}
+
+// function: _ZNSt6vectorIiSaIiEE5beginEv
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin(struct std__vector_int__std__allocator_int__* v75) {
+bb76:
+  struct std__vector_int__std__allocator_int__* this77;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __retval78;
+  this77 = v75;
+  struct std__vector_int__std__allocator_int__* t79 = this77;
+  struct std___Vector_base_int__std__allocator_int__* base80 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t79 + 0);
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base81 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base80->_M_impl) + 0);
+  __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________normal_iterator(&__retval78, &base81->_M_start);
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ t82 = __retval78;
+  return t82;
+}
+
+// function: _ZNK9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEdeEv
+int* __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______operator____const(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* v83) {
+bb84:
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* this85;
+  int* __retval86;
+  this85 = v83;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* t87 = this85;
+  int* t88 = t87->_M_current;
+  __retval86 = t88;
+  int* t89 = __retval86;
+  return t89;
+}
+
+// function: _ZNSt6vectorIiSaIiEE5frontEv
+int* std__vector_int__std__allocator_int_____front(struct std__vector_int__std__allocator_int__* v90) {
+bb91:
+  struct std__vector_int__std__allocator_int__* this92;
+  int* __retval93;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ ref_tmp094;
+  this92 = v90;
+  struct std__vector_int__std__allocator_int__* t95 = this92;
+    do {
+          _Bool r96 = std__vector_int__std__allocator_int_____empty___const(t95);
+          if (r96) {
+            char* cast97 = (char*)&(_str_5);
+            int c98 = 1346;
+            char* cast99 = (char*)&(__PRETTY_FUNCTION____ZNSt6vectorIiSaIiEE5frontEv);
+            char* cast100 = (char*)&(_str_6);
+            std____glibcxx_assert_fail(cast97, c98, cast99, cast100);
+          }
+      _Bool c101 = 0;
+      if (!c101) break;
+    } while (1);
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r102 = std__vector_int__std__allocator_int_____begin(t95);
+  ref_tmp094 = r102;
+  int* r103 = __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______operator____const(&ref_tmp094);
+  __retval93 = r103;
+  int* t104 = __retval93;
+  return t104;
+}
+
+// function: _ZNSt6vectorIiSaIiEED2Ev
+void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* v105) {
+bb106:
+  struct std__vector_int__std__allocator_int__* this107;
+  this107 = v105;
+  struct std__vector_int__std__allocator_int__* t108 = this107;
+    struct std___Vector_base_int__std__allocator_int__* base109 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t108 + 0);
+    struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base110 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base109->_M_impl) + 0);
+    int* t111 = base110->_M_start;
+    struct std___Vector_base_int__std__allocator_int__* base112 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t108 + 0);
+    struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base113 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base112->_M_impl) + 0);
+    int* t114 = base113->_M_finish;
+    struct std___Vector_base_int__std__allocator_int__* base115 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t108 + 0);
+    struct std__allocator_int_* r116 = std___Vector_base_int__std__allocator_int______M_get_Tp_allocator(base115);
+    void_std___Destroy_int___int_(t111, t114, r116);
+  {
+    struct std___Vector_base_int__std__allocator_int__* base117 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t108 + 0);
+    std___Vector_base_int__std__allocator_int_______Vector_base(base117);
+  }
+  return;
+}
+
+// function: main
+int main() {
+bb118:
+  int __retval119;
+  struct std__vector_int__std__allocator_int__ vectorOne120;
+  int ref_tmp0121;
+  struct std__allocator_int_ ref_tmp1122;
+  struct std__vector_int__std__allocator_int__ vectorTwo123;
+  int c124 = 0;
+  __retval119 = c124;
+  unsigned long c125 = 10;
+  int c126 = 5;
+  ref_tmp0121 = c126;
+  std__allocator_int___allocator_2(&ref_tmp1122);
+    std__vector_int__std__allocator_int_____vector_2(&vectorOne120, c125, &ref_tmp0121, &ref_tmp1122);
+  {
+    std__allocator_int____allocator(&ref_tmp1122);
+  }
+    std__vector_int__std__allocator_int_____vector(&vectorTwo123, &vectorOne120);
+      int* r127 = std__vector_int__std__allocator_int_____front(&vectorTwo123);
+      int t128 = *r127;
+      int c129 = 10;
+      _Bool c130 = ((t128 == c129)) ? 1 : 0;
+      if (c130) {
+      } else {
+        char* cast131 = (char*)&(_str);
+        char* c132 = _str_1;
+        unsigned int c133 = 15;
+        char* cast134 = (char*)&(__PRETTY_FUNCTION___main);
+        __assert_fail(cast131, c132, c133, cast134);
+      }
+      int c135 = 0;
+      __retval119 = c135;
+      int t136 = __retval119;
+      int ret_val137 = t136;
+      {
+        std__vector_int__std__allocator_int______vector(&vectorTwo123);
+      }
+      {
+        std__vector_int__std__allocator_int______vector(&vectorOne120);
+      }
+      return ret_val137;
+  int t138 = __retval119;
+  return t138;
+}
+
+// function: _ZNSt15__new_allocatorIiEC2Ev
+void std____new_allocator_int_____new_allocator_2(struct std____new_allocator_int_* v139) {
+bb140:
+  struct std____new_allocator_int_* this141;
+  this141 = v139;
+  struct std____new_allocator_int_* t142 = this141;
+  return;
+}
+
+// function: _ZSt3minImERKT_S2_S2_
+unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* v143, unsigned long* v144) {
+bb145:
+  unsigned long* __a146;
+  unsigned long* __b147;
+  unsigned long* __retval148;
+  __a146 = v143;
+  __b147 = v144;
+    unsigned long* t149 = __b147;
+    unsigned long t150 = *t149;
+    unsigned long* t151 = __a146;
+    unsigned long t152 = *t151;
+    _Bool c153 = ((t150 < t152)) ? 1 : 0;
+    if (c153) {
+      unsigned long* t154 = __b147;
+      __retval148 = t154;
+      unsigned long* t155 = __retval148;
+      return t155;
+    }
+  unsigned long* t156 = __a146;
+  __retval148 = t156;
+  unsigned long* t157 = __retval148;
+  return t157;
+}
+
+// function: _ZNSt6vectorIiSaIiEE11_S_max_sizeERKS0_
+unsigned long std__vector_int__std__allocator_int______S_max_size(struct std__allocator_int_* v158) {
+bb159:
+  struct std__allocator_int_* __a160;
+  unsigned long __retval161;
+  unsigned long __diffmax162;
+  unsigned long __allocmax163;
+  __a160 = v158;
+  unsigned long c164 = 2305843009213693951;
+  __diffmax162 = c164;
+  unsigned long c165 = 4611686018427387903;
+  __allocmax163 = c165;
+  unsigned long* r166 = unsigned_long_const__std__min_unsigned_long_(&__diffmax162, &__allocmax163);
+  unsigned long t167 = *r166;
+  __retval161 = t167;
+  unsigned long t168 = __retval161;
+  return t168;
+}
+
+// function: _ZNSaIiEC2ERKS_
+void std__allocator_int___allocator(struct std__allocator_int_* v169, struct std__allocator_int_* v170) {
+bb171:
+  struct std__allocator_int_* this172;
+  struct std__allocator_int_* __a173;
+  this172 = v169;
+  __a173 = v170;
+  struct std__allocator_int_* t174 = this172;
+  struct std____new_allocator_int_* base175 = (struct std____new_allocator_int_*)((char *)t174 + 0);
+  struct std__allocator_int_* t176 = __a173;
+  struct std____new_allocator_int_* base177 = (struct std____new_allocator_int_*)((char *)t176 + 0);
+  std____new_allocator_int_____new_allocator(base175, base177);
+  return;
+}
+
+// function: _ZNSt6vectorIiSaIiEE17_S_check_init_lenEmRKS0_
+unsigned long std__vector_int__std__allocator_int______S_check_init_len(unsigned long v178, struct std__allocator_int_* v179) {
+bb180:
+  unsigned long __n181;
+  struct std__allocator_int_* __a182;
+  unsigned long __retval183;
+  __n181 = v178;
+  __a182 = v179;
+    struct std__allocator_int_ ref_tmp0184;
+    _Bool tmp_exprcleanup185;
+    unsigned long t186 = __n181;
+    struct std__allocator_int_* t187 = __a182;
+    std__allocator_int___allocator(&ref_tmp0184, t187);
+      unsigned long r188 = std__vector_int__std__allocator_int______S_max_size(&ref_tmp0184);
+      _Bool c189 = ((t186 > r188)) ? 1 : 0;
+      tmp_exprcleanup185 = c189;
+    {
+      std__allocator_int____allocator(&ref_tmp0184);
+    }
+    _Bool t190 = tmp_exprcleanup185;
+    if (t190) {
+      char* cast191 = (char*)&(_str_2);
+      std____throw_length_error(cast191);
+    }
+  unsigned long t192 = __n181;
+  __retval183 = t192;
+  unsigned long t193 = __retval183;
+  return t193;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEE12_Vector_implC2ERKS0_
+void std___Vector_base_int__std__allocator_int______Vector_impl___Vector_impl(struct std___Vector_base_int__std__allocator_int_____Vector_impl* v194, struct std__allocator_int_* v195) {
+bb196:
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl* this197;
+  struct std__allocator_int_* __a198;
+  this197 = v194;
+  __a198 = v195;
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl* t199 = this197;
+  struct std__allocator_int_* base200 = (struct std__allocator_int_*)((char *)t199 + 0);
+  struct std__allocator_int_* t201 = __a198;
+  std__allocator_int___allocator(base200, t201);
+    struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base202 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)t199 + 0);
+    std___Vector_base_int__std__allocator_int______Vector_impl_data___Vector_impl_data(base202);
+  return;
+}
+
+// function: _ZSt23__is_constant_evaluatedv
+_Bool std____is_constant_evaluated() {
+bb203:
+  _Bool __retval204;
+    _Bool c205 = 0;
+    __retval204 = c205;
+    _Bool t206 = __retval204;
+    return t206;
+  abort();
+}
+
+// function: _ZNKSt15__new_allocatorIiE11_M_max_sizeEv
+unsigned long std____new_allocator_int____M_max_size___const(struct std____new_allocator_int_* v207) {
+bb208:
+  struct std____new_allocator_int_* this209;
+  unsigned long __retval210;
+  this209 = v207;
+  struct std____new_allocator_int_* t211 = this209;
+  unsigned long c212 = 9223372036854775807;
+  unsigned long c213 = 4;
+  unsigned long b214 = c212 / c213;
+  __retval210 = b214;
+  unsigned long t215 = __retval210;
+  return t215;
+}
+
+// function: _ZNSt15__new_allocatorIiE8allocateEmPKv
+int* std____new_allocator_int___allocate(struct std____new_allocator_int_* v216, unsigned long v217, void* v218) {
+bb219:
+  struct std____new_allocator_int_* this220;
+  unsigned long __n221;
+  void* unnamed222;
+  int* __retval223;
+  this220 = v216;
+  __n221 = v217;
+  unnamed222 = v218;
+  struct std____new_allocator_int_* t224 = this220;
+    unsigned long t225 = __n221;
+    unsigned long r226 = std____new_allocator_int____M_max_size___const(t224);
+    _Bool c227 = ((t225 > r226)) ? 1 : 0;
+    if (c227) {
+        unsigned long t228 = __n221;
+        unsigned long c229 = -1;
+        unsigned long c230 = 4;
+        unsigned long b231 = c229 / c230;
+        _Bool c232 = ((t228 > b231)) ? 1 : 0;
+        if (c232) {
+          std____throw_bad_array_new_length();
+        }
+      std____throw_bad_alloc();
+    }
+    unsigned long c233 = 4;
+    unsigned long c234 = 16;
+    _Bool c235 = ((c233 > c234)) ? 1 : 0;
+    if (c235) {
+      unsigned long __al236;
+      unsigned long c237 = 4;
+      __al236 = c237;
+      unsigned long t238 = __n221;
+      unsigned long c239 = 4;
+      unsigned long b240 = t238 * c239;
+      unsigned long t241 = __al236;
+      void* r242 = operator_new_2(b240, t241);
+      int* cast243 = (int*)r242;
+      __retval223 = cast243;
+      int* t244 = __retval223;
+      return t244;
+    }
+  unsigned long t245 = __n221;
+  unsigned long c246 = 4;
+  unsigned long b247 = t245 * c246;
+  void* r248 = operator_new(b247);
+  int* cast249 = (int*)r248;
+  __retval223 = cast249;
+  int* t250 = __retval223;
+  return t250;
+}
+
+// function: _ZNSaIiE8allocateEm
+int* std__allocator_int___allocate(struct std__allocator_int_* v251, unsigned long v252) {
+bb253:
+  struct std__allocator_int_* this254;
+  unsigned long __n255;
+  int* __retval256;
+  this254 = v251;
+  __n255 = v252;
+  struct std__allocator_int_* t257 = this254;
+    _Bool r258 = std____is_constant_evaluated();
+    if (r258) {
+        unsigned long t259 = __n255;
+        unsigned long c260 = 4;
+        unsigned long ovr261;
+        _Bool ovf262 = __builtin_mul_overflow(t259, c260, &ovr261);
+        __n255 = ovr261;
+        if (ovf262) {
+          std____throw_bad_array_new_length();
+        }
+      unsigned long t263 = __n255;
+      void* r264 = operator_new(t263);
+      int* cast265 = (int*)r264;
+      __retval256 = cast265;
+      int* t266 = __retval256;
+      return t266;
+    }
+  struct std____new_allocator_int_* base267 = (struct std____new_allocator_int_*)((char *)t257 + 0);
+  unsigned long t268 = __n255;
+  void* c269 = ((void*)0);
+  int* r270 = std____new_allocator_int___allocate(base267, t268, c269);
+  __retval256 = r270;
+  int* t271 = __retval256;
+  return t271;
+}
+
+// function: _ZNSt16allocator_traitsISaIiEE8allocateERS0_m
+int* std__allocator_traits_std__allocator_int_____allocate(struct std__allocator_int_* v272, unsigned long v273) {
+bb274:
+  struct std__allocator_int_* __a275;
+  unsigned long __n276;
+  int* __retval277;
+  __a275 = v272;
+  __n276 = v273;
+  struct std__allocator_int_* t278 = __a275;
+  unsigned long t279 = __n276;
+  int* r280 = std__allocator_int___allocate(t278, t279);
+  __retval277 = r280;
+  int* t281 = __retval277;
+  return t281;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEE11_M_allocateEm
+int* std___Vector_base_int__std__allocator_int______M_allocate(struct std___Vector_base_int__std__allocator_int__* v282, unsigned long v283) {
+bb284:
+  struct std___Vector_base_int__std__allocator_int__* this285;
+  unsigned long __n286;
+  int* __retval287;
+  this285 = v282;
+  __n286 = v283;
+  struct std___Vector_base_int__std__allocator_int__* t288 = this285;
+  unsigned long t289 = __n286;
+  unsigned long c290 = 0;
+  _Bool c291 = ((t289 != c290)) ? 1 : 0;
+  int* ternary292;
+  if (c291) {
+    struct std__allocator_int_* base293 = (struct std__allocator_int_*)((char *)&(t288->_M_impl) + 0);
+    unsigned long t294 = __n286;
+    int* r295 = std__allocator_traits_std__allocator_int_____allocate(base293, t294);
+    ternary292 = (int*)r295;
+  } else {
+    int* c296 = ((void*)0);
+    ternary292 = (int*)c296;
+  }
+  __retval287 = ternary292;
+  int* t297 = __retval287;
+  return t297;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEE17_M_create_storageEm
+void std___Vector_base_int__std__allocator_int______M_create_storage(struct std___Vector_base_int__std__allocator_int__* v298, unsigned long v299) {
+bb300:
+  struct std___Vector_base_int__std__allocator_int__* this301;
+  unsigned long __n302;
+  this301 = v298;
+  __n302 = v299;
+  struct std___Vector_base_int__std__allocator_int__* t303 = this301;
+  unsigned long t304 = __n302;
+  int* r305 = std___Vector_base_int__std__allocator_int______M_allocate(t303, t304);
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base306 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(t303->_M_impl) + 0);
+  base306->_M_start = r305;
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base307 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(t303->_M_impl) + 0);
+  int* t308 = base307->_M_start;
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base309 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(t303->_M_impl) + 0);
+  base309->_M_finish = t308;
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base310 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(t303->_M_impl) + 0);
+  int* t311 = base310->_M_start;
+  unsigned long t312 = __n302;
+  int* ptr313 = &(t311)[t312];
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base314 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(t303->_M_impl) + 0);
+  base314->_M_end_of_storage = ptr313;
+  return;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEE12_Vector_implD2Ev
+void std___Vector_base_int__std__allocator_int______Vector_impl____Vector_impl(struct std___Vector_base_int__std__allocator_int_____Vector_impl* v315) {
+bb316:
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl* this317;
+  this317 = v315;
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl* t318 = this317;
+  {
+    struct std__allocator_int_* base319 = (struct std__allocator_int_*)((char *)t318 + 0);
+    std__allocator_int____allocator(base319);
+  }
+  return;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEEC2EmRKS0_
+void std___Vector_base_int__std__allocator_int______Vector_base(struct std___Vector_base_int__std__allocator_int__* v320, unsigned long v321, struct std__allocator_int_* v322) {
+bb323:
+  struct std___Vector_base_int__std__allocator_int__* this324;
+  unsigned long __n325;
+  struct std__allocator_int_* __a326;
+  this324 = v320;
+  __n325 = v321;
+  __a326 = v322;
+  struct std___Vector_base_int__std__allocator_int__* t327 = this324;
+  struct std__allocator_int_* t328 = __a326;
+  std___Vector_base_int__std__allocator_int______Vector_impl___Vector_impl(&t327->_M_impl, t328);
+    unsigned long t329 = __n325;
+    std___Vector_base_int__std__allocator_int______M_create_storage(t327, t329);
+  return;
+}
+
+// function: _ZSt21is_constant_evaluatedv
+_Bool std__is_constant_evaluated() {
+bb330:
+  _Bool __retval331;
+    _Bool c332 = 0;
+    __retval331 = c332;
+    _Bool t333 = __retval331;
+    return t333;
+  abort();
+}
+
+// function: _ZNSt19_UninitDestroyGuardIPivEC2ERS0_
+void std___UninitDestroyGuard_int___void____UninitDestroyGuard(struct std___UninitDestroyGuard_int____void_* v334, int** v335) {
+bb336:
+  struct std___UninitDestroyGuard_int____void_* this337;
+  int** __first338;
+  this337 = v334;
+  __first338 = v335;
+  struct std___UninitDestroyGuard_int____void_* t339 = this337;
+  int** t340 = __first338;
+  int* t341 = *t340;
+  t339->_M_first = t341;
+  int** t342 = __first338;
+  t339->_M_cur = t342;
+  return;
+}
+
+// function: _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_
+int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* v343, int* v344) {
+bb345:
+  int* __location346;
+  int* __args347;
+  int* __retval348;
+  void* __loc349;
+  __location346 = v343;
+  __args347 = v344;
+  int* t350 = __location346;
+  void* cast351 = (void*)t350;
+  __loc349 = cast351;
+    void* t352 = __loc349;
+    int* cast353 = (int*)t352;
+    int* t354 = __args347;
+    int t355 = *t354;
+    *cast353 = t355;
+    __retval348 = cast353;
+    int* t356 = __retval348;
+    return t356;
+  abort();
+}
+
+// function: _ZSt10_ConstructIiJRKiEEvPT_DpOT0_
+void void_std___Construct_int__int_const__(int* v357, int* v358) {
+bb359:
+  int* __p360;
+  int* __args361;
+  __p360 = v357;
+  __args361 = v358;
+    _Bool r362 = std____is_constant_evaluated();
+    if (r362) {
+      int* t363 = __p360;
+      int* t364 = __args361;
+      int* r365 = _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(t363, t364);
+      return;
+    }
+  int* t366 = __p360;
+  void* cast367 = (void*)t366;
+  int* cast368 = (int*)cast367;
+  int* t369 = __args361;
+  int t370 = *t369;
+  *cast368 = t370;
+  return;
+}
+
+// function: _ZNSt19_UninitDestroyGuardIPivE7releaseEv
+void std___UninitDestroyGuard_int___void___release(struct std___UninitDestroyGuard_int____void_* v371) {
+bb372:
+  struct std___UninitDestroyGuard_int____void_* this373;
+  this373 = v371;
+  struct std___UninitDestroyGuard_int____void_* t374 = this373;
+  int** c375 = ((void*)0);
+  t374->_M_cur = c375;
+  return;
+}
+
+// function: _ZNSt19_UninitDestroyGuardIPivED2Ev
+void std___UninitDestroyGuard_int___void_____UninitDestroyGuard(struct std___UninitDestroyGuard_int____void_* v376) {
+bb377:
+  struct std___UninitDestroyGuard_int____void_* this378;
+  this378 = v376;
+  struct std___UninitDestroyGuard_int____void_* t379 = this378;
+    int** t380 = t379->_M_cur;
+    int** c381 = ((void*)0);
+    _Bool c382 = ((t380 != c381)) ? 1 : 0;
+    if (c382) {
+      int* t383 = t379->_M_first;
+      int** t384 = t379->_M_cur;
+      int* t385 = *t384;
+      void_std___Destroy_int__(t383, t385);
+    }
+  return;
+}
+
+// function: _ZSt18__do_uninit_fill_nIPimiET_S1_T0_RKT1_
+int* int__std____do_uninit_fill_n_int___unsigned_long__int_(int* v386, unsigned long v387, int* v388) {
+bb389:
+  int* __first390;
+  unsigned long __n391;
+  int* __x392;
+  int* __retval393;
+  struct std___UninitDestroyGuard_int____void_ __guard394;
+  __first390 = v386;
+  __n391 = v387;
+  __x392 = v388;
+  std___UninitDestroyGuard_int___void____UninitDestroyGuard(&__guard394, &__first390);
+        do {
+              unsigned long t395 = __n391;
+              unsigned long c396 = 0;
+              _Bool c397 = ((t395 >= c396)) ? 1 : 0;
+              _Bool u398 = !c397;
+              if (u398) {
+                char* cast399 = (char*)&(_str_3);
+                int c400 = 463;
+                char* cast401 = (char*)&(__PRETTY_FUNCTION____ZSt18__do_uninit_fill_nIPimiET_S1_T0_RKT1_);
+                char* cast402 = (char*)&(_str_4);
+                std____glibcxx_assert_fail(cast399, c400, cast401, cast402);
+              }
+          _Bool c403 = 0;
+          if (!c403) break;
+        } while (1);
+      while (1) {
+        unsigned long t405 = __n391;
+        unsigned long u406 = t405 - 1;
+        __n391 = u406;
+        _Bool cast407 = (_Bool)t405;
+        if (!cast407) break;
+        int* t408 = __first390;
+        int* t409 = __x392;
+        void_std___Construct_int__int_const__(t408, t409);
+      for_step404: ;
+        int* t410 = __first390;
+        int c411 = 1;
+        int* ptr412 = &(t410)[c411];
+        __first390 = ptr412;
+      }
+    std___UninitDestroyGuard_int___void___release(&__guard394);
+    int* t413 = __first390;
+    __retval393 = t413;
+    int* t414 = __retval393;
+    int* ret_val415 = t414;
+    {
+      std___UninitDestroyGuard_int___void_____UninitDestroyGuard(&__guard394);
+    }
+    return ret_val415;
+  abort();
+}
+
+// function: _ZSt20uninitialized_fill_nIPimiET_S1_T0_RKT1_
+int* int__std__uninitialized_fill_n_int___unsigned_long__int_(int* v416, unsigned long v417, int* v418) {
+bb419:
+  int* __first420;
+  unsigned long __n421;
+  int* __x422;
+  int* __retval423;
+  __first420 = v416;
+  __n421 = v417;
+  __x422 = v418;
+  int* t424 = __first420;
+  unsigned long t425 = __n421;
+  int* t426 = __x422;
+  int* r427 = int__std____do_uninit_fill_n_int___unsigned_long__int_(t424, t425, t426);
+  __retval423 = r427;
+  int* t428 = __retval423;
+  return t428;
+}
+
+// function: _ZSt24__uninitialized_fill_n_aIPimiiET_S1_T0_RKT1_RSaIT2_E
+int* int__std____uninitialized_fill_n_a_int___unsigned_long__int__int_(int* v429, unsigned long v430, int* v431, struct std__allocator_int_* v432) {
+bb433:
+  int* __first434;
+  unsigned long __n435;
+  int* __x436;
+  struct std__allocator_int_* unnamed437;
+  int* __retval438;
+  __first434 = v429;
+  __n435 = v430;
+  __x436 = v431;
+  unnamed437 = v432;
+    _Bool r439 = std__is_constant_evaluated();
+    if (r439) {
+      int* t440 = __first434;
+      unsigned long t441 = __n435;
+      int* t442 = __x436;
+      int* r443 = int__std____do_uninit_fill_n_int___unsigned_long__int_(t440, t441, t442);
+      __retval438 = r443;
+      int* t444 = __retval438;
+      return t444;
+    }
+  int* t445 = __first434;
+  unsigned long t446 = __n435;
+  int* t447 = __x436;
+  int* r448 = int__std__uninitialized_fill_n_int___unsigned_long__int_(t445, t446, t447);
+  __retval438 = r448;
+  int* t449 = __retval438;
+  return t449;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEE19_M_get_Tp_allocatorEv
+struct std__allocator_int_* std___Vector_base_int__std__allocator_int______M_get_Tp_allocator(struct std___Vector_base_int__std__allocator_int__* v450) {
+bb451:
+  struct std___Vector_base_int__std__allocator_int__* this452;
+  struct std__allocator_int_* __retval453;
+  this452 = v450;
+  struct std___Vector_base_int__std__allocator_int__* t454 = this452;
+  struct std__allocator_int_* base455 = (struct std__allocator_int_*)((char *)&(t454->_M_impl) + 0);
+  __retval453 = base455;
+  struct std__allocator_int_* t456 = __retval453;
+  return t456;
+}
+
+// function: _ZNSt6vectorIiSaIiEE18_M_fill_initializeEmRKi
+void std__vector_int__std__allocator_int______M_fill_initialize(struct std__vector_int__std__allocator_int__* v457, unsigned long v458, int* v459) {
+bb460:
+  struct std__vector_int__std__allocator_int__* this461;
+  unsigned long __n462;
+  int* __value463;
+  this461 = v457;
+  __n462 = v458;
+  __value463 = v459;
+  struct std__vector_int__std__allocator_int__* t464 = this461;
+  struct std___Vector_base_int__std__allocator_int__* base465 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t464 + 0);
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base466 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base465->_M_impl) + 0);
+  int* t467 = base466->_M_start;
+  unsigned long t468 = __n462;
+  int* t469 = __value463;
+  struct std___Vector_base_int__std__allocator_int__* base470 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t464 + 0);
+  struct std__allocator_int_* r471 = std___Vector_base_int__std__allocator_int______M_get_Tp_allocator(base470);
+  int* r472 = int__std____uninitialized_fill_n_a_int___unsigned_long__int__int_(t467, t468, t469, r471);
+  struct std___Vector_base_int__std__allocator_int__* base473 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t464 + 0);
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base474 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base473->_M_impl) + 0);
+  base474->_M_finish = r472;
+  return;
+}
+
+// function: _ZNSt15__new_allocatorIiE10deallocateEPim
+void std____new_allocator_int___deallocate(struct std____new_allocator_int_* v475, int* v476, unsigned long v477) {
+bb478:
+  struct std____new_allocator_int_* this479;
+  int* __p480;
+  unsigned long __n481;
+  this479 = v475;
+  __p480 = v476;
+  __n481 = v477;
+  struct std____new_allocator_int_* t482 = this479;
+    unsigned long c483 = 4;
+    unsigned long c484 = 16;
+    _Bool c485 = ((c483 > c484)) ? 1 : 0;
+    if (c485) {
+      int* t486 = __p480;
+      void* cast487 = (void*)t486;
+      unsigned long t488 = __n481;
+      unsigned long c489 = 4;
+      unsigned long b490 = t488 * c489;
+      unsigned long c491 = 4;
+      operator_delete_3(cast487, b490, c491);
+      return;
+    }
+  int* t492 = __p480;
+  void* cast493 = (void*)t492;
+  unsigned long t494 = __n481;
+  unsigned long c495 = 4;
+  unsigned long b496 = t494 * c495;
+  operator_delete_2(cast493, b496);
+  return;
+}
+
+// function: _ZNSaIiE10deallocateEPim
+void std__allocator_int___deallocate(struct std__allocator_int_* v497, int* v498, unsigned long v499) {
+bb500:
+  struct std__allocator_int_* this501;
+  int* __p502;
+  unsigned long __n503;
+  this501 = v497;
+  __p502 = v498;
+  __n503 = v499;
+  struct std__allocator_int_* t504 = this501;
+    _Bool r505 = std____is_constant_evaluated();
+    if (r505) {
+      int* t506 = __p502;
+      void* cast507 = (void*)t506;
+      operator_delete(cast507);
+      return;
+    }
+  struct std____new_allocator_int_* base508 = (struct std____new_allocator_int_*)((char *)t504 + 0);
+  int* t509 = __p502;
+  unsigned long t510 = __n503;
+  std____new_allocator_int___deallocate(base508, t509, t510);
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaIiEE10deallocateERS0_Pim
+void std__allocator_traits_std__allocator_int_____deallocate(struct std__allocator_int_* v511, int* v512, unsigned long v513) {
+bb514:
+  struct std__allocator_int_* __a515;
+  int* __p516;
+  unsigned long __n517;
+  __a515 = v511;
+  __p516 = v512;
+  __n517 = v513;
+  struct std__allocator_int_* t518 = __a515;
+  int* t519 = __p516;
+  unsigned long t520 = __n517;
+  std__allocator_int___deallocate(t518, t519, t520);
+  return;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEE13_M_deallocateEPim
+void std___Vector_base_int__std__allocator_int______M_deallocate(struct std___Vector_base_int__std__allocator_int__* v521, int* v522, unsigned long v523) {
+bb524:
+  struct std___Vector_base_int__std__allocator_int__* this525;
+  int* __p526;
+  unsigned long __n527;
+  this525 = v521;
+  __p526 = v522;
+  __n527 = v523;
+  struct std___Vector_base_int__std__allocator_int__* t528 = this525;
+    int* t529 = __p526;
+    _Bool cast530 = (_Bool)t529;
+    if (cast530) {
+      struct std__allocator_int_* base531 = (struct std__allocator_int_*)((char *)&(t528->_M_impl) + 0);
+      int* t532 = __p526;
+      unsigned long t533 = __n527;
+      std__allocator_traits_std__allocator_int_____deallocate(base531, t532, t533);
+    }
+  return;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEED2Ev
+void std___Vector_base_int__std__allocator_int_______Vector_base(struct std___Vector_base_int__std__allocator_int__* v534) {
+bb535:
+  struct std___Vector_base_int__std__allocator_int__* this536;
+  this536 = v534;
+  struct std___Vector_base_int__std__allocator_int__* t537 = this536;
+    struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base538 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(t537->_M_impl) + 0);
+    int* t539 = base538->_M_start;
+    struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base540 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(t537->_M_impl) + 0);
+    int* t541 = base540->_M_end_of_storage;
+    struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base542 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(t537->_M_impl) + 0);
+    int* t543 = base542->_M_start;
+    long diff544 = t541 - t543;
+    unsigned long cast545 = (unsigned long)diff544;
+    std___Vector_base_int__std__allocator_int______M_deallocate(t537, t539, cast545);
+  {
+    std___Vector_base_int__std__allocator_int______Vector_impl____Vector_impl(&t537->_M_impl);
+  }
+  return;
+}
+
+// function: _ZNSt15__new_allocatorIiEC2ERKS0_
+void std____new_allocator_int_____new_allocator(struct std____new_allocator_int_* v546, struct std____new_allocator_int_* v547) {
+bb548:
+  struct std____new_allocator_int_* this549;
+  struct std____new_allocator_int_* unnamed550;
+  this549 = v546;
+  unnamed550 = v547;
+  struct std____new_allocator_int_* t551 = this549;
+  return;
+}
+
+// function: _ZNSt12_Vector_baseIiSaIiEE17_Vector_impl_dataC2Ev
+void std___Vector_base_int__std__allocator_int______Vector_impl_data___Vector_impl_data(struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* v552) {
+bb553:
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* this554;
+  this554 = v552;
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* t555 = this554;
+  int* c556 = ((void*)0);
+  t555->_M_start = c556;
+  int* c557 = ((void*)0);
+  t555->_M_finish = c557;
+  int* c558 = ((void*)0);
+  t555->_M_end_of_storage = c558;
+  return;
+}
+
+// function: _ZSt10destroy_atIiEvPT_
+void void_std__destroy_at_int_(int* v559) {
+bb560:
+  int* __location561;
+  __location561 = v559;
+  return;
+}
+
+// function: _ZSt8_DestroyIPiEvT_S1_
+void void_std___Destroy_int__(int* v562, int* v563) {
+bb564:
+  int* __first565;
+  int* __last566;
+  __first565 = v562;
+  __last566 = v563;
+      _Bool r567 = std____is_constant_evaluated();
+      if (r567) {
+          while (1) {
+            int* t569 = __first565;
+            int* t570 = __last566;
+            _Bool c571 = ((t569 != t570)) ? 1 : 0;
+            if (!c571) break;
+            int* t572 = __first565;
+            void_std__destroy_at_int_(t572);
+          for_step568: ;
+            int* t573 = __first565;
+            int c574 = 1;
+            int* ptr575 = &(t573)[c574];
+            __first565 = ptr575;
+          }
+      }
+  return;
+}
+
+// function: _ZNKSt6vectorIiSaIiEE4sizeEv
+unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* v576) {
+bb577:
+  struct std__vector_int__std__allocator_int__* this578;
+  unsigned long __retval579;
+  long __dif580;
+  this578 = v576;
+  struct std__vector_int__std__allocator_int__* t581 = this578;
+  struct std___Vector_base_int__std__allocator_int__* base582 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t581 + 0);
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base583 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base582->_M_impl) + 0);
+  int* t584 = base583->_M_finish;
+  struct std___Vector_base_int__std__allocator_int__* base585 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t581 + 0);
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base586 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base585->_M_impl) + 0);
+  int* t587 = base586->_M_start;
+  long diff588 = t584 - t587;
+  __dif580 = diff588;
+    long t589 = __dif580;
+    long c590 = 0;
+    _Bool c591 = ((t589 < c590)) ? 1 : 0;
+    if (c591) {
+      __builtin_unreachable();
+    }
+  long t592 = __dif580;
+  unsigned long cast593 = (unsigned long)t592;
+  __retval579 = cast593;
+  unsigned long t594 = __retval579;
+  return t594;
+}
+
+// function: _ZNSt16allocator_traitsISaIiEE37select_on_container_copy_constructionERKS0_
+struct std__allocator_int_ std__allocator_traits_std__allocator_int_____select_on_container_copy_construction(struct std__allocator_int_* v595) {
+bb596:
+  struct std__allocator_int_* __rhs597;
+  struct std__allocator_int_ __retval598;
+  __rhs597 = v595;
+  struct std__allocator_int_* t599 = __rhs597;
+  std__allocator_int___allocator(&__retval598, t599);
+  struct std__allocator_int_ t600 = __retval598;
+  return t600;
+}
+
+// function: _ZN9__gnu_cxx14__alloc_traitsISaIiEiE17_S_select_on_copyERKS1_
+struct std__allocator_int_ __gnu_cxx____alloc_traits_std__allocator_int___int____S_select_on_copy(struct std__allocator_int_* v601) {
+bb602:
+  struct std__allocator_int_* __a603;
+  struct std__allocator_int_ __retval604;
+  __a603 = v601;
+  struct std__allocator_int_* t605 = __a603;
+  struct std__allocator_int_ r606 = std__allocator_traits_std__allocator_int_____select_on_container_copy_construction(t605);
+  __retval604 = r606;
+  struct std__allocator_int_ t607 = __retval604;
+  return t607;
+}
+
+// function: _ZNKSt12_Vector_baseIiSaIiEE19_M_get_Tp_allocatorEv
+struct std__allocator_int_* std___Vector_base_int__std__allocator_int______M_get_Tp_allocator___const(struct std___Vector_base_int__std__allocator_int__* v608) {
+bb609:
+  struct std___Vector_base_int__std__allocator_int__* this610;
+  struct std__allocator_int_* __retval611;
+  this610 = v608;
+  struct std___Vector_base_int__std__allocator_int__* t612 = this610;
+  struct std__allocator_int_* base613 = (struct std__allocator_int_*)((char *)&(t612->_M_impl) + 0);
+  __retval611 = base613;
+  struct std__allocator_int_* t614 = __retval611;
+  return t614;
+}
+
+// function: _ZNK9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEE4baseEv
+int** __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______base___const(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* v615) {
+bb616:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* this617;
+  int** __retval618;
+  this617 = v615;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t619 = this617;
+  __retval618 = &t619->_M_current;
+  int** t620 = __retval618;
+  return t620;
+}
+
+// function: _ZN9__gnu_cxxeqIPKiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESB_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE
+_Bool _ZN9__gnu_cxxeqIPKiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESB_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* v621, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* v622) {
+bb623:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* __lhs624;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* __rhs625;
+  _Bool __retval626;
+  __lhs624 = v621;
+  __rhs625 = v622;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t627 = __lhs624;
+  int** r628 = __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______base___const(t627);
+  int* t629 = *r628;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t630 = __rhs625;
+  int** r631 = __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______base___const(t630);
+  int* t632 = *r631;
+  _Bool c633 = ((t629 == t632)) ? 1 : 0;
+  __retval626 = c633;
+  _Bool t634 = __retval626;
+  return t634;
+}
+
+// function: _ZNK9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEdeEv
+int* __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______operator____const(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* v635) {
+bb636:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* this637;
+  int* __retval638;
+  this637 = v635;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t639 = this637;
+  int* t640 = t639->_M_current;
+  __retval638 = t640;
+  int* t641 = __retval638;
+  return t641;
+}
+
+// function: _ZN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEppEv
+struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______operator__(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* v642) {
+bb643:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* this644;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* __retval645;
+  this644 = v642;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t646 = this644;
+  int* t647 = t646->_M_current;
+  int c648 = 1;
+  int* ptr649 = &(t647)[c648];
+  t646->_M_current = ptr649;
+  __retval645 = t646;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t650 = __retval645;
+  return t650;
+}
+
+// function: _ZSt16__do_uninit_copyIN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEES7_PiET1_T_T0_S9_
+int* int__std____do_uninit_copy___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int__(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ v651, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ v652, int* v653) {
+bb654:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __first655;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __last656;
+  int* __result657;
+  int* __retval658;
+  struct std___UninitDestroyGuard_int____void_ __guard659;
+  __first655 = v651;
+  __last656 = v652;
+  __result657 = v653;
+  std___UninitDestroyGuard_int___void____UninitDestroyGuard(&__guard659, &__result657);
+      while (1) {
+        _Bool r661 = _ZN9__gnu_cxxeqIPKiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESB_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(&__first655, &__last656);
+        _Bool u662 = !r661;
+        if (!u662) break;
+        int* t663 = __result657;
+        int* r664 = __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______operator____const(&__first655);
+        void_std___Construct_int__int_const__(t663, r664);
+      for_step660: ;
+        struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* r665 = __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______operator__(&__first655);
+        int* t666 = __result657;
+        int c667 = 1;
+        int* ptr668 = &(t666)[c667];
+        __result657 = ptr668;
+      }
+    std___UninitDestroyGuard_int___void___release(&__guard659);
+    int* t669 = __result657;
+    __retval658 = t669;
+    int* t670 = __retval658;
+    int* ret_val671 = t670;
+    {
+      std___UninitDestroyGuard_int___void_____UninitDestroyGuard(&__guard659);
+    }
+    return ret_val671;
+  abort();
+}
+
+// function: _ZN9__gnu_cxxmiIPKiSt6vectorIiSaIiEEEENS_17__normal_iteratorIT_T0_E15difference_typeERKS9_SC_
+long __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______difference_type___gnu_cxx__operator__int_const___std__vector_int__std__allocator_int_____(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* v672, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* v673) {
+bb674:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* __lhs675;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* __rhs676;
+  long __retval677;
+  __lhs675 = v672;
+  __rhs676 = v673;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t678 = __lhs675;
+  int** r679 = __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______base___const(t678);
+  int* t680 = *r679;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t681 = __rhs676;
+  int** r682 = __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______base___const(t681);
+  int* t683 = *r682;
+  long diff684 = t680 - t683;
+  __retval677 = diff684;
+  long t685 = __retval677;
+  return t685;
+}
+
+// function: _ZSt12__niter_baseIPiET_S1_
+int* int__std____niter_base_int__(int* v686) {
+bb687:
+  int* __it688;
+  int* __retval689;
+  __it688 = v686;
+  int* t690 = __it688;
+  __retval689 = t690;
+  int* t691 = __retval689;
+  return t691;
+}
+
+// function: _ZSt12__niter_baseIPKiSt6vectorIiSaIiEEET_N9__gnu_cxx17__normal_iteratorIS5_T0_EE
+int* int_const__std____niter_base_int_const___std__vector_int__std__allocator_int_____(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ v692) {
+bb693:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __it694;
+  int* __retval695;
+  __it694 = v692;
+  int** r696 = __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______base___const(&__it694);
+  int* t697 = *r696;
+  __retval695 = t697;
+  int* t698 = __retval695;
+  return t698;
+}
+
+// function: _ZSt18uninitialized_copyIN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEEPiET0_T_SA_S9_
+int* int__std__uninitialized_copy___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int__(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ v699, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ v700, int* v701) {
+bb702:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __first703;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __last704;
+  int* __result705;
+  int* __retval706;
+  __first703 = v699;
+  __last704 = v700;
+  __result705 = v701;
+      long __n707;
+      long r708 = __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______difference_type___gnu_cxx__operator__int_const___std__vector_int__std__allocator_int_____(&__last704, &__first703);
+      __n707 = r708;
+        long t709 = __n707;
+        long c710 = 0;
+        _Bool c711 = ((t709 > c710)) ? 1 : 0;
+        if (c711) {
+          struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ agg_tmp0712;
+          int* t713 = __result705;
+          int* r714 = int__std____niter_base_int__(t713);
+          void* cast715 = (void*)r714;
+          agg_tmp0712 = __first703; // copy
+          struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t716 = agg_tmp0712;
+          int* r717 = int_const__std____niter_base_int_const___std__vector_int__std__allocator_int_____(t716);
+          void* cast718 = (void*)r717;
+          long t719 = __n707;
+          unsigned long cast720 = (unsigned long)t719;
+          unsigned long c721 = 4;
+          unsigned long b722 = cast720 * c721;
+          void* r723 = memcpy(cast715, cast718, b722);
+          long t724 = __n707;
+          int* t725 = __result705;
+          int* ptr726 = &(t725)[t724];
+          __result705 = ptr726;
+        }
+      int* t727 = __result705;
+      __retval706 = t727;
+      int* t728 = __retval706;
+      return t728;
+  abort();
+}
+
+// function: _ZSt22__uninitialized_copy_aIN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEES7_PiiET1_T_T0_S9_RSaIT2_E
+int* int__std____uninitialized_copy_a___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int___int_(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ v729, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ v730, int* v731, struct std__allocator_int_* v732) {
+bb733:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __first734;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __last735;
+  int* __result736;
+  struct std__allocator_int_* unnamed737;
+  int* __retval738;
+  __first734 = v729;
+  __last735 = v730;
+  __result736 = v731;
+  unnamed737 = v732;
+    _Bool r739 = std__is_constant_evaluated();
+    if (r739) {
+      struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ agg_tmp0740;
+      struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ agg_tmp1741;
+      agg_tmp0740 = __first734; // copy
+      agg_tmp1741 = __last735; // copy
+      int* t742 = __result736;
+      struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t743 = agg_tmp0740;
+      struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t744 = agg_tmp1741;
+      int* r745 = int__std____do_uninit_copy___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int__(t743, t744, t742);
+      __retval738 = r745;
+      int* t746 = __retval738;
+      return t746;
+    }
+    struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ agg_tmp2747;
+    struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ agg_tmp3748;
+    agg_tmp2747 = __first734; // copy
+    agg_tmp3748 = __last735; // copy
+    int* t749 = __result736;
+    struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t750 = agg_tmp2747;
+    struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t751 = agg_tmp3748;
+    int* r752 = int__std__uninitialized_copy___gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______int__(t750, t751, t749);
+    __retval738 = r752;
+    int* t753 = __retval738;
+    return t753;
+  abort();
+}
+
+// function: _ZN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEC2ERKS2_
+void __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________normal_iterator(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* v754, int** v755) {
+bb756:
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* this757;
+  int** __i758;
+  this757 = v754;
+  __i758 = v755;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* t759 = this757;
+  int** t760 = __i758;
+  int* t761 = *t760;
+  t759->_M_current = t761;
+  return;
+}
+
+// function: _ZNKSt6vectorIiSaIiEE5beginEv
+struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin___const(struct std__vector_int__std__allocator_int__* v762) {
+bb763:
+  struct std__vector_int__std__allocator_int__* this764;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __retval765;
+  this764 = v762;
+  struct std__vector_int__std__allocator_int__* t766 = this764;
+  struct std___Vector_base_int__std__allocator_int__* base767 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t766 + 0);
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base768 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base767->_M_impl) + 0);
+  __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________normal_iterator(&__retval765, &base768->_M_start);
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t769 = __retval765;
+  return t769;
+}
+
+// function: _ZNKSt6vectorIiSaIiEE3endEv
+struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____end___const(struct std__vector_int__std__allocator_int__* v770) {
+bb771:
+  struct std__vector_int__std__allocator_int__* this772;
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ __retval773;
+  this772 = v770;
+  struct std__vector_int__std__allocator_int__* t774 = this772;
+  struct std___Vector_base_int__std__allocator_int__* base775 = (struct std___Vector_base_int__std__allocator_int__*)((char *)t774 + 0);
+  struct std___Vector_base_int__std__allocator_int_____Vector_impl_data* base776 = (struct std___Vector_base_int__std__allocator_int_____Vector_impl_data*)((char *)&(base775->_M_impl) + 0);
+  __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_________normal_iterator(&__retval773, &base776->_M_finish);
+  struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ t777 = __retval773;
+  return t777;
+}
+
+// function: _ZSt8_DestroyIPiiEvT_S1_RSaIT0_E
+void void_std___Destroy_int___int_(int* v778, int* v779, struct std__allocator_int_* v780) {
+bb781:
+  int* __first782;
+  int* __last783;
+  struct std__allocator_int_* unnamed784;
+  __first782 = v778;
+  __last783 = v779;
+  unnamed784 = v780;
+  int* t785 = __first782;
+  int* t786 = __last783;
+  void_std___Destroy_int__(t785, t786);
+  return;
+}
+

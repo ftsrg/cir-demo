@@ -1,0 +1,1827 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+
+// Struct definitions (auto-parsed)
+struct StringClass { char str[20]; };
+struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__ { unsigned char _M_storage[40]; };
+struct opposite { char str[20]; };
+struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node { struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* _M_t; };
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ { struct std___Rb_tree_node_base* _M_node; };
+struct std___Rb_tree_key_compare_std__less_StringClass__ { unsigned char __field0; };
+struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__ _M_storage; };
+struct std___Select1st_std__pair_const_StringClass__opposite__ { unsigned char __field0; };
+struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___ { unsigned char __field0; };
+struct std____pair_base_const_StringClass__opposite_ { unsigned char __field0; };
+struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___ { unsigned char __field0; };
+struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___ { unsigned char __field0; };
+struct std__less_StringClass_ { unsigned char __field0; };
+struct std__pair_const_StringClass__opposite_ { struct StringClass first; struct opposite second; };
+struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
+struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
+struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_ { struct std___Rb_tree_key_compare_std__less_StringClass__ __field0; struct std___Rb_tree_header __field1; };
+struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ { struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_ _M_impl; };
+struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ { struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ _M_t; };
+
+char _str[2] = "a";
+char _str_1[2] = "b";
+char _str_2[30] = "it->first == StringClass(\"a\")";
+char _str_3[124] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/multimap/multimap_string_class-2_bug/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_4[28] = "it->second == opposite(\"b\")";
+char _str_5[22] = "mapObject.size() != 1";
+extern int strcmp(char* p0, char* p1);
+char* StringClass__get(struct StringClass* p0);
+_Bool operator_(struct StringClass p0, struct StringClass p1);
+_Bool operator__(struct StringClass p0, struct StringClass p1);
+_Bool operator___3(struct StringClass p0, struct StringClass p1);
+char* opposite__get(struct opposite* p0);
+_Bool operator__2(struct opposite p0, struct opposite p1);
+_Bool operator___2(struct opposite p0, struct opposite p1);
+_Bool operator___4(struct opposite p0, struct opposite p1);
+void std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______multimap(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+struct std___Rb_tree_node_base* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_begin___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+struct std___Rb_tree_node_base* std___Rb_tree_node_base___M_base_ptr___const(struct std___Rb_tree_node_base* p0);
+struct std___Rb_tree_node_base* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_end___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+_Bool std__less_StringClass___operator___StringClass_const___StringClass_const___const(struct std__less_StringClass_* p0, struct StringClass* p1, struct StringClass* p2);
+struct StringClass* std___Select1st_std__pair_StringClass_const__opposite_____operator___std__pair_StringClass_const__opposite__const___const(struct std___Select1st_std__pair_const_StringClass__opposite__* p0, struct std__pair_const_StringClass__opposite_* p1);
+void* __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_addr___const(struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* p0);
+struct std__pair_const_StringClass__opposite_* __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_ptr___const(struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* p0);
+struct std__pair_const_StringClass__opposite_* std___Rb_tree_node_std__pair_StringClass_const__opposite______M_valptr___const(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p0);
+struct StringClass* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_key_2(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p0);
+struct StringClass* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_key(struct std___Rb_tree_node_base* p0);
+struct std___Rb_tree_node_base* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_left_2(struct std___Rb_tree_node_base* p0);
+struct std___Rb_tree_node_base* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_right_2(struct std___Rb_tree_node_base* p0);
+void _ZNSt4pairIPSt18_Rb_tree_node_baseS1_EC2IRS1_S4_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___* p0, struct std___Rb_tree_node_base** p1, struct std___Rb_tree_node_base** p2);
+struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_insert_equal_pos(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct StringClass* p1);
+struct StringClass* std___Select1st_std__pair_StringClass_const__opposite_____operator___std__pair_StringClass_const__opposite____const(struct std___Select1st_std__pair_const_StringClass__opposite__* p0, struct std__pair_const_StringClass__opposite_* p1);
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node___Alloc_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* p0, struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p1);
+extern void std____throw_bad_array_new_length();
+extern void *malloc(unsigned long);
+extern void free(void*);
+void* operator_new(unsigned long p0) { return malloc(p0); }
+unsigned long std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite________M_max_size___const(struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0);
+extern void std____throw_bad_alloc();
+void* operator_new_2(unsigned long p0, unsigned long p1) { return malloc(p0); }
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocate(struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0, unsigned long p1, void* p2);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocate(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0, unsigned long p1);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________allocate(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0, unsigned long p1);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+extern int __gxx_personality_v0();
+struct std__pair_const_StringClass__opposite_* _ZSt12construct_atISt4pairIK11StringClass8oppositeEJS4_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S5_pispclsr3stdE7declvalIT0_EEEEEPS5_S8_DpOS7_(struct std__pair_const_StringClass__opposite_* p0, struct std__pair_const_StringClass__opposite_* p1);
+void void_std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________construct_std__pair_StringClass_const__opposite___std__pair_StringClass_const__opposite___(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0, struct std__pair_const_StringClass__opposite_* p1, struct std__pair_const_StringClass__opposite_* p2);
+void void_std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_construct_node_std__pair_StringClass_const__opposite___(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p1, struct std__pair_const_StringClass__opposite_* p2);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_node_std__pair_StringClass_const__opposite_____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_create_node_std__pair_StringClass_const__opposite___(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std__pair_const_StringClass__opposite_* p1);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_node_std__pair_StringClass_const__opposite_____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node__operator___std__pair_StringClass_const__opposite____std__pair_StringClass_const__opposite_____const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* p0, struct std__pair_const_StringClass__opposite_* p1);
+extern void std___Rb_tree_insert_and_rebalance(_Bool p0, struct std___Rb_tree_node_base* p1, struct std___Rb_tree_node_base* p2, struct std___Rb_tree_node_base* p3);
+void std____rb_tree___Node_traits_std__pair_StringClass_const__opposite___std__pair_StringClass_const__opposite______S_insert_and_rebalance(_Bool p0, struct std___Rb_tree_node_base* p1, struct std___Rb_tree_node_base* p2, struct std___Rb_tree_node_base* p3);
+void std___Rb_tree_iterator_std__pair_StringClass_const__opposite______Rb_tree_iterator(struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* p0, struct std___Rb_tree_node_base* p1);
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std___Rb_tree_iterator_std__pair_StringClass_const__opposite____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_insert__std__pair_StringClass_const__opposite___std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node_(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_base* p1, struct std___Rb_tree_node_base* p2, struct std__pair_const_StringClass__opposite_* p3, struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* p4);
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std___Rb_tree_iterator_std__pair_StringClass_const__opposite____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_insert_equal_std__pair_StringClass_const__opposite___(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std__pair_const_StringClass__opposite_* p1);
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______insert(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std__pair_const_StringClass__opposite_* p1);
+void StringClass__StringClass(struct StringClass* p0, char* p1);
+void opposite__opposite(struct opposite* p0, char* p1);
+void _ZNSt4pairIK11StringClass8oppositeEC2IS0_S2_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(struct std__pair_const_StringClass__opposite_* p0, struct StringClass* p1, struct opposite* p2);
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______begin(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______begin(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+struct std__pair_const_StringClass__opposite_* std___Rb_tree_iterator_std__pair_StringClass_const__opposite_____operator_____const(struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+unsigned long std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+unsigned long std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+void std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+int main();
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_________Rb_tree(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree_impl_std__less_StringClass___true____Rb_tree_impl(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_* p0);
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree_impl_std__less_StringClass___true_____Rb_tree_impl(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_* p0);
+void std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________new_allocator(struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0);
+void std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocator(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0);
+void std___Rb_tree_key_compare_std__less_StringClass______Rb_tree_key_compare(struct std___Rb_tree_key_compare_std__less_StringClass__* p0);
+void std___Rb_tree_header___M_reset(struct std___Rb_tree_header* p0);
+void std___Rb_tree_header___Rb_tree_header(struct std___Rb_tree_header* p0);
+void std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite________allocator(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_node_std__pair_StringClass_const__opposite______M_node_ptr(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p0);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_right(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p0);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_left(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p0);
+void void_std__destroy_at_std__pair_StringClass_const__opposite___(struct std__pair_const_StringClass__opposite_* p0);
+void void_std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________destroy_std__pair_StringClass_const__opposite___(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0, struct std__pair_const_StringClass__opposite_* p1);
+struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_Node_allocator(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+void* __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_addr(struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* p0);
+struct std__pair_const_StringClass__opposite_* __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_ptr(struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* p0);
+struct std__pair_const_StringClass__opposite_* std___Rb_tree_node_std__pair_StringClass_const__opposite______M_valptr(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p0);
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_destroy_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p1);
+_Bool std____is_constant_evaluated();
+void operator_delete(void* p0) { free(p0); }
+void operator_delete_3(void* p0, unsigned long p1, unsigned long p2) { free(p0); }
+void operator_delete_2(void* p0, unsigned long p1) { free(p0); }
+void std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______deallocate(struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p1, unsigned long p2);
+void std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______deallocate(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p1, unsigned long p2);
+void std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________deallocate(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p1, unsigned long p2);
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_put_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p1);
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_drop_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p1);
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_erase(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* p1);
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_begin_node___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
+extern char* strcpy(char* p0, char* p1);
+
+// function: _ZN11StringClass3getEv
+char* StringClass__get(struct StringClass* v0) {
+bb1:
+  struct StringClass* this2;
+  char* __retval3;
+  this2 = v0;
+  struct StringClass* t4 = this2;
+  char* cast5 = (char*)&(t4->str);
+  __retval3 = cast5;
+  char* t6 = __retval3;
+  return t6;
+}
+
+// function: _Zlt11StringClassS_
+_Bool operator_(struct StringClass v7, struct StringClass v8) {
+bb9:
+  struct StringClass a10;
+  struct StringClass b11;
+  _Bool __retval12;
+  a10 = v7;
+  b11 = v8;
+  char* r13 = StringClass__get(&a10);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  char* r14 = StringClass__get(&b11);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  int r15 = strcmp(r13, r14);
+  int c16 = 0;
+  _Bool c17 = ((r15 < c16)) ? 1 : 0;
+  __retval12 = c17;
+  _Bool t18 = __retval12;
+  return t18;
+}
+
+// function: _Zeq11StringClassS_
+_Bool operator__(struct StringClass v19, struct StringClass v20) {
+bb21:
+  struct StringClass a22;
+  struct StringClass b23;
+  _Bool __retval24;
+  a22 = v19;
+  b23 = v20;
+  char* r25 = StringClass__get(&a22);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  char* r26 = StringClass__get(&b23);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  int r27 = strcmp(r25, r26);
+  int c28 = 0;
+  _Bool c29 = ((r27 == c28)) ? 1 : 0;
+  __retval24 = c29;
+  _Bool t30 = __retval24;
+  return t30;
+}
+
+// function: _Zne11StringClassS_
+_Bool operator___3(struct StringClass v31, struct StringClass v32) {
+bb33:
+  struct StringClass a34;
+  struct StringClass b35;
+  _Bool __retval36;
+  a34 = v31;
+  b35 = v32;
+  char* r37 = StringClass__get(&a34);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  char* r38 = StringClass__get(&b35);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  int r39 = strcmp(r37, r38);
+  int c40 = 0;
+  _Bool c41 = ((r39 != c40)) ? 1 : 0;
+  __retval36 = c41;
+  _Bool t42 = __retval36;
+  return t42;
+}
+
+// function: _ZN8opposite3getEv
+char* opposite__get(struct opposite* v43) {
+bb44:
+  struct opposite* this45;
+  char* __retval46;
+  this45 = v43;
+  struct opposite* t47 = this45;
+  char* cast48 = (char*)&(t47->str);
+  __retval46 = cast48;
+  char* t49 = __retval46;
+  return t49;
+}
+
+// function: _Zlt8oppositeS_
+_Bool operator__2(struct opposite v50, struct opposite v51) {
+bb52:
+  struct opposite a53;
+  struct opposite b54;
+  _Bool __retval55;
+  a53 = v50;
+  b54 = v51;
+  char* r56 = opposite__get(&a53);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  char* r57 = opposite__get(&b54);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  int r58 = strcmp(r56, r57);
+  int c59 = 0;
+  _Bool c60 = ((r58 < c59)) ? 1 : 0;
+  __retval55 = c60;
+  _Bool t61 = __retval55;
+  return t61;
+}
+
+// function: _Zeq8oppositeS_
+_Bool operator___2(struct opposite v62, struct opposite v63) {
+bb64:
+  struct opposite a65;
+  struct opposite b66;
+  _Bool __retval67;
+  a65 = v62;
+  b66 = v63;
+  char* r68 = opposite__get(&a65);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  char* r69 = opposite__get(&b66);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  int r70 = strcmp(r68, r69);
+  int c71 = 0;
+  _Bool c72 = ((r70 == c71)) ? 1 : 0;
+  __retval67 = c72;
+  _Bool t73 = __retval67;
+  return t73;
+}
+
+// function: _Zne8oppositeS_
+_Bool operator___4(struct opposite v74, struct opposite v75) {
+bb76:
+  struct opposite a77;
+  struct opposite b78;
+  _Bool __retval79;
+  a77 = v74;
+  b78 = v75;
+  char* r80 = opposite__get(&a77);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  char* r81 = opposite__get(&b78);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  int r82 = strcmp(r80, r81);
+  int c83 = 0;
+  _Bool c84 = ((r82 != c83)) ? 1 : 0;
+  __retval79 = c84;
+  _Bool t85 = __retval79;
+  return t85;
+}
+
+// function: _ZNSt8multimapI11StringClass8oppositeSt4lessIS0_ESaISt4pairIKS0_S1_EEEC2Ev
+void std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______multimap(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v86) {
+bb87:
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this88;
+  this88 = v86;
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t89 = this88;
+  std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree(&t89->_M_t);
+  return;
+}
+
+// function: _ZNKSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE8_M_beginEv
+struct std___Rb_tree_node_base* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_begin___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v90) {
+bb91:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this92;
+  struct std___Rb_tree_node_base* __retval93;
+  this92 = v90;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t94 = this92;
+  struct std___Rb_tree_header* base95 = (struct std___Rb_tree_header*)((char *)&(t94->_M_impl) + 8);
+  struct std___Rb_tree_node_base* t96 = base95->_M_header._M_parent;
+  __retval93 = t96;
+  struct std___Rb_tree_node_base* t97 = __retval93;
+  return t97;
+}
+
+// function: _ZNKSt18_Rb_tree_node_base11_M_base_ptrEv
+struct std___Rb_tree_node_base* std___Rb_tree_node_base___M_base_ptr___const(struct std___Rb_tree_node_base* v98) {
+bb99:
+  struct std___Rb_tree_node_base* this100;
+  struct std___Rb_tree_node_base* __retval101;
+  this100 = v98;
+  struct std___Rb_tree_node_base* t102 = this100;
+  __retval101 = t102;
+  struct std___Rb_tree_node_base* t103 = __retval101;
+  return t103;
+}
+
+// function: _ZNKSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE6_M_endEv
+struct std___Rb_tree_node_base* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_end___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v104) {
+bb105:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this106;
+  struct std___Rb_tree_node_base* __retval107;
+  this106 = v104;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t108 = this106;
+  struct std___Rb_tree_header* base109 = (struct std___Rb_tree_header*)((char *)&(t108->_M_impl) + 8);
+  struct std___Rb_tree_node_base* r110 = std___Rb_tree_node_base___M_base_ptr___const(&base109->_M_header);
+  __retval107 = r110;
+  struct std___Rb_tree_node_base* t111 = __retval107;
+  return t111;
+}
+
+// function: _ZNKSt4lessI11StringClassEclERKS0_S3_
+_Bool std__less_StringClass___operator___StringClass_const___StringClass_const___const(struct std__less_StringClass_* v112, struct StringClass* v113, struct StringClass* v114) {
+bb115:
+  struct std__less_StringClass_* this116;
+  struct StringClass* __x117;
+  struct StringClass* __y118;
+  _Bool __retval119;
+  struct StringClass agg_tmp0120;
+  struct StringClass agg_tmp1121;
+  this116 = v112;
+  __x117 = v113;
+  __y118 = v114;
+  struct std__less_StringClass_* t122 = this116;
+  struct StringClass* t123 = __x117;
+  agg_tmp0120 = *t123; // copy
+  struct StringClass* t124 = __y118;
+  agg_tmp1121 = *t124; // copy
+  struct StringClass t125 = agg_tmp0120;
+  struct StringClass t126 = agg_tmp1121;
+  _Bool r127 = operator_(t125, t126);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  __retval119 = r127;
+  _Bool t128 = __retval119;
+  return t128;
+}
+
+// function: _ZNKSt10_Select1stISt4pairIK11StringClass8oppositeEEclERKS4_
+struct StringClass* std___Select1st_std__pair_StringClass_const__opposite_____operator___std__pair_StringClass_const__opposite__const___const(struct std___Select1st_std__pair_const_StringClass__opposite__* v129, struct std__pair_const_StringClass__opposite_* v130) {
+bb131:
+  struct std___Select1st_std__pair_const_StringClass__opposite__* this132;
+  struct std__pair_const_StringClass__opposite_* __x133;
+  struct StringClass* __retval134;
+  this132 = v129;
+  __x133 = v130;
+  struct std___Select1st_std__pair_const_StringClass__opposite__* t135 = this132;
+  struct std__pair_const_StringClass__opposite_* t136 = __x133;
+  __retval134 = &t136->first;
+  struct StringClass* t137 = __retval134;
+  return t137;
+}
+
+// function: _ZNK9__gnu_cxx16__aligned_membufISt4pairIK11StringClass8oppositeEE7_M_addrEv
+void* __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_addr___const(struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* v138) {
+bb139:
+  struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* this140;
+  void* __retval141;
+  this140 = v138;
+  struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* t142 = this140;
+  void* cast143 = (void*)&(t142->_M_storage);
+  __retval141 = cast143;
+  void* t144 = __retval141;
+  return t144;
+}
+
+// function: _ZNK9__gnu_cxx16__aligned_membufISt4pairIK11StringClass8oppositeEE6_M_ptrEv
+struct std__pair_const_StringClass__opposite_* __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_ptr___const(struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* v145) {
+bb146:
+  struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* this147;
+  struct std__pair_const_StringClass__opposite_* __retval148;
+  this147 = v145;
+  struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* t149 = this147;
+  void* r150 = __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_addr___const(t149);
+  struct std__pair_const_StringClass__opposite_* cast151 = (struct std__pair_const_StringClass__opposite_*)r150;
+  __retval148 = cast151;
+  struct std__pair_const_StringClass__opposite_* t152 = __retval148;
+  return t152;
+}
+
+// function: _ZNKSt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEE9_M_valptrEv
+struct std__pair_const_StringClass__opposite_* std___Rb_tree_node_std__pair_StringClass_const__opposite______M_valptr___const(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v153) {
+bb154:
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* this155;
+  struct std__pair_const_StringClass__opposite_* __retval156;
+  this155 = v153;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t157 = this155;
+  struct std__pair_const_StringClass__opposite_* r158 = __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_ptr___const(&t157->_M_storage);
+  __retval156 = r158;
+  struct std__pair_const_StringClass__opposite_* t159 = __retval156;
+  return t159;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE6_S_keyERKSt13_Rb_tree_nodeIS4_E
+struct StringClass* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_key_2(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v160) {
+bb161:
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __node162;
+  struct StringClass* __retval163;
+  struct std___Select1st_std__pair_const_StringClass__opposite__ ref_tmp0164;
+  __node162 = v160;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t165 = __node162;
+  struct std__pair_const_StringClass__opposite_* r166 = std___Rb_tree_node_std__pair_StringClass_const__opposite______M_valptr___const(t165);
+  if (__cir_exc_active) {
+    struct StringClass* __cir_eh_ret = (struct StringClass*)0;
+    return __cir_eh_ret;
+  }
+  struct StringClass* r167 = std___Select1st_std__pair_StringClass_const__opposite_____operator___std__pair_StringClass_const__opposite__const___const(&ref_tmp0164, r166);
+  if (__cir_exc_active) {
+    struct StringClass* __cir_eh_ret = (struct StringClass*)0;
+    return __cir_eh_ret;
+  }
+  __retval163 = r167;
+  struct StringClass* t168 = __retval163;
+  return t168;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE6_S_keyEPSt18_Rb_tree_node_base
+struct StringClass* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_key(struct std___Rb_tree_node_base* v169) {
+bb170:
+  struct std___Rb_tree_node_base* __x171;
+  struct StringClass* __retval172;
+  __x171 = v169;
+  struct std___Rb_tree_node_base* t173 = __x171;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* derived174 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)((char *)t173 - 0);
+  struct StringClass* r175 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_key_2(derived174);
+  if (__cir_exc_active) {
+    struct StringClass* __cir_eh_ret = (struct StringClass*)0;
+    return __cir_eh_ret;
+  }
+  __retval172 = r175;
+  struct StringClass* t176 = __retval172;
+  return t176;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE7_S_leftEPSt18_Rb_tree_node_base
+struct std___Rb_tree_node_base* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_left_2(struct std___Rb_tree_node_base* v177) {
+bb178:
+  struct std___Rb_tree_node_base* __x179;
+  struct std___Rb_tree_node_base* __retval180;
+  __x179 = v177;
+  struct std___Rb_tree_node_base* t181 = __x179;
+  struct std___Rb_tree_node_base* t182 = t181->_M_left;
+  __retval180 = t182;
+  struct std___Rb_tree_node_base* t183 = __retval180;
+  return t183;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE8_S_rightEPSt18_Rb_tree_node_base
+struct std___Rb_tree_node_base* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_right_2(struct std___Rb_tree_node_base* v184) {
+bb185:
+  struct std___Rb_tree_node_base* __x186;
+  struct std___Rb_tree_node_base* __retval187;
+  __x186 = v184;
+  struct std___Rb_tree_node_base* t188 = __x186;
+  struct std___Rb_tree_node_base* t189 = t188->_M_right;
+  __retval187 = t189;
+  struct std___Rb_tree_node_base* t190 = __retval187;
+  return t190;
+}
+
+// function: _ZNSt4pairIPSt18_Rb_tree_node_baseS1_EC2IRS1_S4_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_
+void _ZNSt4pairIPSt18_Rb_tree_node_baseS1_EC2IRS1_S4_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___* v191, struct std___Rb_tree_node_base** v192, struct std___Rb_tree_node_base** v193) {
+bb194:
+  struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___* this195;
+  struct std___Rb_tree_node_base** __x196;
+  struct std___Rb_tree_node_base** __y197;
+  this195 = v191;
+  __x196 = v192;
+  __y197 = v193;
+  struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___* t198 = this195;
+  struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___* base199 = (struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___*)((char *)t198 + 0);
+  struct std___Rb_tree_node_base** t200 = __x196;
+  struct std___Rb_tree_node_base* t201 = *t200;
+  t198->first = t201;
+  struct std___Rb_tree_node_base** t202 = __y197;
+  struct std___Rb_tree_node_base* t203 = *t202;
+  t198->second = t203;
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE23_M_get_insert_equal_posERS2_
+struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_insert_equal_pos(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v204, struct StringClass* v205) {
+bb206:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this207;
+  struct StringClass* __k208;
+  struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ __retval209;
+  struct std___Rb_tree_node_base* __x210;
+  struct std___Rb_tree_node_base* __y211;
+  this207 = v204;
+  __k208 = v205;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t212 = this207;
+  struct std___Rb_tree_node_base* r213 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_begin___const(t212);
+  __x210 = r213;
+  struct std___Rb_tree_node_base* r214 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_end___const(t212);
+  __y211 = r214;
+    while (1) {
+      struct std___Rb_tree_node_base* t215 = __x210;
+      _Bool cast216 = (_Bool)t215;
+      if (!cast216) break;
+        struct std___Rb_tree_node_base* t217 = __x210;
+        __y211 = t217;
+        struct std___Rb_tree_key_compare_std__less_StringClass__* base218 = (struct std___Rb_tree_key_compare_std__less_StringClass__*)((char *)&(t212->_M_impl) + 0);
+        struct std__less_StringClass_* cast219 = (struct std__less_StringClass_*)base218;
+        struct StringClass* t220 = __k208;
+        struct std___Rb_tree_node_base* t221 = __x210;
+        struct StringClass* r222 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_key(t221);
+        if (__cir_exc_active) {
+          struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        _Bool r223 = std__less_StringClass___operator___StringClass_const___StringClass_const___const(cast219, t220, r222);
+        if (__cir_exc_active) {
+          struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        struct std___Rb_tree_node_base* ternary224;
+        if (r223) {
+          struct std___Rb_tree_node_base* t225 = __x210;
+          struct std___Rb_tree_node_base* r226 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_left_2(t225);
+          ternary224 = (struct std___Rb_tree_node_base*)r226;
+        } else {
+          struct std___Rb_tree_node_base* t227 = __x210;
+          struct std___Rb_tree_node_base* r228 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_right_2(t227);
+          ternary224 = (struct std___Rb_tree_node_base*)r228;
+        }
+        __x210 = ternary224;
+    }
+  _ZNSt4pairIPSt18_Rb_tree_node_baseS1_EC2IRS1_S4_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(&__retval209, &__x210, &__y211);
+  struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ t229 = __retval209;
+  return t229;
+}
+
+// function: _ZNKSt10_Select1stISt4pairIK11StringClass8oppositeEEclERS4_
+struct StringClass* std___Select1st_std__pair_StringClass_const__opposite_____operator___std__pair_StringClass_const__opposite____const(struct std___Select1st_std__pair_const_StringClass__opposite__* v230, struct std__pair_const_StringClass__opposite_* v231) {
+bb232:
+  struct std___Select1st_std__pair_const_StringClass__opposite__* this233;
+  struct std__pair_const_StringClass__opposite_* __x234;
+  struct StringClass* __retval235;
+  this233 = v230;
+  __x234 = v231;
+  struct std___Select1st_std__pair_const_StringClass__opposite__* t236 = this233;
+  struct std__pair_const_StringClass__opposite_* t237 = __x234;
+  __retval235 = &t237->first;
+  struct StringClass* t238 = __retval235;
+  return t238;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE11_Alloc_nodeC2ERSA_
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node___Alloc_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* v239, struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v240) {
+bb241:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* this242;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* __t243;
+  this242 = v239;
+  __t243 = v240;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* t244 = this242;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t245 = __t243;
+  t244->_M_t = t245;
+  return;
+}
+
+// function: _ZNKSt15__new_allocatorISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEE11_M_max_sizeEv
+unsigned long std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite________M_max_size___const(struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v246) {
+bb247:
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* this248;
+  unsigned long __retval249;
+  this248 = v246;
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t250 = this248;
+  unsigned long c251 = 9223372036854775807;
+  unsigned long c252 = 72;
+  unsigned long b253 = c251 / c252;
+  __retval249 = b253;
+  unsigned long t254 = __retval249;
+  return t254;
+}
+
+// function: _ZNSt15__new_allocatorISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEE8allocateEmPKv
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocate(struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v255, unsigned long v256, void* v257) {
+bb258:
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* this259;
+  unsigned long __n260;
+  void* unnamed261;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval262;
+  this259 = v255;
+  __n260 = v256;
+  unnamed261 = v257;
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t263 = this259;
+    unsigned long t264 = __n260;
+    unsigned long r265 = std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite________M_max_size___const(t263);
+    _Bool c266 = ((t264 > r265)) ? 1 : 0;
+    if (c266) {
+        unsigned long t267 = __n260;
+        unsigned long c268 = -1;
+        unsigned long c269 = 72;
+        unsigned long b270 = c268 / c269;
+        _Bool c271 = ((t267 > b270)) ? 1 : 0;
+        if (c271) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+            return __cir_eh_ret;
+          }
+        }
+      std____throw_bad_alloc();
+      if (__cir_exc_active) {
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+        return __cir_eh_ret;
+      }
+    }
+    unsigned long c272 = 8;
+    unsigned long c273 = 16;
+    _Bool c274 = ((c272 > c273)) ? 1 : 0;
+    if (c274) {
+      unsigned long __al275;
+      unsigned long c276 = 8;
+      __al275 = c276;
+      unsigned long t277 = __n260;
+      unsigned long c278 = 72;
+      unsigned long b279 = t277 * c278;
+      unsigned long t280 = __al275;
+      void* r281 = operator_new_2(b279, t280);
+      if (__cir_exc_active) {
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+        return __cir_eh_ret;
+      }
+      struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* cast282 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)r281;
+      __retval262 = cast282;
+      struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t283 = __retval262;
+      return t283;
+    }
+  unsigned long t284 = __n260;
+  unsigned long c285 = 72;
+  unsigned long b286 = t284 * c285;
+  void* r287 = operator_new(b286);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+    return __cir_eh_ret;
+  }
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* cast288 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)r287;
+  __retval262 = cast288;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t289 = __retval262;
+  return t289;
+}
+
+// function: _ZNSaISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEE8allocateEm
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocate(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v290, unsigned long v291) {
+bb292:
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* this293;
+  unsigned long __n294;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval295;
+  this293 = v290;
+  __n294 = v291;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t296 = this293;
+    _Bool r297 = std____is_constant_evaluated();
+    if (r297) {
+        unsigned long t298 = __n294;
+        unsigned long c299 = 72;
+        unsigned long ovr300;
+        _Bool ovf301 = __builtin_mul_overflow(t298, c299, &ovr300);
+        __n294 = ovr300;
+        if (ovf301) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+            return __cir_eh_ret;
+          }
+        }
+      unsigned long t302 = __n294;
+      void* r303 = operator_new(t302);
+      if (__cir_exc_active) {
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+        return __cir_eh_ret;
+      }
+      struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* cast304 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)r303;
+      __retval295 = cast304;
+      struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t305 = __retval295;
+      return t305;
+    }
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* base306 = (struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___*)((char *)t296 + 0);
+  unsigned long t307 = __n294;
+  void* c308 = ((void*)0);
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r309 = std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocate(base306, t307, c308);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+    return __cir_eh_ret;
+  }
+  __retval295 = r309;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t310 = __retval295;
+  return t310;
+}
+
+// function: _ZNSt16allocator_traitsISaISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEEE8allocateERS7_m
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________allocate(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v311, unsigned long v312) {
+bb313:
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* __a314;
+  unsigned long __n315;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval316;
+  __a314 = v311;
+  __n315 = v312;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t317 = __a314;
+  unsigned long t318 = __n315;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r319 = std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocate(t317, t318);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+    return __cir_eh_ret;
+  }
+  __retval316 = r319;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t320 = __retval316;
+  return t320;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE11_M_get_nodeEv
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v321) {
+bb322:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this323;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval324;
+  this323 = v321;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t325 = this323;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* r326 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_Node_allocator(t325);
+  unsigned long c327 = 1;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r328 = std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________allocate(r326, c327);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+    return __cir_eh_ret;
+  }
+  __retval324 = r328;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t329 = __retval324;
+  return t329;
+}
+
+// function: _ZSt12construct_atISt4pairIK11StringClass8oppositeEJS4_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S5_pispclsr3stdE7declvalIT0_EEEEEPS5_S8_DpOS7_
+struct std__pair_const_StringClass__opposite_* _ZSt12construct_atISt4pairIK11StringClass8oppositeEJS4_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S5_pispclsr3stdE7declvalIT0_EEEEEPS5_S8_DpOS7_(struct std__pair_const_StringClass__opposite_* v330, struct std__pair_const_StringClass__opposite_* v331) {
+bb332:
+  struct std__pair_const_StringClass__opposite_* __location333;
+  struct std__pair_const_StringClass__opposite_* __args334;
+  struct std__pair_const_StringClass__opposite_* __retval335;
+  void* __loc336;
+  __location333 = v330;
+  __args334 = v331;
+  struct std__pair_const_StringClass__opposite_* t337 = __location333;
+  void* cast338 = (void*)t337;
+  __loc336 = cast338;
+    void* t339 = __loc336;
+    struct std__pair_const_StringClass__opposite_* cast340 = (struct std__pair_const_StringClass__opposite_*)t339;
+    struct std__pair_const_StringClass__opposite_* t341 = __args334;
+    *cast340 = *t341; // copy
+    __retval335 = cast340;
+    struct std__pair_const_StringClass__opposite_* t342 = __retval335;
+    return t342;
+  abort();
+}
+
+// function: _ZNSt16allocator_traitsISaISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEEE9constructIS5_JS5_EEEvRS7_PT_DpOT0_
+void void_std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________construct_std__pair_StringClass_const__opposite___std__pair_StringClass_const__opposite___(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v343, struct std__pair_const_StringClass__opposite_* v344, struct std__pair_const_StringClass__opposite_* v345) {
+bb346:
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* __a347;
+  struct std__pair_const_StringClass__opposite_* __p348;
+  struct std__pair_const_StringClass__opposite_* __args349;
+  __a347 = v343;
+  __p348 = v344;
+  __args349 = v345;
+  struct std__pair_const_StringClass__opposite_* t350 = __p348;
+  struct std__pair_const_StringClass__opposite_* t351 = __args349;
+  struct std__pair_const_StringClass__opposite_* r352 = _ZSt12construct_atISt4pairIK11StringClass8oppositeEJS4_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S5_pispclsr3stdE7declvalIT0_EEEEEPS5_S8_DpOS7_(t350, t351);
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE17_M_construct_nodeIJS4_EEEvPSt13_Rb_tree_nodeIS4_EDpOT_
+void void_std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_construct_node_std__pair_StringClass_const__opposite___(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v353, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v354, struct std__pair_const_StringClass__opposite_* v355) {
+bb356:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this357;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __node358;
+  struct std__pair_const_StringClass__opposite_* __args359;
+  this357 = v353;
+  __node358 = v354;
+  __args359 = v355;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t360 = this357;
+      struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* r362 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_Node_allocator(t360);
+      struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t363 = __node358;
+      struct std__pair_const_StringClass__opposite_* r364 = std___Rb_tree_node_std__pair_StringClass_const__opposite______M_valptr(t363);
+      if (__cir_exc_active) {
+        goto cir_try_dispatch361;
+      }
+      struct std__pair_const_StringClass__opposite_* t365 = __args359;
+      void_std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________construct_std__pair_StringClass_const__opposite___std__pair_StringClass_const__opposite___(r362, r364, t365);
+    cir_try_dispatch361: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok366 = 0;
+      void* ca_exn367 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t368 = __node358;
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t369 = __node358;
+        std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_put_node(t360, t369);
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE14_M_create_nodeIJS4_EEEPSt13_Rb_tree_nodeIS4_EDpOT_
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_node_std__pair_StringClass_const__opposite_____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_create_node_std__pair_StringClass_const__opposite___(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v370, struct std__pair_const_StringClass__opposite_* v371) {
+bb372:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this373;
+  struct std__pair_const_StringClass__opposite_* __args374;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval375;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __tmp376;
+  this373 = v370;
+  __args374 = v371;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t377 = this373;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r378 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_node(t377);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+    return __cir_eh_ret;
+  }
+  __tmp376 = r378;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t379 = __tmp376;
+  struct std__pair_const_StringClass__opposite_* t380 = __args374;
+  void_std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_construct_node_std__pair_StringClass_const__opposite___(t377, t379, t380);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+    return __cir_eh_ret;
+  }
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t381 = __tmp376;
+  __retval375 = t381;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t382 = __retval375;
+  return t382;
+}
+
+// function: _ZNKSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE11_Alloc_nodeclIS4_EEPSt13_Rb_tree_nodeIS4_EOT_
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_node_std__pair_StringClass_const__opposite_____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node__operator___std__pair_StringClass_const__opposite____std__pair_StringClass_const__opposite_____const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* v383, struct std__pair_const_StringClass__opposite_* v384) {
+bb385:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* this386;
+  struct std__pair_const_StringClass__opposite_* __arg387;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval388;
+  this386 = v383;
+  __arg387 = v384;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* t389 = this386;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t390 = t389->_M_t;
+  struct std__pair_const_StringClass__opposite_* t391 = __arg387;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r392 = std___Rb_tree_node_std__pair_StringClass_const__opposite_____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_create_node_std__pair_StringClass_const__opposite___(t390, t391);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __cir_eh_ret = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0;
+    return __cir_eh_ret;
+  }
+  __retval388 = r392;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t393 = __retval388;
+  return t393;
+}
+
+// function: _ZNSt9__rb_tree12_Node_traitsISt4pairIK11StringClass8oppositeEPS5_E23_S_insert_and_rebalanceEbPSt18_Rb_tree_node_baseS9_RS8_
+void std____rb_tree___Node_traits_std__pair_StringClass_const__opposite___std__pair_StringClass_const__opposite______S_insert_and_rebalance(_Bool v394, struct std___Rb_tree_node_base* v395, struct std___Rb_tree_node_base* v396, struct std___Rb_tree_node_base* v397) {
+bb398:
+  _Bool __insert_left399;
+  struct std___Rb_tree_node_base* __x400;
+  struct std___Rb_tree_node_base* __p401;
+  struct std___Rb_tree_node_base* __header402;
+  __insert_left399 = v394;
+  __x400 = v395;
+  __p401 = v396;
+  __header402 = v397;
+  _Bool t403 = __insert_left399;
+  struct std___Rb_tree_node_base* t404 = __x400;
+  struct std___Rb_tree_node_base* t405 = __p401;
+  struct std___Rb_tree_node_base* t406 = __header402;
+  std___Rb_tree_insert_and_rebalance(t403, t404, t405, t406);
+  return;
+}
+
+// function: _ZNSt17_Rb_tree_iteratorISt4pairIK11StringClass8oppositeEEC2EPSt18_Rb_tree_node_base
+void std___Rb_tree_iterator_std__pair_StringClass_const__opposite______Rb_tree_iterator(struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* v407, struct std___Rb_tree_node_base* v408) {
+bb409:
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* this410;
+  struct std___Rb_tree_node_base* __x411;
+  this410 = v407;
+  __x411 = v408;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* t412 = this410;
+  struct std___Rb_tree_node_base* t413 = __x411;
+  t412->_M_node = t413;
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE10_M_insert_IS4_NSA_11_Alloc_nodeEEESt17_Rb_tree_iteratorIS4_EPSt18_Rb_tree_node_baseSG_OT_RT0_
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std___Rb_tree_iterator_std__pair_StringClass_const__opposite____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_insert__std__pair_StringClass_const__opposite___std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node_(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v414, struct std___Rb_tree_node_base* v415, struct std___Rb_tree_node_base* v416, struct std__pair_const_StringClass__opposite_* v417, struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* v418) {
+bb419:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this420;
+  struct std___Rb_tree_node_base* __x421;
+  struct std___Rb_tree_node_base* __p422;
+  struct std__pair_const_StringClass__opposite_* __v423;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* __node_gen424;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __retval425;
+  _Bool __insert_left426;
+  struct std___Rb_tree_node_base* __z427;
+  this420 = v414;
+  __x421 = v415;
+  __p422 = v416;
+  __v423 = v417;
+  __node_gen424 = v418;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t428 = this420;
+  struct std___Rb_tree_node_base* t429 = __x421;
+  _Bool cast430 = (_Bool)t429;
+  _Bool ternary431;
+  if (cast430) {
+    _Bool c432 = 1;
+    ternary431 = (_Bool)c432;
+  } else {
+    struct std___Rb_tree_node_base* t433 = __p422;
+    struct std___Rb_tree_node_base* r434 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_end___const(t428);
+    _Bool c435 = ((t433 == r434)) ? 1 : 0;
+    ternary431 = (_Bool)c435;
+  }
+  _Bool ternary436;
+  if (ternary431) {
+    _Bool c437 = 1;
+    ternary436 = (_Bool)c437;
+  } else {
+    struct std___Select1st_std__pair_const_StringClass__opposite__ ref_tmp0438;
+    struct std___Rb_tree_key_compare_std__less_StringClass__* base439 = (struct std___Rb_tree_key_compare_std__less_StringClass__*)((char *)&(t428->_M_impl) + 0);
+    struct std__less_StringClass_* cast440 = (struct std__less_StringClass_*)base439;
+    struct std__pair_const_StringClass__opposite_* t441 = __v423;
+    struct StringClass* r442 = std___Select1st_std__pair_StringClass_const__opposite_____operator___std__pair_StringClass_const__opposite____const(&ref_tmp0438, t441);
+    if (__cir_exc_active) {
+      struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    struct std___Rb_tree_node_base* t443 = __p422;
+    struct StringClass* r444 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_key(t443);
+    if (__cir_exc_active) {
+      struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    _Bool r445 = std__less_StringClass___operator___StringClass_const___StringClass_const___const(cast440, r442, r444);
+    if (__cir_exc_active) {
+      struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    ternary436 = (_Bool)r445;
+  }
+  __insert_left426 = ternary436;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node* t446 = __node_gen424;
+  struct std__pair_const_StringClass__opposite_* t447 = __v423;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r448 = std___Rb_tree_node_std__pair_StringClass_const__opposite_____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node__operator___std__pair_StringClass_const__opposite____std__pair_StringClass_const__opposite_____const(t446, t447);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  struct std___Rb_tree_node_base* base449 = (struct std___Rb_tree_node_base*)((char *)r448 + 0);
+  struct std___Rb_tree_node_base* r450 = std___Rb_tree_node_base___M_base_ptr___const(base449);
+  __z427 = r450;
+  _Bool t451 = __insert_left426;
+  struct std___Rb_tree_node_base* t452 = __z427;
+  struct std___Rb_tree_node_base* t453 = __p422;
+  struct std___Rb_tree_header* base454 = (struct std___Rb_tree_header*)((char *)&(t428->_M_impl) + 8);
+  std____rb_tree___Node_traits_std__pair_StringClass_const__opposite___std__pair_StringClass_const__opposite______S_insert_and_rebalance(t451, t452, t453, &base454->_M_header);
+  struct std___Rb_tree_header* base455 = (struct std___Rb_tree_header*)((char *)&(t428->_M_impl) + 8);
+  unsigned long t456 = base455->_M_node_count;
+  unsigned long u457 = t456 + 1;
+  base455->_M_node_count = u457;
+  struct std___Rb_tree_node_base* t458 = __z427;
+  std___Rb_tree_iterator_std__pair_StringClass_const__opposite______Rb_tree_iterator(&__retval425, t458);
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ t459 = __retval425;
+  return t459;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE15_M_insert_equalIS4_EESt17_Rb_tree_iteratorIS4_EOT_
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std___Rb_tree_iterator_std__pair_StringClass_const__opposite____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_insert_equal_std__pair_StringClass_const__opposite___(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v460, struct std__pair_const_StringClass__opposite_* v461) {
+bb462:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this463;
+  struct std__pair_const_StringClass__opposite_* __v464;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __retval465;
+  struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ __res466;
+  struct std___Select1st_std__pair_const_StringClass__opposite__ ref_tmp0467;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node __an468;
+  this463 = v460;
+  __v464 = v461;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t469 = this463;
+  struct std__pair_const_StringClass__opposite_* t470 = __v464;
+  struct StringClass* r471 = std___Select1st_std__pair_StringClass_const__opposite_____operator___std__pair_StringClass_const__opposite____const(&ref_tmp0467, t470);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ r472 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_insert_equal_pos(t469, r471);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __res466 = r472;
+  std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node___Alloc_node(&__an468, t469);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  struct std___Rb_tree_node_base* t473 = __res466.first;
+  struct std___Rb_tree_node_base* t474 = __res466.second;
+  struct std__pair_const_StringClass__opposite_* t475 = __v464;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ r476 = std___Rb_tree_iterator_std__pair_StringClass_const__opposite____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_insert__std__pair_StringClass_const__opposite___std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Alloc_node_(t469, t473, t474, t475, &__an468);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval465 = r476;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ t477 = __retval465;
+  return t477;
+}
+
+// function: _ZNSt8multimapI11StringClass8oppositeSt4lessIS0_ESaISt4pairIKS0_S1_EEE6insertEOS6_
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______insert(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v478, struct std__pair_const_StringClass__opposite_* v479) {
+bb480:
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this481;
+  struct std__pair_const_StringClass__opposite_* __x482;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __retval483;
+  this481 = v478;
+  __x482 = v479;
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t484 = this481;
+  struct std__pair_const_StringClass__opposite_* t485 = __x482;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ r486 = std___Rb_tree_iterator_std__pair_StringClass_const__opposite____std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_insert_equal_std__pair_StringClass_const__opposite___(&t484->_M_t, t485);
+  if (__cir_exc_active) {
+    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval483 = r486;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ t487 = __retval483;
+  return t487;
+}
+
+// function: _ZN11StringClassC2EPc
+void StringClass__StringClass(struct StringClass* v488, char* v489) {
+bb490:
+  struct StringClass* this491;
+  char* s492;
+  this491 = v488;
+  s492 = v489;
+  struct StringClass* t493 = this491;
+  char* cast494 = (char*)&(t493->str);
+  char* t495 = s492;
+  char* r496 = strcpy(cast494, t495);
+  return;
+}
+
+// function: _ZN8oppositeC2EPc
+void opposite__opposite(struct opposite* v497, char* v498) {
+bb499:
+  struct opposite* this500;
+  char* s501;
+  this500 = v497;
+  s501 = v498;
+  struct opposite* t502 = this500;
+  char* cast503 = (char*)&(t502->str);
+  char* t504 = s501;
+  char* r505 = strcpy(cast503, t504);
+  return;
+}
+
+// function: _ZNSt4pairIK11StringClass8oppositeEC2IS0_S2_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_
+void _ZNSt4pairIK11StringClass8oppositeEC2IS0_S2_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(struct std__pair_const_StringClass__opposite_* v506, struct StringClass* v507, struct opposite* v508) {
+bb509:
+  struct std__pair_const_StringClass__opposite_* this510;
+  struct StringClass* __x511;
+  struct opposite* __y512;
+  this510 = v506;
+  __x511 = v507;
+  __y512 = v508;
+  struct std__pair_const_StringClass__opposite_* t513 = this510;
+  struct std____pair_base_const_StringClass__opposite_* base514 = (struct std____pair_base_const_StringClass__opposite_*)((char *)t513 + 0);
+  struct StringClass* t515 = __x511;
+  t513->first = *t515; // copy
+  struct opposite* t516 = __y512;
+  t513->second = *t516; // copy
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE5beginEv
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______begin(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v517) {
+bb518:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this519;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __retval520;
+  this519 = v517;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t521 = this519;
+  struct std___Rb_tree_header* base522 = (struct std___Rb_tree_header*)((char *)&(t521->_M_impl) + 8);
+  struct std___Rb_tree_node_base* t523 = base522->_M_header._M_left;
+  std___Rb_tree_iterator_std__pair_StringClass_const__opposite______Rb_tree_iterator(&__retval520, t523);
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ t524 = __retval520;
+  return t524;
+}
+
+// function: _ZNSt8multimapI11StringClass8oppositeSt4lessIS0_ESaISt4pairIKS0_S1_EEE5beginEv
+struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______begin(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v525) {
+bb526:
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this527;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ __retval528;
+  this527 = v525;
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t529 = this527;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ r530 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______begin(&t529->_M_t);
+  __retval528 = r530;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ t531 = __retval528;
+  return t531;
+}
+
+// function: _ZNKSt17_Rb_tree_iteratorISt4pairIK11StringClass8oppositeEEptEv
+struct std__pair_const_StringClass__opposite_* std___Rb_tree_iterator_std__pair_StringClass_const__opposite_____operator_____const(struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* v532) {
+bb533:
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* this534;
+  struct std__pair_const_StringClass__opposite_* __retval535;
+  this534 = v532;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* t536 = this534;
+  struct std___Rb_tree_node_base* t537 = t536->_M_node;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* derived538 = ((t537) ? (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)((char *)t537 - 0) : (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)0);
+  struct std__pair_const_StringClass__opposite_* r539 = std___Rb_tree_node_std__pair_StringClass_const__opposite______M_valptr(derived538);
+  if (__cir_exc_active) {
+    struct std__pair_const_StringClass__opposite_* __cir_eh_ret = (struct std__pair_const_StringClass__opposite_*)0;
+    return __cir_eh_ret;
+  }
+  __retval535 = r539;
+  struct std__pair_const_StringClass__opposite_* t540 = __retval535;
+  return t540;
+}
+
+// function: _ZNKSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE4sizeEv
+unsigned long std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v541) {
+bb542:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this543;
+  unsigned long __retval544;
+  this543 = v541;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t545 = this543;
+  struct std___Rb_tree_header* base546 = (struct std___Rb_tree_header*)((char *)&(t545->_M_impl) + 8);
+  unsigned long t547 = base546->_M_node_count;
+  __retval544 = t547;
+  unsigned long t548 = __retval544;
+  return t548;
+}
+
+// function: _ZNKSt8multimapI11StringClass8oppositeSt4lessIS0_ESaISt4pairIKS0_S1_EEE4sizeEv
+unsigned long std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v549) {
+bb550:
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this551;
+  unsigned long __retval552;
+  this551 = v549;
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t553 = this551;
+  unsigned long r554 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(&t553->_M_t);
+  __retval552 = r554;
+  unsigned long t555 = __retval552;
+  return t555;
+}
+
+// function: _ZNSt8multimapI11StringClass8oppositeSt4lessIS0_ESaISt4pairIKS0_S1_EEED2Ev
+void std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v556) {
+bb557:
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this558;
+  this558 = v556;
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t559 = this558;
+  {
+    std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_________Rb_tree(&t559->_M_t);
+  }
+  return;
+}
+
+// function: main
+int main() {
+bb560:
+  int __retval561;
+  struct std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ mapObject562;
+  struct std__pair_const_StringClass__opposite_ ref_tmp0563;
+  struct StringClass ref_tmp1564;
+  struct opposite ref_tmp2565;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ agg_tmp0566;
+  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ it567;
+  struct StringClass agg_tmp1568;
+  struct StringClass agg_tmp2569;
+  struct opposite agg_tmp3570;
+  struct opposite agg_tmp4571;
+  int c572 = 0;
+  __retval561 = c572;
+  std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______multimap(&mapObject562);
+    char* cast573 = (char*)&(_str);
+    StringClass__StringClass(&ref_tmp1564, cast573);
+    if (__cir_exc_active) {
+      {
+        std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(&mapObject562);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    char* cast574 = (char*)&(_str_1);
+    opposite__opposite(&ref_tmp2565, cast574);
+    if (__cir_exc_active) {
+      {
+        std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(&mapObject562);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    _ZNSt4pairIK11StringClass8oppositeEC2IS0_S2_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(&ref_tmp0563, &ref_tmp1564, &ref_tmp2565);
+    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ r575 = std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______insert(&mapObject562, &ref_tmp0563);
+    if (__cir_exc_active) {
+      {
+        std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(&mapObject562);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    agg_tmp0566 = r575;
+    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ r576 = std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______begin(&mapObject562);
+    it567 = r576;
+    struct std__pair_const_StringClass__opposite_* r577 = std___Rb_tree_iterator_std__pair_StringClass_const__opposite_____operator_____const(&it567);
+    agg_tmp1568 = r577->first; // copy
+    char* cast578 = (char*)&(_str);
+    StringClass__StringClass(&agg_tmp2569, cast578);
+    if (__cir_exc_active) {
+      {
+        std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(&mapObject562);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    struct StringClass t579 = agg_tmp1568;
+    struct StringClass t580 = agg_tmp2569;
+    _Bool r581 = operator__(t579, t580);
+    if (__cir_exc_active) {
+      {
+        std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(&mapObject562);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    if (r581) {
+    } else {
+      char* cast582 = (char*)&(_str_2);
+      char* c583 = _str_3;
+      unsigned int c584 = 74;
+      char* cast585 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast582, c583, c584, cast585);
+    }
+    struct std__pair_const_StringClass__opposite_* r586 = std___Rb_tree_iterator_std__pair_StringClass_const__opposite_____operator_____const(&it567);
+    agg_tmp3570 = r586->second; // copy
+    char* cast587 = (char*)&(_str_1);
+    opposite__opposite(&agg_tmp4571, cast587);
+    if (__cir_exc_active) {
+      {
+        std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(&mapObject562);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    struct opposite t588 = agg_tmp3570;
+    struct opposite t589 = agg_tmp4571;
+    _Bool r590 = operator___2(t588, t589);
+    if (__cir_exc_active) {
+      {
+        std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(&mapObject562);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    if (r590) {
+    } else {
+      char* cast591 = (char*)&(_str_4);
+      char* c592 = _str_3;
+      unsigned int c593 = 75;
+      char* cast594 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast591, c592, c593, cast594);
+    }
+    unsigned long r595 = std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(&mapObject562);
+    unsigned long c596 = 1;
+    _Bool c597 = ((r595 != c596)) ? 1 : 0;
+    if (c597) {
+    } else {
+      char* cast598 = (char*)&(_str_5);
+      char* c599 = _str_3;
+      unsigned int c600 = 76;
+      char* cast601 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast598, c599, c600, cast601);
+    }
+    int c602 = 0;
+    __retval561 = c602;
+    int t603 = __retval561;
+    int ret_val604 = t603;
+    {
+      std__multimap_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________multimap(&mapObject562);
+    }
+    return ret_val604;
+  int t605 = __retval561;
+  return t605;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EEC2Ev
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v606) {
+bb607:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this608;
+  this608 = v606;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t609 = this608;
+  std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree_impl_std__less_StringClass___true____Rb_tree_impl(&t609->_M_impl);
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EED2Ev
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_________Rb_tree(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v610) {
+bb611:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this612;
+  this612 = v610;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t613 = this612;
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r614 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_begin_node___const(t613);
+    std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_erase(t613, r614);
+    if (__cir_exc_active) {
+      {
+        std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree_impl_std__less_StringClass___true_____Rb_tree_impl(&t613->_M_impl);
+      }
+      return;
+    }
+  {
+    std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree_impl_std__less_StringClass___true_____Rb_tree_impl(&t613->_M_impl);
+  }
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE13_Rb_tree_implIS8_Lb1EEC2Ev
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree_impl_std__less_StringClass___true____Rb_tree_impl(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_* v615) {
+bb616:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_* this617;
+  this617 = v615;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_* t618 = this617;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* base619 = (struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___*)((char *)t618 + 0);
+  std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocator(base619);
+    struct std___Rb_tree_key_compare_std__less_StringClass__* base620 = (struct std___Rb_tree_key_compare_std__less_StringClass__*)((char *)t618 + 0);
+    std___Rb_tree_key_compare_std__less_StringClass______Rb_tree_key_compare(base620);
+    struct std___Rb_tree_header* base621 = (struct std___Rb_tree_header*)((char *)t618 + 8);
+    std___Rb_tree_header___Rb_tree_header(base621);
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE13_Rb_tree_implIS8_Lb1EED2Ev
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________Rb_tree_impl_std__less_StringClass___true_____Rb_tree_impl(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_* v622) {
+bb623:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_* this624;
+  this624 = v622;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_* t625 = this624;
+  {
+    struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* base626 = (struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___*)((char *)t625 + 0);
+    std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite________allocator(base626);
+  }
+  return;
+}
+
+// function: _ZNSt15__new_allocatorISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEEC2Ev
+void std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________new_allocator(struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v627) {
+bb628:
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* this629;
+  this629 = v627;
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t630 = this629;
+  return;
+}
+
+// function: _ZNSaISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEEC2Ev
+void std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______allocator(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v631) {
+bb632:
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* this633;
+  this633 = v631;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t634 = this633;
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* base635 = (struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___*)((char *)t634 + 0);
+  std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________new_allocator(base635);
+  return;
+}
+
+// function: _ZNSt20_Rb_tree_key_compareISt4lessI11StringClassEEC2Ev
+void std___Rb_tree_key_compare_std__less_StringClass______Rb_tree_key_compare(struct std___Rb_tree_key_compare_std__less_StringClass__* v636) {
+bb637:
+  struct std___Rb_tree_key_compare_std__less_StringClass__* this638;
+  this638 = v636;
+  return;
+}
+
+// function: _ZNSt15_Rb_tree_header8_M_resetEv
+void std___Rb_tree_header___M_reset(struct std___Rb_tree_header* v639) {
+bb640:
+  struct std___Rb_tree_header* this641;
+  this641 = v639;
+  struct std___Rb_tree_header* t642 = this641;
+  struct std___Rb_tree_node_base* c643 = ((void*)0);
+  t642->_M_header._M_parent = c643;
+  t642->_M_header._M_left = &t642->_M_header;
+  t642->_M_header._M_right = &t642->_M_header;
+  unsigned long c644 = 0;
+  t642->_M_node_count = c644;
+  return;
+}
+
+// function: _ZNSt15_Rb_tree_headerC2Ev
+void std___Rb_tree_header___Rb_tree_header(struct std___Rb_tree_header* v645) {
+bb646:
+  struct std___Rb_tree_header* this647;
+  this647 = v645;
+  struct std___Rb_tree_header* t648 = this647;
+  unsigned int c649 = 0;
+  t648->_M_header._M_color = c649;
+  std___Rb_tree_header___M_reset(t648);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSaISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEED2Ev
+void std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite________allocator(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v650) {
+bb651:
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* this652;
+  this652 = v650;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t653 = this652;
+  return;
+}
+
+// function: _ZNSt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEE11_M_node_ptrEv
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_node_std__pair_StringClass_const__opposite______M_node_ptr(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v654) {
+bb655:
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* this656;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval657;
+  this656 = v654;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t658 = this656;
+  __retval657 = t658;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t659 = __retval657;
+  return t659;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE8_S_rightEPSt13_Rb_tree_nodeIS4_E
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_right(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v660) {
+bb661:
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __x662;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval663;
+  __x662 = v660;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t664 = __x662;
+  struct std___Rb_tree_node_base* base665 = (struct std___Rb_tree_node_base*)((char *)t664 + 0);
+  struct std___Rb_tree_node_base* t666 = base665->_M_right;
+  _Bool cast667 = (_Bool)t666;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* ternary668;
+  if (cast667) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t669 = __x662;
+    struct std___Rb_tree_node_base* base670 = (struct std___Rb_tree_node_base*)((char *)t669 + 0);
+    struct std___Rb_tree_node_base* t671 = base670->_M_right;
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* derived672 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)((char *)t671 - 0);
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r673 = std___Rb_tree_node_std__pair_StringClass_const__opposite______M_node_ptr(derived672);
+    ternary668 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)r673;
+  } else {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* c674 = ((void*)0);
+    ternary668 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)c674;
+  }
+  __retval663 = ternary668;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t675 = __retval663;
+  return t675;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE7_S_leftEPSt13_Rb_tree_nodeIS4_E
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_left(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v676) {
+bb677:
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __x678;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval679;
+  __x678 = v676;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t680 = __x678;
+  struct std___Rb_tree_node_base* base681 = (struct std___Rb_tree_node_base*)((char *)t680 + 0);
+  struct std___Rb_tree_node_base* t682 = base681->_M_left;
+  _Bool cast683 = (_Bool)t682;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* ternary684;
+  if (cast683) {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t685 = __x678;
+    struct std___Rb_tree_node_base* base686 = (struct std___Rb_tree_node_base*)((char *)t685 + 0);
+    struct std___Rb_tree_node_base* t687 = base686->_M_left;
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* derived688 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)((char *)t687 - 0);
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r689 = std___Rb_tree_node_std__pair_StringClass_const__opposite______M_node_ptr(derived688);
+    ternary684 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)r689;
+  } else {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* c690 = ((void*)0);
+    ternary684 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)c690;
+  }
+  __retval679 = ternary684;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t691 = __retval679;
+  return t691;
+}
+
+// function: _ZSt10destroy_atISt4pairIK11StringClass8oppositeEEvPT_
+void void_std__destroy_at_std__pair_StringClass_const__opposite___(struct std__pair_const_StringClass__opposite_* v692) {
+bb693:
+  struct std__pair_const_StringClass__opposite_* __location694;
+  __location694 = v692;
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEEE7destroyIS5_EEvRS7_PT_
+void void_std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________destroy_std__pair_StringClass_const__opposite___(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v695, struct std__pair_const_StringClass__opposite_* v696) {
+bb697:
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* __a698;
+  struct std__pair_const_StringClass__opposite_* __p699;
+  __a698 = v695;
+  __p699 = v696;
+  struct std__pair_const_StringClass__opposite_* t700 = __p699;
+  void_std__destroy_at_std__pair_StringClass_const__opposite___(t700);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE21_M_get_Node_allocatorEv
+struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_Node_allocator(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v701) {
+bb702:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this703;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* __retval704;
+  this703 = v701;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t705 = this703;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* base706 = (struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___*)((char *)&(t705->_M_impl) + 0);
+  __retval704 = base706;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t707 = __retval704;
+  return t707;
+}
+
+// function: _ZN9__gnu_cxx16__aligned_membufISt4pairIK11StringClass8oppositeEE7_M_addrEv
+void* __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_addr(struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* v708) {
+bb709:
+  struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* this710;
+  void* __retval711;
+  this710 = v708;
+  struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* t712 = this710;
+  void* cast713 = (void*)&(t712->_M_storage);
+  __retval711 = cast713;
+  void* t714 = __retval711;
+  return t714;
+}
+
+// function: _ZN9__gnu_cxx16__aligned_membufISt4pairIK11StringClass8oppositeEE6_M_ptrEv
+struct std__pair_const_StringClass__opposite_* __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_ptr(struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* v715) {
+bb716:
+  struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* this717;
+  struct std__pair_const_StringClass__opposite_* __retval718;
+  this717 = v715;
+  struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__* t719 = this717;
+  void* r720 = __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_addr(t719);
+  struct std__pair_const_StringClass__opposite_* cast721 = (struct std__pair_const_StringClass__opposite_*)r720;
+  __retval718 = cast721;
+  struct std__pair_const_StringClass__opposite_* t722 = __retval718;
+  return t722;
+}
+
+// function: _ZNSt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEE9_M_valptrEv
+struct std__pair_const_StringClass__opposite_* std___Rb_tree_node_std__pair_StringClass_const__opposite______M_valptr(struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v723) {
+bb724:
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* this725;
+  struct std__pair_const_StringClass__opposite_* __retval726;
+  this725 = v723;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t727 = this725;
+  struct std__pair_const_StringClass__opposite_* r728 = __gnu_cxx____aligned_membuf_std__pair_StringClass_const__opposite______M_ptr(&t727->_M_storage);
+  __retval726 = r728;
+  struct std__pair_const_StringClass__opposite_* t729 = __retval726;
+  return t729;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE15_M_destroy_nodeEPSt13_Rb_tree_nodeIS4_E
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_destroy_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v730, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v731) {
+bb732:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this733;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __p734;
+  this733 = v730;
+  __p734 = v731;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t735 = this733;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* r736 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_Node_allocator(t735);
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t737 = __p734;
+  struct std__pair_const_StringClass__opposite_* r738 = std___Rb_tree_node_std__pair_StringClass_const__opposite______M_valptr(t737);
+  if (__cir_exc_active) {
+    return;
+  }
+  void_std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________destroy_std__pair_StringClass_const__opposite___(r736, r738);
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t739 = __p734;
+  return;
+}
+
+// function: _ZSt23__is_constant_evaluatedv
+_Bool std____is_constant_evaluated() {
+bb740:
+  _Bool __retval741;
+    _Bool c742 = 0;
+    __retval741 = c742;
+    _Bool t743 = __retval741;
+    return t743;
+  abort();
+}
+
+// function: _ZNSt15__new_allocatorISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEE10deallocateEPS6_m
+void std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______deallocate(struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v744, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v745, unsigned long v746) {
+bb747:
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* this748;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __p749;
+  unsigned long __n750;
+  this748 = v744;
+  __p749 = v745;
+  __n750 = v746;
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t751 = this748;
+    unsigned long c752 = 8;
+    unsigned long c753 = 16;
+    _Bool c754 = ((c752 > c753)) ? 1 : 0;
+    if (c754) {
+      struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t755 = __p749;
+      void* cast756 = (void*)t755;
+      unsigned long t757 = __n750;
+      unsigned long c758 = 72;
+      unsigned long b759 = t757 * c758;
+      unsigned long c760 = 8;
+      operator_delete_3(cast756, b759, c760);
+      return;
+    }
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t761 = __p749;
+  void* cast762 = (void*)t761;
+  unsigned long t763 = __n750;
+  unsigned long c764 = 72;
+  unsigned long b765 = t763 * c764;
+  operator_delete_2(cast762, b765);
+  return;
+}
+
+// function: _ZNSaISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEE10deallocateEPS5_m
+void std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______deallocate(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v766, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v767, unsigned long v768) {
+bb769:
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* this770;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __p771;
+  unsigned long __n772;
+  this770 = v766;
+  __p771 = v767;
+  __n772 = v768;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t773 = this770;
+    _Bool r774 = std____is_constant_evaluated();
+    if (r774) {
+      struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t775 = __p771;
+      void* cast776 = (void*)t775;
+      operator_delete(cast776);
+      return;
+    }
+  struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* base777 = (struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___*)((char *)t773 + 0);
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t778 = __p771;
+  unsigned long t779 = __n772;
+  std____new_allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______deallocate(base777, t778, t779);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaISt13_Rb_tree_nodeISt4pairIK11StringClass8oppositeEEEE10deallocateERS7_PS6_m
+void std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________deallocate(struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* v780, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v781, unsigned long v782) {
+bb783:
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* __a784;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __p785;
+  unsigned long __n786;
+  __a784 = v780;
+  __p785 = v781;
+  __n786 = v782;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* t787 = __a784;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t788 = __p785;
+  unsigned long t789 = __n786;
+  std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_______deallocate(t787, t788, t789);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE11_M_put_nodeEPSt13_Rb_tree_nodeIS4_E
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_put_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v790, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v791) {
+bb792:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this793;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __p794;
+  this793 = v790;
+  __p794 = v791;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t795 = this793;
+  struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___* r796 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_get_Node_allocator(t795);
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t797 = __p794;
+  unsigned long c798 = 1;
+  std__allocator_traits_std__allocator_std___Rb_tree_node_std__pair_StringClass_const__opposite_________deallocate(r796, t797, c798);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE12_M_drop_nodeEPSt13_Rb_tree_nodeIS4_E
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_drop_node(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v799, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v800) {
+bb801:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this802;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __p803;
+  this802 = v799;
+  __p803 = v800;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t804 = this802;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t805 = __p803;
+  std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_destroy_node(t804, t805);
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t806 = __p803;
+  std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_put_node(t804, t806);
+  return;
+}
+
+// function: _ZNSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE8_M_eraseEPSt13_Rb_tree_nodeIS4_E
+void std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_erase(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v807, struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* v808) {
+bb809:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this810;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __x811;
+  this810 = v807;
+  __x811 = v808;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t812 = this810;
+    while (1) {
+      struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t813 = __x811;
+      _Bool cast814 = (_Bool)t813;
+      if (!cast814) break;
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __y815;
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t816 = __x811;
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r817 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_right(t816);
+        std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_erase(t812, r817);
+        if (__cir_exc_active) {
+          return;
+        }
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t818 = __x811;
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r819 = std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________S_left(t818);
+        if (__cir_exc_active) {
+          return;
+        }
+        __y815 = r819;
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t820 = __x811;
+        std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_drop_node(t812, t820);
+        struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t821 = __y815;
+        __x811 = t821;
+    }
+  return;
+}
+
+// function: _ZNKSt8_Rb_treeI11StringClassSt4pairIKS0_8oppositeESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE13_M_begin_nodeEv
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite________M_begin_node___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* v822) {
+bb823:
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* this824;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* __retval825;
+  struct std___Rb_tree_node_base* __begin826;
+  this824 = v822;
+  struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* t827 = this824;
+  struct std___Rb_tree_header* base828 = (struct std___Rb_tree_header*)((char *)&(t827->_M_impl) + 8);
+  struct std___Rb_tree_node_base* t829 = base828->_M_header._M_parent;
+  __begin826 = t829;
+  struct std___Rb_tree_node_base* t830 = __begin826;
+  _Bool cast831 = (_Bool)t830;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* ternary832;
+  if (cast831) {
+    struct std___Rb_tree_node_base* t833 = __begin826;
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* derived834 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)((char *)t833 - 0);
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* r835 = std___Rb_tree_node_std__pair_StringClass_const__opposite______M_node_ptr(derived834);
+    ternary832 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)r835;
+  } else {
+    struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* c836 = ((void*)0);
+    ternary832 = (struct std___Rb_tree_node_std__pair_const_StringClass__opposite__*)c836;
+  }
+  __retval825 = ternary832;
+  struct std___Rb_tree_node_std__pair_const_StringClass__opposite__* t837 = __retval825;
+  return t837;
+}
+

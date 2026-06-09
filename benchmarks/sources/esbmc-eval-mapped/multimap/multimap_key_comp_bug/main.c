@@ -1,0 +1,206 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____aligned_membuf_std__pair_const_char__int__ { unsigned char _M_storage[8]; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Auto_node { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* _M_t; struct std___Rb_tree_node_std__pair_const_char__int__* _M_node; };
+struct std___Rb_tree_iterator_std__pair_const_char__int__ { struct std___Rb_tree_node_base* _M_node; };
+struct std___Rb_tree_key_compare_std__less_char__ { unsigned char __field0; };
+struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
+struct std___Rb_tree_node_std__pair_const_char__int__;
+struct std___Select1st_std__pair_const_char__int__ { unsigned char __field0; };
+struct std____new_allocator_std___Rb_tree_node_std__pair_const_char__int___;
+struct std____pair_base_char__int_;
+struct std____pair_base_const_char__int_;
+struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
+struct std__allocator_std___Rb_tree_node_std__pair_const_char__int___;
+struct std__iterator_std__bidirectional_iterator_tag__std__pair_const_char__int___long__std__pair_const_char__int_____std__pair_const_char__int____;
+struct std__less_char_ { unsigned char __field0; };
+struct std__pair_char__int_ { char first; int second; };
+struct std__pair_const_char__int_;
+struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
+struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___ { struct std___Rb_tree_iterator_std__pair_const_char__int__ current; };
+struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
+struct std__ios_base;
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Rb_tree_impl_std__less_char___true_ { struct std___Rb_tree_key_compare_std__less_char__ __field0; struct std___Rb_tree_header __field1; };
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___ { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Rb_tree_impl_std__less_char___true_ _M_impl; };
+struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___ { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___ _M_t; };
+
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str[22] = "mymultimap contains:\n";
+char _str_1[30] = "!mycomp((*it).first, highest)";
+char _str_2[118] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/multimap/multimap_key_comp_bug/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_3[5] = " => ";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___ mymultimap2;
+  struct std__less_char_ mycomp3;
+  struct std__pair_char__int_ ref_tmp04;
+  char ref_tmp15;
+  int ref_tmp26;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ agg_tmp07;
+  struct std__pair_char__int_ ref_tmp38;
+  char ref_tmp49;
+  int ref_tmp510;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ agg_tmp111;
+  struct std__pair_char__int_ ref_tmp612;
+  char ref_tmp713;
+  int ref_tmp814;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ agg_tmp215;
+  struct std__pair_char__int_ ref_tmp916;
+  char ref_tmp1017;
+  int ref_tmp1118;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ agg_tmp319;
+  char highest20;
+  struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___ ref_tmp1221;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ it22;
+  int c23 = 0;
+  __retval1 = c23;
+  // externalized std:: op: std::multimap<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >::multimap()
+  __VERIFIER_nondet_memory(&mymultimap2, sizeof(mymultimap2));
+    struct std__less_char_ std24;
+    __VERIFIER_nondet_memory(&std24, sizeof(std24));
+    mycomp3 = std24;
+    char c25 = 97;
+    ref_tmp15 = c25;
+    int c26 = 100;
+    ref_tmp26 = c26;
+    struct std__pair_char__int_ std27;
+    __VERIFIER_nondet_memory(&std27, sizeof(std27));
+    ref_tmp04 = std27;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std28;
+    __VERIFIER_nondet_memory(&std28, sizeof(std28));
+    agg_tmp07 = std28;
+    char c29 = 98;
+    ref_tmp49 = c29;
+    int c30 = 200;
+    ref_tmp510 = c30;
+    struct std__pair_char__int_ std31;
+    __VERIFIER_nondet_memory(&std31, sizeof(std31));
+    ref_tmp38 = std31;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std32;
+    __VERIFIER_nondet_memory(&std32, sizeof(std32));
+    agg_tmp111 = std32;
+    char c33 = 98;
+    ref_tmp713 = c33;
+    int c34 = 211;
+    ref_tmp814 = c34;
+    struct std__pair_char__int_ std35;
+    __VERIFIER_nondet_memory(&std35, sizeof(std35));
+    ref_tmp612 = std35;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std36;
+    __VERIFIER_nondet_memory(&std36, sizeof(std36));
+    agg_tmp215 = std36;
+    char c37 = 99;
+    ref_tmp1017 = c37;
+    int c38 = 300;
+    ref_tmp1118 = c38;
+    struct std__pair_char__int_ std39;
+    __VERIFIER_nondet_memory(&std39, sizeof(std39));
+    ref_tmp916 = std39;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std40;
+    __VERIFIER_nondet_memory(&std40, sizeof(std40));
+    agg_tmp319 = std40;
+    char* cast41 = (char*)&(_str);
+    struct std__basic_ostream_char__std__char_traits_char__* std42;
+    __VERIFIER_nondet_memory(&std42, sizeof(std42));
+    struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___ std43;
+    __VERIFIER_nondet_memory(&std43, sizeof(std43));
+    ref_tmp1221 = std43;
+    struct std__pair_const_char__int_* std44;
+    __VERIFIER_nondet_memory(&std44, sizeof(std44));
+    char t45 = std44->first;
+    highest20 = t45;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std46;
+    __VERIFIER_nondet_memory(&std46, sizeof(std46));
+    it22 = std46;
+    struct std__pair_const_char__int_* std47;
+    __VERIFIER_nondet_memory(&std47, sizeof(std47));
+    _Bool std48;
+    __VERIFIER_nondet_memory(&std48, sizeof(std48));
+    _Bool u49 = !std48;
+    if (u49) {
+    } else {
+      char* cast50 = (char*)&(_str_1);
+      char* c51 = _str_2;
+      unsigned int c52 = 30;
+      char* cast53 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast50, c51, c52, cast53);
+    }
+      struct std___Rb_tree_iterator_std__pair_const_char__int__ ref_tmp1354;
+      do {
+          struct std__pair_const_char__int_* std55;
+          __VERIFIER_nondet_memory(&std55, sizeof(std55));
+          char t56 = std55->first;
+          struct std__basic_ostream_char__std__char_traits_char__* std57;
+          __VERIFIER_nondet_memory(&std57, sizeof(std57));
+          char* cast58 = (char*)&(_str_3);
+          struct std__basic_ostream_char__std__char_traits_char__* std59;
+          __VERIFIER_nondet_memory(&std59, sizeof(std59));
+          struct std__pair_const_char__int_* std60;
+          __VERIFIER_nondet_memory(&std60, sizeof(std60));
+          int t61 = std60->second;
+          struct std__basic_ostream_char__std__char_traits_char__* std62;
+          __VERIFIER_nondet_memory(&std62, sizeof(std62));
+          char c63 = 10;
+          struct std__basic_ostream_char__std__char_traits_char__* std64;
+          __VERIFIER_nondet_memory(&std64, sizeof(std64));
+        int c65 = 0;
+        struct std___Rb_tree_iterator_std__pair_const_char__int__ std66;
+        __VERIFIER_nondet_memory(&std66, sizeof(std66));
+        ref_tmp1354 = std66;
+        struct std__pair_const_char__int_* std67;
+        __VERIFIER_nondet_memory(&std67, sizeof(std67));
+        _Bool std68;
+        __VERIFIER_nondet_memory(&std68, sizeof(std68));
+        if (!std68) break;
+      } while (1);
+    char c69 = 10;
+    struct std__basic_ostream_char__std__char_traits_char__* std70;
+    __VERIFIER_nondet_memory(&std70, sizeof(std70));
+    int c71 = 0;
+    __retval1 = c71;
+    int t72 = __retval1;
+    int ret_val73 = t72;
+    {
+      // externalized std:: op: std::multimap<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >::~multimap()
+      __VERIFIER_nondet_memory(&mymultimap2, sizeof(mymultimap2));
+    }
+    return ret_val73;
+  int t74 = __retval1;
+  return t74;
+}
+

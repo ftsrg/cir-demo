@@ -1,0 +1,263 @@
+#!/usr/bin/env python3
+#
+# Copyright 2025 Budapest University of Technology and Economics
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""
+Populate benchmarks/sources/ with the ESBMC evaluation suite and its
+cir2c-mapped variants.
+
+Three subdirectories are created under sources/:
+  esbmc-eval/            — original C++ benchmarks (copied from backend/examples/esbmc-eval)
+  esbmc-eval-mapped/     — cir2c output with --externalize-std (default)
+  esbmc-eval-mapped-nostd/ — cir2c output with --no-externalize-std
+
+Each mapped task directory gets a <name>.yml BenchExec task file that references
+the generated main.c with expected_verdict: true and the appropriate property file.
+
+Usage:
+    python3 benchmarks/setup-sources.py [--jobs N] [--dry-run]
+"""
+
+from __future__ import annotations
+
+import argparse
+import shutil
+import subprocess
+import sys
+import textwrap
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+BENCHMARKS_DIR = Path(__file__).resolve().parent
+SOURCES_DIR = BENCHMARKS_DIR / "sources"
+ESBMC_EVAL_SRC = REPO_ROOT / "backend" / "examples" / "esbmc-eval"
+RUNNER = REPO_ROOT / "cir2c" / "test" / "run-cir2c.sh"
+
+DEFAULT_JOBS = 16
+DEFAULT_TIMEOUT = 120
+
+
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS)
+    p.add_argument("--dry-run", "-n", action="store_true", help="Print actions without executing")
+    p.add_argument("--yaml-only", action="store_true",
+                   help="Rewrite .yml files for already-mapped cases without re-running the mapper")
+    return p.parse_args()
+
+
+def copy_esbmc_eval(dry_run: bool) -> None:
+    dest = SOURCES_DIR / "esbmc-eval"
+    if dest.exists():
+        print(f"  [skip] {dest} already exists")
+        return
+    print(f"  Copying {ESBMC_EVAL_SRC} → {dest}")
+    if not dry_run:
+        shutil.copytree(ESBMC_EVAL_SRC, dest)
+
+
+def find_yml_files(root: Path) -> list[Path]:
+    return sorted(root.rglob("*.yml"))
+
+
+def parse_input_file(yml_path: Path) -> str:
+    for line in yml_path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("input_files:"):
+            return stripped.split(":", 1)[1].strip().strip("\"'")
+    raise ValueError(f"No input_files in {yml_path}")
+
+
+def parse_data_model(yml_path: Path) -> str:
+    for line in yml_path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("data_model:"):
+            return stripped.split(":", 1)[1].strip()
+    return "ILP32"
+
+
+def parse_expected_verdict(yml_path: Path) -> str:
+    for line in yml_path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if "expected_verdict:" in stripped:
+            return stripped.split(":", 1)[1].strip()
+    return "true"
+
+
+def make_mapped_yml(data_model: str, expected_verdict: str) -> str:
+    return textwrap.dedent(f"""\
+        format_version: '2.0'
+        input_files: main.c
+        options:
+          data_model: LP64
+          language: C
+        properties:
+        - expected_verdict: {expected_verdict}
+          property_file: ../../no-assertion-violation.prp
+        """)
+
+
+def map_one(
+    yml_path: Path,
+    src_root: Path,
+    dest_root: Path,
+    externalize_std: bool,
+    dry_run: bool,
+    yaml_only: bool = False,
+) -> dict:
+    rel = yml_path.relative_to(src_root)
+    parts = rel.parts  # (category, case, category_case.yml)
+    category = parts[0]
+    case_name = parts[1]  # e.g. "algorithm0"
+    case_dir = dest_root / rel.parent
+    src_file = yml_path.parent / parse_input_file(yml_path)
+    data_model = parse_data_model(yml_path)
+    expected_verdict = parse_expected_verdict(yml_path)
+    out_c = case_dir / "main.c"
+    out_yml = case_dir / f"{category}_{case_name}.yml"
+
+    if yaml_only:
+        if not out_c.exists():
+            return {"case": str(rel), "status": "skipped"}
+        if not dry_run:
+            out_yml.write_text(make_mapped_yml(data_model, expected_verdict), encoding="utf-8")
+        return {"case": str(rel), "status": "dry-run" if dry_run else "ok"}
+
+    if out_yml.exists() and out_c.exists():
+        return {"case": str(rel), "status": "skipped"}
+
+    if dry_run:
+        return {"case": str(rel), "status": "dry-run"}
+
+    case_dir.mkdir(parents=True, exist_ok=True)
+
+    cmd = [str(RUNNER)]
+    cmd += ["--externalize-std"] if externalize_std else ["--no-externalize-std"]
+    cmd += [str(src_file), str(out_c)]
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=DEFAULT_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        return {"case": str(rel), "status": "timeout"}
+
+    if result.returncode != 0:
+        stage = {2: "clang", 3: "cir-opt", 4: "cir2c"}.get(result.returncode, "pipeline")
+        return {"case": str(rel), "status": f"failed:{stage}"}
+
+    out_yml.write_text(make_mapped_yml(data_model, expected_verdict), encoding="utf-8")
+    return {"case": str(rel), "status": "ok"}
+
+
+def copy_property_file(dest_root: Path, dry_run: bool) -> None:
+    """Copy no-assertion-violation.prp into the mapped suite root so relative paths in .yml files resolve."""
+    src_prp = ESBMC_EVAL_SRC / "unreach-call.prp"
+    dest_prp = dest_root / "no-assertion-violation.prp"
+    if dest_prp.exists():
+        return
+    print(f"  Copying property file → {dest_prp}")
+    if not dry_run:
+        dest_root.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_prp, dest_prp)
+
+
+def run_variant(
+    variant_name: str,
+    dest_root: Path,
+    src_root: Path,
+    yml_files: list[Path],
+    externalize_std: bool,
+    jobs: int,
+    dry_run: bool,
+    yaml_only: bool = False,
+) -> None:
+    mode = "dry-run" if dry_run else ("yaml-only" if yaml_only else "live")
+    print(f"\n=== {variant_name} ({len(yml_files)} tasks, {mode}) ===")
+    copy_property_file(dest_root, dry_run)
+
+    counts: dict[str, int] = {}
+    with ThreadPoolExecutor(max_workers=jobs) as ex:
+        futures = {
+            ex.submit(map_one, yml, src_root, dest_root, externalize_std, dry_run, yaml_only): yml
+            for yml in yml_files
+        }
+        done = 0
+        for f in as_completed(futures):
+            r = f.result()
+            counts[r["status"]] = counts.get(r["status"], 0) + 1
+            done += 1
+            if done % 100 == 0 or done == len(yml_files):
+                print(f"  {done}/{len(yml_files)} processed")
+
+    print("  Results:", ", ".join(f"{k}={v}" for k, v in sorted(counts.items())))
+
+
+def main() -> int:
+    args = parse_args()
+
+    if not RUNNER.exists():
+        print(f"ERROR: run-cir2c.sh not found at {RUNNER}", file=sys.stderr)
+        return 1
+
+    SOURCES_DIR.mkdir(exist_ok=True)
+
+    print("Step 1: Copy original esbmc-eval")
+    copy_esbmc_eval(args.dry_run)
+
+    src_root = SOURCES_DIR / "esbmc-eval"
+    yml_files = find_yml_files(src_root)
+    print(f"  Found {len(yml_files)} task .yml files")
+
+    run_variant(
+        "esbmc-eval-mapped (externalize-std)",
+        SOURCES_DIR / "esbmc-eval-mapped",
+        src_root,
+        yml_files,
+        externalize_std=True,
+        jobs=args.jobs,
+        dry_run=args.dry_run,
+        yaml_only=args.yaml_only,
+    )
+
+    run_variant(
+        "esbmc-eval-mapped-nostd (no-externalize-std)",
+        SOURCES_DIR / "esbmc-eval-mapped-nostd",
+        src_root,
+        yml_files,
+        externalize_std=False,
+        jobs=args.jobs,
+        dry_run=args.dry_run,
+        yaml_only=args.yaml_only,
+    )
+
+    write_set_files(args.dry_run)
+    return 0
+
+
+def write_set_files(dry_run: bool) -> None:
+    """(Re)write benchmarks/sets/ by enumerating all .yml files on disk."""
+    sets_dir = BENCHMARKS_DIR / "sets"
+    for variant in ("esbmc-eval", "esbmc-eval-mapped", "esbmc-eval-mapped-nostd"):
+        variant_root = SOURCES_DIR / variant
+        ymls = sorted(variant_root.rglob("*.yml"))
+        lines = [f"../sources/{variant}/{p.relative_to(variant_root)}\n" for p in ymls]
+        dest = sets_dir / f"{variant}.set"
+        print(f"  Writing {dest.name} ({len(lines)} entries)")
+        if not dry_run:
+            dest.write_text("".join(lines), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    sys.exit(main())

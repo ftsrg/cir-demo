@@ -1,0 +1,3368 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____aligned_membuf_double_ { unsigned char _M_storage[8]; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct is_near { unsigned char __field0; };
+struct std___List_const_iterator_double_ { struct std____detail___List_node_base* _M_node; };
+struct std___List_iterator_double_ { struct std____detail___List_node_base* _M_node; };
+struct std____allocated_ptr_std__allocator_std___List_node_double___ { struct std__allocator_std___List_node_double__* _M_alloc; struct std___List_node_double_* _M_ptr; };
+struct std____detail___List_node_base { struct std____detail___List_node_base* _M_next; struct std____detail___List_node_base* _M_prev; };
+struct std____detail___List_size { unsigned long _M_size; };
+struct std____false_type { unsigned char __field0; };
+struct std____list___Scratch_list_std____detail___List_node_base_ { struct std____detail___List_node_base __field0; };
+struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ { unsigned char __field0; };
+struct std____new_allocator_double_ { unsigned char __field0; };
+struct std____new_allocator_std___List_node_double__ { unsigned char __field0; };
+struct std__allocator_double_ { unsigned char __field0; };
+struct std__allocator_std___List_node_double__ { unsigned char __field0; };
+struct std__ios_base___Callback_list { struct std__ios_base___Callback_list* __field0; void* __field1; int __field2; int __field3; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale___Impl { int __field0; struct std__locale__facet** __field1; unsigned long __field2; struct std__locale__facet** __field3; char** __field4; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___ { struct std__locale__facet __field0; unsigned char __field1[4]; };
+struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___ { struct std__locale__facet __field0; unsigned char __field1[4]; };
+struct std___List_node_double_ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_double_ _M_storage; };
+struct std____allocated_obj_std__allocator_std___List_node_double___ { struct std____allocated_ptr_std__allocator_std___List_node_double___ __field0; };
+struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
+struct std__basic_streambuf_char__std__char_traits_char__ { void* __field0; char* __field1; char* __field2; char* __field3; char* __field4; char* __field5; char* __field6; struct std__locale __field7; };
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std____cxx11___List_base_double__std__allocator_double_____List_impl { struct std____detail___List_node_header _M_node; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+struct std____cxx11___List_base_double__std__allocator_double__ { struct std____cxx11___List_base_double__std__allocator_double_____List_impl _M_impl; };
+struct std____cxx11__list_double__std__allocator_double__ { struct std____cxx11___List_base_double__std__allocator_double__ __field0; };
+
+struct std____detail___List_size __const__ZNSt8__detail17_List_node_header7_M_initEv_ref_tmp0;
+double __const_main_mydoubles[10] = {0x1.84ccccccccccdp3, 0x1.5c28f5c28f5c3p1, 0x1.24p6, 0x1.98a3d70a3d70ap3, 0x1.91eb851eb851fp1, 0x1.98a3d70a3d70ap3, 0x1.2566666666666p6, 0x1.21p6, 0x1.e99999999999ap3, 0x1.21p6};
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+char _str[19] = "mylist.size() == 8";
+char _str_1[108] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/template/list_unique/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[12] = "*it == 2.72";
+char _str_3[12] = "*it == 3.14";
+char _str_4[13] = "*it == 12.15";
+char _str_5[13] = "*it == 12.77";
+char _str_6[12] = "*it == 15.3";
+char _str_7[13] = "*it == 72.25";
+char _str_8[12] = "*it == 73.0";
+char _str_9[13] = "*it == 73.35";
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str_10[17] = "mylist contains:";
+char _str_11[2] = " ";
+char _str_12[89] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_list.h";
+char __PRETTY_FUNCTION____ZNSt7__cxx114listIdSaIdEE4backEv[84] = "reference std::list<double>::back() [_Tp = double, _Alloc = std::allocator<double>]";
+char _str_13[15] = "!this->empty()";
+_Bool same_integral_part(double p0, double p1);
+void std__allocator_double___allocator(struct std__allocator_double_* p0);
+void std____cxx11__list_double__std__allocator_double_____list_double___void_(struct std____cxx11__list_double__std__allocator_double__* p0, double* p1, double* p2, struct std__allocator_double_* p3);
+void std__allocator_double____allocator(struct std__allocator_double_* p0);
+void std____list___Scratch_list_std____detail___List_node_base____Scratch_list(struct std____list___Scratch_list_std____detail___List_node_base_* p0);
+extern int __gxx_personality_v0();
+extern void std____detail___List_node_base___M_transfer(struct std____detail___List_node_base* p0, struct std____detail___List_node_base* p1, struct std____detail___List_node_base* p2);
+void std____list___Scratch_list_std____detail___List_node_base____M_take_one(struct std____list___Scratch_list_std____detail___List_node_base_* p0, struct std____detail___List_node_base* p1);
+_Bool std____list___Scratch_list_std____detail___List_node_base___empty___const(struct std____list___Scratch_list_std____detail___List_node_base_* p0);
+void std___List_iterator_double____List_iterator(struct std___List_iterator_double_* p0, struct std____detail___List_node_base* p1);
+_Bool std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___operator___std____detail___List_node_base___std____detail___List_node_base___const(struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_* p0, struct std____detail___List_node_base* p1, struct std____detail___List_node_base* p2);
+void void_std____list___Scratch_list_std____detail___List_node_base___merge_std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___(struct std____list___Scratch_list_std____detail___List_node_base_* p0, struct std____detail___List_node_base* p1, struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ p2);
+extern void std____detail___List_node_base__swap(struct std____detail___List_node_base* p0, struct std____detail___List_node_base* p1);
+void std____list___Scratch_list_std____detail___List_node_base___swap(struct std____list___Scratch_list_std____detail___List_node_base_* p0, struct std____detail___List_node_base* p1);
+void std____list___Scratch_list_std____detail___List_node_base____M_put_all(struct std____list___Scratch_list_std____detail___List_node_base_* p0, struct std____detail___List_node_base* p1);
+void std____cxx11__list_double__std__allocator_double_____sort(struct std____cxx11__list_double__std__allocator_double__* p0);
+struct std__allocator_std___List_node_double__* std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator___const(struct std____cxx11___List_base_double__std__allocator_double__* p0);
+void std__allocator_double___allocator_std___List_node_double___(struct std__allocator_double_* p0, struct std__allocator_std___List_node_double__* p1);
+struct std__allocator_double_ std____cxx11__list_double__std__allocator_double_____get_allocator___const(struct std____cxx11__list_double__std__allocator_double__* p0);
+void std____cxx11__list_double__std__allocator_double_____list(struct std____cxx11__list_double__std__allocator_double__* p0, struct std__allocator_double_* p1);
+struct std___List_iterator_double_ std___List_const_iterator_double____M_const_cast___const(struct std___List_const_iterator_double_* p0);
+_Bool std__operator___3(struct std___List_const_iterator_double_* p0, struct std___List_const_iterator_double_* p1);
+_Bool std__operator__(struct std__allocator_std___List_node_double__* p0, struct std__allocator_std___List_node_double__* p1);
+extern void abort();
+void std____cxx11__list_double__std__allocator_double______M_check_equal_allocators(struct std____cxx11__list_double__std__allocator_double__* p0, struct std____cxx11__list_double__std__allocator_double__* p1);
+void std____cxx11__list_double__std__allocator_double______M_transfer(struct std____cxx11__list_double__std__allocator_double__* p0, struct std___List_iterator_double_ p1, struct std___List_iterator_double_ p2, struct std___List_iterator_double_ p3);
+void std____cxx11___List_base_double__std__allocator_double______M_dec_size(struct std____cxx11___List_base_double__std__allocator_double__* p0, unsigned long p1);
+void std____cxx11__list_double__std__allocator_double_____splice(struct std____cxx11__list_double__std__allocator_double__* p0, struct std___List_const_iterator_double_ p1, struct std____cxx11__list_double__std__allocator_double__* p2, struct std___List_const_iterator_double_ p3);
+void std____cxx11__list_double__std__allocator_double_____splice_2(struct std____cxx11__list_double__std__allocator_double__* p0, struct std___List_const_iterator_double_ p1, struct std____cxx11__list_double__std__allocator_double__* p2, struct std___List_const_iterator_double_ p3);
+void std___List_const_iterator_double____List_const_iterator(struct std___List_const_iterator_double_* p0, struct std___List_iterator_double_* p1);
+struct std___List_iterator_double_* std___List_iterator_double___operator__2(struct std___List_iterator_double_* p0, struct std___List_iterator_double_* p1);
+unsigned long std____cxx11__list_double__std__allocator_double_____unique(struct std____cxx11__list_double__std__allocator_double__* p0);
+unsigned long std____cxx11___List_base_double__std__allocator_double______M_get_size___const(struct std____cxx11___List_base_double__std__allocator_double__* p0);
+unsigned long std____cxx11__list_double__std__allocator_double_____size___const(struct std____cxx11__list_double__std__allocator_double__* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+struct std___List_iterator_double_ std____cxx11__list_double__std__allocator_double_____begin(struct std____cxx11__list_double__std__allocator_double__* p0);
+double* std___List_iterator_double___operator____const(struct std___List_iterator_double_* p0);
+struct std___List_iterator_double_ std___List_iterator_double___operator___2(struct std___List_iterator_double_* p0, int p1);
+unsigned long unsigned_long_std____cxx11__list_double__std__allocator_double_____unique_bool_____double__double___bool____(struct std____cxx11__list_double__std__allocator_double__* p0, void* p1);
+struct std___List_iterator_double_* std___List_iterator_double___operator_(struct std___List_iterator_double_* p0, struct std___List_iterator_double_* p1);
+_Bool is_near__operator__(struct is_near* p0, double p1, double p2);
+unsigned long unsigned_long_std____cxx11__list_double__std__allocator_double_____unique_is_near_(struct std____cxx11__list_double__std__allocator_double__* p0, struct is_near p1);
+extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
+int std__operator_(int p0, int p1);
+int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* p0);
+void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std____ostream_insert_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1, long p2);
+_Bool __gnu_cxx__char_traits_char___eq(char* p0, char* p1);
+unsigned long __gnu_cxx__char_traits_char___length(char* p0);
+extern unsigned long strlen(char* p0);
+unsigned long std__char_traits_char___length(char* p0);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1);
+_Bool std__operator___2(struct std___List_iterator_double_* p0, struct std___List_iterator_double_* p1);
+struct std___List_iterator_double_ std____cxx11__list_double__std__allocator_double_____end(struct std____cxx11__list_double__std__allocator_double__* p0);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__std__ostream___M_insert_double_(struct std__basic_ostream_char__std__char_traits_char__* p0, double p1);
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator__(struct std__basic_ostream_char__std__char_traits_char__* p0, double p1);
+struct std___List_iterator_double_* std___List_iterator_double___operator___3(struct std___List_iterator_double_* p0);
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__put(struct std__basic_ostream_char__std__char_traits_char__* p0, char p1);
+extern void std____throw_bad_cast();
+struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* p0);
+extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0);
+char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
+char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+void std____cxx11__list_double__std__allocator_double______list(struct std____cxx11__list_double__std__allocator_double__* p0);
+int main();
+void std____new_allocator_double_____new_allocator(struct std____new_allocator_double_* p0);
+struct std____detail___List_node_base* std____detail___List_node_header___M_base(struct std____detail___List_node_header* p0);
+void void_std__destroy_at_double_(double* p0);
+void void_std__allocator_traits_std__allocator_std___List_node_double_______destroy_double_(struct std__allocator_std___List_node_double__* p0, double* p1);
+void* __gnu_cxx____aligned_membuf_double____M_addr(struct __gnu_cxx____aligned_membuf_double_* p0);
+double* __gnu_cxx____aligned_membuf_double____M_ptr(struct __gnu_cxx____aligned_membuf_double_* p0);
+double* std___List_node_double____M_valptr(struct std___List_node_double_* p0);
+_Bool std____is_constant_evaluated();
+extern void *malloc(unsigned long);
+extern void free(void*);
+void operator_delete(void* p0) { free(p0); }
+void operator_delete_3(void* p0, unsigned long p1, unsigned long p2) { free(p0); }
+void operator_delete_2(void* p0, unsigned long p1) { free(p0); }
+void std____new_allocator_std___List_node_double_____deallocate(struct std____new_allocator_std___List_node_double__* p0, struct std___List_node_double_* p1, unsigned long p2);
+void std__allocator_std___List_node_double_____deallocate(struct std__allocator_std___List_node_double__* p0, struct std___List_node_double_* p1, unsigned long p2);
+void std__allocator_traits_std__allocator_std___List_node_double_______deallocate(struct std__allocator_std___List_node_double__* p0, struct std___List_node_double_* p1, unsigned long p2);
+void std____cxx11___List_base_double__std__allocator_double______M_put_node(struct std____cxx11___List_base_double__std__allocator_double__* p0, struct std___List_node_double_* p1);
+void std____cxx11___List_base_double__std__allocator_double______M_destroy_node(struct std____cxx11___List_base_double__std__allocator_double__* p0, struct std___List_node_double_* p1);
+struct std___List_node_double_* std___List_node_double____M_node_ptr(struct std___List_node_double_* p0);
+void std____cxx11___List_base_double__std__allocator_double______M_clear(struct std____cxx11___List_base_double__std__allocator_double__* p0);
+void std____cxx11___List_base_double__std__allocator_double______List_impl____List_impl(struct std____cxx11___List_base_double__std__allocator_double_____List_impl* p0);
+void std____cxx11___List_base_double__std__allocator_double_______List_base(struct std____cxx11___List_base_double__std__allocator_double__* p0);
+void std__allocator_std___List_node_double_____allocator_double_(struct std__allocator_std___List_node_double__* p0, struct std__allocator_double_* p1);
+void std____cxx11___List_base_double__std__allocator_double______List_impl___List_impl(struct std____cxx11___List_base_double__std__allocator_double_____List_impl* p0, struct std__allocator_std___List_node_double__* p1);
+void std____cxx11___List_base_double__std__allocator_double______List_base(struct std____cxx11___List_base_double__std__allocator_double__* p0, struct std__allocator_std___List_node_double__* p1);
+void std__allocator_std___List_node_double______allocator(struct std__allocator_std___List_node_double__* p0);
+struct std__allocator_std___List_node_double__* std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator(struct std____cxx11___List_base_double__std__allocator_double__* p0);
+extern void std____throw_bad_array_new_length();
+void* operator_new(unsigned long p0) { return malloc(p0); }
+unsigned long std____new_allocator_std___List_node_double______M_max_size___const(struct std____new_allocator_std___List_node_double__* p0);
+extern void std____throw_bad_alloc();
+void* operator_new_2(unsigned long p0, unsigned long p1) { return malloc(p0); }
+struct std___List_node_double_* std____new_allocator_std___List_node_double_____allocate(struct std____new_allocator_std___List_node_double__* p0, unsigned long p1, void* p2);
+struct std___List_node_double_* std__allocator_std___List_node_double_____allocate(struct std__allocator_std___List_node_double__* p0, unsigned long p1);
+struct std___List_node_double_* std__allocator_traits_std__allocator_std___List_node_double_______allocate(struct std__allocator_std___List_node_double__* p0, unsigned long p1);
+void std____allocated_ptr_std__allocator_std___List_node_double_________allocated_ptr_2(struct std____allocated_ptr_std__allocator_std___List_node_double___* p0, struct std__allocator_std___List_node_double__* p1, struct std___List_node_double_* p2);
+struct std____allocated_ptr_std__allocator_std___List_node_double___ std____allocated_ptr_std__allocator_std___List_node_double______std____allocate_guarded_std__allocator_std___List_node_double_____(struct std__allocator_std___List_node_double__* p0);
+void std____allocated_obj_std__allocator_std___List_node_double_________allocated_obj(struct std____allocated_obj_std__allocator_std___List_node_double___* p0, struct std____allocated_ptr_std__allocator_std___List_node_double___* p1);
+void std____allocated_ptr_std__allocator_std___List_node_double__________allocated_ptr(struct std____allocated_ptr_std__allocator_std___List_node_double___* p0);
+struct std____allocated_obj_std__allocator_std___List_node_double___ std____allocated_obj_std__allocator_std___List_node_double______std____allocate_guarded_obj_std__allocator_std___List_node_double_____(struct std__allocator_std___List_node_double__* p0);
+double* _ZSt12construct_atIdJRdEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(double* p0, double* p1);
+void void_std__allocator_traits_std__allocator_std___List_node_double_______construct_double__double__(struct std__allocator_std___List_node_double__* p0, double* p1, double* p2);
+struct std___List_node_double_* std____allocated_obj_std__allocator_std___List_node_double_______operator_____const(struct std____allocated_obj_std__allocator_std___List_node_double___* p0);
+struct std___List_node_double_* std___List_node_double___std____exchange_std___List_node_double____decltype_nullptr___std___List_node_double_____decltype(struct std___List_node_double_** p0, void** p1);
+struct std___List_node_double_* std____allocated_ptr_std__allocator_std___List_node_double_______release(struct std____allocated_ptr_std__allocator_std___List_node_double___* p0);
+void std____allocated_obj_std__allocator_std___List_node_double__________allocated_obj(struct std____allocated_obj_std__allocator_std___List_node_double___* p0);
+struct std___List_node_double_* std___List_node_double___std____cxx11__list_double__std__allocator_double______M_create_node_double__(struct std____cxx11__list_double__std__allocator_double__* p0, double* p1);
+extern void std____detail___List_node_base___M_hook(struct std____detail___List_node_base* p0, struct std____detail___List_node_base* p1);
+void std____cxx11___List_base_double__std__allocator_double______M_inc_size(struct std____cxx11___List_base_double__std__allocator_double__* p0, unsigned long p1);
+void void_std____cxx11__list_double__std__allocator_double______M_insert_double__(struct std____cxx11__list_double__std__allocator_double__* p0, struct std___List_iterator_double_ p1, double* p2);
+struct std____detail___List_node_base* std____detail___List_node_base___M_base___const(struct std____detail___List_node_base* p0);
+_Bool std____cxx11__list_double__std__allocator_double_____empty___const(struct std____cxx11__list_double__std__allocator_double__* p0);
+extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
+struct std___List_iterator_double_* std___List_iterator_double___operator__(struct std___List_iterator_double_* p0);
+double* std____cxx11__list_double__std__allocator_double_____back(struct std____cxx11__list_double__std__allocator_double__* p0);
+double* double__std____cxx11__list_double__std__allocator_double_____emplace_back_double__(struct std____cxx11__list_double__std__allocator_double__* p0, double* p1);
+void void_std____cxx11__list_double__std__allocator_double______M_initialize_dispatch_double__(struct std____cxx11__list_double__std__allocator_double__* p0, double* p1, double* p2, struct std____false_type p3);
+void std____new_allocator_std___List_node_double_______new_allocator_2(struct std____new_allocator_std___List_node_double__* p0);
+void std____new_allocator_std___List_node_double_______new_allocator(struct std____new_allocator_std___List_node_double__* p0, struct std____new_allocator_std___List_node_double__* p1);
+void std__allocator_std___List_node_double_____allocator(struct std__allocator_std___List_node_double__* p0, struct std__allocator_std___List_node_double__* p1);
+void std____detail___List_node_header___List_node_header(struct std____detail___List_node_header* p0);
+struct std____detail___List_size* std____detail___List_size__operator_(struct std____detail___List_size* p0, struct std____detail___List_size* p1);
+void std____detail___List_node_header___M_init(struct std____detail___List_node_header* p0);
+void std____allocated_ptr_std__allocator_std___List_node_double_________allocated_ptr(struct std____allocated_ptr_std__allocator_std___List_node_double___* p0, struct std____allocated_ptr_std__allocator_std___List_node_double___* p1);
+struct std___List_node_double_* std___List_node_double___std__to_address_std___List_node_double___(struct std___List_node_double_* p0);
+struct std___List_node_double_* auto_std____to_address_std___List_node_double___(struct std___List_node_double_** p0);
+struct std___List_node_double_* std____allocated_ptr_std__allocator_std___List_node_double_______get___const(struct std____allocated_ptr_std__allocator_std___List_node_double___* p0);
+_Bool std____allocated_ptr_std__allocator_std___List_node_double_______operator_bool___const(struct std____allocated_ptr_std__allocator_std___List_node_double___* p0);
+struct std____detail___List_node_base* std____detail___List_node_base___M_base(struct std____detail___List_node_base* p0);
+
+// function: _Z18same_integral_partdd
+_Bool same_integral_part(double v0, double v1) {
+bb2:
+  double first3;
+  double second4;
+  _Bool __retval5;
+  first3 = v0;
+  second4 = v1;
+  double t6 = first3;
+  int cast7 = (int)t6;
+  double t8 = second4;
+  int cast9 = (int)t8;
+  _Bool c10 = ((cast7 == cast9)) ? 1 : 0;
+  __retval5 = c10;
+  _Bool t11 = __retval5;
+  return t11;
+}
+
+// function: _ZNSaIdEC2Ev
+void std__allocator_double___allocator(struct std__allocator_double_* v12) {
+bb13:
+  struct std__allocator_double_* this14;
+  this14 = v12;
+  struct std__allocator_double_* t15 = this14;
+  struct std____new_allocator_double_* base16 = (struct std____new_allocator_double_*)((char *)t15 + 0);
+  std____new_allocator_double_____new_allocator(base16);
+  return;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEEC2IPdvEET_S5_RKS1_
+void std____cxx11__list_double__std__allocator_double_____list_double___void_(struct std____cxx11__list_double__std__allocator_double__* v17, double* v18, double* v19, struct std__allocator_double_* v20) {
+bb21:
+  struct std____cxx11__list_double__std__allocator_double__* this22;
+  double* __first23;
+  double* __last24;
+  struct std__allocator_double_* __a25;
+  struct std__allocator_std___List_node_double__ ref_tmp026;
+  struct std____false_type agg_tmp027;
+  this22 = v17;
+  __first23 = v18;
+  __last24 = v19;
+  __a25 = v20;
+  struct std____cxx11__list_double__std__allocator_double__* t28 = this22;
+  struct std____cxx11___List_base_double__std__allocator_double__* base29 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t28 + 0);
+  struct std__allocator_double_* t30 = __a25;
+  std__allocator_std___List_node_double_____allocator_double_(&ref_tmp026, t30);
+    std____cxx11___List_base_double__std__allocator_double______List_base(base29, &ref_tmp026);
+    if (__cir_exc_active) {
+      {
+        std__allocator_std___List_node_double______allocator(&ref_tmp026);
+      }
+      return;
+    }
+  {
+    std__allocator_std___List_node_double______allocator(&ref_tmp026);
+  }
+    double* t31 = __first23;
+    double* t32 = __last24;
+    struct std____false_type t33 = agg_tmp027;
+    void_std____cxx11__list_double__std__allocator_double______M_initialize_dispatch_double__(t28, t31, t32, t33);
+    if (__cir_exc_active) {
+      {
+        struct std____cxx11___List_base_double__std__allocator_double__* base34 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t28 + 0);
+        std____cxx11___List_base_double__std__allocator_double_______List_base(base34);
+      }
+      return;
+    }
+  return;
+}
+
+// function: _ZNSaIdED2Ev
+void std__allocator_double____allocator(struct std__allocator_double_* v35) {
+bb36:
+  struct std__allocator_double_* this37;
+  this37 = v35;
+  struct std__allocator_double_* t38 = this37;
+  return;
+}
+
+// function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEEC2Ev
+void std____list___Scratch_list_std____detail___List_node_base____Scratch_list(struct std____list___Scratch_list_std____detail___List_node_base_* v39) {
+bb40:
+  struct std____list___Scratch_list_std____detail___List_node_base_* this41;
+  this41 = v39;
+  struct std____list___Scratch_list_std____detail___List_node_base_* t42 = this41;
+  struct std____detail___List_node_base* base43 = (struct std____detail___List_node_base*)((char *)t42 + 0);
+  struct std____detail___List_node_base* base44 = (struct std____detail___List_node_base*)((char *)t42 + 0);
+  struct std____detail___List_node_base* r45 = std____detail___List_node_base___M_base(base44);
+  if (__cir_exc_active) {
+    return;
+  }
+  struct std____detail___List_node_base* base46 = (struct std____detail___List_node_base*)((char *)t42 + 0);
+  base46->_M_prev = r45;
+  struct std____detail___List_node_base* base47 = (struct std____detail___List_node_base*)((char *)t42 + 0);
+  base47->_M_next = r45;
+  return;
+}
+
+// function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE11_M_take_oneEPS2_
+void std____list___Scratch_list_std____detail___List_node_base____M_take_one(struct std____list___Scratch_list_std____detail___List_node_base_* v48, struct std____detail___List_node_base* v49) {
+bb50:
+  struct std____list___Scratch_list_std____detail___List_node_base_* this51;
+  struct std____detail___List_node_base* __i52;
+  this51 = v48;
+  __i52 = v49;
+  struct std____list___Scratch_list_std____detail___List_node_base_* t53 = this51;
+  struct std____detail___List_node_base* base54 = (struct std____detail___List_node_base*)((char *)t53 + 0);
+  struct std____detail___List_node_base* t55 = __i52;
+  struct std____detail___List_node_base* t56 = __i52;
+  struct std____detail___List_node_base* t57 = t56->_M_next;
+  std____detail___List_node_base___M_transfer(base54, t55, t57);
+  return;
+}
+
+// function: _ZNKSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE5emptyEv
+_Bool std____list___Scratch_list_std____detail___List_node_base___empty___const(struct std____list___Scratch_list_std____detail___List_node_base_* v58) {
+bb59:
+  struct std____list___Scratch_list_std____detail___List_node_base_* this60;
+  _Bool __retval61;
+  this60 = v58;
+  struct std____list___Scratch_list_std____detail___List_node_base_* t62 = this60;
+  struct std____detail___List_node_base* base63 = (struct std____detail___List_node_base*)((char *)t62 + 0);
+  struct std____detail___List_node_base* t64 = base63->_M_next;
+  struct std____detail___List_node_base* base65 = (struct std____detail___List_node_base*)((char *)t62 + 0);
+  struct std____detail___List_node_base* r66 = std____detail___List_node_base___M_base___const(base65);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  _Bool c67 = ((t64 == r66)) ? 1 : 0;
+  __retval61 = c67;
+  _Bool t68 = __retval61;
+  return t68;
+}
+
+// function: _ZNSt14_List_iteratorIdEC2EPNSt8__detail15_List_node_baseE
+void std___List_iterator_double____List_iterator(struct std___List_iterator_double_* v69, struct std____detail___List_node_base* v70) {
+bb71:
+  struct std___List_iterator_double_* this72;
+  struct std____detail___List_node_base* __x73;
+  this72 = v69;
+  __x73 = v70;
+  struct std___List_iterator_double_* t74 = this72;
+  struct std____detail___List_node_base* t75 = __x73;
+  t74->_M_node = t75;
+  return;
+}
+
+// function: _ZNKSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE8_Ptr_cmpISt14_List_iteratorIdEvEclEPS2_S8_
+_Bool std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___operator___std____detail___List_node_base___std____detail___List_node_base___const(struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_* v76, struct std____detail___List_node_base* v77, struct std____detail___List_node_base* v78) {
+bb79:
+  struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_* this80;
+  struct std____detail___List_node_base* __lhs81;
+  struct std____detail___List_node_base* __rhs82;
+  _Bool __retval83;
+  struct std___List_iterator_double_ ref_tmp084;
+  struct std___List_iterator_double_ ref_tmp185;
+  this80 = v76;
+  __lhs81 = v77;
+  __rhs82 = v78;
+  struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_* t86 = this80;
+  struct std____detail___List_node_base* t87 = __lhs81;
+  std___List_iterator_double____List_iterator(&ref_tmp084, t87);
+  double* r88 = std___List_iterator_double___operator____const(&ref_tmp084);
+  double t89 = *r88;
+  struct std____detail___List_node_base* t90 = __rhs82;
+  std___List_iterator_double____List_iterator(&ref_tmp185, t90);
+  double* r91 = std___List_iterator_double___operator____const(&ref_tmp185);
+  double t92 = *r91;
+  _Bool c93 = ((t89 < t92)) ? 1 : 0;
+  __retval83 = c93;
+  _Bool t94 = __retval83;
+  return t94;
+}
+
+// function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE5mergeINS3_8_Ptr_cmpISt14_List_iteratorIdEvEEEEvRS2_T_
+void void_std____list___Scratch_list_std____detail___List_node_base___merge_std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___(struct std____list___Scratch_list_std____detail___List_node_base_* v95, struct std____detail___List_node_base* v96, struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ v97) {
+bb98:
+  struct std____list___Scratch_list_std____detail___List_node_base_* this99;
+  struct std____detail___List_node_base* __x100;
+  struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ __comp101;
+  struct std____detail___List_node_base* __first1102;
+  struct std____detail___List_node_base* __last1103;
+  struct std____detail___List_node_base* __first2104;
+  struct std____detail___List_node_base* __last2105;
+  this99 = v95;
+  __x100 = v96;
+  __comp101 = v97;
+  struct std____list___Scratch_list_std____detail___List_node_base_* t106 = this99;
+  struct std____detail___List_node_base* base107 = (struct std____detail___List_node_base*)((char *)t106 + 0);
+  struct std____detail___List_node_base* t108 = base107->_M_next;
+  __first1102 = t108;
+  struct std____detail___List_node_base* base109 = (struct std____detail___List_node_base*)((char *)t106 + 0);
+  struct std____detail___List_node_base* r110 = std____detail___List_node_base___M_base(base109);
+  if (__cir_exc_active) {
+    return;
+  }
+  __last1103 = r110;
+  struct std____detail___List_node_base* t111 = __x100;
+  struct std____detail___List_node_base* t112 = t111->_M_next;
+  __first2104 = t112;
+  struct std____detail___List_node_base* t113 = __x100;
+  struct std____detail___List_node_base* r114 = std____detail___List_node_base___M_base(t113);
+  if (__cir_exc_active) {
+    return;
+  }
+  __last2105 = r114;
+    while (1) {
+      struct std____detail___List_node_base* t115 = __first1102;
+      struct std____detail___List_node_base* t116 = __last1103;
+      _Bool c117 = ((t115 != t116)) ? 1 : 0;
+      _Bool ternary118;
+      if (c117) {
+        struct std____detail___List_node_base* t119 = __first2104;
+        struct std____detail___List_node_base* t120 = __last2105;
+        _Bool c121 = ((t119 != t120)) ? 1 : 0;
+        ternary118 = (_Bool)c121;
+      } else {
+        _Bool c122 = 0;
+        ternary118 = (_Bool)c122;
+      }
+      if (!ternary118) break;
+          struct std____detail___List_node_base* t123 = __first2104;
+          struct std____detail___List_node_base* t124 = __first1102;
+          _Bool r125 = std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___operator___std____detail___List_node_base___std____detail___List_node_base___const(&__comp101, t123, t124);
+          if (__cir_exc_active) {
+            return;
+          }
+          if (r125) {
+            struct std____detail___List_node_base* __next126;
+            struct std____detail___List_node_base* t127 = __first2104;
+            struct std____detail___List_node_base* t128 = t127->_M_next;
+            __next126 = t128;
+            struct std____detail___List_node_base* t129 = __first1102;
+            struct std____detail___List_node_base* t130 = __first2104;
+            struct std____detail___List_node_base* t131 = __next126;
+            std____detail___List_node_base___M_transfer(t129, t130, t131);
+            struct std____detail___List_node_base* t132 = __next126;
+            __first2104 = t132;
+          } else {
+            struct std____detail___List_node_base* t133 = __first1102;
+            struct std____detail___List_node_base* t134 = t133->_M_next;
+            __first1102 = t134;
+          }
+    }
+    struct std____detail___List_node_base* t135 = __first2104;
+    struct std____detail___List_node_base* t136 = __last2105;
+    _Bool c137 = ((t135 != t136)) ? 1 : 0;
+    if (c137) {
+      struct std____detail___List_node_base* base138 = (struct std____detail___List_node_base*)((char *)t106 + 0);
+      struct std____detail___List_node_base* t139 = __first2104;
+      struct std____detail___List_node_base* t140 = __last2105;
+      std____detail___List_node_base___M_transfer(base138, t139, t140);
+    }
+  return;
+}
+
+// function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE4swapERS2_
+void std____list___Scratch_list_std____detail___List_node_base___swap(struct std____list___Scratch_list_std____detail___List_node_base_* v141, struct std____detail___List_node_base* v142) {
+bb143:
+  struct std____list___Scratch_list_std____detail___List_node_base_* this144;
+  struct std____detail___List_node_base* __l145;
+  this144 = v141;
+  __l145 = v142;
+  struct std____list___Scratch_list_std____detail___List_node_base_* t146 = this144;
+  struct std____detail___List_node_base* base147 = (struct std____detail___List_node_base*)((char *)t146 + 0);
+  struct std____detail___List_node_base* t148 = __l145;
+  std____detail___List_node_base__swap(base147, t148);
+  return;
+}
+
+// function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE10_M_put_allEPS2_
+void std____list___Scratch_list_std____detail___List_node_base____M_put_all(struct std____list___Scratch_list_std____detail___List_node_base_* v149, struct std____detail___List_node_base* v150) {
+bb151:
+  struct std____list___Scratch_list_std____detail___List_node_base_* this152;
+  struct std____detail___List_node_base* __i153;
+  this152 = v149;
+  __i153 = v150;
+  struct std____list___Scratch_list_std____detail___List_node_base_* t154 = this152;
+    _Bool r155 = std____list___Scratch_list_std____detail___List_node_base___empty___const(t154);
+    if (__cir_exc_active) {
+      return;
+    }
+    _Bool u156 = !r155;
+    if (u156) {
+      struct std____detail___List_node_base* t157 = __i153;
+      struct std____detail___List_node_base* base158 = (struct std____detail___List_node_base*)((char *)t154 + 0);
+      struct std____detail___List_node_base* t159 = base158->_M_next;
+      struct std____detail___List_node_base* base160 = (struct std____detail___List_node_base*)((char *)t154 + 0);
+      struct std____detail___List_node_base* r161 = std____detail___List_node_base___M_base(base160);
+      if (__cir_exc_active) {
+        return;
+      }
+      std____detail___List_node_base___M_transfer(t157, t159, r161);
+    }
+  return;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE4sortEv
+void std____cxx11__list_double__std__allocator_double_____sort(struct std____cxx11__list_double__std__allocator_double__* v162) {
+bb163:
+  struct std____cxx11__list_double__std__allocator_double__* this164;
+  this164 = v162;
+  struct std____cxx11__list_double__std__allocator_double__* t165 = this164;
+    _Bool r166 = std____cxx11__list_double__std__allocator_double_____empty___const(t165);
+    _Bool ternary167;
+    if (r166) {
+      _Bool c168 = 1;
+      ternary167 = (_Bool)c168;
+    } else {
+      struct std___List_iterator_double_ ref_tmp0169;
+      struct std___List_iterator_double_ ref_tmp1170;
+      struct std___List_iterator_double_ r171 = std____cxx11__list_double__std__allocator_double_____begin(t165);
+      ref_tmp0169 = r171;
+      struct std___List_iterator_double_* r172 = std___List_iterator_double___operator___3(&ref_tmp0169);
+      struct std___List_iterator_double_ r173 = std____cxx11__list_double__std__allocator_double_____end(t165);
+      ref_tmp1170 = r173;
+      _Bool r174 = std__operator___2(r172, &ref_tmp1170);
+      ternary167 = (_Bool)r174;
+    }
+    if (ternary167) {
+      return;
+    }
+    struct std____list___Scratch_list_std____detail___List_node_base_ __carry175;
+    struct std____list___Scratch_list_std____detail___List_node_base_ __tmp176[64];
+    struct std____list___Scratch_list_std____detail___List_node_base_* __fill177;
+    struct std____list___Scratch_list_std____detail___List_node_base_* __counter178;
+    struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ __ptr_comp179;
+    std____list___Scratch_list_std____detail___List_node_base____Scratch_list(&__carry175);
+    if (__cir_exc_active) {
+      return;
+    }
+    unsigned long c180 = 64;
+    struct std____list___Scratch_list_std____detail___List_node_base_* cast181 = (struct std____list___Scratch_list_std____detail___List_node_base_*)&(__tmp176);
+    struct std____list___Scratch_list_std____detail___List_node_base_* ptr182 = &(cast181)[c180];
+    struct std____list___Scratch_list_std____detail___List_node_base_* __array_idx183;
+    __array_idx183 = cast181;
+    do {
+      struct std____list___Scratch_list_std____detail___List_node_base_* t184 = __array_idx183;
+      std____list___Scratch_list_std____detail___List_node_base____Scratch_list(t184);
+      if (__cir_exc_active) {
+        return;
+      }
+      unsigned long c185 = 1;
+      struct std____list___Scratch_list_std____detail___List_node_base_* ptr186 = &(t184)[c185];
+      __array_idx183 = ptr186;
+      struct std____list___Scratch_list_std____detail___List_node_base_* t187 = __array_idx183;
+      _Bool c188 = ((t187 != ptr182)) ? 1 : 0;
+      if (!c188) break;
+    } while (1);
+    struct std____list___Scratch_list_std____detail___List_node_base_* cast189 = (struct std____list___Scratch_list_std____detail___List_node_base_*)&(__tmp176);
+    __fill177 = cast189;
+      struct std___List_iterator_double_ ref_tmp3190;
+          do {
+              struct std___List_iterator_double_ ref_tmp2192;
+              struct std___List_iterator_double_ r193 = std____cxx11__list_double__std__allocator_double_____begin(t165);
+              ref_tmp2192 = r193;
+              struct std____detail___List_node_base* t194 = ref_tmp2192._M_node;
+              std____list___Scratch_list_std____detail___List_node_base____M_take_one(&__carry175, t194);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch191;
+              }
+                struct std____list___Scratch_list_std____detail___List_node_base_* cast195 = (struct std____list___Scratch_list_std____detail___List_node_base_*)&(__tmp176);
+                __counter178 = cast195;
+                while (1) {
+                  struct std____list___Scratch_list_std____detail___List_node_base_* t197 = __counter178;
+                  struct std____list___Scratch_list_std____detail___List_node_base_* t198 = __fill177;
+                  _Bool c199 = ((t197 != t198)) ? 1 : 0;
+                  _Bool ternary200;
+                  if (c199) {
+                    struct std____list___Scratch_list_std____detail___List_node_base_* t201 = __counter178;
+                    _Bool r202 = std____list___Scratch_list_std____detail___List_node_base___empty___const(t201);
+                    if (__cir_exc_active) {
+                      goto cir_try_dispatch191;
+                    }
+                    _Bool u203 = !r202;
+                    ternary200 = (_Bool)u203;
+                  } else {
+                    _Bool c204 = 0;
+                    ternary200 = (_Bool)c204;
+                  }
+                  if (!ternary200) break;
+                    struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ agg_tmp0205;
+                    struct std____list___Scratch_list_std____detail___List_node_base_* t206 = __counter178;
+                    struct std____detail___List_node_base* base207 = (struct std____detail___List_node_base*)((char *)&(__carry175) + 0);
+                    struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ t208 = agg_tmp0205;
+                    void_std____list___Scratch_list_std____detail___List_node_base___merge_std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___(t206, base207, t208);
+                    if (__cir_exc_active) {
+                      goto cir_try_dispatch191;
+                    }
+                    struct std____list___Scratch_list_std____detail___List_node_base_* t209 = __counter178;
+                    struct std____detail___List_node_base* base210 = (struct std____detail___List_node_base*)((char *)t209 + 0);
+                    std____list___Scratch_list_std____detail___List_node_base___swap(&__carry175, base210);
+                    if (__cir_exc_active) {
+                      goto cir_try_dispatch191;
+                    }
+                for_step196: ;
+                  struct std____list___Scratch_list_std____detail___List_node_base_* t211 = __counter178;
+                  int c212 = 1;
+                  struct std____list___Scratch_list_std____detail___List_node_base_* ptr213 = &(t211)[c212];
+                  __counter178 = ptr213;
+                }
+              struct std____list___Scratch_list_std____detail___List_node_base_* t214 = __counter178;
+              struct std____detail___List_node_base* base215 = (struct std____detail___List_node_base*)((char *)t214 + 0);
+              std____list___Scratch_list_std____detail___List_node_base___swap(&__carry175, base215);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch191;
+              }
+                struct std____list___Scratch_list_std____detail___List_node_base_* t216 = __counter178;
+                struct std____list___Scratch_list_std____detail___List_node_base_* t217 = __fill177;
+                _Bool c218 = ((t216 == t217)) ? 1 : 0;
+                if (c218) {
+                  struct std____list___Scratch_list_std____detail___List_node_base_* t219 = __fill177;
+                  int c220 = 1;
+                  struct std____list___Scratch_list_std____detail___List_node_base_* ptr221 = &(t219)[c220];
+                  __fill177 = ptr221;
+                }
+            _Bool r222 = std____cxx11__list_double__std__allocator_double_____empty___const(t165);
+            _Bool u223 = !r222;
+            if (!u223) break;
+          } while (1);
+          struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ agg_tmp1224;
+          struct std____list___Scratch_list_std____detail___List_node_base_* cast225 = (struct std____list___Scratch_list_std____detail___List_node_base_*)&(__tmp176);
+          int c226 = 1;
+          struct std____list___Scratch_list_std____detail___List_node_base_* ptr227 = &(cast225)[c226];
+          __counter178 = ptr227;
+          while (1) {
+            struct std____list___Scratch_list_std____detail___List_node_base_* t229 = __counter178;
+            struct std____list___Scratch_list_std____detail___List_node_base_* t230 = __fill177;
+            _Bool c231 = ((t229 != t230)) ? 1 : 0;
+            if (!c231) break;
+            struct std____list___Scratch_list_std____detail___List_node_base_* t232 = __counter178;
+            long c233 = -1;
+            struct std____list___Scratch_list_std____detail___List_node_base_* t234 = __counter178;
+            struct std____list___Scratch_list_std____detail___List_node_base_* ptr235 = &(t234)[c233];
+            struct std____detail___List_node_base* base236 = (struct std____detail___List_node_base*)((char *)ptr235 + 0);
+            struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ t237 = agg_tmp1224;
+            void_std____list___Scratch_list_std____detail___List_node_base___merge_std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___(t232, base236, t237);
+            if (__cir_exc_active) {
+              goto cir_try_dispatch191;
+            }
+          for_step228: ;
+            struct std____list___Scratch_list_std____detail___List_node_base_* t238 = __counter178;
+            int c239 = 1;
+            struct std____list___Scratch_list_std____detail___List_node_base_* ptr240 = &(t238)[c239];
+            __counter178 = ptr240;
+          }
+        long c241 = -1;
+        struct std____list___Scratch_list_std____detail___List_node_base_* t242 = __fill177;
+        struct std____list___Scratch_list_std____detail___List_node_base_* ptr243 = &(t242)[c241];
+        struct std____cxx11___List_base_double__std__allocator_double__* base244 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t165 + 0);
+        struct std____detail___List_node_base* base245 = (struct std____detail___List_node_base*)((char *)&(base244->_M_impl._M_node) + 0);
+        std____list___Scratch_list_std____detail___List_node_base___swap(ptr243, base245);
+        if (__cir_exc_active) {
+          goto cir_try_dispatch191;
+        }
+      cir_try_dispatch191: ;
+      if (__cir_exc_active) {
+      {
+        int ca_tok246 = 0;
+        void* ca_exn247 = (void*)__cir_exc_ptr;
+        __cir_exc_active = 0;
+          struct std___List_iterator_double_ r248 = std____cxx11__list_double__std__allocator_double_____end(t165);
+          ref_tmp3190 = r248;
+          struct std____detail___List_node_base* t249 = ref_tmp3190._M_node;
+          std____list___Scratch_list_std____detail___List_node_base____M_put_all(&__carry175, t249);
+          if (__cir_exc_active) {
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+            return;
+          }
+            int __i250;
+            struct std___List_iterator_double_ ref_tmp4251;
+            int c252 = 0;
+            __i250 = c252;
+            while (1) {
+              int t254 = __i250;
+              unsigned long cast255 = (unsigned long)t254;
+              unsigned long c256 = 1024;
+              unsigned long c257 = 16;
+              unsigned long b258 = c256 / c257;
+              _Bool c259 = ((cast255 < b258)) ? 1 : 0;
+              if (!c259) break;
+              int t260 = __i250;
+              long cast261 = (long)t260;
+              struct std___List_iterator_double_ r262 = std____cxx11__list_double__std__allocator_double_____end(t165);
+              ref_tmp4251 = r262;
+              struct std____detail___List_node_base* t263 = ref_tmp4251._M_node;
+              std____list___Scratch_list_std____detail___List_node_base____M_put_all(&__tmp176[cast261], t263);
+              if (__cir_exc_active) {
+                {
+                  if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+                }
+                return;
+              }
+            for_step253: ;
+              int t264 = __i250;
+              int u265 = t264 + 1;
+              __i250 = u265;
+            }
+          __cir_exc_active = 1;
+          {
+            if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+          }
+          return;
+          __builtin_unreachable();
+      }
+      }
+  return;
+}
+
+// function: _ZNKSt7__cxx1110_List_baseIdSaIdEE21_M_get_Node_allocatorEv
+struct std__allocator_std___List_node_double__* std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator___const(struct std____cxx11___List_base_double__std__allocator_double__* v266) {
+bb267:
+  struct std____cxx11___List_base_double__std__allocator_double__* this268;
+  struct std__allocator_std___List_node_double__* __retval269;
+  this268 = v266;
+  struct std____cxx11___List_base_double__std__allocator_double__* t270 = this268;
+  struct std__allocator_std___List_node_double__* base271 = (struct std__allocator_std___List_node_double__*)((char *)&(t270->_M_impl) + 0);
+  __retval269 = base271;
+  struct std__allocator_std___List_node_double__* t272 = __retval269;
+  return t272;
+}
+
+// function: _ZNSaIdEC2ISt10_List_nodeIdEEERKSaIT_E
+void std__allocator_double___allocator_std___List_node_double___(struct std__allocator_double_* v273, struct std__allocator_std___List_node_double__* v274) {
+bb275:
+  struct std__allocator_double_* this276;
+  struct std__allocator_std___List_node_double__* unnamed277;
+  this276 = v273;
+  unnamed277 = v274;
+  struct std__allocator_double_* t278 = this276;
+  struct std____new_allocator_double_* base279 = (struct std____new_allocator_double_*)((char *)t278 + 0);
+  std____new_allocator_double_____new_allocator(base279);
+  return;
+}
+
+// function: _ZNKSt7__cxx114listIdSaIdEE13get_allocatorEv
+struct std__allocator_double_ std____cxx11__list_double__std__allocator_double_____get_allocator___const(struct std____cxx11__list_double__std__allocator_double__* v280) {
+bb281:
+  struct std____cxx11__list_double__std__allocator_double__* this282;
+  struct std__allocator_double_ __retval283;
+  this282 = v280;
+  struct std____cxx11__list_double__std__allocator_double__* t284 = this282;
+  struct std____cxx11___List_base_double__std__allocator_double__* base285 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t284 + 0);
+  struct std__allocator_std___List_node_double__* r286 = std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator___const(base285);
+  std__allocator_double___allocator_std___List_node_double___(&__retval283, r286);
+  struct std__allocator_double_ t287 = __retval283;
+  return t287;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEEC2ERKS1_
+void std____cxx11__list_double__std__allocator_double_____list(struct std____cxx11__list_double__std__allocator_double__* v288, struct std__allocator_double_* v289) {
+bb290:
+  struct std____cxx11__list_double__std__allocator_double__* this291;
+  struct std__allocator_double_* __a292;
+  struct std__allocator_std___List_node_double__ ref_tmp0293;
+  this291 = v288;
+  __a292 = v289;
+  struct std____cxx11__list_double__std__allocator_double__* t294 = this291;
+  struct std____cxx11___List_base_double__std__allocator_double__* base295 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t294 + 0);
+  struct std__allocator_double_* t296 = __a292;
+  std__allocator_std___List_node_double_____allocator_double_(&ref_tmp0293, t296);
+    std____cxx11___List_base_double__std__allocator_double______List_base(base295, &ref_tmp0293);
+    if (__cir_exc_active) {
+      {
+        std__allocator_std___List_node_double______allocator(&ref_tmp0293);
+      }
+      return;
+    }
+  {
+    std__allocator_std___List_node_double______allocator(&ref_tmp0293);
+  }
+  return;
+}
+
+// function: _ZNKSt20_List_const_iteratorIdE13_M_const_castEv
+struct std___List_iterator_double_ std___List_const_iterator_double____M_const_cast___const(struct std___List_const_iterator_double_* v297) {
+bb298:
+  struct std___List_const_iterator_double_* this299;
+  struct std___List_iterator_double_ __retval300;
+  this299 = v297;
+  struct std___List_const_iterator_double_* t301 = this299;
+  struct std____detail___List_node_base* t302 = t301->_M_node;
+  std___List_iterator_double____List_iterator(&__retval300, t302);
+  struct std___List_iterator_double_ t303 = __retval300;
+  return t303;
+}
+
+// function: _ZSteqRKSt20_List_const_iteratorIdES2_
+_Bool std__operator___3(struct std___List_const_iterator_double_* v304, struct std___List_const_iterator_double_* v305) {
+bb306:
+  struct std___List_const_iterator_double_* __x307;
+  struct std___List_const_iterator_double_* __y308;
+  _Bool __retval309;
+  __x307 = v304;
+  __y308 = v305;
+  struct std___List_const_iterator_double_* t310 = __x307;
+  struct std____detail___List_node_base* t311 = t310->_M_node;
+  struct std___List_const_iterator_double_* t312 = __y308;
+  struct std____detail___List_node_base* t313 = t312->_M_node;
+  _Bool c314 = ((t311 == t313)) ? 1 : 0;
+  __retval309 = c314;
+  _Bool t315 = __retval309;
+  return t315;
+}
+
+// function: _ZSteqRKSaISt10_List_nodeIdEES3_
+_Bool std__operator__(struct std__allocator_std___List_node_double__* v316, struct std__allocator_std___List_node_double__* v317) {
+bb318:
+  struct std__allocator_std___List_node_double__* unnamed319;
+  struct std__allocator_std___List_node_double__* unnamed320;
+  _Bool __retval321;
+  unnamed319 = v316;
+  unnamed320 = v317;
+  _Bool c322 = 1;
+  __retval321 = c322;
+  _Bool t323 = __retval321;
+  return t323;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE25_M_check_equal_allocatorsERKS2_
+void std____cxx11__list_double__std__allocator_double______M_check_equal_allocators(struct std____cxx11__list_double__std__allocator_double__* v324, struct std____cxx11__list_double__std__allocator_double__* v325) {
+bb326:
+  struct std____cxx11__list_double__std__allocator_double__* this327;
+  struct std____cxx11__list_double__std__allocator_double__* __x328;
+  this327 = v324;
+  __x328 = v325;
+  struct std____cxx11__list_double__std__allocator_double__* t329 = this327;
+    struct std____cxx11___List_base_double__std__allocator_double__* base330 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t329 + 0);
+    struct std__allocator_std___List_node_double__* r331 = std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator(base330);
+    struct std____cxx11__list_double__std__allocator_double__* t332 = __x328;
+    struct std____cxx11___List_base_double__std__allocator_double__* base333 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t332 + 0);
+    struct std__allocator_std___List_node_double__* r334 = std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator___const(base333);
+    _Bool r335 = std__operator__(r331, r334);
+    _Bool u336 = !r335;
+    if (u336) {
+      abort();
+    }
+  return;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE11_M_transferESt14_List_iteratorIdES4_S4_
+void std____cxx11__list_double__std__allocator_double______M_transfer(struct std____cxx11__list_double__std__allocator_double__* v337, struct std___List_iterator_double_ v338, struct std___List_iterator_double_ v339, struct std___List_iterator_double_ v340) {
+bb341:
+  struct std____cxx11__list_double__std__allocator_double__* this342;
+  struct std___List_iterator_double_ __position343;
+  struct std___List_iterator_double_ __first344;
+  struct std___List_iterator_double_ __last345;
+  this342 = v337;
+  __position343 = v338;
+  __first344 = v339;
+  __last345 = v340;
+  struct std____cxx11__list_double__std__allocator_double__* t346 = this342;
+  struct std____detail___List_node_base* t347 = __position343._M_node;
+  struct std____detail___List_node_base* t348 = __first344._M_node;
+  struct std____detail___List_node_base* t349 = __last345._M_node;
+  std____detail___List_node_base___M_transfer(t347, t348, t349);
+  return;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEE11_M_dec_sizeEm
+void std____cxx11___List_base_double__std__allocator_double______M_dec_size(struct std____cxx11___List_base_double__std__allocator_double__* v350, unsigned long v351) {
+bb352:
+  struct std____cxx11___List_base_double__std__allocator_double__* this353;
+  unsigned long __n354;
+  this353 = v350;
+  __n354 = v351;
+  struct std____cxx11___List_base_double__std__allocator_double__* t355 = this353;
+  unsigned long t356 = __n354;
+  struct std____detail___List_size* base357 = (struct std____detail___List_size*)((char *)&(t355->_M_impl._M_node) + 16);
+  unsigned long t358 = base357->_M_size;
+  unsigned long b359 = t358 - t356;
+  base357->_M_size = b359;
+  return;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE6spliceESt20_List_const_iteratorIdEOS2_S4_
+void std____cxx11__list_double__std__allocator_double_____splice(struct std____cxx11__list_double__std__allocator_double__* v360, struct std___List_const_iterator_double_ v361, struct std____cxx11__list_double__std__allocator_double__* v362, struct std___List_const_iterator_double_ v363) {
+bb364:
+  struct std____cxx11__list_double__std__allocator_double__* this365;
+  struct std___List_const_iterator_double_ __position366;
+  struct std____cxx11__list_double__std__allocator_double__* __x367;
+  struct std___List_const_iterator_double_ __i368;
+  struct std___List_iterator_double_ __j369;
+  struct std___List_iterator_double_ agg_tmp0370;
+  struct std___List_iterator_double_ agg_tmp1371;
+  struct std___List_iterator_double_ agg_tmp2372;
+  this365 = v360;
+  __position366 = v361;
+  __x367 = v362;
+  __i368 = v363;
+  struct std____cxx11__list_double__std__allocator_double__* t373 = this365;
+  struct std___List_iterator_double_ r374 = std___List_const_iterator_double____M_const_cast___const(&__i368);
+  __j369 = r374;
+  struct std___List_iterator_double_* r375 = std___List_iterator_double___operator___3(&__j369);
+    _Bool r376 = std__operator___3(&__position366, &__i368);
+    _Bool ternary377;
+    if (r376) {
+      _Bool c378 = 1;
+      ternary377 = (_Bool)c378;
+    } else {
+      struct std___List_const_iterator_double_ ref_tmp0379;
+      std___List_const_iterator_double____List_const_iterator(&ref_tmp0379, &__j369);
+      _Bool r380 = std__operator___3(&__position366, &ref_tmp0379);
+      ternary377 = (_Bool)r380;
+    }
+    if (ternary377) {
+      return;
+    }
+    struct std____cxx11__list_double__std__allocator_double__* t381 = __x367;
+    _Bool c382 = ((t373 != t381)) ? 1 : 0;
+    if (c382) {
+      struct std____cxx11__list_double__std__allocator_double__* t383 = __x367;
+      std____cxx11__list_double__std__allocator_double______M_check_equal_allocators(t373, t383);
+    }
+  struct std___List_iterator_double_ r384 = std___List_const_iterator_double____M_const_cast___const(&__position366);
+  agg_tmp0370 = r384;
+  struct std___List_iterator_double_ r385 = std___List_const_iterator_double____M_const_cast___const(&__i368);
+  agg_tmp1371 = r385;
+  agg_tmp2372 = __j369; // copy
+  struct std___List_iterator_double_ t386 = agg_tmp0370;
+  struct std___List_iterator_double_ t387 = agg_tmp1371;
+  struct std___List_iterator_double_ t388 = agg_tmp2372;
+  std____cxx11__list_double__std__allocator_double______M_transfer(t373, t386, t387, t388);
+  if (__cir_exc_active) {
+    return;
+  }
+  struct std____cxx11___List_base_double__std__allocator_double__* base389 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t373 + 0);
+  unsigned long c390 = 1;
+  std____cxx11___List_base_double__std__allocator_double______M_inc_size(base389, c390);
+  if (__cir_exc_active) {
+    return;
+  }
+  struct std____cxx11__list_double__std__allocator_double__* t391 = __x367;
+  struct std____cxx11___List_base_double__std__allocator_double__* base392 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t391 + 0);
+  unsigned long c393 = 1;
+  std____cxx11___List_base_double__std__allocator_double______M_dec_size(base392, c393);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE6spliceESt20_List_const_iteratorIdERS2_S4_
+void std____cxx11__list_double__std__allocator_double_____splice_2(struct std____cxx11__list_double__std__allocator_double__* v394, struct std___List_const_iterator_double_ v395, struct std____cxx11__list_double__std__allocator_double__* v396, struct std___List_const_iterator_double_ v397) {
+bb398:
+  struct std____cxx11__list_double__std__allocator_double__* this399;
+  struct std___List_const_iterator_double_ __position400;
+  struct std____cxx11__list_double__std__allocator_double__* __x401;
+  struct std___List_const_iterator_double_ __i402;
+  struct std___List_const_iterator_double_ agg_tmp0403;
+  struct std___List_const_iterator_double_ agg_tmp1404;
+  this399 = v394;
+  __position400 = v395;
+  __x401 = v396;
+  __i402 = v397;
+  struct std____cxx11__list_double__std__allocator_double__* t405 = this399;
+  agg_tmp0403 = __position400; // copy
+  struct std____cxx11__list_double__std__allocator_double__* t406 = __x401;
+  agg_tmp1404 = __i402; // copy
+  struct std___List_const_iterator_double_ t407 = agg_tmp0403;
+  struct std___List_const_iterator_double_ t408 = agg_tmp1404;
+  std____cxx11__list_double__std__allocator_double_____splice(t405, t407, t406, t408);
+  return;
+}
+
+// function: _ZNSt20_List_const_iteratorIdEC2ERKSt14_List_iteratorIdE
+void std___List_const_iterator_double____List_const_iterator(struct std___List_const_iterator_double_* v409, struct std___List_iterator_double_* v410) {
+bb411:
+  struct std___List_const_iterator_double_* this412;
+  struct std___List_iterator_double_* __x413;
+  this412 = v409;
+  __x413 = v410;
+  struct std___List_const_iterator_double_* t414 = this412;
+  struct std___List_iterator_double_* t415 = __x413;
+  struct std____detail___List_node_base* t416 = t415->_M_node;
+  t414->_M_node = t416;
+  return;
+}
+
+// function: _ZNSt14_List_iteratorIdEaSERKS0_
+struct std___List_iterator_double_* std___List_iterator_double___operator__2(struct std___List_iterator_double_* v417, struct std___List_iterator_double_* v418) {
+bb419:
+  struct std___List_iterator_double_* this420;
+  struct std___List_iterator_double_* unnamed421;
+  struct std___List_iterator_double_* __retval422;
+  this420 = v417;
+  unnamed421 = v418;
+  struct std___List_iterator_double_* t423 = this420;
+  struct std___List_iterator_double_* t424 = unnamed421;
+  struct std____detail___List_node_base* t425 = t424->_M_node;
+  t423->_M_node = t425;
+  __retval422 = t423;
+  struct std___List_iterator_double_* t426 = __retval422;
+  return t426;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE6uniqueEv
+unsigned long std____cxx11__list_double__std__allocator_double_____unique(struct std____cxx11__list_double__std__allocator_double__* v427) {
+bb428:
+  struct std____cxx11__list_double__std__allocator_double__* this429;
+  unsigned long __retval430;
+  struct std___List_iterator_double_ __first431;
+  struct std___List_iterator_double_ __last432;
+  struct std____cxx11__list_double__std__allocator_double__ __to_destroy433;
+  struct std__allocator_double_ ref_tmp0434;
+  struct std___List_iterator_double_ __next435;
+  this429 = v427;
+  struct std____cxx11__list_double__std__allocator_double__* t436 = this429;
+  struct std___List_iterator_double_ r437 = std____cxx11__list_double__std__allocator_double_____begin(t436);
+  __first431 = r437;
+  struct std___List_iterator_double_ r438 = std____cxx11__list_double__std__allocator_double_____end(t436);
+  __last432 = r438;
+    _Bool r439 = std__operator___2(&__first431, &__last432);
+    if (r439) {
+      unsigned long c440 = 0;
+      __retval430 = c440;
+      unsigned long t441 = __retval430;
+      return t441;
+    }
+  struct std__allocator_double_ r442 = std____cxx11__list_double__std__allocator_double_____get_allocator___const(t436);
+  ref_tmp0434 = r442;
+    std____cxx11__list_double__std__allocator_double_____list(&__to_destroy433, &ref_tmp0434);
+  {
+    std__allocator_double____allocator(&ref_tmp0434);
+  }
+    __next435 = __first431; // copy
+      while (1) {
+        struct std___List_iterator_double_* r443 = std___List_iterator_double___operator___3(&__next435);
+        _Bool r444 = std__operator___2(r443, &__last432);
+        _Bool u445 = !r444;
+        if (!u445) break;
+            double* r446 = std___List_iterator_double___operator____const(&__first431);
+            double t447 = *r446;
+            double* r448 = std___List_iterator_double___operator____const(&__next435);
+            double t449 = *r448;
+            _Bool c450 = ((t447 == t449)) ? 1 : 0;
+            if (c450) {
+              struct std___List_const_iterator_double_ agg_tmp0451;
+              struct std___List_iterator_double_ ref_tmp1452;
+              struct std___List_const_iterator_double_ agg_tmp1453;
+              struct std___List_iterator_double_ r454 = std____cxx11__list_double__std__allocator_double_____begin(&__to_destroy433);
+              ref_tmp1452 = r454;
+              std___List_const_iterator_double____List_const_iterator(&agg_tmp0451, &ref_tmp1452);
+              std___List_const_iterator_double____List_const_iterator(&agg_tmp1453, &__next435);
+              struct std___List_const_iterator_double_ t455 = agg_tmp0451;
+              struct std___List_const_iterator_double_ t456 = agg_tmp1453;
+              std____cxx11__list_double__std__allocator_double_____splice_2(&__to_destroy433, t455, t436, t456);
+            } else {
+              struct std___List_iterator_double_* r457 = std___List_iterator_double___operator__2(&__first431, &__next435);
+            }
+          struct std___List_iterator_double_* r458 = std___List_iterator_double___operator__2(&__next435, &__first431);
+      }
+    unsigned long r459 = std____cxx11__list_double__std__allocator_double_____size___const(&__to_destroy433);
+    __retval430 = r459;
+    unsigned long t460 = __retval430;
+    unsigned long ret_val461 = t460;
+    {
+      std____cxx11__list_double__std__allocator_double______list(&__to_destroy433);
+    }
+    return ret_val461;
+  abort();
+}
+
+// function: _ZNKSt7__cxx1110_List_baseIdSaIdEE11_M_get_sizeEv
+unsigned long std____cxx11___List_base_double__std__allocator_double______M_get_size___const(struct std____cxx11___List_base_double__std__allocator_double__* v462) {
+bb463:
+  struct std____cxx11___List_base_double__std__allocator_double__* this464;
+  unsigned long __retval465;
+  this464 = v462;
+  struct std____cxx11___List_base_double__std__allocator_double__* t466 = this464;
+  struct std____detail___List_size* base467 = (struct std____detail___List_size*)((char *)&(t466->_M_impl._M_node) + 16);
+  unsigned long t468 = base467->_M_size;
+  __retval465 = t468;
+  unsigned long t469 = __retval465;
+  return t469;
+}
+
+// function: _ZNKSt7__cxx114listIdSaIdEE4sizeEv
+unsigned long std____cxx11__list_double__std__allocator_double_____size___const(struct std____cxx11__list_double__std__allocator_double__* v470) {
+bb471:
+  struct std____cxx11__list_double__std__allocator_double__* this472;
+  unsigned long __retval473;
+  this472 = v470;
+  struct std____cxx11__list_double__std__allocator_double__* t474 = this472;
+  struct std____cxx11___List_base_double__std__allocator_double__* base475 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t474 + 0);
+  unsigned long r476 = std____cxx11___List_base_double__std__allocator_double______M_get_size___const(base475);
+  if (__cir_exc_active) {
+    unsigned long __cir_eh_ret = (unsigned long)0;
+    return __cir_eh_ret;
+  }
+  __retval473 = r476;
+  unsigned long t477 = __retval473;
+  return t477;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE5beginEv
+struct std___List_iterator_double_ std____cxx11__list_double__std__allocator_double_____begin(struct std____cxx11__list_double__std__allocator_double__* v478) {
+bb479:
+  struct std____cxx11__list_double__std__allocator_double__* this480;
+  struct std___List_iterator_double_ __retval481;
+  this480 = v478;
+  struct std____cxx11__list_double__std__allocator_double__* t482 = this480;
+  struct std____cxx11___List_base_double__std__allocator_double__* base483 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t482 + 0);
+  struct std____detail___List_node_base* base484 = (struct std____detail___List_node_base*)((char *)&(base483->_M_impl._M_node) + 0);
+  struct std____detail___List_node_base* t485 = base484->_M_next;
+  std___List_iterator_double____List_iterator(&__retval481, t485);
+  struct std___List_iterator_double_ t486 = __retval481;
+  return t486;
+}
+
+// function: _ZNKSt14_List_iteratorIdEdeEv
+double* std___List_iterator_double___operator____const(struct std___List_iterator_double_* v487) {
+bb488:
+  struct std___List_iterator_double_* this489;
+  double* __retval490;
+  this489 = v487;
+  struct std___List_iterator_double_* t491 = this489;
+  struct std____detail___List_node_base* t492 = t491->_M_node;
+  struct std___List_node_double_* derived493 = ((t492) ? (struct std___List_node_double_*)((char *)t492 - 0) : (struct std___List_node_double_*)0);
+  double* r494 = std___List_node_double____M_valptr(derived493);
+  if (__cir_exc_active) {
+    double* __cir_eh_ret = (double*)0;
+    return __cir_eh_ret;
+  }
+  __retval490 = r494;
+  double* t495 = __retval490;
+  return t495;
+}
+
+// function: _ZNSt14_List_iteratorIdEppEi
+struct std___List_iterator_double_ std___List_iterator_double___operator___2(struct std___List_iterator_double_* v496, int v497) {
+bb498:
+  struct std___List_iterator_double_* this499;
+  int unnamed500;
+  struct std___List_iterator_double_ __retval501;
+  this499 = v496;
+  unnamed500 = v497;
+  struct std___List_iterator_double_* t502 = this499;
+  __retval501 = *t502; // copy
+  struct std____detail___List_node_base* t503 = t502->_M_node;
+  struct std____detail___List_node_base* t504 = t503->_M_next;
+  t502->_M_node = t504;
+  struct std___List_iterator_double_ t505 = __retval501;
+  return t505;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE6uniqueIPFbddEEEmT_
+unsigned long unsigned_long_std____cxx11__list_double__std__allocator_double_____unique_bool_____double__double___bool____(struct std____cxx11__list_double__std__allocator_double__* v506, void* v507) {
+bb508:
+  struct std____cxx11__list_double__std__allocator_double__* this509;
+  void* __binary_pred510;
+  unsigned long __retval511;
+  struct std___List_iterator_double_ __first512;
+  struct std___List_iterator_double_ __last513;
+  struct std____cxx11__list_double__std__allocator_double__ __to_destroy514;
+  struct std__allocator_double_ ref_tmp0515;
+  struct std___List_iterator_double_ __next516;
+  this509 = v506;
+  __binary_pred510 = v507;
+  struct std____cxx11__list_double__std__allocator_double__* t517 = this509;
+  struct std___List_iterator_double_ r518 = std____cxx11__list_double__std__allocator_double_____begin(t517);
+  __first512 = r518;
+  struct std___List_iterator_double_ r519 = std____cxx11__list_double__std__allocator_double_____end(t517);
+  __last513 = r519;
+    _Bool r520 = std__operator___2(&__first512, &__last513);
+    if (r520) {
+      unsigned long c521 = 0;
+      __retval511 = c521;
+      unsigned long t522 = __retval511;
+      return t522;
+    }
+  struct std__allocator_double_ r523 = std____cxx11__list_double__std__allocator_double_____get_allocator___const(t517);
+  ref_tmp0515 = r523;
+    std____cxx11__list_double__std__allocator_double_____list(&__to_destroy514, &ref_tmp0515);
+  {
+    std__allocator_double____allocator(&ref_tmp0515);
+  }
+    __next516 = __first512; // copy
+      while (1) {
+        struct std___List_iterator_double_* r524 = std___List_iterator_double___operator___3(&__next516);
+        _Bool r525 = std__operator___2(r524, &__last513);
+        _Bool u526 = !r525;
+        if (!u526) break;
+            void* t527 = __binary_pred510;
+            double* r528 = std___List_iterator_double___operator____const(&__first512);
+            double t529 = *r528;
+            double* r530 = std___List_iterator_double___operator____const(&__next516);
+            double t531 = *r530;
+            _Bool r532 = ((_Bool (*)(double, double))t527)(t529, t531);
+            if (__cir_exc_active) {
+              {
+                std____cxx11__list_double__std__allocator_double______list(&__to_destroy514);
+              }
+              unsigned long __cir_eh_ret = (unsigned long)0;
+              return __cir_eh_ret;
+            }
+            if (r532) {
+              struct std___List_const_iterator_double_ agg_tmp0533;
+              struct std___List_iterator_double_ ref_tmp1534;
+              struct std___List_const_iterator_double_ agg_tmp1535;
+              struct std___List_iterator_double_ r536 = std____cxx11__list_double__std__allocator_double_____begin(&__to_destroy514);
+              ref_tmp1534 = r536;
+              std___List_const_iterator_double____List_const_iterator(&agg_tmp0533, &ref_tmp1534);
+              std___List_const_iterator_double____List_const_iterator(&agg_tmp1535, &__next516);
+              struct std___List_const_iterator_double_ t537 = agg_tmp0533;
+              struct std___List_const_iterator_double_ t538 = agg_tmp1535;
+              std____cxx11__list_double__std__allocator_double_____splice_2(&__to_destroy514, t537, t517, t538);
+            } else {
+              struct std___List_iterator_double_* r539 = std___List_iterator_double___operator__2(&__first512, &__next516);
+            }
+          struct std___List_iterator_double_* r540 = std___List_iterator_double___operator__2(&__next516, &__first512);
+      }
+    unsigned long r541 = std____cxx11__list_double__std__allocator_double_____size___const(&__to_destroy514);
+    __retval511 = r541;
+    unsigned long t542 = __retval511;
+    unsigned long ret_val543 = t542;
+    {
+      std____cxx11__list_double__std__allocator_double______list(&__to_destroy514);
+    }
+    return ret_val543;
+  abort();
+}
+
+// function: _ZNSt14_List_iteratorIdEaSEOS0_
+struct std___List_iterator_double_* std___List_iterator_double___operator_(struct std___List_iterator_double_* v544, struct std___List_iterator_double_* v545) {
+bb546:
+  struct std___List_iterator_double_* this547;
+  struct std___List_iterator_double_* unnamed548;
+  struct std___List_iterator_double_* __retval549;
+  this547 = v544;
+  unnamed548 = v545;
+  struct std___List_iterator_double_* t550 = this547;
+  struct std___List_iterator_double_* t551 = unnamed548;
+  struct std____detail___List_node_base* t552 = t551->_M_node;
+  t550->_M_node = t552;
+  __retval549 = t550;
+  struct std___List_iterator_double_* t553 = __retval549;
+  return t553;
+}
+
+// function: _ZN7is_nearclEdd
+_Bool is_near__operator__(struct is_near* v554, double v555, double v556) {
+bb557:
+  struct is_near* this558;
+  double first559;
+  double second560;
+  _Bool __retval561;
+  this558 = v554;
+  first559 = v555;
+  second560 = v556;
+  struct is_near* t562 = this558;
+  double t563 = first559;
+  double t564 = second560;
+  double b565 = t563 - t564;
+  double fabs566 = __builtin_fabs(b565);
+  double c567 = 0x1.4p2;
+  _Bool c568 = ((fabs566 < c567)) ? 1 : 0;
+  __retval561 = c568;
+  _Bool t569 = __retval561;
+  return t569;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE6uniqueI7is_nearEEmT_
+unsigned long unsigned_long_std____cxx11__list_double__std__allocator_double_____unique_is_near_(struct std____cxx11__list_double__std__allocator_double__* v570, struct is_near v571) {
+bb572:
+  struct std____cxx11__list_double__std__allocator_double__* this573;
+  struct is_near __binary_pred574;
+  unsigned long __retval575;
+  struct std___List_iterator_double_ __first576;
+  struct std___List_iterator_double_ __last577;
+  struct std____cxx11__list_double__std__allocator_double__ __to_destroy578;
+  struct std__allocator_double_ ref_tmp0579;
+  struct std___List_iterator_double_ __next580;
+  this573 = v570;
+  __binary_pred574 = v571;
+  struct std____cxx11__list_double__std__allocator_double__* t581 = this573;
+  struct std___List_iterator_double_ r582 = std____cxx11__list_double__std__allocator_double_____begin(t581);
+  __first576 = r582;
+  struct std___List_iterator_double_ r583 = std____cxx11__list_double__std__allocator_double_____end(t581);
+  __last577 = r583;
+    _Bool r584 = std__operator___2(&__first576, &__last577);
+    if (r584) {
+      unsigned long c585 = 0;
+      __retval575 = c585;
+      unsigned long t586 = __retval575;
+      return t586;
+    }
+  struct std__allocator_double_ r587 = std____cxx11__list_double__std__allocator_double_____get_allocator___const(t581);
+  ref_tmp0579 = r587;
+    std____cxx11__list_double__std__allocator_double_____list(&__to_destroy578, &ref_tmp0579);
+  {
+    std__allocator_double____allocator(&ref_tmp0579);
+  }
+    __next580 = __first576; // copy
+      while (1) {
+        struct std___List_iterator_double_* r588 = std___List_iterator_double___operator___3(&__next580);
+        _Bool r589 = std__operator___2(r588, &__last577);
+        _Bool u590 = !r589;
+        if (!u590) break;
+            double* r591 = std___List_iterator_double___operator____const(&__first576);
+            double t592 = *r591;
+            double* r593 = std___List_iterator_double___operator____const(&__next580);
+            double t594 = *r593;
+            _Bool r595 = is_near__operator__(&__binary_pred574, t592, t594);
+            if (__cir_exc_active) {
+              {
+                std____cxx11__list_double__std__allocator_double______list(&__to_destroy578);
+              }
+              unsigned long __cir_eh_ret = (unsigned long)0;
+              return __cir_eh_ret;
+            }
+            if (r595) {
+              struct std___List_const_iterator_double_ agg_tmp0596;
+              struct std___List_iterator_double_ ref_tmp1597;
+              struct std___List_const_iterator_double_ agg_tmp1598;
+              struct std___List_iterator_double_ r599 = std____cxx11__list_double__std__allocator_double_____begin(&__to_destroy578);
+              ref_tmp1597 = r599;
+              std___List_const_iterator_double____List_const_iterator(&agg_tmp0596, &ref_tmp1597);
+              std___List_const_iterator_double____List_const_iterator(&agg_tmp1598, &__next580);
+              struct std___List_const_iterator_double_ t600 = agg_tmp0596;
+              struct std___List_const_iterator_double_ t601 = agg_tmp1598;
+              std____cxx11__list_double__std__allocator_double_____splice_2(&__to_destroy578, t600, t581, t601);
+            } else {
+              struct std___List_iterator_double_* r602 = std___List_iterator_double___operator__2(&__first576, &__next580);
+            }
+          struct std___List_iterator_double_* r603 = std___List_iterator_double___operator__2(&__next580, &__first576);
+      }
+    unsigned long r604 = std____cxx11__list_double__std__allocator_double_____size___const(&__to_destroy578);
+    __retval575 = r604;
+    unsigned long t605 = __retval575;
+    unsigned long ret_val606 = t605;
+    {
+      std____cxx11__list_double__std__allocator_double______list(&__to_destroy578);
+    }
+    return ret_val606;
+  abort();
+}
+
+// function: _ZStorSt12_Ios_IostateS_
+int std__operator_(int v607, int v608) {
+bb609:
+  int __a610;
+  int __b611;
+  int __retval612;
+  __a610 = v607;
+  __b611 = v608;
+  int t613 = __a610;
+  int t614 = __b611;
+  int b615 = t613 | t614;
+  __retval612 = b615;
+  int t616 = __retval612;
+  return t616;
+}
+
+// function: _ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
+int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* v617) {
+bb618:
+  struct std__basic_ios_char__std__char_traits_char__* this619;
+  int __retval620;
+  this619 = v617;
+  struct std__basic_ios_char__std__char_traits_char__* t621 = this619;
+  struct std__ios_base* base622 = (struct std__ios_base*)((char *)t621 + 0);
+  int t623 = base622->_M_streambuf_state;
+  __retval620 = t623;
+  int t624 = __retval620;
+  return t624;
+}
+
+// function: _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* v625, int v626) {
+bb627:
+  struct std__basic_ios_char__std__char_traits_char__* this628;
+  int __state629;
+  this628 = v625;
+  __state629 = v626;
+  struct std__basic_ios_char__std__char_traits_char__* t630 = this628;
+  int r631 = std__basic_ios_char__std__char_traits_char_____rdstate___const(t630);
+  if (__cir_exc_active) {
+    return;
+  }
+  int t632 = __state629;
+  int r633 = std__operator_(r631, t632);
+  std__basic_ios_char__std__char_traits_char_____clear(t630, r633);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZN9__gnu_cxx11char_traitsIcE2eqERKcS3_
+_Bool __gnu_cxx__char_traits_char___eq(char* v634, char* v635) {
+bb636:
+  char* __c1637;
+  char* __c2638;
+  _Bool __retval639;
+  __c1637 = v634;
+  __c2638 = v635;
+  char* t640 = __c1637;
+  char t641 = *t640;
+  int cast642 = (int)t641;
+  char* t643 = __c2638;
+  char t644 = *t643;
+  int cast645 = (int)t644;
+  _Bool c646 = ((cast642 == cast645)) ? 1 : 0;
+  __retval639 = c646;
+  _Bool t647 = __retval639;
+  return t647;
+}
+
+// function: _ZN9__gnu_cxx11char_traitsIcE6lengthEPKc
+unsigned long __gnu_cxx__char_traits_char___length(char* v648) {
+bb649:
+  char* __p650;
+  unsigned long __retval651;
+  unsigned long __i652;
+  __p650 = v648;
+  unsigned long c653 = 0;
+  __i652 = c653;
+    char ref_tmp0654;
+    while (1) {
+      unsigned long t655 = __i652;
+      char* t656 = __p650;
+      char* ptr657 = &(t656)[t655];
+      char c658 = 0;
+      ref_tmp0654 = c658;
+      _Bool r659 = __gnu_cxx__char_traits_char___eq(ptr657, &ref_tmp0654);
+      if (__cir_exc_active) {
+        unsigned long __cir_eh_ret = (unsigned long)0;
+        return __cir_eh_ret;
+      }
+      _Bool u660 = !r659;
+      if (!u660) break;
+      unsigned long t661 = __i652;
+      unsigned long u662 = t661 + 1;
+      __i652 = u662;
+    }
+  unsigned long t663 = __i652;
+  __retval651 = t663;
+  unsigned long t664 = __retval651;
+  return t664;
+}
+
+// function: _ZNSt11char_traitsIcE6lengthEPKc
+unsigned long std__char_traits_char___length(char* v665) {
+bb666:
+  char* __s667;
+  unsigned long __retval668;
+  __s667 = v665;
+    _Bool r669 = std____is_constant_evaluated();
+    if (r669) {
+      char* t670 = __s667;
+      unsigned long r671 = __gnu_cxx__char_traits_char___length(t670);
+      if (__cir_exc_active) {
+        unsigned long __cir_eh_ret = (unsigned long)0;
+        return __cir_eh_ret;
+      }
+      __retval668 = r671;
+      unsigned long t672 = __retval668;
+      return t672;
+    }
+  char* t673 = __s667;
+  unsigned long r674 = strlen(t673);
+  __retval668 = r674;
+  unsigned long t675 = __retval668;
+  return t675;
+}
+
+// function: _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v676, char* v677) {
+bb678:
+  struct std__basic_ostream_char__std__char_traits_char__* __out679;
+  char* __s680;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval681;
+  __out679 = v676;
+  __s680 = v677;
+    char* t682 = __s680;
+    _Bool cast683 = (_Bool)t682;
+    _Bool u684 = !cast683;
+    if (u684) {
+      struct std__basic_ostream_char__std__char_traits_char__* t685 = __out679;
+      void** v686 = (void**)t685;
+      void* v687 = *((void**)v686);
+      unsigned char* cast688 = (unsigned char*)v687;
+      long c689 = -24;
+      unsigned char* ptr690 = &(cast688)[c689];
+      long* cast691 = (long*)ptr690;
+      long t692 = *cast691;
+      unsigned char* cast693 = (unsigned char*)t685;
+      unsigned char* ptr694 = &(cast693)[t692];
+      struct std__basic_ostream_char__std__char_traits_char__* cast695 = (struct std__basic_ostream_char__std__char_traits_char__*)ptr694;
+      struct std__basic_ios_char__std__char_traits_char__* cast696 = (struct std__basic_ios_char__std__char_traits_char__*)cast695;
+      int t697 = _ZNSt8ios_base6badbitE_const;
+      std__basic_ios_char__std__char_traits_char_____setstate(cast696, t697);
+      if (__cir_exc_active) {
+        struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+        return __cir_eh_ret;
+      }
+    } else {
+      struct std__basic_ostream_char__std__char_traits_char__* t698 = __out679;
+      char* t699 = __s680;
+      char* t700 = __s680;
+      unsigned long r701 = std__char_traits_char___length(t700);
+      if (__cir_exc_active) {
+        struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+        return __cir_eh_ret;
+      }
+      long cast702 = (long)r701;
+      struct std__basic_ostream_char__std__char_traits_char__* r703 = std__basic_ostream_char__std__char_traits_char_____std____ostream_insert_char__std__char_traits_char___(t698, t699, cast702);
+      if (__cir_exc_active) {
+        struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+        return __cir_eh_ret;
+      }
+    }
+  struct std__basic_ostream_char__std__char_traits_char__* t704 = __out679;
+  __retval681 = t704;
+  struct std__basic_ostream_char__std__char_traits_char__* t705 = __retval681;
+  return t705;
+}
+
+// function: _ZSteqRKSt14_List_iteratorIdES2_
+_Bool std__operator___2(struct std___List_iterator_double_* v706, struct std___List_iterator_double_* v707) {
+bb708:
+  struct std___List_iterator_double_* __x709;
+  struct std___List_iterator_double_* __y710;
+  _Bool __retval711;
+  __x709 = v706;
+  __y710 = v707;
+  struct std___List_iterator_double_* t712 = __x709;
+  struct std____detail___List_node_base* t713 = t712->_M_node;
+  struct std___List_iterator_double_* t714 = __y710;
+  struct std____detail___List_node_base* t715 = t714->_M_node;
+  _Bool c716 = ((t713 == t715)) ? 1 : 0;
+  __retval711 = c716;
+  _Bool t717 = __retval711;
+  return t717;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE3endEv
+struct std___List_iterator_double_ std____cxx11__list_double__std__allocator_double_____end(struct std____cxx11__list_double__std__allocator_double__* v718) {
+bb719:
+  struct std____cxx11__list_double__std__allocator_double__* this720;
+  struct std___List_iterator_double_ __retval721;
+  this720 = v718;
+  struct std____cxx11__list_double__std__allocator_double__* t722 = this720;
+  struct std____cxx11___List_base_double__std__allocator_double__* base723 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t722 + 0);
+  struct std____detail___List_node_base* r724 = std____detail___List_node_header___M_base(&base723->_M_impl._M_node);
+  if (__cir_exc_active) {
+    struct std___List_iterator_double_ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  std___List_iterator_double____List_iterator(&__retval721, r724);
+  struct std___List_iterator_double_ t725 = __retval721;
+  return t725;
+}
+
+// function: _ZNSolsEd
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator__(struct std__basic_ostream_char__std__char_traits_char__* v726, double v727) {
+bb728:
+  struct std__basic_ostream_char__std__char_traits_char__* this729;
+  double __f730;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval731;
+  this729 = v726;
+  __f730 = v727;
+  struct std__basic_ostream_char__std__char_traits_char__* t732 = this729;
+  double t733 = __f730;
+  struct std__basic_ostream_char__std__char_traits_char__* r734 = std__ostream__std__ostream___M_insert_double_(t732, t733);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  __retval731 = r734;
+  struct std__basic_ostream_char__std__char_traits_char__* t735 = __retval731;
+  return t735;
+}
+
+// function: _ZNSt14_List_iteratorIdEppEv
+struct std___List_iterator_double_* std___List_iterator_double___operator___3(struct std___List_iterator_double_* v736) {
+bb737:
+  struct std___List_iterator_double_* this738;
+  struct std___List_iterator_double_* __retval739;
+  this738 = v736;
+  struct std___List_iterator_double_* t740 = this738;
+  struct std____detail___List_node_base* t741 = t740->_M_node;
+  struct std____detail___List_node_base* t742 = t741->_M_next;
+  t740->_M_node = t742;
+  __retval739 = t740;
+  struct std___List_iterator_double_* t743 = __retval739;
+  return t743;
+}
+
+// function: _ZNSolsEPFRSoS_E
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* v744, void* v745) {
+bb746:
+  struct std__basic_ostream_char__std__char_traits_char__* this747;
+  void* __pf748;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval749;
+  this747 = v744;
+  __pf748 = v745;
+  struct std__basic_ostream_char__std__char_traits_char__* t750 = this747;
+  void* t751 = __pf748;
+  struct std__basic_ostream_char__std__char_traits_char__* r752 = ((struct std__basic_ostream_char__std__char_traits_char__* (*)(struct std__basic_ostream_char__std__char_traits_char__*))t751)(t750);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  __retval749 = r752;
+  struct std__basic_ostream_char__std__char_traits_char__* t753 = __retval749;
+  return t753;
+}
+
+// function: _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v754) {
+bb755:
+  struct std__basic_ostream_char__std__char_traits_char__* __os756;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval757;
+  __os756 = v754;
+  struct std__basic_ostream_char__std__char_traits_char__* t758 = __os756;
+  struct std__basic_ostream_char__std__char_traits_char__* r759 = std__ostream__flush(t758);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  __retval757 = r759;
+  struct std__basic_ostream_char__std__char_traits_char__* t760 = __retval757;
+  return t760;
+}
+
+// function: _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
+struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* v761) {
+bb762:
+  struct std__ctype_char_* __f763;
+  struct std__ctype_char_* __retval764;
+  __f763 = v761;
+    struct std__ctype_char_* t765 = __f763;
+    _Bool cast766 = (_Bool)t765;
+    _Bool u767 = !cast766;
+    if (u767) {
+      std____throw_bad_cast();
+      if (__cir_exc_active) {
+        struct std__ctype_char_* __cir_eh_ret = (struct std__ctype_char_*)0;
+        return __cir_eh_ret;
+      }
+    }
+  struct std__ctype_char_* t768 = __f763;
+  __retval764 = t768;
+  struct std__ctype_char_* t769 = __retval764;
+  return t769;
+}
+
+// function: _ZNKSt5ctypeIcE5widenEc
+char std__ctype_char___widen_char__const(struct std__ctype_char_* v770, char v771) {
+bb772:
+  struct std__ctype_char_* this773;
+  char __c774;
+  char __retval775;
+  this773 = v770;
+  __c774 = v771;
+  struct std__ctype_char_* t776 = this773;
+    char t777 = t776->_M_widen_ok;
+    _Bool cast778 = (_Bool)t777;
+    if (cast778) {
+      char t779 = __c774;
+      unsigned char cast780 = (unsigned char)t779;
+      unsigned long cast781 = (unsigned long)cast780;
+      char t782 = t776->_M_widen[cast781];
+      __retval775 = t782;
+      char t783 = __retval775;
+      return t783;
+    }
+  std__ctype_char____M_widen_init___const(t776);
+  if (__cir_exc_active) {
+    char __cir_eh_ret = (char)0;
+    return __cir_eh_ret;
+  }
+  char t784 = __c774;
+  void** v785 = (void**)t776;
+  void* v786 = *((void**)v785);
+  char vcall789 = (char)__VERIFIER_virtual_call_char_char(t776, 6, t784);
+  if (__cir_exc_active) {
+    char __cir_eh_ret = (char)0;
+    return __cir_eh_ret;
+  }
+  __retval775 = vcall789;
+  char t790 = __retval775;
+  return t790;
+}
+
+// function: _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* v791, char v792) {
+bb793:
+  struct std__basic_ios_char__std__char_traits_char__* this794;
+  char __c795;
+  char __retval796;
+  this794 = v791;
+  __c795 = v792;
+  struct std__basic_ios_char__std__char_traits_char__* t797 = this794;
+  struct std__ctype_char_* t798 = t797->_M_ctype;
+  struct std__ctype_char_* r799 = std__ctype_char__const__std____check_facet_std__ctype_char___(t798);
+  if (__cir_exc_active) {
+    char __cir_eh_ret = (char)0;
+    return __cir_eh_ret;
+  }
+  char t800 = __c795;
+  char r801 = std__ctype_char___widen_char__const(r799, t800);
+  if (__cir_exc_active) {
+    char __cir_eh_ret = (char)0;
+    return __cir_eh_ret;
+  }
+  __retval796 = r801;
+  char t802 = __retval796;
+  return t802;
+}
+
+// function: _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v803) {
+bb804:
+  struct std__basic_ostream_char__std__char_traits_char__* __os805;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval806;
+  __os805 = v803;
+  struct std__basic_ostream_char__std__char_traits_char__* t807 = __os805;
+  struct std__basic_ostream_char__std__char_traits_char__* t808 = __os805;
+  void** v809 = (void**)t808;
+  void* v810 = *((void**)v809);
+  unsigned char* cast811 = (unsigned char*)v810;
+  long c812 = -24;
+  unsigned char* ptr813 = &(cast811)[c812];
+  long* cast814 = (long*)ptr813;
+  long t815 = *cast814;
+  unsigned char* cast816 = (unsigned char*)t808;
+  unsigned char* ptr817 = &(cast816)[t815];
+  struct std__basic_ostream_char__std__char_traits_char__* cast818 = (struct std__basic_ostream_char__std__char_traits_char__*)ptr817;
+  struct std__basic_ios_char__std__char_traits_char__* cast819 = (struct std__basic_ios_char__std__char_traits_char__*)cast818;
+  char c820 = 10;
+  char r821 = std__basic_ios_char__std__char_traits_char_____widen_char__const(cast819, c820);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  struct std__basic_ostream_char__std__char_traits_char__* r822 = std__ostream__put(t807, r821);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  struct std__basic_ostream_char__std__char_traits_char__* r823 = std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(r822);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  __retval806 = r823;
+  struct std__basic_ostream_char__std__char_traits_char__* t824 = __retval806;
+  return t824;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEED2Ev
+void std____cxx11__list_double__std__allocator_double______list(struct std____cxx11__list_double__std__allocator_double__* v825) {
+bb826:
+  struct std____cxx11__list_double__std__allocator_double__* this827;
+  this827 = v825;
+  struct std____cxx11__list_double__std__allocator_double__* t828 = this827;
+  {
+    struct std____cxx11___List_base_double__std__allocator_double__* base829 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t828 + 0);
+    std____cxx11___List_base_double__std__allocator_double_______List_base(base829);
+  }
+  return;
+}
+
+// function: main
+int main() {
+bb830:
+  int __retval831;
+  double mydoubles832[10];
+  struct std____cxx11__list_double__std__allocator_double__ mylist833;
+  struct std__allocator_double_ ref_tmp0834;
+  struct std___List_iterator_double_ it835;
+  struct std___List_iterator_double_ agg_tmp0836;
+  struct std___List_iterator_double_ agg_tmp1837;
+  struct std___List_iterator_double_ agg_tmp2838;
+  struct std___List_iterator_double_ agg_tmp3839;
+  struct std___List_iterator_double_ agg_tmp4840;
+  struct std___List_iterator_double_ agg_tmp5841;
+  struct std___List_iterator_double_ agg_tmp6842;
+  struct std___List_iterator_double_ ref_tmp1843;
+  struct std___List_iterator_double_ agg_tmp7844;
+  struct std___List_iterator_double_ agg_tmp8845;
+  struct std___List_iterator_double_ agg_tmp9846;
+  struct std___List_iterator_double_ agg_tmp10847;
+  struct std___List_iterator_double_ agg_tmp11848;
+  struct std___List_iterator_double_ agg_tmp12849;
+  struct is_near agg_tmp13850;
+  struct std___List_iterator_double_ ref_tmp2851;
+  struct std___List_iterator_double_ agg_tmp14852;
+  struct std___List_iterator_double_ agg_tmp15853;
+  struct std___List_iterator_double_ agg_tmp16854;
+  int c855 = 0;
+  __retval831 = c855;
+  // array copy
+  __builtin_memcpy(mydoubles832, __const_main_mydoubles, (unsigned long)10 * sizeof(__const_main_mydoubles[0]));
+  double* cast856 = (double*)&(mydoubles832);
+  double* cast857 = (double*)&(mydoubles832);
+  int c858 = 10;
+  double* ptr859 = &(cast857)[c858];
+  std__allocator_double___allocator(&ref_tmp0834);
+    std____cxx11__list_double__std__allocator_double_____list_double___void_(&mylist833, cast856, ptr859, &ref_tmp0834);
+    if (__cir_exc_active) {
+      {
+        std__allocator_double____allocator(&ref_tmp0834);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+  {
+    std__allocator_double____allocator(&ref_tmp0834);
+  }
+    std____cxx11__list_double__std__allocator_double_____sort(&mylist833);
+    if (__cir_exc_active) {
+      {
+        std____cxx11__list_double__std__allocator_double______list(&mylist833);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    unsigned long r860 = std____cxx11__list_double__std__allocator_double_____unique(&mylist833);
+    if (__cir_exc_active) {
+      {
+        std____cxx11__list_double__std__allocator_double______list(&mylist833);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    unsigned long r861 = std____cxx11__list_double__std__allocator_double_____size___const(&mylist833);
+    unsigned long c862 = 8;
+    _Bool c863 = ((r861 == c862)) ? 1 : 0;
+    if (c863) {
+    } else {
+      char* cast864 = (char*)&(_str);
+      char* c865 = _str_1;
+      unsigned int c866 = 38;
+      char* cast867 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast864, c865, c866, cast867);
+    }
+    struct std___List_iterator_double_ r868 = std____cxx11__list_double__std__allocator_double_____begin(&mylist833);
+    it835 = r868;
+    double* r869 = std___List_iterator_double___operator____const(&it835);
+    double t870 = *r869;
+    double c871 = 0x1.5c28f5c28f5c3p1;
+    _Bool c872 = ((t870 == c871)) ? 1 : 0;
+    if (c872) {
+    } else {
+      char* cast873 = (char*)&(_str_2);
+      char* c874 = _str_1;
+      unsigned int c875 = 40;
+      char* cast876 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast873, c874, c875, cast876);
+    }
+    int c877 = 0;
+    struct std___List_iterator_double_ r878 = std___List_iterator_double___operator___2(&it835, c877);
+    agg_tmp0836 = r878;
+    double* r879 = std___List_iterator_double___operator____const(&it835);
+    double t880 = *r879;
+    double c881 = 0x1.91eb851eb851fp1;
+    _Bool c882 = ((t880 == c881)) ? 1 : 0;
+    if (c882) {
+    } else {
+      char* cast883 = (char*)&(_str_3);
+      char* c884 = _str_1;
+      unsigned int c885 = 41;
+      char* cast886 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast883, c884, c885, cast886);
+    }
+    int c887 = 0;
+    struct std___List_iterator_double_ r888 = std___List_iterator_double___operator___2(&it835, c887);
+    agg_tmp1837 = r888;
+    double* r889 = std___List_iterator_double___operator____const(&it835);
+    double t890 = *r889;
+    double c891 = 0x1.84ccccccccccdp3;
+    _Bool c892 = ((t890 == c891)) ? 1 : 0;
+    if (c892) {
+    } else {
+      char* cast893 = (char*)&(_str_4);
+      char* c894 = _str_1;
+      unsigned int c895 = 42;
+      char* cast896 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast893, c894, c895, cast896);
+    }
+    int c897 = 0;
+    struct std___List_iterator_double_ r898 = std___List_iterator_double___operator___2(&it835, c897);
+    agg_tmp2838 = r898;
+    double* r899 = std___List_iterator_double___operator____const(&it835);
+    double t900 = *r899;
+    double c901 = 0x1.98a3d70a3d70ap3;
+    _Bool c902 = ((t900 == c901)) ? 1 : 0;
+    if (c902) {
+    } else {
+      char* cast903 = (char*)&(_str_5);
+      char* c904 = _str_1;
+      unsigned int c905 = 43;
+      char* cast906 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast903, c904, c905, cast906);
+    }
+    int c907 = 0;
+    struct std___List_iterator_double_ r908 = std___List_iterator_double___operator___2(&it835, c907);
+    agg_tmp3839 = r908;
+    double* r909 = std___List_iterator_double___operator____const(&it835);
+    double t910 = *r909;
+    double c911 = 0x1.e99999999999ap3;
+    _Bool c912 = ((t910 == c911)) ? 1 : 0;
+    if (c912) {
+    } else {
+      char* cast913 = (char*)&(_str_6);
+      char* c914 = _str_1;
+      unsigned int c915 = 44;
+      char* cast916 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast913, c914, c915, cast916);
+    }
+    int c917 = 0;
+    struct std___List_iterator_double_ r918 = std___List_iterator_double___operator___2(&it835, c917);
+    agg_tmp4840 = r918;
+    double* r919 = std___List_iterator_double___operator____const(&it835);
+    double t920 = *r919;
+    double c921 = 0x1.21p6;
+    _Bool c922 = ((t920 == c921)) ? 1 : 0;
+    if (c922) {
+    } else {
+      char* cast923 = (char*)&(_str_7);
+      char* c924 = _str_1;
+      unsigned int c925 = 45;
+      char* cast926 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast923, c924, c925, cast926);
+    }
+    int c927 = 0;
+    struct std___List_iterator_double_ r928 = std___List_iterator_double___operator___2(&it835, c927);
+    agg_tmp5841 = r928;
+    double* r929 = std___List_iterator_double___operator____const(&it835);
+    double t930 = *r929;
+    double c931 = 0x1.24p6;
+    _Bool c932 = ((t930 == c931)) ? 1 : 0;
+    if (c932) {
+    } else {
+      char* cast933 = (char*)&(_str_8);
+      char* c934 = _str_1;
+      unsigned int c935 = 46;
+      char* cast936 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast933, c934, c935, cast936);
+    }
+    int c937 = 0;
+    struct std___List_iterator_double_ r938 = std___List_iterator_double___operator___2(&it835, c937);
+    agg_tmp6842 = r938;
+    double* r939 = std___List_iterator_double___operator____const(&it835);
+    double t940 = *r939;
+    double c941 = 0x1.2566666666666p6;
+    _Bool c942 = ((t940 == c941)) ? 1 : 0;
+    if (c942) {
+    } else {
+      char* cast943 = (char*)&(_str_9);
+      char* c944 = _str_1;
+      unsigned int c945 = 47;
+      char* cast946 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast943, c944, c945, cast946);
+    }
+    unsigned long r947 = unsigned_long_std____cxx11__list_double__std__allocator_double_____unique_bool_____double__double___bool____(&mylist833, &same_integral_part);
+    if (__cir_exc_active) {
+      {
+        std____cxx11__list_double__std__allocator_double______list(&mylist833);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    struct std___List_iterator_double_ r948 = std____cxx11__list_double__std__allocator_double_____begin(&mylist833);
+    ref_tmp1843 = r948;
+    struct std___List_iterator_double_* r949 = std___List_iterator_double___operator_(&it835, &ref_tmp1843);
+    double* r950 = std___List_iterator_double___operator____const(&it835);
+    double t951 = *r950;
+    double c952 = 0x1.5c28f5c28f5c3p1;
+    _Bool c953 = ((t951 == c952)) ? 1 : 0;
+    if (c953) {
+    } else {
+      char* cast954 = (char*)&(_str_2);
+      char* c955 = _str_1;
+      unsigned int c956 = 52;
+      char* cast957 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast954, c955, c956, cast957);
+    }
+    int c958 = 0;
+    struct std___List_iterator_double_ r959 = std___List_iterator_double___operator___2(&it835, c958);
+    agg_tmp7844 = r959;
+    double* r960 = std___List_iterator_double___operator____const(&it835);
+    double t961 = *r960;
+    double c962 = 0x1.91eb851eb851fp1;
+    _Bool c963 = ((t961 == c962)) ? 1 : 0;
+    if (c963) {
+    } else {
+      char* cast964 = (char*)&(_str_3);
+      char* c965 = _str_1;
+      unsigned int c966 = 53;
+      char* cast967 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast964, c965, c966, cast967);
+    }
+    int c968 = 0;
+    struct std___List_iterator_double_ r969 = std___List_iterator_double___operator___2(&it835, c968);
+    agg_tmp8845 = r969;
+    double* r970 = std___List_iterator_double___operator____const(&it835);
+    double t971 = *r970;
+    double c972 = 0x1.84ccccccccccdp3;
+    _Bool c973 = ((t971 == c972)) ? 1 : 0;
+    if (c973) {
+    } else {
+      char* cast974 = (char*)&(_str_4);
+      char* c975 = _str_1;
+      unsigned int c976 = 54;
+      char* cast977 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast974, c975, c976, cast977);
+    }
+    int c978 = 0;
+    struct std___List_iterator_double_ r979 = std___List_iterator_double___operator___2(&it835, c978);
+    agg_tmp9846 = r979;
+    double* r980 = std___List_iterator_double___operator____const(&it835);
+    double t981 = *r980;
+    double c982 = 0x1.e99999999999ap3;
+    _Bool c983 = ((t981 == c982)) ? 1 : 0;
+    if (c983) {
+    } else {
+      char* cast984 = (char*)&(_str_6);
+      char* c985 = _str_1;
+      unsigned int c986 = 55;
+      char* cast987 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast984, c985, c986, cast987);
+    }
+    int c988 = 0;
+    struct std___List_iterator_double_ r989 = std___List_iterator_double___operator___2(&it835, c988);
+    agg_tmp10847 = r989;
+    double* r990 = std___List_iterator_double___operator____const(&it835);
+    double t991 = *r990;
+    double c992 = 0x1.21p6;
+    _Bool c993 = ((t991 == c992)) ? 1 : 0;
+    if (c993) {
+    } else {
+      char* cast994 = (char*)&(_str_7);
+      char* c995 = _str_1;
+      unsigned int c996 = 56;
+      char* cast997 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast994, c995, c996, cast997);
+    }
+    int c998 = 0;
+    struct std___List_iterator_double_ r999 = std___List_iterator_double___operator___2(&it835, c998);
+    agg_tmp11848 = r999;
+    double* r1000 = std___List_iterator_double___operator____const(&it835);
+    double t1001 = *r1000;
+    double c1002 = 0x1.24p6;
+    _Bool c1003 = ((t1001 == c1002)) ? 1 : 0;
+    if (c1003) {
+    } else {
+      char* cast1004 = (char*)&(_str_8);
+      char* c1005 = _str_1;
+      unsigned int c1006 = 57;
+      char* cast1007 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast1004, c1005, c1006, cast1007);
+    }
+    int c1008 = 0;
+    struct std___List_iterator_double_ r1009 = std___List_iterator_double___operator___2(&it835, c1008);
+    agg_tmp12849 = r1009;
+    struct is_near t1010 = agg_tmp13850;
+    unsigned long r1011 = unsigned_long_std____cxx11__list_double__std__allocator_double_____unique_is_near_(&mylist833, t1010);
+    if (__cir_exc_active) {
+      {
+        std____cxx11__list_double__std__allocator_double______list(&mylist833);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    struct std___List_iterator_double_ r1012 = std____cxx11__list_double__std__allocator_double_____begin(&mylist833);
+    ref_tmp2851 = r1012;
+    struct std___List_iterator_double_* r1013 = std___List_iterator_double___operator_(&it835, &ref_tmp2851);
+    double* r1014 = std___List_iterator_double___operator____const(&it835);
+    double t1015 = *r1014;
+    double c1016 = 0x1.5c28f5c28f5c3p1;
+    _Bool c1017 = ((t1015 == c1016)) ? 1 : 0;
+    if (c1017) {
+    } else {
+      char* cast1018 = (char*)&(_str_2);
+      char* c1019 = _str_1;
+      unsigned int c1020 = 62;
+      char* cast1021 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast1018, c1019, c1020, cast1021);
+    }
+    int c1022 = 0;
+    struct std___List_iterator_double_ r1023 = std___List_iterator_double___operator___2(&it835, c1022);
+    agg_tmp14852 = r1023;
+    double* r1024 = std___List_iterator_double___operator____const(&it835);
+    double t1025 = *r1024;
+    double c1026 = 0x1.84ccccccccccdp3;
+    _Bool c1027 = ((t1025 == c1026)) ? 1 : 0;
+    if (c1027) {
+    } else {
+      char* cast1028 = (char*)&(_str_4);
+      char* c1029 = _str_1;
+      unsigned int c1030 = 63;
+      char* cast1031 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast1028, c1029, c1030, cast1031);
+    }
+    int c1032 = 0;
+    struct std___List_iterator_double_ r1033 = std___List_iterator_double___operator___2(&it835, c1032);
+    agg_tmp15853 = r1033;
+    double* r1034 = std___List_iterator_double___operator____const(&it835);
+    double t1035 = *r1034;
+    double c1036 = 0x1.21p6;
+    _Bool c1037 = ((t1035 == c1036)) ? 1 : 0;
+    if (c1037) {
+    } else {
+      char* cast1038 = (char*)&(_str_7);
+      char* c1039 = _str_1;
+      unsigned int c1040 = 64;
+      char* cast1041 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast1038, c1039, c1040, cast1041);
+    }
+    int c1042 = 0;
+    struct std___List_iterator_double_ r1043 = std___List_iterator_double___operator___2(&it835, c1042);
+    agg_tmp16854 = r1043;
+    char* cast1044 = (char*)&(_str_10);
+    struct std__basic_ostream_char__std__char_traits_char__* r1045 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(&_ZSt4cout, cast1044);
+    if (__cir_exc_active) {
+      {
+        std____cxx11__list_double__std__allocator_double______list(&mylist833);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+      struct std___List_iterator_double_ it1046;
+      struct std___List_iterator_double_ ref_tmp31047;
+      struct std___List_iterator_double_ r1048 = std____cxx11__list_double__std__allocator_double_____begin(&mylist833);
+      it1046 = r1048;
+      while (1) {
+        struct std___List_iterator_double_ r1050 = std____cxx11__list_double__std__allocator_double_____end(&mylist833);
+        ref_tmp31047 = r1050;
+        _Bool r1051 = std__operator___2(&it1046, &ref_tmp31047);
+        _Bool u1052 = !r1051;
+        if (!u1052) break;
+        char* cast1053 = (char*)&(_str_11);
+        struct std__basic_ostream_char__std__char_traits_char__* r1054 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(&_ZSt4cout, cast1053);
+        if (__cir_exc_active) {
+          {
+            std____cxx11__list_double__std__allocator_double______list(&mylist833);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        double* r1055 = std___List_iterator_double___operator____const(&it1046);
+        double t1056 = *r1055;
+        struct std__basic_ostream_char__std__char_traits_char__* r1057 = std__ostream__operator__(r1054, t1056);
+        if (__cir_exc_active) {
+          {
+            std____cxx11__list_double__std__allocator_double______list(&mylist833);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+      for_step1049: ;
+        struct std___List_iterator_double_* r1058 = std___List_iterator_double___operator___3(&it1046);
+      }
+    struct std__basic_ostream_char__std__char_traits_char__* r1059 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);
+    if (__cir_exc_active) {
+      {
+        std____cxx11__list_double__std__allocator_double______list(&mylist833);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    int c1060 = 0;
+    __retval831 = c1060;
+    int t1061 = __retval831;
+    int ret_val1062 = t1061;
+    {
+      std____cxx11__list_double__std__allocator_double______list(&mylist833);
+    }
+    return ret_val1062;
+  int t1063 = __retval831;
+  return t1063;
+}
+
+// function: _ZNSt15__new_allocatorIdEC2Ev
+void std____new_allocator_double_____new_allocator(struct std____new_allocator_double_* v1064) {
+bb1065:
+  struct std____new_allocator_double_* this1066;
+  this1066 = v1064;
+  struct std____new_allocator_double_* t1067 = this1066;
+  return;
+}
+
+// function: _ZNSt8__detail17_List_node_header7_M_baseEv
+struct std____detail___List_node_base* std____detail___List_node_header___M_base(struct std____detail___List_node_header* v1068) {
+bb1069:
+  struct std____detail___List_node_header* this1070;
+  struct std____detail___List_node_base* __retval1071;
+  this1070 = v1068;
+  struct std____detail___List_node_header* t1072 = this1070;
+  struct std____detail___List_node_base* base1073 = (struct std____detail___List_node_base*)((char *)t1072 + 0);
+  __retval1071 = base1073;
+  struct std____detail___List_node_base* t1074 = __retval1071;
+  return t1074;
+}
+
+// function: _ZSt10destroy_atIdEvPT_
+void void_std__destroy_at_double_(double* v1075) {
+bb1076:
+  double* __location1077;
+  __location1077 = v1075;
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaISt10_List_nodeIdEEE7destroyIdEEvRS2_PT_
+void void_std__allocator_traits_std__allocator_std___List_node_double_______destroy_double_(struct std__allocator_std___List_node_double__* v1078, double* v1079) {
+bb1080:
+  struct std__allocator_std___List_node_double__* __a1081;
+  double* __p1082;
+  __a1081 = v1078;
+  __p1082 = v1079;
+  double* t1083 = __p1082;
+  void_std__destroy_at_double_(t1083);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZN9__gnu_cxx16__aligned_membufIdE7_M_addrEv
+void* __gnu_cxx____aligned_membuf_double____M_addr(struct __gnu_cxx____aligned_membuf_double_* v1084) {
+bb1085:
+  struct __gnu_cxx____aligned_membuf_double_* this1086;
+  void* __retval1087;
+  this1086 = v1084;
+  struct __gnu_cxx____aligned_membuf_double_* t1088 = this1086;
+  void* cast1089 = (void*)&(t1088->_M_storage);
+  __retval1087 = cast1089;
+  void* t1090 = __retval1087;
+  return t1090;
+}
+
+// function: _ZN9__gnu_cxx16__aligned_membufIdE6_M_ptrEv
+double* __gnu_cxx____aligned_membuf_double____M_ptr(struct __gnu_cxx____aligned_membuf_double_* v1091) {
+bb1092:
+  struct __gnu_cxx____aligned_membuf_double_* this1093;
+  double* __retval1094;
+  this1093 = v1091;
+  struct __gnu_cxx____aligned_membuf_double_* t1095 = this1093;
+  void* r1096 = __gnu_cxx____aligned_membuf_double____M_addr(t1095);
+  double* cast1097 = (double*)r1096;
+  __retval1094 = cast1097;
+  double* t1098 = __retval1094;
+  return t1098;
+}
+
+// function: _ZNSt10_List_nodeIdE9_M_valptrEv
+double* std___List_node_double____M_valptr(struct std___List_node_double_* v1099) {
+bb1100:
+  struct std___List_node_double_* this1101;
+  double* __retval1102;
+  this1101 = v1099;
+  struct std___List_node_double_* t1103 = this1101;
+  double* r1104 = __gnu_cxx____aligned_membuf_double____M_ptr(&t1103->_M_storage);
+  __retval1102 = r1104;
+  double* t1105 = __retval1102;
+  return t1105;
+}
+
+// function: _ZSt23__is_constant_evaluatedv
+_Bool std____is_constant_evaluated() {
+bb1106:
+  _Bool __retval1107;
+    _Bool c1108 = 0;
+    __retval1107 = c1108;
+    _Bool t1109 = __retval1107;
+    return t1109;
+  abort();
+}
+
+// function: _ZNSt15__new_allocatorISt10_List_nodeIdEE10deallocateEPS1_m
+void std____new_allocator_std___List_node_double_____deallocate(struct std____new_allocator_std___List_node_double__* v1110, struct std___List_node_double_* v1111, unsigned long v1112) {
+bb1113:
+  struct std____new_allocator_std___List_node_double__* this1114;
+  struct std___List_node_double_* __p1115;
+  unsigned long __n1116;
+  this1114 = v1110;
+  __p1115 = v1111;
+  __n1116 = v1112;
+  struct std____new_allocator_std___List_node_double__* t1117 = this1114;
+    unsigned long c1118 = 8;
+    unsigned long c1119 = 16;
+    _Bool c1120 = ((c1118 > c1119)) ? 1 : 0;
+    if (c1120) {
+      struct std___List_node_double_* t1121 = __p1115;
+      void* cast1122 = (void*)t1121;
+      unsigned long t1123 = __n1116;
+      unsigned long c1124 = 24;
+      unsigned long b1125 = t1123 * c1124;
+      unsigned long c1126 = 8;
+      operator_delete_3(cast1122, b1125, c1126);
+      return;
+    }
+  struct std___List_node_double_* t1127 = __p1115;
+  void* cast1128 = (void*)t1127;
+  unsigned long t1129 = __n1116;
+  unsigned long c1130 = 24;
+  unsigned long b1131 = t1129 * c1130;
+  operator_delete_2(cast1128, b1131);
+  return;
+}
+
+// function: _ZNSaISt10_List_nodeIdEE10deallocateEPS0_m
+void std__allocator_std___List_node_double_____deallocate(struct std__allocator_std___List_node_double__* v1132, struct std___List_node_double_* v1133, unsigned long v1134) {
+bb1135:
+  struct std__allocator_std___List_node_double__* this1136;
+  struct std___List_node_double_* __p1137;
+  unsigned long __n1138;
+  this1136 = v1132;
+  __p1137 = v1133;
+  __n1138 = v1134;
+  struct std__allocator_std___List_node_double__* t1139 = this1136;
+    _Bool r1140 = std____is_constant_evaluated();
+    if (r1140) {
+      struct std___List_node_double_* t1141 = __p1137;
+      void* cast1142 = (void*)t1141;
+      operator_delete(cast1142);
+      return;
+    }
+  struct std____new_allocator_std___List_node_double__* base1143 = (struct std____new_allocator_std___List_node_double__*)((char *)t1139 + 0);
+  struct std___List_node_double_* t1144 = __p1137;
+  unsigned long t1145 = __n1138;
+  std____new_allocator_std___List_node_double_____deallocate(base1143, t1144, t1145);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaISt10_List_nodeIdEEE10deallocateERS2_PS1_m
+void std__allocator_traits_std__allocator_std___List_node_double_______deallocate(struct std__allocator_std___List_node_double__* v1146, struct std___List_node_double_* v1147, unsigned long v1148) {
+bb1149:
+  struct std__allocator_std___List_node_double__* __a1150;
+  struct std___List_node_double_* __p1151;
+  unsigned long __n1152;
+  __a1150 = v1146;
+  __p1151 = v1147;
+  __n1152 = v1148;
+  struct std__allocator_std___List_node_double__* t1153 = __a1150;
+  struct std___List_node_double_* t1154 = __p1151;
+  unsigned long t1155 = __n1152;
+  std__allocator_std___List_node_double_____deallocate(t1153, t1154, t1155);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEE11_M_put_nodeEPSt10_List_nodeIdE
+void std____cxx11___List_base_double__std__allocator_double______M_put_node(struct std____cxx11___List_base_double__std__allocator_double__* v1156, struct std___List_node_double_* v1157) {
+bb1158:
+  struct std____cxx11___List_base_double__std__allocator_double__* this1159;
+  struct std___List_node_double_* __p1160;
+  this1159 = v1156;
+  __p1160 = v1157;
+  struct std____cxx11___List_base_double__std__allocator_double__* t1161 = this1159;
+  struct std__allocator_std___List_node_double__* base1162 = (struct std__allocator_std___List_node_double__*)((char *)&(t1161->_M_impl) + 0);
+  struct std___List_node_double_* t1163 = __p1160;
+  unsigned long c1164 = 1;
+  std__allocator_traits_std__allocator_std___List_node_double_______deallocate(base1162, t1163, c1164);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEE15_M_destroy_nodeEPSt10_List_nodeIdE
+void std____cxx11___List_base_double__std__allocator_double______M_destroy_node(struct std____cxx11___List_base_double__std__allocator_double__* v1165, struct std___List_node_double_* v1166) {
+bb1167:
+  struct std____cxx11___List_base_double__std__allocator_double__* this1168;
+  struct std___List_node_double_* __p1169;
+  this1168 = v1165;
+  __p1169 = v1166;
+  struct std____cxx11___List_base_double__std__allocator_double__* t1170 = this1168;
+  struct std__allocator_std___List_node_double__* base1171 = (struct std__allocator_std___List_node_double__*)((char *)&(t1170->_M_impl) + 0);
+  struct std___List_node_double_* t1172 = __p1169;
+  double* r1173 = std___List_node_double____M_valptr(t1172);
+  if (__cir_exc_active) {
+    return;
+  }
+  void_std__allocator_traits_std__allocator_std___List_node_double_______destroy_double_(base1171, r1173);
+  struct std___List_node_double_* t1174 = __p1169;
+  std____cxx11___List_base_double__std__allocator_double______M_put_node(t1170, t1174);
+  return;
+}
+
+// function: _ZNSt10_List_nodeIdE11_M_node_ptrEv
+struct std___List_node_double_* std___List_node_double____M_node_ptr(struct std___List_node_double_* v1175) {
+bb1176:
+  struct std___List_node_double_* this1177;
+  struct std___List_node_double_* __retval1178;
+  this1177 = v1175;
+  struct std___List_node_double_* t1179 = this1177;
+  __retval1178 = t1179;
+  struct std___List_node_double_* t1180 = __retval1178;
+  return t1180;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEE8_M_clearEv
+void std____cxx11___List_base_double__std__allocator_double______M_clear(struct std____cxx11___List_base_double__std__allocator_double__* v1181) {
+bb1182:
+  struct std____cxx11___List_base_double__std__allocator_double__* this1183;
+  struct std____detail___List_node_base* __cur1184;
+  this1183 = v1181;
+  struct std____cxx11___List_base_double__std__allocator_double__* t1185 = this1183;
+  struct std____detail___List_node_base* base1186 = (struct std____detail___List_node_base*)((char *)&(t1185->_M_impl._M_node) + 0);
+  struct std____detail___List_node_base* t1187 = base1186->_M_next;
+  __cur1184 = t1187;
+    while (1) {
+      struct std____detail___List_node_base* t1188 = __cur1184;
+      struct std____detail___List_node_base* r1189 = std____detail___List_node_header___M_base(&t1185->_M_impl._M_node);
+      if (__cir_exc_active) {
+        return;
+      }
+      _Bool c1190 = ((t1188 != r1189)) ? 1 : 0;
+      if (!c1190) break;
+        struct std___List_node_double_* __tmp1191;
+        struct std____detail___List_node_base* t1192 = __cur1184;
+        struct std___List_node_double_* derived1193 = (struct std___List_node_double_*)((char *)t1192 - 0);
+        __tmp1191 = derived1193;
+        struct std___List_node_double_* t1194 = __tmp1191;
+        struct std____detail___List_node_base* base1195 = (struct std____detail___List_node_base*)((char *)t1194 + 0);
+        struct std____detail___List_node_base* t1196 = base1195->_M_next;
+        __cur1184 = t1196;
+        struct std___List_node_double_* t1197 = __tmp1191;
+        struct std___List_node_double_* r1198 = std___List_node_double____M_node_ptr(t1197);
+        if (__cir_exc_active) {
+          return;
+        }
+        std____cxx11___List_base_double__std__allocator_double______M_destroy_node(t1185, r1198);
+        if (__cir_exc_active) {
+          return;
+        }
+    }
+  return;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEE10_List_implD2Ev
+void std____cxx11___List_base_double__std__allocator_double______List_impl____List_impl(struct std____cxx11___List_base_double__std__allocator_double_____List_impl* v1199) {
+bb1200:
+  struct std____cxx11___List_base_double__std__allocator_double_____List_impl* this1201;
+  this1201 = v1199;
+  struct std____cxx11___List_base_double__std__allocator_double_____List_impl* t1202 = this1201;
+  {
+    struct std__allocator_std___List_node_double__* base1203 = (struct std__allocator_std___List_node_double__*)((char *)t1202 + 0);
+    std__allocator_std___List_node_double______allocator(base1203);
+  }
+  return;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEED2Ev
+void std____cxx11___List_base_double__std__allocator_double_______List_base(struct std____cxx11___List_base_double__std__allocator_double__* v1204) {
+bb1205:
+  struct std____cxx11___List_base_double__std__allocator_double__* this1206;
+  this1206 = v1204;
+  struct std____cxx11___List_base_double__std__allocator_double__* t1207 = this1206;
+    std____cxx11___List_base_double__std__allocator_double______M_clear(t1207);
+  {
+    std____cxx11___List_base_double__std__allocator_double______List_impl____List_impl(&t1207->_M_impl);
+  }
+  return;
+}
+
+// function: _ZNSaISt10_List_nodeIdEEC2IdEERKSaIT_E
+void std__allocator_std___List_node_double_____allocator_double_(struct std__allocator_std___List_node_double__* v1208, struct std__allocator_double_* v1209) {
+bb1210:
+  struct std__allocator_std___List_node_double__* this1211;
+  struct std__allocator_double_* unnamed1212;
+  this1211 = v1208;
+  unnamed1212 = v1209;
+  struct std__allocator_std___List_node_double__* t1213 = this1211;
+  struct std____new_allocator_std___List_node_double__* base1214 = (struct std____new_allocator_std___List_node_double__*)((char *)t1213 + 0);
+  std____new_allocator_std___List_node_double_______new_allocator_2(base1214);
+  return;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEE10_List_implC2EOSaISt10_List_nodeIdEE
+void std____cxx11___List_base_double__std__allocator_double______List_impl___List_impl(struct std____cxx11___List_base_double__std__allocator_double_____List_impl* v1215, struct std__allocator_std___List_node_double__* v1216) {
+bb1217:
+  struct std____cxx11___List_base_double__std__allocator_double_____List_impl* this1218;
+  struct std__allocator_std___List_node_double__* __a1219;
+  this1218 = v1215;
+  __a1219 = v1216;
+  struct std____cxx11___List_base_double__std__allocator_double_____List_impl* t1220 = this1218;
+  struct std__allocator_std___List_node_double__* base1221 = (struct std__allocator_std___List_node_double__*)((char *)t1220 + 0);
+  struct std__allocator_std___List_node_double__* t1222 = __a1219;
+  std__allocator_std___List_node_double_____allocator(base1221, t1222);
+    std____detail___List_node_header___List_node_header(&t1220->_M_node);
+  return;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEEC2EOSaISt10_List_nodeIdEE
+void std____cxx11___List_base_double__std__allocator_double______List_base(struct std____cxx11___List_base_double__std__allocator_double__* v1223, struct std__allocator_std___List_node_double__* v1224) {
+bb1225:
+  struct std____cxx11___List_base_double__std__allocator_double__* this1226;
+  struct std__allocator_std___List_node_double__* __a1227;
+  this1226 = v1223;
+  __a1227 = v1224;
+  struct std____cxx11___List_base_double__std__allocator_double__* t1228 = this1226;
+  struct std__allocator_std___List_node_double__* t1229 = __a1227;
+  std____cxx11___List_base_double__std__allocator_double______List_impl___List_impl(&t1228->_M_impl, t1229);
+  return;
+}
+
+// function: _ZNSaISt10_List_nodeIdEED2Ev
+void std__allocator_std___List_node_double______allocator(struct std__allocator_std___List_node_double__* v1230) {
+bb1231:
+  struct std__allocator_std___List_node_double__* this1232;
+  this1232 = v1230;
+  struct std__allocator_std___List_node_double__* t1233 = this1232;
+  return;
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEE21_M_get_Node_allocatorEv
+struct std__allocator_std___List_node_double__* std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator(struct std____cxx11___List_base_double__std__allocator_double__* v1234) {
+bb1235:
+  struct std____cxx11___List_base_double__std__allocator_double__* this1236;
+  struct std__allocator_std___List_node_double__* __retval1237;
+  this1236 = v1234;
+  struct std____cxx11___List_base_double__std__allocator_double__* t1238 = this1236;
+  struct std__allocator_std___List_node_double__* base1239 = (struct std__allocator_std___List_node_double__*)((char *)&(t1238->_M_impl) + 0);
+  __retval1237 = base1239;
+  struct std__allocator_std___List_node_double__* t1240 = __retval1237;
+  return t1240;
+}
+
+// function: _ZNKSt15__new_allocatorISt10_List_nodeIdEE11_M_max_sizeEv
+unsigned long std____new_allocator_std___List_node_double______M_max_size___const(struct std____new_allocator_std___List_node_double__* v1241) {
+bb1242:
+  struct std____new_allocator_std___List_node_double__* this1243;
+  unsigned long __retval1244;
+  this1243 = v1241;
+  struct std____new_allocator_std___List_node_double__* t1245 = this1243;
+  unsigned long c1246 = 9223372036854775807;
+  unsigned long c1247 = 24;
+  unsigned long b1248 = c1246 / c1247;
+  __retval1244 = b1248;
+  unsigned long t1249 = __retval1244;
+  return t1249;
+}
+
+// function: _ZNSt15__new_allocatorISt10_List_nodeIdEE8allocateEmPKv
+struct std___List_node_double_* std____new_allocator_std___List_node_double_____allocate(struct std____new_allocator_std___List_node_double__* v1250, unsigned long v1251, void* v1252) {
+bb1253:
+  struct std____new_allocator_std___List_node_double__* this1254;
+  unsigned long __n1255;
+  void* unnamed1256;
+  struct std___List_node_double_* __retval1257;
+  this1254 = v1250;
+  __n1255 = v1251;
+  unnamed1256 = v1252;
+  struct std____new_allocator_std___List_node_double__* t1258 = this1254;
+    unsigned long t1259 = __n1255;
+    unsigned long r1260 = std____new_allocator_std___List_node_double______M_max_size___const(t1258);
+    _Bool c1261 = ((t1259 > r1260)) ? 1 : 0;
+    if (c1261) {
+        unsigned long t1262 = __n1255;
+        unsigned long c1263 = -1;
+        unsigned long c1264 = 24;
+        unsigned long b1265 = c1263 / c1264;
+        _Bool c1266 = ((t1262 > b1265)) ? 1 : 0;
+        if (c1266) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+            return __cir_eh_ret;
+          }
+        }
+      std____throw_bad_alloc();
+      if (__cir_exc_active) {
+        struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+        return __cir_eh_ret;
+      }
+    }
+    unsigned long c1267 = 8;
+    unsigned long c1268 = 16;
+    _Bool c1269 = ((c1267 > c1268)) ? 1 : 0;
+    if (c1269) {
+      unsigned long __al1270;
+      unsigned long c1271 = 8;
+      __al1270 = c1271;
+      unsigned long t1272 = __n1255;
+      unsigned long c1273 = 24;
+      unsigned long b1274 = t1272 * c1273;
+      unsigned long t1275 = __al1270;
+      void* r1276 = operator_new_2(b1274, t1275);
+      if (__cir_exc_active) {
+        struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+        return __cir_eh_ret;
+      }
+      struct std___List_node_double_* cast1277 = (struct std___List_node_double_*)r1276;
+      __retval1257 = cast1277;
+      struct std___List_node_double_* t1278 = __retval1257;
+      return t1278;
+    }
+  unsigned long t1279 = __n1255;
+  unsigned long c1280 = 24;
+  unsigned long b1281 = t1279 * c1280;
+  void* r1282 = operator_new(b1281);
+  if (__cir_exc_active) {
+    struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+    return __cir_eh_ret;
+  }
+  struct std___List_node_double_* cast1283 = (struct std___List_node_double_*)r1282;
+  __retval1257 = cast1283;
+  struct std___List_node_double_* t1284 = __retval1257;
+  return t1284;
+}
+
+// function: _ZNSaISt10_List_nodeIdEE8allocateEm
+struct std___List_node_double_* std__allocator_std___List_node_double_____allocate(struct std__allocator_std___List_node_double__* v1285, unsigned long v1286) {
+bb1287:
+  struct std__allocator_std___List_node_double__* this1288;
+  unsigned long __n1289;
+  struct std___List_node_double_* __retval1290;
+  this1288 = v1285;
+  __n1289 = v1286;
+  struct std__allocator_std___List_node_double__* t1291 = this1288;
+    _Bool r1292 = std____is_constant_evaluated();
+    if (r1292) {
+        unsigned long t1293 = __n1289;
+        unsigned long c1294 = 24;
+        unsigned long ovr1295;
+        _Bool ovf1296 = __builtin_mul_overflow(t1293, c1294, &ovr1295);
+        __n1289 = ovr1295;
+        if (ovf1296) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+            return __cir_eh_ret;
+          }
+        }
+      unsigned long t1297 = __n1289;
+      void* r1298 = operator_new(t1297);
+      if (__cir_exc_active) {
+        struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+        return __cir_eh_ret;
+      }
+      struct std___List_node_double_* cast1299 = (struct std___List_node_double_*)r1298;
+      __retval1290 = cast1299;
+      struct std___List_node_double_* t1300 = __retval1290;
+      return t1300;
+    }
+  struct std____new_allocator_std___List_node_double__* base1301 = (struct std____new_allocator_std___List_node_double__*)((char *)t1291 + 0);
+  unsigned long t1302 = __n1289;
+  void* c1303 = ((void*)0);
+  struct std___List_node_double_* r1304 = std____new_allocator_std___List_node_double_____allocate(base1301, t1302, c1303);
+  if (__cir_exc_active) {
+    struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+    return __cir_eh_ret;
+  }
+  __retval1290 = r1304;
+  struct std___List_node_double_* t1305 = __retval1290;
+  return t1305;
+}
+
+// function: _ZNSt16allocator_traitsISaISt10_List_nodeIdEEE8allocateERS2_m
+struct std___List_node_double_* std__allocator_traits_std__allocator_std___List_node_double_______allocate(struct std__allocator_std___List_node_double__* v1306, unsigned long v1307) {
+bb1308:
+  struct std__allocator_std___List_node_double__* __a1309;
+  unsigned long __n1310;
+  struct std___List_node_double_* __retval1311;
+  __a1309 = v1306;
+  __n1310 = v1307;
+  struct std__allocator_std___List_node_double__* t1312 = __a1309;
+  unsigned long t1313 = __n1310;
+  struct std___List_node_double_* r1314 = std__allocator_std___List_node_double_____allocate(t1312, t1313);
+  if (__cir_exc_active) {
+    struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+    return __cir_eh_ret;
+  }
+  __retval1311 = r1314;
+  struct std___List_node_double_* t1315 = __retval1311;
+  return t1315;
+}
+
+// function: _ZNSt15__allocated_ptrISaISt10_List_nodeIdEEEC2ERS2_PS1_
+void std____allocated_ptr_std__allocator_std___List_node_double_________allocated_ptr_2(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1316, struct std__allocator_std___List_node_double__* v1317, struct std___List_node_double_* v1318) {
+bb1319:
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* this1320;
+  struct std__allocator_std___List_node_double__* __a1321;
+  struct std___List_node_double_* __ptr1322;
+  this1320 = v1316;
+  __a1321 = v1317;
+  __ptr1322 = v1318;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1323 = this1320;
+  struct std__allocator_std___List_node_double__* t1324 = __a1321;
+  t1323->_M_alloc = t1324;
+  struct std___List_node_double_* t1325 = __ptr1322;
+  t1323->_M_ptr = t1325;
+  return;
+}
+
+// function: _ZSt18__allocate_guardedISaISt10_List_nodeIdEEESt15__allocated_ptrIT_ERS4_
+struct std____allocated_ptr_std__allocator_std___List_node_double___ std____allocated_ptr_std__allocator_std___List_node_double______std____allocate_guarded_std__allocator_std___List_node_double_____(struct std__allocator_std___List_node_double__* v1326) {
+bb1327:
+  struct std__allocator_std___List_node_double__* __a1328;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___ __retval1329;
+  __a1328 = v1326;
+  struct std__allocator_std___List_node_double__* t1330 = __a1328;
+  struct std__allocator_std___List_node_double__* t1331 = __a1328;
+  unsigned long c1332 = 1;
+  struct std___List_node_double_* r1333 = std__allocator_traits_std__allocator_std___List_node_double_______allocate(t1331, c1332);
+  if (__cir_exc_active) {
+    struct std____allocated_ptr_std__allocator_std___List_node_double___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  std____allocated_ptr_std__allocator_std___List_node_double_________allocated_ptr_2(&__retval1329, t1330, r1333);
+  struct std____allocated_ptr_std__allocator_std___List_node_double___ t1334 = __retval1329;
+  return t1334;
+}
+
+// function: _ZNSt15__allocated_objISaISt10_List_nodeIdEEEC2EOSt15__allocated_ptrIS2_E
+void std____allocated_obj_std__allocator_std___List_node_double_________allocated_obj(struct std____allocated_obj_std__allocator_std___List_node_double___* v1335, struct std____allocated_ptr_std__allocator_std___List_node_double___* v1336) {
+bb1337:
+  struct std____allocated_obj_std__allocator_std___List_node_double___* this1338;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* __ptr1339;
+  this1338 = v1335;
+  __ptr1339 = v1336;
+  struct std____allocated_obj_std__allocator_std___List_node_double___* t1340 = this1338;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* base1341 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)t1340 + 0);
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1342 = __ptr1339;
+  std____allocated_ptr_std__allocator_std___List_node_double_________allocated_ptr(base1341, t1342);
+    struct std____allocated_ptr_std__allocator_std___List_node_double___* base1343 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)t1340 + 0);
+    struct std___List_node_double_* r1344 = std____allocated_ptr_std__allocator_std___List_node_double_______get___const(base1343);
+    if (__cir_exc_active) {
+      {
+        struct std____allocated_ptr_std__allocator_std___List_node_double___* base1345 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)t1340 + 0);
+        std____allocated_ptr_std__allocator_std___List_node_double__________allocated_ptr(base1345);
+      }
+      return;
+    }
+  return;
+}
+
+// function: _ZNSt15__allocated_ptrISaISt10_List_nodeIdEEED2Ev
+void std____allocated_ptr_std__allocator_std___List_node_double__________allocated_ptr(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1346) {
+bb1347:
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* this1348;
+  this1348 = v1346;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1349 = this1348;
+    struct std___List_node_double_* t1350 = t1349->_M_ptr;
+    struct std___List_node_double_* c1351 = ((void*)0);
+    _Bool c1352 = ((t1350 != c1351)) ? 1 : 0;
+    if (c1352) {
+      struct std__allocator_std___List_node_double__* t1353 = t1349->_M_alloc;
+      struct std___List_node_double_* t1354 = t1349->_M_ptr;
+      unsigned long c1355 = 1;
+      std__allocator_traits_std__allocator_std___List_node_double_______deallocate(t1353, t1354, c1355);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZSt22__allocate_guarded_objISaISt10_List_nodeIdEEESt15__allocated_objIT_ERS4_
+struct std____allocated_obj_std__allocator_std___List_node_double___ std____allocated_obj_std__allocator_std___List_node_double______std____allocate_guarded_obj_std__allocator_std___List_node_double_____(struct std__allocator_std___List_node_double__* v1356) {
+bb1357:
+  struct std__allocator_std___List_node_double__* __a1358;
+  struct std____allocated_obj_std__allocator_std___List_node_double___ __retval1359;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___ ref_tmp01360;
+  __a1358 = v1356;
+  struct std__allocator_std___List_node_double__* t1361 = __a1358;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___ r1362 = std____allocated_ptr_std__allocator_std___List_node_double______std____allocate_guarded_std__allocator_std___List_node_double_____(t1361);
+  if (__cir_exc_active) {
+    struct std____allocated_obj_std__allocator_std___List_node_double___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  ref_tmp01360 = r1362;
+    std____allocated_obj_std__allocator_std___List_node_double_________allocated_obj(&__retval1359, &ref_tmp01360);
+    if (__cir_exc_active) {
+      {
+        std____allocated_ptr_std__allocator_std___List_node_double__________allocated_ptr(&ref_tmp01360);
+      }
+      struct std____allocated_obj_std__allocator_std___List_node_double___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+  {
+    std____allocated_ptr_std__allocator_std___List_node_double__________allocated_ptr(&ref_tmp01360);
+  }
+  struct std____allocated_obj_std__allocator_std___List_node_double___ t1363 = __retval1359;
+  return t1363;
+}
+
+// function: _ZSt12construct_atIdJRdEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_
+double* _ZSt12construct_atIdJRdEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(double* v1364, double* v1365) {
+bb1366:
+  double* __location1367;
+  double* __args1368;
+  double* __retval1369;
+  void* __loc1370;
+  __location1367 = v1364;
+  __args1368 = v1365;
+  double* t1371 = __location1367;
+  void* cast1372 = (void*)t1371;
+  __loc1370 = cast1372;
+    void* t1373 = __loc1370;
+    double* cast1374 = (double*)t1373;
+    double* t1375 = __args1368;
+    double t1376 = *t1375;
+    *cast1374 = t1376;
+    __retval1369 = cast1374;
+    double* t1377 = __retval1369;
+    return t1377;
+  abort();
+}
+
+// function: _ZNSt16allocator_traitsISaISt10_List_nodeIdEEE9constructIdJRdEEEvRS2_PT_DpOT0_
+void void_std__allocator_traits_std__allocator_std___List_node_double_______construct_double__double__(struct std__allocator_std___List_node_double__* v1378, double* v1379, double* v1380) {
+bb1381:
+  struct std__allocator_std___List_node_double__* __a1382;
+  double* __p1383;
+  double* __args1384;
+  __a1382 = v1378;
+  __p1383 = v1379;
+  __args1384 = v1380;
+  double* t1385 = __p1383;
+  double* t1386 = __args1384;
+  double* r1387 = _ZSt12construct_atIdJRdEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(t1385, t1386);
+  return;
+}
+
+// function: _ZNKSt15__allocated_objISaISt10_List_nodeIdEEEptEv
+struct std___List_node_double_* std____allocated_obj_std__allocator_std___List_node_double_______operator_____const(struct std____allocated_obj_std__allocator_std___List_node_double___* v1388) {
+bb1389:
+  struct std____allocated_obj_std__allocator_std___List_node_double___* this1390;
+  struct std___List_node_double_* __retval1391;
+  this1390 = v1388;
+  struct std____allocated_obj_std__allocator_std___List_node_double___* t1392 = this1390;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* base1393 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)t1392 + 0);
+  struct std___List_node_double_* r1394 = std____allocated_ptr_std__allocator_std___List_node_double_______get___const(base1393);
+  if (__cir_exc_active) {
+    struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+    return __cir_eh_ret;
+  }
+  __retval1391 = r1394;
+  struct std___List_node_double_* t1395 = __retval1391;
+  return t1395;
+}
+
+// function: _ZSt10__exchangeIPSt10_List_nodeIdEDnET_RS3_OT0_
+struct std___List_node_double_* std___List_node_double___std____exchange_std___List_node_double____decltype_nullptr___std___List_node_double_____decltype(struct std___List_node_double_** v1396, void** v1397) {
+bb1398:
+  struct std___List_node_double_** __obj1399;
+  void** __new_val1400;
+  struct std___List_node_double_* __retval1401;
+  struct std___List_node_double_* __old_val1402;
+  __obj1399 = v1396;
+  __new_val1400 = v1397;
+  struct std___List_node_double_** t1403 = __obj1399;
+  struct std___List_node_double_* t1404 = *t1403;
+  __old_val1402 = t1404;
+  void** t1405 = __new_val1400;
+  struct std___List_node_double_* c1406 = ((void*)0);
+  struct std___List_node_double_** t1407 = __obj1399;
+  *t1407 = c1406;
+  struct std___List_node_double_* t1408 = __old_val1402;
+  __retval1401 = t1408;
+  struct std___List_node_double_* t1409 = __retval1401;
+  return t1409;
+}
+
+// function: _ZNSt15__allocated_ptrISaISt10_List_nodeIdEEE7releaseEv
+struct std___List_node_double_* std____allocated_ptr_std__allocator_std___List_node_double_______release(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1410) {
+bb1411:
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* this1412;
+  struct std___List_node_double_* __retval1413;
+  void* ref_tmp01414;
+  this1412 = v1410;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1415 = this1412;
+  void* c1416 = ((void*)0);
+  ref_tmp01414 = c1416;
+  struct std___List_node_double_* r1417 = std___List_node_double___std____exchange_std___List_node_double____decltype_nullptr___std___List_node_double_____decltype(&t1415->_M_ptr, &ref_tmp01414);
+  if (__cir_exc_active) {
+    struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+    return __cir_eh_ret;
+  }
+  __retval1413 = r1417;
+  struct std___List_node_double_* t1418 = __retval1413;
+  return t1418;
+}
+
+// function: _ZNSt15__allocated_objISaISt10_List_nodeIdEEED2Ev
+void std____allocated_obj_std__allocator_std___List_node_double__________allocated_obj(struct std____allocated_obj_std__allocator_std___List_node_double___* v1419) {
+bb1420:
+  struct std____allocated_obj_std__allocator_std___List_node_double___* this1421;
+  this1421 = v1419;
+  struct std____allocated_obj_std__allocator_std___List_node_double___* t1422 = this1421;
+      struct std____allocated_ptr_std__allocator_std___List_node_double___* base1423 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)t1422 + 0);
+      _Bool r1424 = std____allocated_ptr_std__allocator_std___List_node_double_______operator_bool___const(base1423);
+      if (r1424) {
+        struct std____allocated_ptr_std__allocator_std___List_node_double___* base1425 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)t1422 + 0);
+        struct std___List_node_double_* r1426 = std____allocated_ptr_std__allocator_std___List_node_double_______get___const(base1425);
+        if (__cir_exc_active) {
+          {
+            struct std____allocated_ptr_std__allocator_std___List_node_double___* base1427 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)t1422 + 0);
+            std____allocated_ptr_std__allocator_std___List_node_double__________allocated_ptr(base1427);
+          }
+          return;
+        }
+      }
+  {
+    struct std____allocated_ptr_std__allocator_std___List_node_double___* base1428 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)t1422 + 0);
+    std____allocated_ptr_std__allocator_std___List_node_double__________allocated_ptr(base1428);
+  }
+  return;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE14_M_create_nodeIJRdEEEPSt10_List_nodeIdEDpOT_
+struct std___List_node_double_* std___List_node_double___std____cxx11__list_double__std__allocator_double______M_create_node_double__(struct std____cxx11__list_double__std__allocator_double__* v1429, double* v1430) {
+bb1431:
+  struct std____cxx11__list_double__std__allocator_double__* this1432;
+  double* __args1433;
+  struct std___List_node_double_* __retval1434;
+  struct std__allocator_std___List_node_double__* __alloc1435;
+  struct std____allocated_obj_std__allocator_std___List_node_double___ __guard1436;
+  this1432 = v1429;
+  __args1433 = v1430;
+  struct std____cxx11__list_double__std__allocator_double__* t1437 = this1432;
+  struct std____cxx11___List_base_double__std__allocator_double__* base1438 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t1437 + 0);
+  struct std__allocator_std___List_node_double__* r1439 = std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator(base1438);
+  __alloc1435 = r1439;
+  struct std__allocator_std___List_node_double__* t1440 = __alloc1435;
+  struct std____allocated_obj_std__allocator_std___List_node_double___ r1441 = std____allocated_obj_std__allocator_std___List_node_double______std____allocate_guarded_obj_std__allocator_std___List_node_double_____(t1440);
+  if (__cir_exc_active) {
+    struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+    return __cir_eh_ret;
+  }
+  __guard1436 = r1441;
+    struct std__allocator_std___List_node_double__* t1442 = __alloc1435;
+    struct std___List_node_double_* r1443 = std____allocated_obj_std__allocator_std___List_node_double_______operator_____const(&__guard1436);
+    if (__cir_exc_active) {
+      {
+        std____allocated_obj_std__allocator_std___List_node_double__________allocated_obj(&__guard1436);
+      }
+      struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+      return __cir_eh_ret;
+    }
+    double* r1444 = std___List_node_double____M_valptr(r1443);
+    if (__cir_exc_active) {
+      {
+        std____allocated_obj_std__allocator_std___List_node_double__________allocated_obj(&__guard1436);
+      }
+      struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+      return __cir_eh_ret;
+    }
+    double* t1445 = __args1433;
+    void_std__allocator_traits_std__allocator_std___List_node_double_______construct_double__double__(t1442, r1444, t1445);
+    struct std____allocated_ptr_std__allocator_std___List_node_double___* base1446 = (struct std____allocated_ptr_std__allocator_std___List_node_double___*)((char *)&(__guard1436) + 0);
+    struct std___List_node_double_* r1447 = std____allocated_ptr_std__allocator_std___List_node_double_______release(base1446);
+    if (__cir_exc_active) {
+      {
+        std____allocated_obj_std__allocator_std___List_node_double__________allocated_obj(&__guard1436);
+      }
+      struct std___List_node_double_* __cir_eh_ret = (struct std___List_node_double_*)0;
+      return __cir_eh_ret;
+    }
+    __retval1434 = r1447;
+    struct std___List_node_double_* t1448 = __retval1434;
+    struct std___List_node_double_* ret_val1449 = t1448;
+    {
+      std____allocated_obj_std__allocator_std___List_node_double__________allocated_obj(&__guard1436);
+    }
+    return ret_val1449;
+  abort();
+}
+
+// function: _ZNSt7__cxx1110_List_baseIdSaIdEE11_M_inc_sizeEm
+void std____cxx11___List_base_double__std__allocator_double______M_inc_size(struct std____cxx11___List_base_double__std__allocator_double__* v1450, unsigned long v1451) {
+bb1452:
+  struct std____cxx11___List_base_double__std__allocator_double__* this1453;
+  unsigned long __n1454;
+  this1453 = v1450;
+  __n1454 = v1451;
+  struct std____cxx11___List_base_double__std__allocator_double__* t1455 = this1453;
+  unsigned long t1456 = __n1454;
+  struct std____detail___List_size* base1457 = (struct std____detail___List_size*)((char *)&(t1455->_M_impl._M_node) + 16);
+  unsigned long t1458 = base1457->_M_size;
+  unsigned long b1459 = t1458 + t1456;
+  base1457->_M_size = b1459;
+  return;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE9_M_insertIJRdEEEvSt14_List_iteratorIdEDpOT_
+void void_std____cxx11__list_double__std__allocator_double______M_insert_double__(struct std____cxx11__list_double__std__allocator_double__* v1460, struct std___List_iterator_double_ v1461, double* v1462) {
+bb1463:
+  struct std____cxx11__list_double__std__allocator_double__* this1464;
+  struct std___List_iterator_double_ __position1465;
+  double* __args1466;
+  struct std___List_node_double_* __tmp1467;
+  this1464 = v1460;
+  __position1465 = v1461;
+  __args1466 = v1462;
+  struct std____cxx11__list_double__std__allocator_double__* t1468 = this1464;
+  double* t1469 = __args1466;
+  struct std___List_node_double_* r1470 = std___List_node_double___std____cxx11__list_double__std__allocator_double______M_create_node_double__(t1468, t1469);
+  if (__cir_exc_active) {
+    return;
+  }
+  __tmp1467 = r1470;
+  struct std___List_node_double_* t1471 = __tmp1467;
+  struct std____detail___List_node_base* base1472 = (struct std____detail___List_node_base*)((char *)t1471 + 0);
+  struct std____detail___List_node_base* t1473 = __position1465._M_node;
+  std____detail___List_node_base___M_hook(base1472, t1473);
+  struct std____cxx11___List_base_double__std__allocator_double__* base1474 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t1468 + 0);
+  unsigned long c1475 = 1;
+  std____cxx11___List_base_double__std__allocator_double______M_inc_size(base1474, c1475);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNKSt8__detail15_List_node_base7_M_baseEv
+struct std____detail___List_node_base* std____detail___List_node_base___M_base___const(struct std____detail___List_node_base* v1476) {
+bb1477:
+  struct std____detail___List_node_base* this1478;
+  struct std____detail___List_node_base* __retval1479;
+  this1478 = v1476;
+  struct std____detail___List_node_base* t1480 = this1478;
+  __retval1479 = t1480;
+  struct std____detail___List_node_base* t1481 = __retval1479;
+  return t1481;
+}
+
+// function: _ZNKSt7__cxx114listIdSaIdEE5emptyEv
+_Bool std____cxx11__list_double__std__allocator_double_____empty___const(struct std____cxx11__list_double__std__allocator_double__* v1482) {
+bb1483:
+  struct std____cxx11__list_double__std__allocator_double__* this1484;
+  _Bool __retval1485;
+  this1484 = v1482;
+  struct std____cxx11__list_double__std__allocator_double__* t1486 = this1484;
+  struct std____cxx11___List_base_double__std__allocator_double__* base1487 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t1486 + 0);
+  struct std____detail___List_node_base* base1488 = (struct std____detail___List_node_base*)((char *)&(base1487->_M_impl._M_node) + 0);
+  struct std____detail___List_node_base* t1489 = base1488->_M_next;
+  struct std____cxx11___List_base_double__std__allocator_double__* base1490 = (struct std____cxx11___List_base_double__std__allocator_double__*)((char *)t1486 + 0);
+  struct std____detail___List_node_base* base1491 = (struct std____detail___List_node_base*)((char *)&(base1490->_M_impl._M_node) + 0);
+  struct std____detail___List_node_base* r1492 = std____detail___List_node_base___M_base___const(base1491);
+  if (__cir_exc_active) {
+    _Bool __cir_eh_ret = (_Bool)0;
+    return __cir_eh_ret;
+  }
+  _Bool c1493 = ((t1489 == r1492)) ? 1 : 0;
+  __retval1485 = c1493;
+  _Bool t1494 = __retval1485;
+  return t1494;
+}
+
+// function: _ZNSt14_List_iteratorIdEmmEv
+struct std___List_iterator_double_* std___List_iterator_double___operator__(struct std___List_iterator_double_* v1495) {
+bb1496:
+  struct std___List_iterator_double_* this1497;
+  struct std___List_iterator_double_* __retval1498;
+  this1497 = v1495;
+  struct std___List_iterator_double_* t1499 = this1497;
+  struct std____detail___List_node_base* t1500 = t1499->_M_node;
+  struct std____detail___List_node_base* t1501 = t1500->_M_prev;
+  t1499->_M_node = t1501;
+  __retval1498 = t1499;
+  struct std___List_iterator_double_* t1502 = __retval1498;
+  return t1502;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE4backEv
+double* std____cxx11__list_double__std__allocator_double_____back(struct std____cxx11__list_double__std__allocator_double__* v1503) {
+bb1504:
+  struct std____cxx11__list_double__std__allocator_double__* this1505;
+  double* __retval1506;
+  struct std___List_iterator_double_ __tmp1507;
+  this1505 = v1503;
+  struct std____cxx11__list_double__std__allocator_double__* t1508 = this1505;
+    do {
+          _Bool r1509 = std____cxx11__list_double__std__allocator_double_____empty___const(t1508);
+          if (r1509) {
+            char* cast1510 = (char*)&(_str_12);
+            int c1511 = 1674;
+            char* cast1512 = (char*)&(__PRETTY_FUNCTION____ZNSt7__cxx114listIdSaIdEE4backEv);
+            char* cast1513 = (char*)&(_str_13);
+            std____glibcxx_assert_fail(cast1510, c1511, cast1512, cast1513);
+          }
+      _Bool c1514 = 0;
+      if (!c1514) break;
+    } while (1);
+  struct std___List_iterator_double_ r1515 = std____cxx11__list_double__std__allocator_double_____end(t1508);
+  __tmp1507 = r1515;
+  struct std___List_iterator_double_* r1516 = std___List_iterator_double___operator__(&__tmp1507);
+  double* r1517 = std___List_iterator_double___operator____const(&__tmp1507);
+  __retval1506 = r1517;
+  double* t1518 = __retval1506;
+  return t1518;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE12emplace_backIJRdEEES4_DpOT_
+double* double__std____cxx11__list_double__std__allocator_double_____emplace_back_double__(struct std____cxx11__list_double__std__allocator_double__* v1519, double* v1520) {
+bb1521:
+  struct std____cxx11__list_double__std__allocator_double__* this1522;
+  double* __args1523;
+  double* __retval1524;
+  struct std___List_iterator_double_ agg_tmp01525;
+  this1522 = v1519;
+  __args1523 = v1520;
+  struct std____cxx11__list_double__std__allocator_double__* t1526 = this1522;
+  struct std___List_iterator_double_ r1527 = std____cxx11__list_double__std__allocator_double_____end(t1526);
+  agg_tmp01525 = r1527;
+  double* t1528 = __args1523;
+  struct std___List_iterator_double_ t1529 = agg_tmp01525;
+  void_std____cxx11__list_double__std__allocator_double______M_insert_double__(t1526, t1529, t1528);
+  if (__cir_exc_active) {
+    double* __cir_eh_ret = (double*)0;
+    return __cir_eh_ret;
+  }
+  double* r1530 = std____cxx11__list_double__std__allocator_double_____back(t1526);
+  __retval1524 = r1530;
+  double* t1531 = __retval1524;
+  return t1531;
+}
+
+// function: _ZNSt7__cxx114listIdSaIdEE22_M_initialize_dispatchIPdEEvT_S5_St12__false_type
+void void_std____cxx11__list_double__std__allocator_double______M_initialize_dispatch_double__(struct std____cxx11__list_double__std__allocator_double__* v1532, double* v1533, double* v1534, struct std____false_type v1535) {
+bb1536:
+  struct std____cxx11__list_double__std__allocator_double__* this1537;
+  double* __first1538;
+  double* __last1539;
+  struct std____false_type unnamed1540;
+  _Bool __notempty1541;
+  this1537 = v1532;
+  __first1538 = v1533;
+  __last1539 = v1534;
+  unnamed1540 = v1535;
+  struct std____cxx11__list_double__std__allocator_double__* t1542 = this1537;
+  double* t1543 = __first1538;
+  double* t1544 = __last1539;
+  _Bool c1545 = ((t1543 != t1544)) ? 1 : 0;
+  __notempty1541 = c1545;
+    while (1) {
+      double* t1547 = __first1538;
+      double* t1548 = __last1539;
+      _Bool c1549 = ((t1547 != t1548)) ? 1 : 0;
+      if (!c1549) break;
+      double* t1550 = __first1538;
+      double* r1551 = double__std____cxx11__list_double__std__allocator_double_____emplace_back_double__(t1542, t1550);
+      if (__cir_exc_active) {
+        return;
+      }
+    for_step1546: ;
+      double* t1552 = __first1538;
+      int c1553 = 1;
+      double* ptr1554 = &(t1552)[c1553];
+      __first1538 = ptr1554;
+    }
+    _Bool t1555 = __notempty1541;
+    if (t1555) {
+        struct std___List_iterator_double_ ref_tmp01556;
+        struct std___List_iterator_double_ ref_tmp11557;
+        struct std___List_iterator_double_ r1558 = std____cxx11__list_double__std__allocator_double_____begin(t1542);
+        ref_tmp01556 = r1558;
+        struct std___List_iterator_double_ r1559 = std____cxx11__list_double__std__allocator_double_____end(t1542);
+        ref_tmp11557 = r1559;
+        _Bool r1560 = std__operator___2(&ref_tmp01556, &ref_tmp11557);
+        if (r1560) {
+          __builtin_unreachable();
+        }
+    }
+  return;
+}
+
+// function: _ZNSt15__new_allocatorISt10_List_nodeIdEEC2Ev
+void std____new_allocator_std___List_node_double_______new_allocator_2(struct std____new_allocator_std___List_node_double__* v1561) {
+bb1562:
+  struct std____new_allocator_std___List_node_double__* this1563;
+  this1563 = v1561;
+  struct std____new_allocator_std___List_node_double__* t1564 = this1563;
+  return;
+}
+
+// function: _ZNSt15__new_allocatorISt10_List_nodeIdEEC2ERKS2_
+void std____new_allocator_std___List_node_double_______new_allocator(struct std____new_allocator_std___List_node_double__* v1565, struct std____new_allocator_std___List_node_double__* v1566) {
+bb1567:
+  struct std____new_allocator_std___List_node_double__* this1568;
+  struct std____new_allocator_std___List_node_double__* unnamed1569;
+  this1568 = v1565;
+  unnamed1569 = v1566;
+  struct std____new_allocator_std___List_node_double__* t1570 = this1568;
+  return;
+}
+
+// function: _ZNSaISt10_List_nodeIdEEC2ERKS1_
+void std__allocator_std___List_node_double_____allocator(struct std__allocator_std___List_node_double__* v1571, struct std__allocator_std___List_node_double__* v1572) {
+bb1573:
+  struct std__allocator_std___List_node_double__* this1574;
+  struct std__allocator_std___List_node_double__* __a1575;
+  this1574 = v1571;
+  __a1575 = v1572;
+  struct std__allocator_std___List_node_double__* t1576 = this1574;
+  struct std____new_allocator_std___List_node_double__* base1577 = (struct std____new_allocator_std___List_node_double__*)((char *)t1576 + 0);
+  struct std__allocator_std___List_node_double__* t1578 = __a1575;
+  struct std____new_allocator_std___List_node_double__* base1579 = (struct std____new_allocator_std___List_node_double__*)((char *)t1578 + 0);
+  std____new_allocator_std___List_node_double_______new_allocator(base1577, base1579);
+  return;
+}
+
+// function: _ZNSt8__detail17_List_node_headerC2Ev
+void std____detail___List_node_header___List_node_header(struct std____detail___List_node_header* v1580) {
+bb1581:
+  struct std____detail___List_node_header* this1582;
+  this1582 = v1580;
+  struct std____detail___List_node_header* t1583 = this1582;
+  struct std____detail___List_node_base* base1584 = (struct std____detail___List_node_base*)((char *)t1583 + 0);
+  struct std____detail___List_size* base1585 = (struct std____detail___List_size*)((char *)t1583 + 16);
+  std____detail___List_node_header___M_init(t1583);
+  return;
+}
+
+// function: _ZNSt8__detail10_List_sizeaSEOS0_
+struct std____detail___List_size* std____detail___List_size__operator_(struct std____detail___List_size* v1586, struct std____detail___List_size* v1587) {
+bb1588:
+  struct std____detail___List_size* this1589;
+  struct std____detail___List_size* unnamed1590;
+  struct std____detail___List_size* __retval1591;
+  this1589 = v1586;
+  unnamed1590 = v1587;
+  struct std____detail___List_size* t1592 = this1589;
+  struct std____detail___List_size* t1593 = unnamed1590;
+  unsigned long t1594 = t1593->_M_size;
+  t1592->_M_size = t1594;
+  __retval1591 = t1592;
+  struct std____detail___List_size* t1595 = __retval1591;
+  return t1595;
+}
+
+// function: _ZNSt8__detail17_List_node_header7_M_initEv
+void std____detail___List_node_header___M_init(struct std____detail___List_node_header* v1596) {
+bb1597:
+  struct std____detail___List_node_header* this1598;
+  struct std____detail___List_size ref_tmp01599;
+  this1598 = v1596;
+  struct std____detail___List_node_header* t1600 = this1598;
+  struct std____detail___List_node_base* base1601 = (struct std____detail___List_node_base*)((char *)t1600 + 0);
+  struct std____detail___List_node_base* base1602 = (struct std____detail___List_node_base*)((char *)t1600 + 0);
+  base1602->_M_prev = base1601;
+  struct std____detail___List_node_base* base1603 = (struct std____detail___List_node_base*)((char *)t1600 + 0);
+  base1603->_M_next = base1601;
+  struct std____detail___List_size* base1604 = (struct std____detail___List_size*)((char *)t1600 + 16);
+  ref_tmp01599 = *&__const__ZNSt8__detail17_List_node_header7_M_initEv_ref_tmp0; // copy
+  struct std____detail___List_size* r1605 = std____detail___List_size__operator_(base1604, &ref_tmp01599);
+  return;
+}
+
+// function: _ZNSt15__allocated_ptrISaISt10_List_nodeIdEEEC2EOS3_
+void std____allocated_ptr_std__allocator_std___List_node_double_________allocated_ptr(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1606, struct std____allocated_ptr_std__allocator_std___List_node_double___* v1607) {
+bb1608:
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* this1609;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* __gd1610;
+  this1609 = v1606;
+  __gd1610 = v1607;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1611 = this1609;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1612 = __gd1610;
+  struct std__allocator_std___List_node_double__* t1613 = t1612->_M_alloc;
+  t1611->_M_alloc = t1613;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1614 = __gd1610;
+  struct std___List_node_double_* t1615 = t1614->_M_ptr;
+  t1611->_M_ptr = t1615;
+  struct std___List_node_double_* c1616 = ((void*)0);
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1617 = __gd1610;
+  t1617->_M_ptr = c1616;
+  return;
+}
+
+// function: _ZSt10to_addressISt10_List_nodeIdEEPT_S3_
+struct std___List_node_double_* std___List_node_double___std__to_address_std___List_node_double___(struct std___List_node_double_* v1618) {
+bb1619:
+  struct std___List_node_double_* __ptr1620;
+  struct std___List_node_double_* __retval1621;
+  __ptr1620 = v1618;
+  struct std___List_node_double_* t1622 = __ptr1620;
+  __retval1621 = t1622;
+  struct std___List_node_double_* t1623 = __retval1621;
+  return t1623;
+}
+
+// function: _ZSt12__to_addressIPSt10_List_nodeIdEEDaRKT_
+struct std___List_node_double_* auto_std____to_address_std___List_node_double___(struct std___List_node_double_** v1624) {
+bb1625:
+  struct std___List_node_double_** __ptr1626;
+  struct std___List_node_double_* __retval1627;
+  __ptr1626 = v1624;
+  struct std___List_node_double_** t1628 = __ptr1626;
+  struct std___List_node_double_* t1629 = *t1628;
+  struct std___List_node_double_* r1630 = std___List_node_double___std__to_address_std___List_node_double___(t1629);
+  __retval1627 = r1630;
+  struct std___List_node_double_* t1631 = __retval1627;
+  return t1631;
+}
+
+// function: _ZNKSt15__allocated_ptrISaISt10_List_nodeIdEEE3getEv
+struct std___List_node_double_* std____allocated_ptr_std__allocator_std___List_node_double_______get___const(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1632) {
+bb1633:
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* this1634;
+  struct std___List_node_double_* __retval1635;
+  this1634 = v1632;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1636 = this1634;
+  struct std___List_node_double_* r1637 = auto_std____to_address_std___List_node_double___(&t1636->_M_ptr);
+  __retval1635 = r1637;
+  struct std___List_node_double_* t1638 = __retval1635;
+  return t1638;
+}
+
+// function: _ZNKSt15__allocated_ptrISaISt10_List_nodeIdEEEcvbEv
+_Bool std____allocated_ptr_std__allocator_std___List_node_double_______operator_bool___const(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1639) {
+bb1640:
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* this1641;
+  _Bool __retval1642;
+  this1641 = v1639;
+  struct std____allocated_ptr_std__allocator_std___List_node_double___* t1643 = this1641;
+  struct std___List_node_double_* t1644 = t1643->_M_ptr;
+  _Bool cast1645 = (_Bool)t1644;
+  __retval1642 = cast1645;
+  _Bool t1646 = __retval1642;
+  return t1646;
+}
+
+// function: _ZNSt8__detail15_List_node_base7_M_baseEv
+struct std____detail___List_node_base* std____detail___List_node_base___M_base(struct std____detail___List_node_base* v1647) {
+bb1648:
+  struct std____detail___List_node_base* this1649;
+  struct std____detail___List_node_base* __retval1650;
+  this1649 = v1647;
+  struct std____detail___List_node_base* t1651 = this1649;
+  __retval1650 = t1651;
+  struct std____detail___List_node_base* t1652 = __retval1650;
+  return t1652;
+}
+

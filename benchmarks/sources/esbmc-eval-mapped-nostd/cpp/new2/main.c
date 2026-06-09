@@ -1,0 +1,90 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+int a __attribute__((aligned(4))) = 0;
+int* dev_a __attribute__((aligned(8)));
+char _str[14] = "dev_a != NULL";
+char _str_1[96] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/new2/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[12] = "*dev_a == 0";
+char _str_3[13] = "*dev_a == 10";
+extern void *malloc(unsigned long);
+extern void free(void*);
+void* operator_new(unsigned long p0) { return malloc(p0); }
+void operator_delete(void* p0, unsigned long p1) { free(p0); }
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  int* __new_result2;
+  int a3;
+  int c4 = 0;
+  __retval1 = c4;
+  unsigned long c5 = 4;
+  void* r6 = operator_new(c5);
+    int* cast7 = (int*)r6;
+    __new_result2 = cast7;
+    int c8 = 0;
+    *cast7 = c8;
+  int* t9 = __new_result2;
+  dev_a = t9;
+  int* t10 = dev_a;
+  int* c11 = ((void*)0);
+  _Bool c12 = ((t10 != c11)) ? 1 : 0;
+  if (c12) {
+  } else {
+    char* cast13 = (char*)&(_str);
+    char* c14 = _str_1;
+    unsigned int c15 = 20;
+    char* cast16 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast13, c14, c15, cast16);
+  }
+  int* t17 = dev_a;
+  int t18 = *t17;
+  int c19 = 0;
+  _Bool c20 = ((t18 == c19)) ? 1 : 0;
+  if (c20) {
+  } else {
+    char* cast21 = (char*)&(_str_2);
+    char* c22 = _str_1;
+    unsigned int c23 = 21;
+    char* cast24 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast21, c22, c23, cast24);
+  }
+  int c25 = 10;
+  a3 = c25;
+  dev_a = &a3;
+  int* t26 = dev_a;
+  int t27 = *t26;
+  int c28 = 10;
+  _Bool c29 = ((t27 == c28)) ? 1 : 0;
+  if (c29) {
+  } else {
+    char* cast30 = (char*)&(_str_3);
+    char* c31 = _str_1;
+    unsigned int c32 = 25;
+    char* cast33 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast30, c31, c32, cast33);
+  }
+  int c34 = 0;
+  __retval1 = c34;
+  int t35 = __retval1;
+  return t35;
+}
+

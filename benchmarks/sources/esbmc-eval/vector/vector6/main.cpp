@@ -1,0 +1,80 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Source: https://doi.org/10.5281/zenodo.14824495
+ *
+ * This work is licensed under Creative Commons Attribution 4.0 International.
+ * To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+ */
+
+#include <cassert>
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+using namespace std;
+
+int main() {
+    vector<int> vectorOne(10);
+    assert(vectorOne.size() == 10);
+    assert(vectorOne.capacity() == 10);
+    cout << "Size of vectorOne is: " << vectorOne.size() << " elements." << endl;
+    cout << "Capacity of vectorOne is: " << vectorOne.capacity() << " elements." << endl;
+    for (long index=0; index<(long)vectorOne.size(); ++index) vectorOne.at(index)=rand();
+    cout << "vectorOne contains the following elements:" << endl;
+    for (long index=0; index<(long)vectorOne.size(); ++index) {
+//		  assert(vectorOne.at(index) == rand());
+        cout << vectorOne.at(index) << " ";
+    }
+    cout << endl << endl;
+    cout << "Using reserve to reallocate vectorOne with enough storage for 40 elements."  << endl;
+    vectorOne.reserve(40);
+    assert(vectorOne.size() == 10);
+    assert(vectorOne.capacity() == 40);
+    cout << "Size of vectorOne is: " << vectorOne.size() << " elements." << endl;
+    cout << "Capacity of vectorOne is: " << vectorOne.capacity() << " elements." << endl;
+    for (long index=0; index<(long)vectorOne.size(); ++index) vectorOne.at(index)=rand();
+    cout << "vectorOne contains the following elements:" << endl;
+    for (long index=0; index<(long)vectorOne.size(); ++index) {
+        cout << vectorOne.at(index) << " ";
+    }
+    cout << endl << endl;
+    cout << "Using resize to increase size of vector to 15 elements, with new elements set to 0." << endl;
+    vectorOne.resize(15,(int)0);
+    assert(vectorOne.size() == 15);
+    assert(vectorOne.capacity() == 40);
+    cout << "Size of vectorOne is: " << vectorOne.size() << " elements." << endl;
+    cout << "Capacity of vectorOne is: " << vectorOne.capacity() << " elements." << endl;
+    for (long index=0; index<(long)vectorOne.size(); ++index) vectorOne.at(index)=rand();
+    cout << "vectorOne contains the following elements:" << endl;
+    for (long index=0; index<(long)vectorOne.size(); ++index) {
+        cout << vectorOne.at(index) << " ";
+    }
+    cout << endl << endl;
+    cout << "Using resize to decrease size of vector to 5 elements." << endl;
+    vectorOne.resize(5);
+    assert(vectorOne.size() == 5);
+    assert(vectorOne.capacity() == 40);
+    cout << "Size of vectorOne is: " << vectorOne.size() << " elements." << endl;
+    cout << "Capacity of vectorOne is: " << vectorOne.capacity() << " elements." << endl;
+    for (long index=0; index<(long)vectorOne.size(); ++index) vectorOne.at(index)=rand();
+    cout << "vectorOne contains the following elements:" << endl;
+    for (long index=0; index<(long)vectorOne.size(); ++index) {
+        cout << vectorOne.at(index) << " ";
+    }
+    cout << endl << endl;
+    return 0;
+}

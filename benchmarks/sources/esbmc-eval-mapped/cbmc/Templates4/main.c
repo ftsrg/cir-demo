@@ -1,0 +1,192 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Struct definitions (auto-parsed)
+struct T1 { _Bool t; };
+
+char _str[10] = "x.t==true";
+char _str_1[103] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates4/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[15] = "1==x.f<int>(1)";
+char _str_3[22] = "true==x.f<bool>(true)";
+char _str_4[11] = "x.t==false";
+char _str_5[13] = "2==f<int>(2)";
+char __PRETTY_FUNCTION____ZN2T11gEv[13] = "void T1::g()";
+char _str_6[13] = "3==f<int>(3)";
+char __PRETTY_FUNCTION____ZN2T11hEv[13] = "void T1::h()";
+void T1__T1(struct T1* p0);
+void T1__g(struct T1* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int int_T1__f_int_(struct T1* p0, int p1);
+_Bool bool_T1__f_bool_(struct T1* p0, _Bool p1);
+void T1__h(struct T1* p0);
+int main();
+
+// function: _ZN2T1C2Ev
+void T1__T1(struct T1* v0) {
+bb1:
+  struct T1* this2;
+  this2 = v0;
+  struct T1* t3 = this2;
+  _Bool c4 = 0;
+  t3->t = c4;
+  return;
+}
+
+// function: _ZN2T11gEv
+void T1__g(struct T1* v5) {
+bb6:
+  struct T1* this7;
+  this7 = v5;
+  struct T1* t8 = this7;
+  int c9 = 2;
+  int c10 = 2;
+  int r11 = int_T1__f_int_(t8, c10);
+  _Bool c12 = ((c9 == r11)) ? 1 : 0;
+  if (c12) {
+  } else {
+    char* cast13 = (char*)&(_str_5);
+    char* c14 = _str_1;
+    unsigned int c15 = 23;
+    char* cast16 = (char*)&(__PRETTY_FUNCTION____ZN2T11gEv);
+    __assert_fail(cast13, c14, c15, cast16);
+  }
+  return;
+}
+
+// function: _ZN2T11fIiEET_S1_
+int int_T1__f_int_(struct T1* v17, int v18) {
+bb19:
+  struct T1* this20;
+  int x21;
+  int __retval22;
+  this20 = v17;
+  x21 = v18;
+  struct T1* t23 = this20;
+  _Bool t24 = t23->t;
+  _Bool u25 = !t24;
+  t23->t = u25;
+  int t26 = x21;
+  __retval22 = t26;
+  int t27 = __retval22;
+  return t27;
+}
+
+// function: _ZN2T11fIbEET_S1_
+_Bool bool_T1__f_bool_(struct T1* v28, _Bool v29) {
+bb30:
+  struct T1* this31;
+  _Bool x32;
+  _Bool __retval33;
+  this31 = v28;
+  x32 = v29;
+  struct T1* t34 = this31;
+  _Bool t35 = t34->t;
+  _Bool u36 = !t35;
+  t34->t = u36;
+  _Bool t37 = x32;
+  __retval33 = t37;
+  _Bool t38 = __retval33;
+  return t38;
+}
+
+// function: _ZN2T11hEv
+void T1__h(struct T1* v39) {
+bb40:
+  struct T1* this41;
+  this41 = v39;
+  struct T1* t42 = this41;
+  int c43 = 3;
+  int c44 = 3;
+  int r45 = int_T1__f_int_(t42, c44);
+  _Bool c46 = ((c43 == r45)) ? 1 : 0;
+  if (c46) {
+  } else {
+    char* cast47 = (char*)&(_str_6);
+    char* c48 = _str_1;
+    unsigned int c49 = 28;
+    char* cast50 = (char*)&(__PRETTY_FUNCTION____ZN2T11hEv);
+    __assert_fail(cast47, c48, c49, cast50);
+  }
+  return;
+}
+
+// function: main
+int main() {
+bb51:
+  int __retval52;
+  struct T1 x53;
+  int c54 = 0;
+  __retval52 = c54;
+  T1__T1(&x53);
+  T1__g(&x53);
+  _Bool t55 = x53.t;
+  int cast56 = (int)t55;
+  _Bool c57 = 1;
+  int cast58 = (int)c57;
+  _Bool c59 = ((cast56 == cast58)) ? 1 : 0;
+  if (c59) {
+  } else {
+    char* cast60 = (char*)&(_str);
+    char* c61 = _str_1;
+    unsigned int c62 = 39;
+    char* cast63 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast60, c61, c62, cast63);
+  }
+  int c64 = 1;
+  int c65 = 1;
+  int r66 = int_T1__f_int_(&x53, c65);
+  _Bool c67 = ((c64 == r66)) ? 1 : 0;
+  if (c67) {
+  } else {
+    char* cast68 = (char*)&(_str_2);
+    char* c69 = _str_1;
+    unsigned int c70 = 41;
+    char* cast71 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast68, c69, c70, cast71);
+  }
+  _Bool c72 = 1;
+  int cast73 = (int)c72;
+  _Bool c74 = 1;
+  _Bool r75 = bool_T1__f_bool_(&x53, c74);
+  int cast76 = (int)r75;
+  _Bool c77 = ((cast73 == cast76)) ? 1 : 0;
+  if (c77) {
+  } else {
+    char* cast78 = (char*)&(_str_3);
+    char* c79 = _str_1;
+    unsigned int c80 = 42;
+    char* cast81 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast78, c79, c80, cast81);
+  }
+  T1__h(&x53);
+  _Bool t82 = x53.t;
+  int cast83 = (int)t82;
+  _Bool c84 = 0;
+  int cast85 = (int)c84;
+  _Bool c86 = ((cast83 == cast85)) ? 1 : 0;
+  if (c86) {
+  } else {
+    char* cast87 = (char*)&(_str_4);
+    char* c88 = _str_1;
+    unsigned int c89 = 45;
+    char* cast90 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast87, c88, c89, cast90);
+  }
+  int t91 = __retval52;
+  return t91;
+}
+

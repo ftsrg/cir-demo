@@ -1,0 +1,74 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Source: https://doi.org/10.5281/zenodo.14824495
+ *
+ * This work is licensed under Creative Commons Attribution 4.0 International.
+ * To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+ */
+
+// constructing multimaps
+#include <iostream>
+#include <map>
+#include <cassert>
+
+bool fncomp (char lhs, char rhs) {return lhs<rhs;}
+
+struct classcomp {
+  bool operator() (const char& lhs, const char& rhs) const
+  {return lhs<rhs;}
+};
+
+int main ()
+{
+  std::multimap<char,int> first;
+  int number;
+
+  first.insert(std::pair<char,int>('a',10));
+  first.insert(std::pair<char,int>('b',15));
+  first.insert(std::pair<char,int>('b',20));
+  first.insert(std::pair<char,int>('c',25));
+
+  number = 10;
+  for(std::multimap<char,int>::iterator it = first.begin(); it != first.end(); it++, number = number + 5){
+    assert( it->second == number);
+  }
+  assert(first.size() == 4);
+
+  std::multimap<char,int> second (first.begin(),first.end());
+
+  number = 10;
+  for(std::multimap<char,int>::iterator it = second.begin(); it != second.end(); it++, number = number + 5){
+    assert( it->second == number);
+  }
+  assert(second.size() == 4);
+
+  std::multimap<char,int> third (second);
+
+  number = 10;
+  for(std::multimap<char,int>::iterator it = third.begin(); it != third.end(); it++, number = number + 5){
+    assert( it->second == number);
+  }
+  assert(third.size() == 4);
+
+  std::multimap<char,int,classcomp> fourth;                 // class as Compare
+
+  bool(*fn_pt)(char,char) = fncomp;
+  std::multimap<char,int,bool(*)(char,char)> fifth (fn_pt); // function pointer as comp
+
+  return 0;
+}

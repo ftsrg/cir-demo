@@ -1,0 +1,84 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Struct definitions (auto-parsed)
+struct Foo_float_ { int* x; };
+
+int n __attribute__((aligned(4))) = 1;
+char _str[2] = "0";
+char _str_1[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/gcc-template-tests/new11/main.cpp";
+char __PRETTY_FUNCTION____ZN3FooIfEC2Ev[30] = "Foo<float>::Foo() [T = float]";
+void* operator_new(unsigned long p0);
+void Foo_float___Foo(struct Foo_float_* p0);
+int main();
+extern void *malloc(unsigned long);
+extern void free(void*);
+void operator_delete(void* p0, unsigned long p1) { free(p0); }
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+
+// function: _Znwm
+void* operator_new(unsigned long v0) {
+bb1:
+  unsigned long unnamed2;
+  void* __retval3;
+  unnamed2 = v0;
+  int c4 = -1;
+  *&n = c4;
+  void* cast5 = (void*)&n;
+  __retval3 = cast5;
+  void* t6 = __retval3;
+  return t6;
+}
+
+// function: _ZN3FooIfEC2Ev
+void Foo_float___Foo(struct Foo_float_* v7) {
+bb8:
+  struct Foo_float_* this9;
+  int* __new_result10;
+  this9 = v7;
+  struct Foo_float_* t11 = this9;
+  unsigned long c12 = 4;
+  void* r13 = operator_new(c12);
+    int* cast14 = (int*)r13;
+    __new_result10 = cast14;
+  int* t15 = __new_result10;
+  t11->x = t15;
+    int* t16 = t11->x;
+    int t17 = *t16;
+    int c18 = -1;
+    _Bool c19 = ((t17 != c18)) ? 1 : 0;
+    if (c19) {
+      char* cast20 = (char*)&(_str);
+      char* c21 = _str_1;
+      unsigned int c22 = 27;
+      char* cast23 = (char*)&(__PRETTY_FUNCTION____ZN3FooIfEC2Ev);
+      __assert_fail(cast20, c21, c22, cast23);
+    }
+  return;
+}
+
+// function: main
+int main() {
+bb24:
+  int __retval25;
+  struct Foo_float_ foo26;
+  int c27 = 0;
+  __retval25 = c27;
+  Foo_float___Foo(&foo26);
+  int t28 = __retval25;
+  return t28;
+}
+

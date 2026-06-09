@@ -1,0 +1,202 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Struct definitions (auto-parsed)
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std__ios_base;
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+
+int __const_main_b[4] = {10, 20, 30, 40};
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str[24] = "Array b printed with:\n\n";
+char _str_1[26] = "Array subscript notation\n";
+char _str_2[3] = "b[";
+char _str_3[5] = "] = ";
+char _str_4[32] = "\nPointer/offset notation where ";
+char _str_5[31] = "the pointer is the array name\n";
+char _str_6[7] = "*(b + ";
+char _str_7[5] = ") = ";
+char _str_8[29] = "\nPointer subscript notation\n";
+char _str_9[6] = "bPtr[";
+char _str_10[26] = "\nPointer/offset notation\n";
+char _str_11[10] = "*(bPtr + ";
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  int b2[4];
+  int* bPtr3;
+  int c4 = 0;
+  __retval1 = c4;
+  // array copy
+  __builtin_memcpy(b2, __const_main_b, (unsigned long)4 * sizeof(__const_main_b[0]));
+  int* cast5 = (int*)&(b2);
+  bPtr3 = cast5;
+  char* cast6 = (char*)&(_str);
+  struct std__basic_ostream_char__std__char_traits_char__* std7;
+  __VERIFIER_nondet_memory(&std7, sizeof(std7));
+  char* cast8 = (char*)&(_str_1);
+  struct std__basic_ostream_char__std__char_traits_char__* std9;
+  __VERIFIER_nondet_memory(&std9, sizeof(std9));
+    int i10;
+    int c11 = 0;
+    i10 = c11;
+    while (1) {
+      int t13 = i10;
+      int c14 = 4;
+      _Bool c15 = ((t13 < c14)) ? 1 : 0;
+      if (!c15) break;
+      char* cast16 = (char*)&(_str_2);
+      struct std__basic_ostream_char__std__char_traits_char__* std17;
+      __VERIFIER_nondet_memory(&std17, sizeof(std17));
+      int t18 = i10;
+      struct std__basic_ostream_char__std__char_traits_char__* std19;
+      __VERIFIER_nondet_memory(&std19, sizeof(std19));
+      char* cast20 = (char*)&(_str_3);
+      struct std__basic_ostream_char__std__char_traits_char__* std21;
+      __VERIFIER_nondet_memory(&std21, sizeof(std21));
+      int t22 = i10;
+      long cast23 = (long)t22;
+      int t24 = b2[cast23];
+      struct std__basic_ostream_char__std__char_traits_char__* std25;
+      __VERIFIER_nondet_memory(&std25, sizeof(std25));
+      char c26 = 10;
+      struct std__basic_ostream_char__std__char_traits_char__* std27;
+      __VERIFIER_nondet_memory(&std27, sizeof(std27));
+    for_step12: ;
+      int t28 = i10;
+      int u29 = t28 + 1;
+      i10 = u29;
+    }
+  char* cast30 = (char*)&(_str_4);
+  struct std__basic_ostream_char__std__char_traits_char__* std31;
+  __VERIFIER_nondet_memory(&std31, sizeof(std31));
+  char* cast32 = (char*)&(_str_5);
+  struct std__basic_ostream_char__std__char_traits_char__* std33;
+  __VERIFIER_nondet_memory(&std33, sizeof(std33));
+    int offset134;
+    int c35 = 0;
+    offset134 = c35;
+    while (1) {
+      int t37 = offset134;
+      int c38 = 4;
+      _Bool c39 = ((t37 < c38)) ? 1 : 0;
+      if (!c39) break;
+      char* cast40 = (char*)&(_str_6);
+      struct std__basic_ostream_char__std__char_traits_char__* std41;
+      __VERIFIER_nondet_memory(&std41, sizeof(std41));
+      int t42 = offset134;
+      struct std__basic_ostream_char__std__char_traits_char__* std43;
+      __VERIFIER_nondet_memory(&std43, sizeof(std43));
+      char* cast44 = (char*)&(_str_7);
+      struct std__basic_ostream_char__std__char_traits_char__* std45;
+      __VERIFIER_nondet_memory(&std45, sizeof(std45));
+      int* cast46 = (int*)&(b2);
+      int t47 = offset134;
+      int* ptr48 = &(cast46)[t47];
+      int t49 = *ptr48;
+      struct std__basic_ostream_char__std__char_traits_char__* std50;
+      __VERIFIER_nondet_memory(&std50, sizeof(std50));
+      char c51 = 10;
+      struct std__basic_ostream_char__std__char_traits_char__* std52;
+      __VERIFIER_nondet_memory(&std52, sizeof(std52));
+    for_step36: ;
+      int t53 = offset134;
+      int u54 = t53 + 1;
+      offset134 = u54;
+    }
+  char* cast55 = (char*)&(_str_8);
+  struct std__basic_ostream_char__std__char_traits_char__* std56;
+  __VERIFIER_nondet_memory(&std56, sizeof(std56));
+    int j57;
+    int c58 = 0;
+    j57 = c58;
+    while (1) {
+      int t60 = j57;
+      int c61 = 4;
+      _Bool c62 = ((t60 < c61)) ? 1 : 0;
+      if (!c62) break;
+      char* cast63 = (char*)&(_str_9);
+      struct std__basic_ostream_char__std__char_traits_char__* std64;
+      __VERIFIER_nondet_memory(&std64, sizeof(std64));
+      int t65 = j57;
+      struct std__basic_ostream_char__std__char_traits_char__* std66;
+      __VERIFIER_nondet_memory(&std66, sizeof(std66));
+      char* cast67 = (char*)&(_str_3);
+      struct std__basic_ostream_char__std__char_traits_char__* std68;
+      __VERIFIER_nondet_memory(&std68, sizeof(std68));
+      int t69 = j57;
+      long cast70 = (long)t69;
+      int* t71 = bPtr3;
+      int* ptr72 = &(t71)[cast70];
+      int t73 = *ptr72;
+      struct std__basic_ostream_char__std__char_traits_char__* std74;
+      __VERIFIER_nondet_memory(&std74, sizeof(std74));
+      char c75 = 10;
+      struct std__basic_ostream_char__std__char_traits_char__* std76;
+      __VERIFIER_nondet_memory(&std76, sizeof(std76));
+    for_step59: ;
+      int t77 = j57;
+      int u78 = t77 + 1;
+      j57 = u78;
+    }
+  char* cast79 = (char*)&(_str_10);
+  struct std__basic_ostream_char__std__char_traits_char__* std80;
+  __VERIFIER_nondet_memory(&std80, sizeof(std80));
+    int offset281;
+    int c82 = 0;
+    offset281 = c82;
+    while (1) {
+      int t84 = offset281;
+      int c85 = 4;
+      _Bool c86 = ((t84 < c85)) ? 1 : 0;
+      if (!c86) break;
+      char* cast87 = (char*)&(_str_11);
+      struct std__basic_ostream_char__std__char_traits_char__* std88;
+      __VERIFIER_nondet_memory(&std88, sizeof(std88));
+      int t89 = offset281;
+      struct std__basic_ostream_char__std__char_traits_char__* std90;
+      __VERIFIER_nondet_memory(&std90, sizeof(std90));
+      char* cast91 = (char*)&(_str_7);
+      struct std__basic_ostream_char__std__char_traits_char__* std92;
+      __VERIFIER_nondet_memory(&std92, sizeof(std92));
+      int* t93 = bPtr3;
+      int t94 = offset281;
+      int* ptr95 = &(t93)[t94];
+      int t96 = *ptr95;
+      struct std__basic_ostream_char__std__char_traits_char__* std97;
+      __VERIFIER_nondet_memory(&std97, sizeof(std97));
+      char c98 = 10;
+      struct std__basic_ostream_char__std__char_traits_char__* std99;
+      __VERIFIER_nondet_memory(&std99, sizeof(std99));
+    for_step83: ;
+      int t100 = offset281;
+      int u101 = t100 + 1;
+      offset281 = u101;
+    }
+  int c102 = 0;
+  __retval1 = c102;
+  int t103 = __retval1;
+  return t103;
+}
+

@@ -65,7 +65,7 @@ COMMENT_STYLES = {
 SUPPORTED_EXTENSIONS = {
     'h', 'html', 'idx', 'js', 'json', 'jsx', 'md', 'mlir',
     'pack', 'prp', 'py', 'rev', 'sample', 'set', 'sh', 'txt', 'yml',
-    'c', 'cpp', 'yaml', 'xml'
+    'c', 'cpp', 'yaml'
 }
 
 

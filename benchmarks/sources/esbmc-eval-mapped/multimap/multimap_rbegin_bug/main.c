@@ -1,0 +1,165 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____aligned_membuf_std__pair_const_char__int__ { unsigned char _M_storage[8]; };
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Auto_node { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* _M_t; struct std___Rb_tree_node_std__pair_const_char__int__* _M_node; };
+struct std___Rb_tree_iterator_std__pair_const_char__int__ { struct std___Rb_tree_node_base* _M_node; };
+struct std___Rb_tree_key_compare_std__less_char__ { unsigned char __field0; };
+struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
+struct std___Rb_tree_node_std__pair_const_char__int__;
+struct std___Select1st_std__pair_const_char__int__ { unsigned char __field0; };
+struct std____new_allocator_std___Rb_tree_node_std__pair_const_char__int___;
+struct std____pair_base_char__int_;
+struct std____pair_base_const_char__int_;
+struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
+struct std__allocator_std___Rb_tree_node_std__pair_const_char__int___;
+struct std__iterator_std__bidirectional_iterator_tag__std__pair_const_char__int___long__std__pair_const_char__int_____std__pair_const_char__int____;
+struct std__less_char_;
+struct std__pair_char__int_ { char first; int second; };
+struct std__pair_const_char__int_;
+struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
+struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___ { struct std___Rb_tree_iterator_std__pair_const_char__int__ current; };
+struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Rb_tree_impl_std__less_char___true_ { struct std___Rb_tree_key_compare_std__less_char__ __field0; struct std___Rb_tree_header __field1; };
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___ { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Rb_tree_impl_std__less_char___true_ _M_impl; };
+struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___ { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___ _M_t; };
+
+char _str[18] = "rit->first == 'z'";
+char _str_1[116] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/multimap/multimap_rbegin_bug/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[17] = "rit->second != 9";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___ mymultimap2;
+  struct std__pair_char__int_ ref_tmp03;
+  char ref_tmp14;
+  int ref_tmp25;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ agg_tmp06;
+  struct std__pair_char__int_ ref_tmp37;
+  char ref_tmp48;
+  int ref_tmp59;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ agg_tmp110;
+  struct std__pair_char__int_ ref_tmp611;
+  char ref_tmp712;
+  int ref_tmp813;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ agg_tmp214;
+  struct std__pair_char__int_ ref_tmp915;
+  char ref_tmp1016;
+  int ref_tmp1117;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ agg_tmp318;
+  struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___ rit19;
+  int c20 = 0;
+  __retval1 = c20;
+  // externalized std:: op: std::multimap<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >::multimap()
+  __VERIFIER_nondet_memory(&mymultimap2, sizeof(mymultimap2));
+    char c21 = 120;
+    ref_tmp14 = c21;
+    int c22 = 10;
+    ref_tmp25 = c22;
+    struct std__pair_char__int_ std23;
+    __VERIFIER_nondet_memory(&std23, sizeof(std23));
+    ref_tmp03 = std23;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std24;
+    __VERIFIER_nondet_memory(&std24, sizeof(std24));
+    agg_tmp06 = std24;
+    char c25 = 121;
+    ref_tmp48 = c25;
+    int c26 = 20;
+    ref_tmp59 = c26;
+    struct std__pair_char__int_ std27;
+    __VERIFIER_nondet_memory(&std27, sizeof(std27));
+    ref_tmp37 = std27;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std28;
+    __VERIFIER_nondet_memory(&std28, sizeof(std28));
+    agg_tmp110 = std28;
+    char c29 = 121;
+    ref_tmp712 = c29;
+    int c30 = 150;
+    ref_tmp813 = c30;
+    struct std__pair_char__int_ std31;
+    __VERIFIER_nondet_memory(&std31, sizeof(std31));
+    ref_tmp611 = std31;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std32;
+    __VERIFIER_nondet_memory(&std32, sizeof(std32));
+    agg_tmp214 = std32;
+    char c33 = 122;
+    ref_tmp1016 = c33;
+    int c34 = 9;
+    ref_tmp1117 = c34;
+    struct std__pair_char__int_ std35;
+    __VERIFIER_nondet_memory(&std35, sizeof(std35));
+    ref_tmp915 = std35;
+    struct std___Rb_tree_iterator_std__pair_const_char__int__ std36;
+    __VERIFIER_nondet_memory(&std36, sizeof(std36));
+    agg_tmp318 = std36;
+    struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___ std37;
+    __VERIFIER_nondet_memory(&std37, sizeof(std37));
+    rit19 = std37;
+    struct std__pair_const_char__int_* std38;
+    __VERIFIER_nondet_memory(&std38, sizeof(std38));
+    char t39 = std38->first;
+    int cast40 = (int)t39;
+    int c41 = 122;
+    _Bool c42 = ((cast40 == c41)) ? 1 : 0;
+    if (c42) {
+    } else {
+      char* cast43 = (char*)&(_str);
+      char* c44 = _str_1;
+      unsigned int c45 = 24;
+      char* cast46 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast43, c44, c45, cast46);
+    }
+    struct std__pair_const_char__int_* std47;
+    __VERIFIER_nondet_memory(&std47, sizeof(std47));
+    int t48 = std47->second;
+    int c49 = 9;
+    _Bool c50 = ((t48 != c49)) ? 1 : 0;
+    if (c50) {
+    } else {
+      char* cast51 = (char*)&(_str_2);
+      char* c52 = _str_1;
+      unsigned int c53 = 25;
+      char* cast54 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast51, c52, c53, cast54);
+    }
+    int c55 = 0;
+    __retval1 = c55;
+    int t56 = __retval1;
+    int ret_val57 = t56;
+    {
+      // externalized std:: op: std::multimap<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >::~multimap()
+      __VERIFIER_nondet_memory(&mymultimap2, sizeof(mymultimap2));
+    }
+    return ret_val57;
+  int t58 = __retval1;
+  return t58;
+}
+

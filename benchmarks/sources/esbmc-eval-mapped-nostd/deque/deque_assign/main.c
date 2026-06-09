@@ -1,0 +1,9035 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std___Deque_iterator_int__int____int___ { int* _M_cur; int* _M_first; int* _M_last; int** _M_node; };
+struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__ { struct std___Deque_iterator_int__int____int___ _M_first; struct std___Deque_iterator_int__int____int___* _M_cur; struct std__allocator_int_* _M_alloc; };
+struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_ { struct std___Deque_iterator_int__int____int___ _M_first; struct std___Deque_iterator_int__int____int___* _M_cur; };
+struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____ { unsigned char __field0; };
+struct std____new_allocator_int_ { unsigned char __field0; };
+struct std____new_allocator_int___ { unsigned char __field0; };
+struct std__allocator_int_ { unsigned char __field0; };
+struct std__allocator_int___ { unsigned char __field0; };
+struct std__forward_iterator_tag { unsigned char __field0; };
+struct std__ios_base___Callback_list { struct std__ios_base___Callback_list* __field0; void* __field1; int __field2; int __field3; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale___Impl { int __field0; struct std__locale__facet** __field1; unsigned long __field2; struct std__locale__facet** __field3; char** __field4; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__move_iterator_std___Deque_iterator_int__int____int____ { struct std___Deque_iterator_int__int____int___ _M_current; };
+struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___ { struct std__locale__facet __field0; unsigned char __field1[4]; };
+struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___ { struct std__locale__facet __field0; unsigned char __field1[4]; };
+struct std__random_access_iterator_tag { unsigned char __field0; };
+struct std__ranges____imove___IterMove { unsigned char __field0; };
+struct std___Deque_base_int__std__allocator_int_____Deque_impl_data { int** _M_map; unsigned long _M_map_size; struct std___Deque_iterator_int__int____int___ _M_start; struct std___Deque_iterator_int__int____int___ _M_finish; };
+struct std__basic_streambuf_char__std__char_traits_char__ { void* __field0; char* __field1; char* __field2; char* __field3; char* __field4; char* __field5; char* __field6; struct std__locale __field7; };
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std___Deque_base_int__std__allocator_int_____Deque_impl { struct std___Deque_base_int__std__allocator_int_____Deque_impl_data __field0; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+struct std___Deque_base_int__std__allocator_int__ { struct std___Deque_base_int__std__allocator_int_____Deque_impl _M_impl; };
+struct std__deque_int__std__allocator_int__ { struct std___Deque_base_int__std__allocator_int__ __field0; };
+
+int __const_main_myints[3] = {1776, 7, 4};
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+char _str[18] = "first.size() == 7";
+char _str_1[106] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/deque/deque_assign/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[16] = "first[6] == 100";
+char _str_3[19] = "second.size() == 5";
+char _str_4[17] = "second[4] == 100";
+char _str_5[18] = "third.size() == 3";
+char _str_6[14] = "third[2] == 4";
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str_7[16] = "Size of first: ";
+char _str_8[17] = "Size of second: ";
+char _str_9[16] = "Size of third: ";
+char _str_10[32] = "deque::_M_new_elements_at_front";
+char _str_11[31] = "deque::_M_new_elements_at_back";
+struct std__ranges____imove___IterMove _ZNSt6ranges4_Cpo9iter_moveE;
+char _str_12[90] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_deque.h";
+char __PRETTY_FUNCTION____ZNSt5dequeIiSaIiEEixEm[91] = "reference std::deque<int>::operator[](size_type) [_Tp = int, _Alloc = std::allocator<int>]";
+char _str_13[19] = "__n < this->size()";
+void std__deque_int__std__allocator_int_____deque(struct std__deque_int__std__allocator_int__* p0);
+void void_std____fill_a1_int___int_(int* p0, int* p1, int* p2);
+void void_std____fill_a1_int__int_(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1, int* p2);
+void void_std____fill_a_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, int* p2);
+void void_std__fill_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, int* p2);
+unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* p0, unsigned long* p1);
+unsigned long std__deque_int__std__allocator_int______S_max_size(struct std__allocator_int_* p0);
+unsigned long std__deque_int__std__allocator_int_____max_size___const(struct std__deque_int__std__allocator_int__* p0);
+extern void std____throw_length_error(char* p0);
+int** int___std____niter_wrap_int___(int*** p0, int** p1);
+long std__iterator_traits_int_____difference_type_std____distance_int___(int** p0, int** p1, struct std__random_access_iterator_tag p2);
+struct std__random_access_iterator_tag std__iterator_traits_int_____iterator_category_std____iterator_category_int___(int*** p0);
+long std__iterator_traits_int_____difference_type_std__distance_int___(int** p0, int** p1);
+extern void* memmove(void* p0, void* p1, unsigned long p2);
+void void_std____assign_one_false__int____int___(int*** p0, int*** p1);
+int** int___std____copy_move_a2_false__int____int____int___(int** p0, int** p1, int** p2);
+int** int___std____copy_move_a1_false__int____int___(int** p0, int** p1, int** p2);
+int** int___std____niter_base_int___(int** p0);
+int** int___std____copy_move_a_false__int____int___(int** p0, int** p1, int** p2);
+int** int___std____miter_base_int___(int** p0);
+int** int___std__copy_int____int___(int** p0, int** p1, int** p2);
+_Bool std__is_constant_evaluated();
+void void_std____advance_int____long_(int*** p0, long p1, struct std__random_access_iterator_tag p2);
+void void_std__advance_int____long_(int*** p0, long p1);
+int** int___std____copy_move_backward_a2_false__int____int___(int** p0, int** p1, int** p2);
+int** int___std____copy_move_backward_a1_false__int____int___(int** p0, int** p1, int** p2);
+int** int___std____copy_move_backward_a_false__int____int___(int** p0, int** p1, int** p2);
+int** int___std__copy_backward_int____int___(int** p0, int** p1, int** p2);
+void std__deque_int__std__allocator_int______M_reallocate_map(struct std__deque_int__std__allocator_int__* p0, unsigned long p1, _Bool p2);
+void std__deque_int__std__allocator_int______M_reserve_map_at_front(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+void std__deque_int__std__allocator_int______M_new_elements_at_front(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int______M_reserve_elements_at_front(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void____UninitDestroyGuard(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* p0, struct std___Deque_iterator_int__int____int___* p1);
+_Bool std__operator__(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1);
+int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* p0, int* p1);
+void void_std___Construct_int__int_const__(int* p0, int* p1);
+int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* p0);
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator___4(struct std___Deque_iterator_int__int____int___* p0);
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void___release(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* p0);
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* p0);
+void void_std____do_uninit_fill_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, int* p2);
+void void_std__uninitialized_fill_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, int* p2);
+void void_std____uninitialized_fill_a_std___Deque_iterator_int__int___int____int__int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, int* p2, struct std__allocator_int_* p3);
+void std__deque_int__std__allocator_int______M_reserve_map_at_back(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+void std__deque_int__std__allocator_int______M_new_elements_at_back(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int______M_reserve_elements_at_back(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+long std__operator_(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1);
+struct std___Deque_iterator_int__int____int___* std__move_iterator_std___Deque_iterator_int__int___int______base___const__(struct std__move_iterator_std___Deque_iterator_int__int____int____* p0);
+_Bool bool_std__operator___std___Deque_iterator_int__int___int____(struct std__move_iterator_std___Deque_iterator_int__int____int____* p0, struct std__move_iterator_std___Deque_iterator_int__int____int____* p1);
+int* _ZSt12construct_atIiJiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S0_pispclsr3stdE7declvalIT0_EEEEEPS0_S3_DpOS2_(int* p0, int* p1);
+void void_std___Construct_int__int_(int* p0, int* p1);
+int* _ZNKSt6ranges7__imove9_IterMoveclIRKSt15_Deque_iteratorIiRiPiEQoo11__adl_imoveIT_ErqTDTdeclsr3stdE7declvalIS9_EEEEEENS1_8__resultIS9_E4typeEOS9_(struct std__ranges____imove___IterMove* p0, struct std___Deque_iterator_int__int____int___* p1);
+int* std__move_iterator_std___Deque_iterator_int__int___int______operator____const(struct std__move_iterator_std___Deque_iterator_int__int____int____* p0);
+struct std__move_iterator_std___Deque_iterator_int__int____int____* std__move_iterator_std___Deque_iterator_int__int___int______operator__(struct std__move_iterator_std___Deque_iterator_int__int____int____* p0);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____do_uninit_copy_std__move_iterator_std___Deque_iterator_int__int___int______std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____(struct std__move_iterator_std___Deque_iterator_int__int____int____ p0, struct std__move_iterator_std___Deque_iterator_int__int____int____ p1, struct std___Deque_iterator_int__int____int___ p2);
+void std__move_iterator_std___Deque_iterator_int__int___int______move_iterator(struct std__move_iterator_std___Deque_iterator_int__int____int____* p0, struct std__move_iterator_std___Deque_iterator_int__int____int____* p1);
+void std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_2(struct std__move_iterator_std___Deque_iterator_int__int____int____* p0, struct std__move_iterator_std___Deque_iterator_int__int____int____* p1);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__uninitialized_copy_std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____(struct std__move_iterator_std___Deque_iterator_int__int____int____ p0, struct std__move_iterator_std___Deque_iterator_int__int____int____ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std__move_iterator_std___Deque_iterator_int__int___int______std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____int_(struct std__move_iterator_std___Deque_iterator_int__int____int____ p0, struct std__move_iterator_std___Deque_iterator_int__int____int____ p1, struct std___Deque_iterator_int__int____int___ p2, struct std__allocator_int_* p3);
+void std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_3(struct std__move_iterator_std___Deque_iterator_int__int____int____* p0, struct std___Deque_iterator_int__int____int___ p1);
+struct std__move_iterator_std___Deque_iterator_int__int____int____ std__move_iterator_std___Deque_iterator_int__int___int_____std__make_move_iterator_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std__allocator_int_* p3);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____niter_wrap_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___ p1);
+long* long_const__std__min_long_(long* p0, long* p1);
+long std__iterator_traits_int____difference_type_std____distance_int__(int* p0, int* p1, struct std__random_access_iterator_tag p2);
+struct std__random_access_iterator_tag std__iterator_traits_int____iterator_category_std____iterator_category_int__(int** p0);
+long std__iterator_traits_int____difference_type_std__distance_int__(int* p0, int* p1);
+void void_std____assign_one_true__int___int__(int** p0, int** p1);
+int* int__std____copy_move_a2_true__int___int___int__(int* p0, int* p1, int* p2);
+int* int__std____copy_move_a1_true__int___int__(int* p0, int* p1, int* p2);
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator___3(struct std___Deque_iterator_int__int____int___* p0, long p1);
+struct std___Deque_iterator_int__int____int___ __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_true__int___int_(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_dit_true__int__int___int___std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a1_true__int__int___int___int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a_true__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____miter_base_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__move_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int______UninitDestroyGuard(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___* p1, struct std__allocator_int_* p2);
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_____release(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* p0);
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* p0);
+void void_std____uninitialized_move_fill_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int__std__allocator_int___(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std___Deque_iterator_int__int____int___ p3, int* p4, struct std__allocator_int_* p5);
+void void_std____advance_int___long_(int** p0, long p1, struct std__random_access_iterator_tag p2);
+void void_std__advance_int___long_(int** p0, long p1);
+int* int__std____copy_move_backward_a2_true__int___int__(int* p0, int* p1, int* p2);
+int* int__std____copy_move_backward_a1_true__int___int__(int* p0, int* p1, int* p2);
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator__(struct std___Deque_iterator_int__int____int___* p0, long p1);
+struct std___Deque_iterator_int__int____int___ __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_backward_a1_true__int___int_(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_backward_dit_true__int__int___int___std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_backward_a1_true__int__int___int___int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_backward_a_true__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__move_backward_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_fill_move_std___Deque_iterator_int__int___int____int__std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, int* p2, struct std___Deque_iterator_int__int____int___ p3, struct std___Deque_iterator_int__int____int___ p4, struct std__allocator_int_* p5);
+void std__deque_int__std__allocator_int______M_insert_aux(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, unsigned long p2, int* p3);
+void std__deque_int__std__allocator_int______M_fill_insert(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, unsigned long p2, int* p3);
+void std__deque_int__std__allocator_int______M_erase_at_end(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1);
+void std__deque_int__std__allocator_int______M_fill_assign(struct std__deque_int__std__allocator_int__* p0, unsigned long p1, int* p2);
+void std__deque_int__std__allocator_int_____assign(struct std__deque_int__std__allocator_int__* p0, unsigned long p1, int* p2);
+unsigned long std__deque_int__std__allocator_int_____size___const(struct std__deque_int__std__allocator_int__* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
+int* std___Deque_iterator_int__int___int____operator___long__const(struct std___Deque_iterator_int__int____int___* p0, long p1);
+int* std__deque_int__std__allocator_int_____operator__(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+void std___Deque_iterator_int__int___int_____Deque_iterator_2(struct std___Deque_iterator_int__int____int___* p0);
+struct std___Deque_iterator_int__int____int___ std__operator__4(struct std___Deque_iterator_int__int____int___* p0, long p1);
+struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int_____begin(struct std__deque_int__std__allocator_int__* p0);
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator_(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1);
+long std__iterator_traits_std___Deque_iterator_int__int___int______difference_type_std____distance_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std__random_access_iterator_tag p2);
+long std__iterator_traits_std___Deque_iterator_int__int___int______difference_type_std__distance_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1);
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator___2(struct std___Deque_iterator_int__int____int___* p0);
+void void_std____advance_std___Deque_iterator_int__int___int____long_(struct std___Deque_iterator_int__int____int___* p0, long p1, struct std__random_access_iterator_tag p2);
+void void_std__advance_std___Deque_iterator_int__int___int____unsigned_long_(struct std___Deque_iterator_int__int____int___* p0, unsigned long p1);
+void void_std____assign_one_false__int___int__(int** p0, int** p1);
+int* int__std____copy_move_a2_false__int___int___int__(int* p0, int* p1, int* p2);
+int* int__std____copy_move_a1_false__int___int__(int* p0, int* p1, int* p2);
+struct std___Deque_iterator_int__int____int___ __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_false__int___int_(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_dit_false__int__int___int___std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a1_false__int__int___int___int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a_false__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+int* _ZSt12construct_atIiJRiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(int* p0, int* p1);
+void void_std___Construct_int__int__(int* p0, int* p1);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____do_uninit_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__uninitialized_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std__allocator_int_* p3);
+void void_std__deque_int__std__allocator_int______M_range_prepend_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, unsigned long p3);
+void void_std__deque_int__std__allocator_int______M_range_append_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, unsigned long p3);
+void void_std__advance_std___Deque_iterator_int__int___int____long_(struct std___Deque_iterator_int__int____int___* p0, long p1);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_move_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std___Deque_iterator_int__int____int___ p3, struct std___Deque_iterator_int__int____int___ p4, struct std__allocator_int_* p5);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_move_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std___Deque_iterator_int__int____int___ p3, struct std___Deque_iterator_int__int____int___ p4, struct std__allocator_int_* p5);
+void void_std__deque_int__std__allocator_int______M_insert_aux_std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std___Deque_iterator_int__int____int___ p3, unsigned long p4);
+void void_std__deque_int__std__allocator_int______M_range_insert_aux_std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std___Deque_iterator_int__int____int___ p3, struct std__forward_iterator_tag p4);
+void void_std__deque_int__std__allocator_int______M_assign_aux_std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std__forward_iterator_tag p3);
+struct std__random_access_iterator_tag std__iterator_traits_std___Deque_iterator_int__int___int______iterator_category_std____iterator_category_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___* p0);
+void void_std__deque_int__std__allocator_int_____assign_std___Deque_iterator_int__int___int____void_(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+void std___Deque_iterator_int__int___int_____Deque_iterator(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1);
+struct std___Deque_iterator_int__int____int___ std__operator__2(struct std___Deque_iterator_int__int____int___* p0, long p1);
+struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int_____end(struct std__deque_int__std__allocator_int__* p0);
+void void_std__advance_int___unsigned_long_(int** p0, unsigned long p1);
+int* int__std____niter_base_int__(int* p0);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a_false__int___std___Deque_iterator_int__int___int____(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2);
+int* int__std____miter_base_int__(int* p0);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__copy_int___std___Deque_iterator_int__int___int____(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____do_uninit_copy_int___int___std___Deque_iterator_int__int___int____(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__uninitialized_copy_int___std___Deque_iterator_int__int___int____(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_a_int___int___std___Deque_iterator_int__int___int____int_(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2, struct std__allocator_int_* p3);
+void void_std__deque_int__std__allocator_int______M_range_prepend_int___int__(struct std__deque_int__std__allocator_int__* p0, int* p1, int* p2, unsigned long p3);
+void void_std__deque_int__std__allocator_int______M_range_append_int___int__(struct std__deque_int__std__allocator_int__* p0, int* p1, int* p2, unsigned long p3);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_move_copy_std___Deque_iterator_int__int___int____int___std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, int* p2, int* p3, struct std___Deque_iterator_int__int____int___ p4, struct std__allocator_int_* p5);
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_move_int___std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(int* p0, int* p1, struct std___Deque_iterator_int__int____int___ p2, struct std___Deque_iterator_int__int____int___ p3, struct std___Deque_iterator_int__int____int___ p4, struct std__allocator_int_* p5);
+void void_std__deque_int__std__allocator_int______M_insert_aux_int__(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, int* p2, int* p3, unsigned long p4);
+void void_std__deque_int__std__allocator_int______M_range_insert_aux_int__(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, int* p2, int* p3, struct std__forward_iterator_tag p4);
+void void_std__deque_int__std__allocator_int______M_assign_aux_int__(struct std__deque_int__std__allocator_int__* p0, int* p1, int* p2, struct std__forward_iterator_tag p3);
+void void_std__deque_int__std__allocator_int_____assign_int___void_(struct std__deque_int__std__allocator_int__* p0, int* p1, int* p2);
+extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
+int std__operator__3(int p0, int p1);
+int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* p0);
+void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std____ostream_insert_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1, long p2);
+_Bool __gnu_cxx__char_traits_char___eq(char* p0, char* p1);
+unsigned long __gnu_cxx__char_traits_char___length(char* p0);
+extern unsigned long strlen(char* p0);
+unsigned long std__char_traits_char___length(char* p0);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator__(struct std__basic_ostream_char__std__char_traits_char__* p0, int p1);
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__put(struct std__basic_ostream_char__std__char_traits_char__* p0, char p1);
+extern void std____throw_bad_cast();
+struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* p0);
+extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0);
+char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
+char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+void std__deque_int__std__allocator_int______deque(struct std__deque_int__std__allocator_int__* p0);
+int main();
+void std___Deque_base_int__std__allocator_int______Deque_impl___Deque_impl(struct std___Deque_base_int__std__allocator_int_____Deque_impl* p0);
+unsigned long std____deque_buf_size(unsigned long p0);
+unsigned long* unsigned_long_const__std__max_unsigned_long_(unsigned long* p0, unsigned long* p1);
+struct std__allocator_int_* std___Deque_base_int__std__allocator_int______M_get_Tp_allocator___const(struct std___Deque_base_int__std__allocator_int__* p0);
+void std__allocator_int____allocator_int_(struct std__allocator_int___* p0, struct std__allocator_int_* p1);
+struct std__allocator_int___ std___Deque_base_int__std__allocator_int______M_get_map_allocator___const(struct std___Deque_base_int__std__allocator_int__* p0);
+_Bool std____is_constant_evaluated();
+extern void std____throw_bad_array_new_length();
+extern void *malloc(unsigned long);
+extern void free(void*);
+void* operator_new(unsigned long p0) { return malloc(p0); }
+unsigned long std____new_allocator_int_____M_max_size___const(struct std____new_allocator_int___* p0);
+extern void std____throw_bad_alloc();
+void* operator_new_2(unsigned long p0, unsigned long p1) { return malloc(p0); }
+int** std____new_allocator_int____allocate(struct std____new_allocator_int___* p0, unsigned long p1, void* p2);
+int** std__allocator_int____allocate(struct std__allocator_int___* p0, unsigned long p1);
+int** std__allocator_traits_std__allocator_int______allocate(struct std__allocator_int___* p0, unsigned long p1);
+int** std___Deque_base_int__std__allocator_int______M_allocate_map(struct std___Deque_base_int__std__allocator_int__* p0, unsigned long p1);
+extern int __gxx_personality_v0();
+unsigned long std____new_allocator_int____M_max_size___const(struct std____new_allocator_int_* p0);
+int* std____new_allocator_int___allocate(struct std____new_allocator_int_* p0, unsigned long p1, void* p2);
+int* std__allocator_int___allocate(struct std__allocator_int_* p0, unsigned long p1);
+int* std__allocator_traits_std__allocator_int_____allocate(struct std__allocator_int_* p0, unsigned long p1);
+int* std___Deque_base_int__std__allocator_int______M_allocate_node(struct std___Deque_base_int__std__allocator_int__* p0);
+void operator_delete(void* p0) { free(p0); }
+void operator_delete_3(void* p0, unsigned long p1, unsigned long p2) { free(p0); }
+void operator_delete_2(void* p0, unsigned long p1) { free(p0); }
+void std____new_allocator_int___deallocate(struct std____new_allocator_int_* p0, int* p1, unsigned long p2);
+void std__allocator_int___deallocate(struct std__allocator_int_* p0, int* p1, unsigned long p2);
+void std__allocator_traits_std__allocator_int_____deallocate(struct std__allocator_int_* p0, int* p1, unsigned long p2);
+void std___Deque_base_int__std__allocator_int______M_deallocate_node(struct std___Deque_base_int__std__allocator_int__* p0, int* p1);
+void std___Deque_base_int__std__allocator_int______M_destroy_nodes(struct std___Deque_base_int__std__allocator_int__* p0, int** p1, int** p2);
+void std___Deque_base_int__std__allocator_int______M_create_nodes(struct std___Deque_base_int__std__allocator_int__* p0, int** p1, int** p2);
+void std____new_allocator_int____deallocate(struct std____new_allocator_int___* p0, int** p1, unsigned long p2);
+void std__allocator_int____deallocate(struct std__allocator_int___* p0, int** p1, unsigned long p2);
+void std__allocator_traits_std__allocator_int______deallocate(struct std__allocator_int___* p0, int** p1, unsigned long p2);
+void std___Deque_base_int__std__allocator_int______M_deallocate_map(struct std___Deque_base_int__std__allocator_int__* p0, int** p1, unsigned long p2);
+unsigned long std___Deque_iterator_int__int___int_____S_buffer_size();
+void std___Deque_iterator_int__int___int_____M_set_node(struct std___Deque_iterator_int__int____int___* p0, int** p1);
+void std___Deque_base_int__std__allocator_int______M_initialize_map(struct std___Deque_base_int__std__allocator_int__* p0, unsigned long p1);
+void std___Deque_base_int__std__allocator_int______Deque_impl____Deque_impl(struct std___Deque_base_int__std__allocator_int_____Deque_impl* p0);
+void std___Deque_base_int__std__allocator_int______Deque_base(struct std___Deque_base_int__std__allocator_int__* p0);
+void std___Deque_base_int__std__allocator_int_______Deque_base(struct std___Deque_base_int__std__allocator_int__* p0);
+void std____new_allocator_int_____new_allocator(struct std____new_allocator_int_* p0);
+void std__allocator_int___allocator(struct std__allocator_int_* p0);
+void std___Deque_base_int__std__allocator_int______Deque_impl_data___Deque_impl_data(struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* p0);
+void std__allocator_int____allocator(struct std__allocator_int_* p0);
+void std____new_allocator_int______new_allocator(struct std____new_allocator_int___* p0);
+void void_std__destroy_at_int_(int* p0);
+void void_std___Destroy_int__(int* p0, int* p1);
+void void_std___Destroy_int___int_(int* p0, int* p1, struct std__allocator_int_* p2);
+unsigned long std__deque_int__std__allocator_int______S_buffer_size();
+void std__deque_int__std__allocator_int______M_destroy_data_aux(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2);
+void std__deque_int__std__allocator_int______M_destroy_data(struct std__deque_int__std__allocator_int__* p0, struct std___Deque_iterator_int__int____int___ p1, struct std___Deque_iterator_int__int____int___ p2, struct std__allocator_int_* p3);
+struct std__allocator_int_* std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(struct std___Deque_base_int__std__allocator_int__* p0);
+void void_std___Destroy_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1);
+void void_std___Destroy_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ p0, struct std___Deque_iterator_int__int____int___ p1, struct std__allocator_int_* p2);
+
+// function: _ZNSt5dequeIiSaIiEEC2Ev
+void std__deque_int__std__allocator_int_____deque(struct std__deque_int__std__allocator_int__* v0) {
+bb1:
+  struct std__deque_int__std__allocator_int__* this2;
+  this2 = v0;
+  struct std__deque_int__std__allocator_int__* t3 = this2;
+  struct std___Deque_base_int__std__allocator_int__* base4 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3 + 0);
+  std___Deque_base_int__std__allocator_int______Deque_base(base4);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt9__fill_a1IPiiEvT_S1_RKT0_
+void void_std____fill_a1_int___int_(int* v5, int* v6, int* v7) {
+bb8:
+  int* __first9;
+  int* __last10;
+  int* __value11;
+  _Bool __load_outside_loop12;
+  int __val13;
+  __first9 = v5;
+  __last10 = v6;
+  __value11 = v7;
+  _Bool c14 = 1;
+  __load_outside_loop12 = c14;
+  int* t15 = __value11;
+  int t16 = *t15;
+  __val13 = t16;
+    while (1) {
+      int* t18 = __first9;
+      int* t19 = __last10;
+      _Bool c20 = ((t18 != t19)) ? 1 : 0;
+      if (!c20) break;
+      int t21 = __val13;
+      int* t22 = __first9;
+      *t22 = t21;
+    for_step17: ;
+      int* t23 = __first9;
+      int c24 = 1;
+      int* ptr25 = &(t23)[c24];
+      __first9 = ptr25;
+    }
+  return;
+}
+
+// function: _ZSt9__fill_a1IiiEvRKSt15_Deque_iteratorIT_RS1_PS1_ES6_RKT0_
+void void_std____fill_a1_int__int_(struct std___Deque_iterator_int__int____int___* v26, struct std___Deque_iterator_int__int____int___* v27, int* v28) {
+bb29:
+  struct std___Deque_iterator_int__int____int___* __first30;
+  struct std___Deque_iterator_int__int____int___* __last31;
+  int* __value32;
+  __first30 = v26;
+  __last31 = v27;
+  __value32 = v28;
+    struct std___Deque_iterator_int__int____int___* t33 = __first30;
+    int** t34 = t33->_M_node;
+    struct std___Deque_iterator_int__int____int___* t35 = __last31;
+    int** t36 = t35->_M_node;
+    _Bool c37 = ((t34 != t36)) ? 1 : 0;
+    if (c37) {
+      struct std___Deque_iterator_int__int____int___* t38 = __first30;
+      int* t39 = t38->_M_cur;
+      struct std___Deque_iterator_int__int____int___* t40 = __first30;
+      int* t41 = t40->_M_last;
+      int* t42 = __value32;
+      void_std____fill_a1_int___int_(t39, t41, t42);
+      if (__cir_exc_active) {
+        return;
+      }
+        int** __node43;
+        struct std___Deque_iterator_int__int____int___* t44 = __first30;
+        int** t45 = t44->_M_node;
+        int c46 = 1;
+        int** ptr47 = &(t45)[c46];
+        __node43 = ptr47;
+        while (1) {
+          int** t49 = __node43;
+          struct std___Deque_iterator_int__int____int___* t50 = __last31;
+          int** t51 = t50->_M_node;
+          _Bool c52 = ((t49 < t51)) ? 1 : 0;
+          if (!c52) break;
+          int** t53 = __node43;
+          int* t54 = *t53;
+          int** t55 = __node43;
+          int* t56 = *t55;
+          unsigned long r57 = std___Deque_iterator_int__int___int_____S_buffer_size();
+          int* ptr58 = &(t56)[r57];
+          int* t59 = __value32;
+          void_std____fill_a1_int___int_(t54, ptr58, t59);
+          if (__cir_exc_active) {
+            return;
+          }
+        for_step48: ;
+          int** t60 = __node43;
+          int c61 = 1;
+          int** ptr62 = &(t60)[c61];
+          __node43 = ptr62;
+        }
+      struct std___Deque_iterator_int__int____int___* t63 = __last31;
+      int* t64 = t63->_M_first;
+      struct std___Deque_iterator_int__int____int___* t65 = __last31;
+      int* t66 = t65->_M_cur;
+      int* t67 = __value32;
+      void_std____fill_a1_int___int_(t64, t66, t67);
+      if (__cir_exc_active) {
+        return;
+      }
+    } else {
+      struct std___Deque_iterator_int__int____int___* t68 = __first30;
+      int* t69 = t68->_M_cur;
+      struct std___Deque_iterator_int__int____int___* t70 = __last31;
+      int* t71 = t70->_M_cur;
+      int* t72 = __value32;
+      void_std____fill_a1_int___int_(t69, t71, t72);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZSt8__fill_aISt15_Deque_iteratorIiRiPiEiEvT_S4_RKT0_
+void void_std____fill_a_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ v73, struct std___Deque_iterator_int__int____int___ v74, int* v75) {
+bb76:
+  struct std___Deque_iterator_int__int____int___ __first77;
+  struct std___Deque_iterator_int__int____int___ __last78;
+  int* __value79;
+  __first77 = v73;
+  __last78 = v74;
+  __value79 = v75;
+  int* t80 = __value79;
+  void_std____fill_a1_int__int_(&__first77, &__last78, t80);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt4fillISt15_Deque_iteratorIiRiPiEiEvT_S4_RKT0_
+void void_std__fill_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ v81, struct std___Deque_iterator_int__int____int___ v82, int* v83) {
+bb84:
+  struct std___Deque_iterator_int__int____int___ __first85;
+  struct std___Deque_iterator_int__int____int___ __last86;
+  int* __value87;
+  struct std___Deque_iterator_int__int____int___ agg_tmp088;
+  struct std___Deque_iterator_int__int____int___ agg_tmp189;
+  __first85 = v81;
+  __last86 = v82;
+  __value87 = v83;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp088, &__first85);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp189, &__last86);
+  int* t90 = __value87;
+  struct std___Deque_iterator_int__int____int___ t91 = agg_tmp088;
+  struct std___Deque_iterator_int__int____int___ t92 = agg_tmp189;
+  void_std____fill_a_std___Deque_iterator_int__int___int____int_(t91, t92, t90);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt3minImERKT_S2_S2_
+unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* v93, unsigned long* v94) {
+bb95:
+  unsigned long* __a96;
+  unsigned long* __b97;
+  unsigned long* __retval98;
+  __a96 = v93;
+  __b97 = v94;
+    unsigned long* t99 = __b97;
+    unsigned long t100 = *t99;
+    unsigned long* t101 = __a96;
+    unsigned long t102 = *t101;
+    _Bool c103 = ((t100 < t102)) ? 1 : 0;
+    if (c103) {
+      unsigned long* t104 = __b97;
+      __retval98 = t104;
+      unsigned long* t105 = __retval98;
+      return t105;
+    }
+  unsigned long* t106 = __a96;
+  __retval98 = t106;
+  unsigned long* t107 = __retval98;
+  return t107;
+}
+
+// function: _ZNSt5dequeIiSaIiEE11_S_max_sizeERKS0_
+unsigned long std__deque_int__std__allocator_int______S_max_size(struct std__allocator_int_* v108) {
+bb109:
+  struct std__allocator_int_* __a110;
+  unsigned long __retval111;
+  unsigned long __diffmax112;
+  unsigned long __allocmax113;
+  __a110 = v108;
+  unsigned long c114 = 9223372036854775807;
+  __diffmax112 = c114;
+  unsigned long c115 = 4611686018427387903;
+  __allocmax113 = c115;
+  unsigned long* r116 = unsigned_long_const__std__min_unsigned_long_(&__diffmax112, &__allocmax113);
+  if (__cir_exc_active) {
+    unsigned long __cir_eh_ret = (unsigned long)0;
+    return __cir_eh_ret;
+  }
+  unsigned long t117 = *r116;
+  __retval111 = t117;
+  unsigned long t118 = __retval111;
+  return t118;
+}
+
+// function: _ZNKSt5dequeIiSaIiEE8max_sizeEv
+unsigned long std__deque_int__std__allocator_int_____max_size___const(struct std__deque_int__std__allocator_int__* v119) {
+bb120:
+  struct std__deque_int__std__allocator_int__* this121;
+  unsigned long __retval122;
+  this121 = v119;
+  struct std__deque_int__std__allocator_int__* t123 = this121;
+  struct std___Deque_base_int__std__allocator_int__* base124 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t123 + 0);
+  struct std__allocator_int_* r125 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator___const(base124);
+  unsigned long r126 = std__deque_int__std__allocator_int______S_max_size(r125);
+  __retval122 = r126;
+  unsigned long t127 = __retval122;
+  return t127;
+}
+
+// function: _ZSt12__niter_wrapIPPiET_RKS2_S2_
+int** int___std____niter_wrap_int___(int*** v128, int** v129) {
+bb130:
+  int*** unnamed131;
+  int** __res132;
+  int** __retval133;
+  unnamed131 = v128;
+  __res132 = v129;
+  int** t134 = __res132;
+  __retval133 = t134;
+  int** t135 = __retval133;
+  return t135;
+}
+
+// function: _ZSt10__distanceIPPiENSt15iterator_traitsIT_E15difference_typeES3_S3_St26random_access_iterator_tag
+long std__iterator_traits_int_____difference_type_std____distance_int___(int** v136, int** v137, struct std__random_access_iterator_tag v138) {
+bb139:
+  int** __first140;
+  int** __last141;
+  struct std__random_access_iterator_tag unnamed142;
+  long __retval143;
+  __first140 = v136;
+  __last141 = v137;
+  unnamed142 = v138;
+  int** t144 = __last141;
+  int** t145 = __first140;
+  long diff146 = t144 - t145;
+  __retval143 = diff146;
+  long t147 = __retval143;
+  return t147;
+}
+
+// function: _ZSt19__iterator_categoryIPPiENSt15iterator_traitsIT_E17iterator_categoryERKS3_
+struct std__random_access_iterator_tag std__iterator_traits_int_____iterator_category_std____iterator_category_int___(int*** v148) {
+bb149:
+  int*** unnamed150;
+  struct std__random_access_iterator_tag __retval151;
+  unnamed150 = v148;
+  struct std__random_access_iterator_tag t152 = __retval151;
+  return t152;
+}
+
+// function: _ZSt8distanceIPPiENSt15iterator_traitsIT_E15difference_typeES3_S3_
+long std__iterator_traits_int_____difference_type_std__distance_int___(int** v153, int** v154) {
+bb155:
+  int** __first156;
+  int** __last157;
+  long __retval158;
+  struct std__random_access_iterator_tag agg_tmp0159;
+  __first156 = v153;
+  __last157 = v154;
+  int** t160 = __first156;
+  int** t161 = __last157;
+  struct std__random_access_iterator_tag r162 = std__iterator_traits_int_____iterator_category_std____iterator_category_int___(&__first156);
+  if (__cir_exc_active) {
+    long __cir_eh_ret = (long)0;
+    return __cir_eh_ret;
+  }
+  agg_tmp0159 = r162;
+  struct std__random_access_iterator_tag t163 = agg_tmp0159;
+  long r164 = std__iterator_traits_int_____difference_type_std____distance_int___(t160, t161, t163);
+  if (__cir_exc_active) {
+    long __cir_eh_ret = (long)0;
+    return __cir_eh_ret;
+  }
+  __retval158 = r164;
+  long t165 = __retval158;
+  return t165;
+}
+
+// function: _ZSt12__assign_oneILb0EPPiS1_EvRT0_RT1_
+void void_std____assign_one_false__int____int___(int*** v166, int*** v167) {
+bb168:
+  int*** __out169;
+  int*** __in170;
+  __out169 = v166;
+  __in170 = v167;
+    int*** t171 = __in170;
+    int** t172 = *t171;
+    int* t173 = *t172;
+    int*** t174 = __out169;
+    int** t175 = *t174;
+    *t175 = t173;
+  return;
+}
+
+// function: _ZSt14__copy_move_a2ILb0EPPiS1_S1_ET2_T0_T1_S2_
+int** int___std____copy_move_a2_false__int____int____int___(int** v176, int** v177, int** v178) {
+bb179:
+  int** __first180;
+  int** __last181;
+  int** __result182;
+  int** __retval183;
+  __first180 = v176;
+  __last181 = v177;
+  __result182 = v178;
+      _Bool r184 = std____is_constant_evaluated();
+      if (r184) {
+      } else {
+          long __n185;
+          int** t186 = __first180;
+          int** t187 = __last181;
+          long r188 = std__iterator_traits_int_____difference_type_std__distance_int___(t186, t187);
+          if (__cir_exc_active) {
+            int** __cir_eh_ret = (int**)0;
+            return __cir_eh_ret;
+          }
+          __n185 = r188;
+            long t189 = __n185;
+            long c190 = 1;
+            _Bool c191 = ((t189 > c190)) ? 1 : 0;
+            if (c191) {
+              int** t192 = __result182;
+              void* cast193 = (void*)t192;
+              int** t194 = __first180;
+              void* cast195 = (void*)t194;
+              long t196 = __n185;
+              unsigned long cast197 = (unsigned long)t196;
+              unsigned long c198 = 8;
+              unsigned long b199 = cast197 * c198;
+              void* r200 = memmove(cast193, cast195, b199);
+              long t201 = __n185;
+              int** t202 = __result182;
+              int** ptr203 = &(t202)[t201];
+              __result182 = ptr203;
+            } else {
+                long t204 = __n185;
+                long c205 = 1;
+                _Bool c206 = ((t204 == c205)) ? 1 : 0;
+                if (c206) {
+                  void_std____assign_one_false__int____int___(&__result182, &__first180);
+                  if (__cir_exc_active) {
+                    int** __cir_eh_ret = (int**)0;
+                    return __cir_eh_ret;
+                  }
+                  int** t207 = __result182;
+                  int c208 = 1;
+                  int** ptr209 = &(t207)[c208];
+                  __result182 = ptr209;
+                }
+            }
+          int** t210 = __result182;
+          __retval183 = t210;
+          int** t211 = __retval183;
+          return t211;
+      }
+    while (1) {
+      int** t213 = __first180;
+      int** t214 = __last181;
+      _Bool c215 = ((t213 != t214)) ? 1 : 0;
+      if (!c215) break;
+      void_std____assign_one_false__int____int___(&__result182, &__first180);
+      if (__cir_exc_active) {
+        int** __cir_eh_ret = (int**)0;
+        return __cir_eh_ret;
+      }
+    for_step212: ;
+      int** t216 = __result182;
+      int c217 = 1;
+      int** ptr218 = &(t216)[c217];
+      __result182 = ptr218;
+      int** t219 = __first180;
+      int c220 = 1;
+      int** ptr221 = &(t219)[c220];
+      __first180 = ptr221;
+    }
+  int** t222 = __result182;
+  __retval183 = t222;
+  int** t223 = __retval183;
+  return t223;
+}
+
+// function: _ZSt14__copy_move_a1ILb0EPPiS1_ET1_T0_S3_S2_
+int** int___std____copy_move_a1_false__int____int___(int** v224, int** v225, int** v226) {
+bb227:
+  int** __first228;
+  int** __last229;
+  int** __result230;
+  int** __retval231;
+  __first228 = v224;
+  __last229 = v225;
+  __result230 = v226;
+  int** t232 = __first228;
+  int** t233 = __last229;
+  int** t234 = __result230;
+  int** r235 = int___std____copy_move_a2_false__int____int____int___(t232, t233, t234);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval231 = r235;
+  int** t236 = __retval231;
+  return t236;
+}
+
+// function: _ZSt12__niter_baseIPPiET_S2_
+int** int___std____niter_base_int___(int** v237) {
+bb238:
+  int** __it239;
+  int** __retval240;
+  __it239 = v237;
+  int** t241 = __it239;
+  __retval240 = t241;
+  int** t242 = __retval240;
+  return t242;
+}
+
+// function: _ZSt13__copy_move_aILb0EPPiS1_ET1_T0_S3_S2_
+int** int___std____copy_move_a_false__int____int___(int** v243, int** v244, int** v245) {
+bb246:
+  int** __first247;
+  int** __last248;
+  int** __result249;
+  int** __retval250;
+  __first247 = v243;
+  __last248 = v244;
+  __result249 = v245;
+  int** t251 = __first247;
+  int** r252 = int___std____niter_base_int___(t251);
+  int** t253 = __last248;
+  int** r254 = int___std____niter_base_int___(t253);
+  int** t255 = __result249;
+  int** r256 = int___std____niter_base_int___(t255);
+  int** r257 = int___std____copy_move_a1_false__int____int___(r252, r254, r256);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  int** r258 = int___std____niter_wrap_int___(&__result249, r257);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval250 = r258;
+  int** t259 = __retval250;
+  return t259;
+}
+
+// function: _ZSt12__miter_baseIPPiET_S2_
+int** int___std____miter_base_int___(int** v260) {
+bb261:
+  int** __it262;
+  int** __retval263;
+  __it262 = v260;
+  int** t264 = __it262;
+  __retval263 = t264;
+  int** t265 = __retval263;
+  return t265;
+}
+
+// function: _ZSt4copyIPPiS1_ET0_T_S3_S2_
+int** int___std__copy_int____int___(int** v266, int** v267, int** v268) {
+bb269:
+  int** __first270;
+  int** __last271;
+  int** __result272;
+  int** __retval273;
+  __first270 = v266;
+  __last271 = v267;
+  __result272 = v268;
+  int** t274 = __first270;
+  int** r275 = int___std____miter_base_int___(t274);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  int** t276 = __last271;
+  int** r277 = int___std____miter_base_int___(t276);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  int** t278 = __result272;
+  int** r279 = int___std____copy_move_a_false__int____int___(r275, r277, t278);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval273 = r279;
+  int** t280 = __retval273;
+  return t280;
+}
+
+// function: _ZSt21is_constant_evaluatedv
+_Bool std__is_constant_evaluated() {
+bb281:
+  _Bool __retval282;
+    _Bool c283 = 0;
+    __retval282 = c283;
+    _Bool t284 = __retval282;
+    return t284;
+  abort();
+}
+
+// function: _ZSt9__advanceIPPilEvRT_T0_St26random_access_iterator_tag
+void void_std____advance_int____long_(int*** v285, long v286, struct std__random_access_iterator_tag v287) {
+bb288:
+  int*** __i289;
+  long __n290;
+  struct std__random_access_iterator_tag unnamed291;
+  __i289 = v285;
+  __n290 = v286;
+  unnamed291 = v287;
+    long t292 = __n290;
+    _Bool isconst293 = 0;
+    _Bool ternary294;
+    if (isconst293) {
+      long t295 = __n290;
+      long c296 = 1;
+      _Bool c297 = ((t295 == c296)) ? 1 : 0;
+      ternary294 = (_Bool)c297;
+    } else {
+      _Bool c298 = 0;
+      ternary294 = (_Bool)c298;
+    }
+    if (ternary294) {
+      int*** t299 = __i289;
+      int** t300 = *t299;
+      int c301 = 1;
+      int** ptr302 = &(t300)[c301];
+      *t299 = ptr302;
+    } else {
+        long t303 = __n290;
+        _Bool isconst304 = 0;
+        _Bool ternary305;
+        if (isconst304) {
+          long t306 = __n290;
+          long c307 = -1;
+          _Bool c308 = ((t306 == c307)) ? 1 : 0;
+          ternary305 = (_Bool)c308;
+        } else {
+          _Bool c309 = 0;
+          ternary305 = (_Bool)c309;
+        }
+        if (ternary305) {
+          int*** t310 = __i289;
+          int** t311 = *t310;
+          int c312 = -1;
+          int** ptr313 = &(t311)[c312];
+          *t310 = ptr313;
+        } else {
+          long t314 = __n290;
+          int*** t315 = __i289;
+          int** t316 = *t315;
+          int** ptr317 = &(t316)[t314];
+          *t315 = ptr317;
+        }
+    }
+  return;
+}
+
+// function: _ZSt7advanceIPPilEvRT_T0_
+void void_std__advance_int____long_(int*** v318, long v319) {
+bb320:
+  int*** __i321;
+  long __n322;
+  long __d323;
+  struct std__random_access_iterator_tag agg_tmp0324;
+  __i321 = v318;
+  __n322 = v319;
+  long t325 = __n322;
+  __d323 = t325;
+  int*** t326 = __i321;
+  long t327 = __d323;
+  int*** t328 = __i321;
+  struct std__random_access_iterator_tag r329 = std__iterator_traits_int_____iterator_category_std____iterator_category_int___(t328);
+  if (__cir_exc_active) {
+    return;
+  }
+  agg_tmp0324 = r329;
+  struct std__random_access_iterator_tag t330 = agg_tmp0324;
+  void_std____advance_int____long_(t326, t327, t330);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt23__copy_move_backward_a2ILb0EPPiS1_ET1_T0_S3_S2_
+int** int___std____copy_move_backward_a2_false__int____int___(int** v331, int** v332, int** v333) {
+bb334:
+  int** __first335;
+  int** __last336;
+  int** __result337;
+  int** __retval338;
+  __first335 = v331;
+  __last336 = v332;
+  __result337 = v333;
+      _Bool r339 = std__is_constant_evaluated();
+      if (r339) {
+      } else {
+          long __n340;
+          int** t341 = __first335;
+          int** t342 = __last336;
+          long r343 = std__iterator_traits_int_____difference_type_std__distance_int___(t341, t342);
+          if (__cir_exc_active) {
+            int** __cir_eh_ret = (int**)0;
+            return __cir_eh_ret;
+          }
+          __n340 = r343;
+          long t344 = __n340;
+          long u345 = -t344;
+          void_std__advance_int____long_(&__result337, u345);
+          if (__cir_exc_active) {
+            int** __cir_eh_ret = (int**)0;
+            return __cir_eh_ret;
+          }
+            long t346 = __n340;
+            long c347 = 1;
+            _Bool c348 = ((t346 > c347)) ? 1 : 0;
+            if (c348) {
+              int** t349 = __result337;
+              void* cast350 = (void*)t349;
+              int** t351 = __first335;
+              void* cast352 = (void*)t351;
+              long t353 = __n340;
+              unsigned long cast354 = (unsigned long)t353;
+              unsigned long c355 = 8;
+              unsigned long b356 = cast354 * c355;
+              void* r357 = memmove(cast350, cast352, b356);
+            } else {
+                long t358 = __n340;
+                long c359 = 1;
+                _Bool c360 = ((t358 == c359)) ? 1 : 0;
+                if (c360) {
+                  void_std____assign_one_false__int____int___(&__result337, &__first335);
+                  if (__cir_exc_active) {
+                    int** __cir_eh_ret = (int**)0;
+                    return __cir_eh_ret;
+                  }
+                }
+            }
+          int** t361 = __result337;
+          __retval338 = t361;
+          int** t362 = __retval338;
+          return t362;
+      }
+    while (1) {
+      int** t363 = __first335;
+      int** t364 = __last336;
+      _Bool c365 = ((t363 != t364)) ? 1 : 0;
+      if (!c365) break;
+        int** t366 = __last336;
+        int c367 = -1;
+        int** ptr368 = &(t366)[c367];
+        __last336 = ptr368;
+        int** t369 = __result337;
+        int c370 = -1;
+        int** ptr371 = &(t369)[c370];
+        __result337 = ptr371;
+        void_std____assign_one_false__int____int___(&__result337, &__last336);
+        if (__cir_exc_active) {
+          int** __cir_eh_ret = (int**)0;
+          return __cir_eh_ret;
+        }
+    }
+  int** t372 = __result337;
+  __retval338 = t372;
+  int** t373 = __retval338;
+  return t373;
+}
+
+// function: _ZSt23__copy_move_backward_a1ILb0EPPiS1_ET1_T0_S3_S2_
+int** int___std____copy_move_backward_a1_false__int____int___(int** v374, int** v375, int** v376) {
+bb377:
+  int** __first378;
+  int** __last379;
+  int** __result380;
+  int** __retval381;
+  __first378 = v374;
+  __last379 = v375;
+  __result380 = v376;
+  int** t382 = __first378;
+  int** t383 = __last379;
+  int** t384 = __result380;
+  int** r385 = int___std____copy_move_backward_a2_false__int____int___(t382, t383, t384);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval381 = r385;
+  int** t386 = __retval381;
+  return t386;
+}
+
+// function: _ZSt22__copy_move_backward_aILb0EPPiS1_ET1_T0_S3_S2_
+int** int___std____copy_move_backward_a_false__int____int___(int** v387, int** v388, int** v389) {
+bb390:
+  int** __first391;
+  int** __last392;
+  int** __result393;
+  int** __retval394;
+  __first391 = v387;
+  __last392 = v388;
+  __result393 = v389;
+  int** t395 = __first391;
+  int** r396 = int___std____niter_base_int___(t395);
+  int** t397 = __last392;
+  int** r398 = int___std____niter_base_int___(t397);
+  int** t399 = __result393;
+  int** r400 = int___std____niter_base_int___(t399);
+  int** r401 = int___std____copy_move_backward_a1_false__int____int___(r396, r398, r400);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  int** r402 = int___std____niter_wrap_int___(&__result393, r401);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval394 = r402;
+  int** t403 = __retval394;
+  return t403;
+}
+
+// function: _ZSt13copy_backwardIPPiS1_ET0_T_S3_S2_
+int** int___std__copy_backward_int____int___(int** v404, int** v405, int** v406) {
+bb407:
+  int** __first408;
+  int** __last409;
+  int** __result410;
+  int** __retval411;
+  __first408 = v404;
+  __last409 = v405;
+  __result410 = v406;
+  int** t412 = __first408;
+  int** r413 = int___std____miter_base_int___(t412);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  int** t414 = __last409;
+  int** r415 = int___std____miter_base_int___(t414);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  int** t416 = __result410;
+  int** r417 = int___std____copy_move_backward_a_false__int____int___(r413, r415, t416);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval411 = r417;
+  int** t418 = __retval411;
+  return t418;
+}
+
+// function: _ZNSt5dequeIiSaIiEE17_M_reallocate_mapEmb
+void std__deque_int__std__allocator_int______M_reallocate_map(struct std__deque_int__std__allocator_int__* v419, unsigned long v420, _Bool v421) {
+bb422:
+  struct std__deque_int__std__allocator_int__* this423;
+  unsigned long __nodes_to_add424;
+  _Bool __add_at_front425;
+  unsigned long __old_num_nodes426;
+  unsigned long __new_num_nodes427;
+  int** __new_nstart428;
+  this423 = v419;
+  __nodes_to_add424 = v420;
+  __add_at_front425 = v421;
+  struct std__deque_int__std__allocator_int__* t429 = this423;
+  struct std___Deque_base_int__std__allocator_int__* base430 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base431 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base430->_M_impl) + 0);
+  int** t432 = base431->_M_finish._M_node;
+  struct std___Deque_base_int__std__allocator_int__* base433 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base434 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base433->_M_impl) + 0);
+  int** t435 = base434->_M_start._M_node;
+  long diff436 = t432 - t435;
+  long c437 = 1;
+  long b438 = diff436 + c437;
+  unsigned long cast439 = (unsigned long)b438;
+  __old_num_nodes426 = cast439;
+  unsigned long t440 = __old_num_nodes426;
+  unsigned long t441 = __nodes_to_add424;
+  unsigned long b442 = t440 + t441;
+  __new_num_nodes427 = b442;
+    struct std___Deque_base_int__std__allocator_int__* base443 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base444 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base443->_M_impl) + 0);
+    unsigned long t445 = base444->_M_map_size;
+    unsigned long c446 = 2;
+    unsigned long t447 = __new_num_nodes427;
+    unsigned long b448 = c446 * t447;
+    _Bool c449 = ((t445 > b448)) ? 1 : 0;
+    if (c449) {
+      struct std___Deque_base_int__std__allocator_int__* base450 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base451 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base450->_M_impl) + 0);
+      int** t452 = base451->_M_map;
+      struct std___Deque_base_int__std__allocator_int__* base453 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base454 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base453->_M_impl) + 0);
+      unsigned long t455 = base454->_M_map_size;
+      unsigned long t456 = __new_num_nodes427;
+      unsigned long b457 = t455 - t456;
+      unsigned long c458 = 2;
+      unsigned long b459 = b457 / c458;
+      int** ptr460 = &(t452)[b459];
+      _Bool t461 = __add_at_front425;
+      unsigned long ternary462;
+      if (t461) {
+        unsigned long t463 = __nodes_to_add424;
+        ternary462 = (unsigned long)t463;
+      } else {
+        unsigned long c464 = 0;
+        ternary462 = (unsigned long)c464;
+      }
+      int** ptr465 = &(ptr460)[ternary462];
+      __new_nstart428 = ptr465;
+        int** t466 = __new_nstart428;
+        struct std___Deque_base_int__std__allocator_int__* base467 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base468 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base467->_M_impl) + 0);
+        int** t469 = base468->_M_start._M_node;
+        _Bool c470 = ((t466 < t469)) ? 1 : 0;
+        if (c470) {
+          struct std___Deque_base_int__std__allocator_int__* base471 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+          struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base472 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base471->_M_impl) + 0);
+          int** t473 = base472->_M_start._M_node;
+          struct std___Deque_base_int__std__allocator_int__* base474 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+          struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base475 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base474->_M_impl) + 0);
+          int** t476 = base475->_M_finish._M_node;
+          int c477 = 1;
+          int** ptr478 = &(t476)[c477];
+          int** t479 = __new_nstart428;
+          int** r480 = int___std__copy_int____int___(t473, ptr478, t479);
+          if (__cir_exc_active) {
+            return;
+          }
+        } else {
+          struct std___Deque_base_int__std__allocator_int__* base481 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+          struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base482 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base481->_M_impl) + 0);
+          int** t483 = base482->_M_start._M_node;
+          struct std___Deque_base_int__std__allocator_int__* base484 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+          struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base485 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base484->_M_impl) + 0);
+          int** t486 = base485->_M_finish._M_node;
+          int c487 = 1;
+          int** ptr488 = &(t486)[c487];
+          int** t489 = __new_nstart428;
+          unsigned long t490 = __old_num_nodes426;
+          int** ptr491 = &(t489)[t490];
+          int** r492 = int___std__copy_backward_int____int___(t483, ptr488, ptr491);
+          if (__cir_exc_active) {
+            return;
+          }
+        }
+    } else {
+      unsigned long __new_map_size493;
+      unsigned long __bufsz494;
+      int** __new_map495;
+      struct std___Deque_base_int__std__allocator_int__* base496 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base497 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base496->_M_impl) + 0);
+      unsigned long t498 = base497->_M_map_size;
+      struct std___Deque_base_int__std__allocator_int__* base499 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base500 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base499->_M_impl) + 0);
+      unsigned long* r501 = unsigned_long_const__std__max_unsigned_long_(&base500->_M_map_size, &__nodes_to_add424);
+      if (__cir_exc_active) {
+        return;
+      }
+      unsigned long t502 = *r501;
+      unsigned long b503 = t498 + t502;
+      unsigned long c504 = 2;
+      unsigned long b505 = b503 + c504;
+      __new_map_size493 = b505;
+      unsigned long c506 = 128;
+      __bufsz494 = c506;
+        unsigned long t507 = __new_map_size493;
+        unsigned long r508 = std__deque_int__std__allocator_int_____max_size___const(t429);
+        unsigned long t509 = __bufsz494;
+        unsigned long b510 = r508 + t509;
+        unsigned long c511 = 1;
+        unsigned long b512 = b510 - c511;
+        unsigned long t513 = __bufsz494;
+        unsigned long b514 = b512 / t513;
+        unsigned long c515 = 2;
+        unsigned long b516 = b514 * c515;
+        _Bool c517 = ((t507 > b516)) ? 1 : 0;
+        if (c517) {
+          __builtin_unreachable();
+        }
+      struct std___Deque_base_int__std__allocator_int__* base518 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      unsigned long t519 = __new_map_size493;
+      int** r520 = std___Deque_base_int__std__allocator_int______M_allocate_map(base518, t519);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_map495 = r520;
+      int** t521 = __new_map495;
+      unsigned long t522 = __new_map_size493;
+      unsigned long t523 = __new_num_nodes427;
+      unsigned long b524 = t522 - t523;
+      unsigned long c525 = 2;
+      unsigned long b526 = b524 / c525;
+      int** ptr527 = &(t521)[b526];
+      _Bool t528 = __add_at_front425;
+      unsigned long ternary529;
+      if (t528) {
+        unsigned long t530 = __nodes_to_add424;
+        ternary529 = (unsigned long)t530;
+      } else {
+        unsigned long c531 = 0;
+        ternary529 = (unsigned long)c531;
+      }
+      int** ptr532 = &(ptr527)[ternary529];
+      __new_nstart428 = ptr532;
+      struct std___Deque_base_int__std__allocator_int__* base533 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base534 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base533->_M_impl) + 0);
+      int** t535 = base534->_M_start._M_node;
+      struct std___Deque_base_int__std__allocator_int__* base536 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base537 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base536->_M_impl) + 0);
+      int** t538 = base537->_M_finish._M_node;
+      int c539 = 1;
+      int** ptr540 = &(t538)[c539];
+      int** t541 = __new_nstart428;
+      int** r542 = int___std__copy_int____int___(t535, ptr540, t541);
+      if (__cir_exc_active) {
+        return;
+      }
+      struct std___Deque_base_int__std__allocator_int__* base543 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int__* base544 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base545 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base544->_M_impl) + 0);
+      int** t546 = base545->_M_map;
+      struct std___Deque_base_int__std__allocator_int__* base547 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base548 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base547->_M_impl) + 0);
+      unsigned long t549 = base548->_M_map_size;
+      std___Deque_base_int__std__allocator_int______M_deallocate_map(base543, t546, t549);
+      int** t550 = __new_map495;
+      struct std___Deque_base_int__std__allocator_int__* base551 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base552 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base551->_M_impl) + 0);
+      base552->_M_map = t550;
+      unsigned long t553 = __new_map_size493;
+      struct std___Deque_base_int__std__allocator_int__* base554 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base555 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base554->_M_impl) + 0);
+      base555->_M_map_size = t553;
+    }
+  struct std___Deque_base_int__std__allocator_int__* base556 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base557 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base556->_M_impl) + 0);
+  int** t558 = __new_nstart428;
+  std___Deque_iterator_int__int___int_____M_set_node(&base557->_M_start, t558);
+  struct std___Deque_base_int__std__allocator_int__* base559 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t429 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base560 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base559->_M_impl) + 0);
+  int** t561 = __new_nstart428;
+  unsigned long t562 = __old_num_nodes426;
+  int** ptr563 = &(t561)[t562];
+  int c564 = -1;
+  int** ptr565 = &(ptr563)[c564];
+  std___Deque_iterator_int__int___int_____M_set_node(&base560->_M_finish, ptr565);
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE23_M_reserve_map_at_frontEm
+void std__deque_int__std__allocator_int______M_reserve_map_at_front(struct std__deque_int__std__allocator_int__* v566, unsigned long v567) {
+bb568:
+  struct std__deque_int__std__allocator_int__* this569;
+  unsigned long __nodes_to_add570;
+  this569 = v566;
+  __nodes_to_add570 = v567;
+  struct std__deque_int__std__allocator_int__* t571 = this569;
+    unsigned long t572 = __nodes_to_add570;
+    struct std___Deque_base_int__std__allocator_int__* base573 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t571 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base574 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base573->_M_impl) + 0);
+    int** t575 = base574->_M_start._M_node;
+    struct std___Deque_base_int__std__allocator_int__* base576 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t571 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base577 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base576->_M_impl) + 0);
+    int** t578 = base577->_M_map;
+    long diff579 = t575 - t578;
+    unsigned long cast580 = (unsigned long)diff579;
+    _Bool c581 = ((t572 > cast580)) ? 1 : 0;
+    if (c581) {
+      unsigned long t582 = __nodes_to_add570;
+      _Bool c583 = 1;
+      std__deque_int__std__allocator_int______M_reallocate_map(t571, t582, c583);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE24_M_new_elements_at_frontEm
+void std__deque_int__std__allocator_int______M_new_elements_at_front(struct std__deque_int__std__allocator_int__* v584, unsigned long v585) {
+bb586:
+  struct std__deque_int__std__allocator_int__* this587;
+  unsigned long __new_elems588;
+  unsigned long __new_nodes589;
+  unsigned long __i590;
+  this587 = v584;
+  __new_elems588 = v585;
+  struct std__deque_int__std__allocator_int__* t591 = this587;
+    unsigned long r592 = std__deque_int__std__allocator_int_____max_size___const(t591);
+    unsigned long r593 = std__deque_int__std__allocator_int_____size___const(t591);
+    unsigned long b594 = r592 - r593;
+    unsigned long t595 = __new_elems588;
+    _Bool c596 = ((b594 < t595)) ? 1 : 0;
+    if (c596) {
+      char* cast597 = (char*)&(_str_10);
+      std____throw_length_error(cast597);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  unsigned long t598 = __new_elems588;
+  unsigned long r599 = std__deque_int__std__allocator_int______S_buffer_size();
+  unsigned long b600 = t598 + r599;
+  unsigned long c601 = 1;
+  unsigned long b602 = b600 - c601;
+  unsigned long r603 = std__deque_int__std__allocator_int______S_buffer_size();
+  unsigned long b604 = b602 / r603;
+  __new_nodes589 = b604;
+  unsigned long t605 = __new_nodes589;
+  std__deque_int__std__allocator_int______M_reserve_map_at_front(t591, t605);
+  if (__cir_exc_active) {
+    return;
+  }
+        unsigned long c607 = 1;
+        __i590 = c607;
+        while (1) {
+          unsigned long t609 = __i590;
+          unsigned long t610 = __new_nodes589;
+          _Bool c611 = ((t609 <= t610)) ? 1 : 0;
+          if (!c611) break;
+          struct std___Deque_base_int__std__allocator_int__* base612 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t591 + 0);
+          int* r613 = std___Deque_base_int__std__allocator_int______M_allocate_node(base612);
+          if (__cir_exc_active) {
+            goto cir_try_dispatch606;
+          }
+          struct std___Deque_base_int__std__allocator_int__* base614 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t591 + 0);
+          struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base615 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base614->_M_impl) + 0);
+          int** t616 = base615->_M_start._M_node;
+          unsigned long t617 = __i590;
+          long cast618 = (long)t617;
+          long u619 = -cast618;
+          int** ptr620 = &(t616)[u619];
+          *ptr620 = r613;
+        for_step608: ;
+          unsigned long t621 = __i590;
+          unsigned long u622 = t621 + 1;
+          __i590 = u622;
+        }
+    cir_try_dispatch606: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok623 = 0;
+      void* ca_exn624 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+          unsigned long __j625;
+          unsigned long c626 = 1;
+          __j625 = c626;
+          while (1) {
+            unsigned long t628 = __j625;
+            unsigned long t629 = __i590;
+            _Bool c630 = ((t628 < t629)) ? 1 : 0;
+            if (!c630) break;
+            struct std___Deque_base_int__std__allocator_int__* base631 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t591 + 0);
+            struct std___Deque_base_int__std__allocator_int__* base632 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t591 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base633 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base632->_M_impl) + 0);
+            int** t634 = base633->_M_start._M_node;
+            unsigned long t635 = __j625;
+            long cast636 = (long)t635;
+            long u637 = -cast636;
+            int** ptr638 = &(t634)[u637];
+            int* t639 = *ptr638;
+            std___Deque_base_int__std__allocator_int______M_deallocate_node(base631, t639);
+          for_step627: ;
+            unsigned long t640 = __j625;
+            unsigned long u641 = t640 + 1;
+            __j625 = u641;
+          }
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE28_M_reserve_elements_at_frontEm
+struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int______M_reserve_elements_at_front(struct std__deque_int__std__allocator_int__* v642, unsigned long v643) {
+bb644:
+  struct std__deque_int__std__allocator_int__* this645;
+  unsigned long __n646;
+  struct std___Deque_iterator_int__int____int___ __retval647;
+  unsigned long __vacancies648;
+  this645 = v642;
+  __n646 = v643;
+  struct std__deque_int__std__allocator_int__* t649 = this645;
+  struct std___Deque_base_int__std__allocator_int__* base650 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t649 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base651 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base650->_M_impl) + 0);
+  int* t652 = base651->_M_start._M_cur;
+  struct std___Deque_base_int__std__allocator_int__* base653 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t649 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base654 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base653->_M_impl) + 0);
+  int* t655 = base654->_M_start._M_first;
+  long diff656 = t652 - t655;
+  unsigned long cast657 = (unsigned long)diff656;
+  __vacancies648 = cast657;
+    unsigned long t658 = __n646;
+    unsigned long t659 = __vacancies648;
+    _Bool c660 = ((t658 > t659)) ? 1 : 0;
+    if (c660) {
+      unsigned long t661 = __n646;
+      unsigned long t662 = __vacancies648;
+      unsigned long b663 = t661 - t662;
+      std__deque_int__std__allocator_int______M_new_elements_at_front(t649, b663);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+    }
+  struct std___Deque_base_int__std__allocator_int__* base664 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t649 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base665 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base664->_M_impl) + 0);
+  unsigned long t666 = __n646;
+  long cast667 = (long)t666;
+  struct std___Deque_iterator_int__int____int___ r668 = std__operator__2(&base665->_M_start, cast667);
+  __retval647 = r668;
+  struct std___Deque_iterator_int__int____int___ t669 = __retval647;
+  return t669;
+}
+
+// function: _ZNSt19_UninitDestroyGuardISt15_Deque_iteratorIiRiPiEvEC2ERS3_
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void____UninitDestroyGuard(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* v670, struct std___Deque_iterator_int__int____int___* v671) {
+bb672:
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* this673;
+  struct std___Deque_iterator_int__int____int___* __first674;
+  this673 = v670;
+  __first674 = v671;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* t675 = this673;
+  struct std___Deque_iterator_int__int____int___* t676 = __first674;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&t675->_M_first, t676);
+  struct std___Deque_iterator_int__int____int___* t677 = __first674;
+  t675->_M_cur = t677;
+  return;
+}
+
+// function: _ZSteqRKSt15_Deque_iteratorIiRiPiES4_
+_Bool std__operator__(struct std___Deque_iterator_int__int____int___* v678, struct std___Deque_iterator_int__int____int___* v679) {
+bb680:
+  struct std___Deque_iterator_int__int____int___* __x681;
+  struct std___Deque_iterator_int__int____int___* __y682;
+  _Bool __retval683;
+  __x681 = v678;
+  __y682 = v679;
+  struct std___Deque_iterator_int__int____int___* t684 = __x681;
+  int* t685 = t684->_M_cur;
+  struct std___Deque_iterator_int__int____int___* t686 = __y682;
+  int* t687 = t686->_M_cur;
+  _Bool c688 = ((t685 == t687)) ? 1 : 0;
+  __retval683 = c688;
+  _Bool t689 = __retval683;
+  return t689;
+}
+
+// function: _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_
+int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* v690, int* v691) {
+bb692:
+  int* __location693;
+  int* __args694;
+  int* __retval695;
+  void* __loc696;
+  __location693 = v690;
+  __args694 = v691;
+  int* t697 = __location693;
+  void* cast698 = (void*)t697;
+  __loc696 = cast698;
+    void* t699 = __loc696;
+    int* cast700 = (int*)t699;
+    int* t701 = __args694;
+    int t702 = *t701;
+    *cast700 = t702;
+    __retval695 = cast700;
+    int* t703 = __retval695;
+    return t703;
+  abort();
+}
+
+// function: _ZSt10_ConstructIiJRKiEEvPT_DpOT0_
+void void_std___Construct_int__int_const__(int* v704, int* v705) {
+bb706:
+  int* __p707;
+  int* __args708;
+  __p707 = v704;
+  __args708 = v705;
+    _Bool r709 = std____is_constant_evaluated();
+    if (r709) {
+      int* t710 = __p707;
+      int* t711 = __args708;
+      int* r712 = _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(t710, t711);
+      return;
+    }
+  int* t713 = __p707;
+  void* cast714 = (void*)t713;
+  int* cast715 = (int*)cast714;
+  int* t716 = __args708;
+  int t717 = *t716;
+  *cast715 = t717;
+  return;
+}
+
+// function: _ZNKSt15_Deque_iteratorIiRiPiEdeEv
+int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* v718) {
+bb719:
+  struct std___Deque_iterator_int__int____int___* this720;
+  int* __retval721;
+  this720 = v718;
+  struct std___Deque_iterator_int__int____int___* t722 = this720;
+  int* t723 = t722->_M_cur;
+  __retval721 = t723;
+  int* t724 = __retval721;
+  return t724;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiEppEv
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator___4(struct std___Deque_iterator_int__int____int___* v725) {
+bb726:
+  struct std___Deque_iterator_int__int____int___* this727;
+  struct std___Deque_iterator_int__int____int___* __retval728;
+  this727 = v725;
+  struct std___Deque_iterator_int__int____int___* t729 = this727;
+  int* t730 = t729->_M_cur;
+  int c731 = 1;
+  int* ptr732 = &(t730)[c731];
+  t729->_M_cur = ptr732;
+    int* t733 = t729->_M_cur;
+    int* t734 = t729->_M_last;
+    _Bool c735 = ((t733 == t734)) ? 1 : 0;
+    if (c735) {
+      int** t736 = t729->_M_node;
+      int c737 = 1;
+      int** ptr738 = &(t736)[c737];
+      std___Deque_iterator_int__int___int_____M_set_node(t729, ptr738);
+      int* t739 = t729->_M_first;
+      t729->_M_cur = t739;
+    }
+  __retval728 = t729;
+  struct std___Deque_iterator_int__int____int___* t740 = __retval728;
+  return t740;
+}
+
+// function: _ZNSt19_UninitDestroyGuardISt15_Deque_iteratorIiRiPiEvE7releaseEv
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void___release(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* v741) {
+bb742:
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* this743;
+  this743 = v741;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* t744 = this743;
+  struct std___Deque_iterator_int__int____int___* c745 = ((void*)0);
+  t744->_M_cur = c745;
+  return;
+}
+
+// function: _ZNSt19_UninitDestroyGuardISt15_Deque_iteratorIiRiPiEvED2Ev
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* v746) {
+bb747:
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* this748;
+  this748 = v746;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_* t749 = this748;
+    struct std___Deque_iterator_int__int____int___* t750 = t749->_M_cur;
+    struct std___Deque_iterator_int__int____int___* c751 = ((void*)0);
+    _Bool c752 = ((t750 != c751)) ? 1 : 0;
+    if (c752) {
+      struct std___Deque_iterator_int__int____int___ agg_tmp0753;
+      struct std___Deque_iterator_int__int____int___ agg_tmp1754;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp0753, &t749->_M_first);
+      struct std___Deque_iterator_int__int____int___* t755 = t749->_M_cur;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp1754, t755);
+      struct std___Deque_iterator_int__int____int___ t756 = agg_tmp0753;
+      struct std___Deque_iterator_int__int____int___ t757 = agg_tmp1754;
+      void_std___Destroy_std___Deque_iterator_int__int___int____(t756, t757);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZSt16__do_uninit_fillISt15_Deque_iteratorIiRiPiEiEvT_S4_RKT0_
+void void_std____do_uninit_fill_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ v758, struct std___Deque_iterator_int__int____int___ v759, int* v760) {
+bb761:
+  struct std___Deque_iterator_int__int____int___ __first762;
+  struct std___Deque_iterator_int__int____int___ __last763;
+  int* __x764;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_ __guard765;
+  __first762 = v758;
+  __last763 = v759;
+  __x764 = v760;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void____UninitDestroyGuard(&__guard765, &__first762);
+  if (__cir_exc_active) {
+    return;
+  }
+      while (1) {
+        _Bool r767 = std__operator__(&__first762, &__last763);
+        _Bool u768 = !r767;
+        if (!u768) break;
+        int* r769 = std___Deque_iterator_int__int___int____operator____const(&__first762);
+        int* t770 = __x764;
+        void_std___Construct_int__int_const__(r769, t770);
+        if (__cir_exc_active) {
+          {
+            std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard765);
+          }
+          return;
+        }
+      for_step766: ;
+        struct std___Deque_iterator_int__int____int___* r771 = std___Deque_iterator_int__int___int____operator___4(&__first762);
+      }
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void___release(&__guard765);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard765);
+      }
+      return;
+    }
+  {
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard765);
+  }
+  return;
+}
+
+// function: _ZSt18uninitialized_fillISt15_Deque_iteratorIiRiPiEiEvT_S4_RKT0_
+void void_std__uninitialized_fill_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ v772, struct std___Deque_iterator_int__int____int___ v773, int* v774) {
+bb775:
+  struct std___Deque_iterator_int__int____int___ __first776;
+  struct std___Deque_iterator_int__int____int___ __last777;
+  int* __x778;
+  struct std___Deque_iterator_int__int____int___ agg_tmp0779;
+  struct std___Deque_iterator_int__int____int___ agg_tmp1780;
+  __first776 = v772;
+  __last777 = v773;
+  __x778 = v774;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp0779, &__first776);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp1780, &__last777);
+  int* t781 = __x778;
+  struct std___Deque_iterator_int__int____int___ t782 = agg_tmp0779;
+  struct std___Deque_iterator_int__int____int___ t783 = agg_tmp1780;
+  void_std____do_uninit_fill_std___Deque_iterator_int__int___int____int_(t782, t783, t781);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt22__uninitialized_fill_aISt15_Deque_iteratorIiRiPiEiiEvT_S4_RKT0_RSaIT1_E
+void void_std____uninitialized_fill_a_std___Deque_iterator_int__int___int____int__int_(struct std___Deque_iterator_int__int____int___ v784, struct std___Deque_iterator_int__int____int___ v785, int* v786, struct std__allocator_int_* v787) {
+bb788:
+  struct std___Deque_iterator_int__int____int___ __first789;
+  struct std___Deque_iterator_int__int____int___ __last790;
+  int* __x791;
+  struct std__allocator_int_* unnamed792;
+  struct std___Deque_iterator_int__int____int___ agg_tmp2793;
+  struct std___Deque_iterator_int__int____int___ agg_tmp3794;
+  __first789 = v784;
+  __last790 = v785;
+  __x791 = v786;
+  unnamed792 = v787;
+    _Bool r795 = std__is_constant_evaluated();
+    if (r795) {
+      struct std___Deque_iterator_int__int____int___ agg_tmp0796;
+      struct std___Deque_iterator_int__int____int___ agg_tmp1797;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp0796, &__first789);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp1797, &__last790);
+      int* t798 = __x791;
+      struct std___Deque_iterator_int__int____int___ t799 = agg_tmp0796;
+      struct std___Deque_iterator_int__int____int___ t800 = agg_tmp1797;
+      void_std____do_uninit_fill_std___Deque_iterator_int__int___int____int_(t799, t800, t798);
+      if (__cir_exc_active) {
+        return;
+      }
+      return;
+    }
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp2793, &__first789);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp3794, &__last790);
+  int* t801 = __x791;
+  struct std___Deque_iterator_int__int____int___ t802 = agg_tmp2793;
+  struct std___Deque_iterator_int__int____int___ t803 = agg_tmp3794;
+  void_std__uninitialized_fill_std___Deque_iterator_int__int___int____int_(t802, t803, t801);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE22_M_reserve_map_at_backEm
+void std__deque_int__std__allocator_int______M_reserve_map_at_back(struct std__deque_int__std__allocator_int__* v804, unsigned long v805) {
+bb806:
+  struct std__deque_int__std__allocator_int__* this807;
+  unsigned long __nodes_to_add808;
+  this807 = v804;
+  __nodes_to_add808 = v805;
+  struct std__deque_int__std__allocator_int__* t809 = this807;
+    unsigned long t810 = __nodes_to_add808;
+    unsigned long c811 = 1;
+    unsigned long b812 = t810 + c811;
+    struct std___Deque_base_int__std__allocator_int__* base813 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t809 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base814 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base813->_M_impl) + 0);
+    unsigned long t815 = base814->_M_map_size;
+    struct std___Deque_base_int__std__allocator_int__* base816 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t809 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base817 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base816->_M_impl) + 0);
+    int** t818 = base817->_M_finish._M_node;
+    struct std___Deque_base_int__std__allocator_int__* base819 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t809 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base820 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base819->_M_impl) + 0);
+    int** t821 = base820->_M_map;
+    long diff822 = t818 - t821;
+    unsigned long cast823 = (unsigned long)diff822;
+    unsigned long b824 = t815 - cast823;
+    _Bool c825 = ((b812 > b824)) ? 1 : 0;
+    if (c825) {
+      unsigned long t826 = __nodes_to_add808;
+      _Bool c827 = 0;
+      std__deque_int__std__allocator_int______M_reallocate_map(t809, t826, c827);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE23_M_new_elements_at_backEm
+void std__deque_int__std__allocator_int______M_new_elements_at_back(struct std__deque_int__std__allocator_int__* v828, unsigned long v829) {
+bb830:
+  struct std__deque_int__std__allocator_int__* this831;
+  unsigned long __new_elems832;
+  unsigned long __new_nodes833;
+  unsigned long __i834;
+  this831 = v828;
+  __new_elems832 = v829;
+  struct std__deque_int__std__allocator_int__* t835 = this831;
+    unsigned long r836 = std__deque_int__std__allocator_int_____max_size___const(t835);
+    unsigned long r837 = std__deque_int__std__allocator_int_____size___const(t835);
+    unsigned long b838 = r836 - r837;
+    unsigned long t839 = __new_elems832;
+    _Bool c840 = ((b838 < t839)) ? 1 : 0;
+    if (c840) {
+      char* cast841 = (char*)&(_str_11);
+      std____throw_length_error(cast841);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  unsigned long t842 = __new_elems832;
+  unsigned long r843 = std__deque_int__std__allocator_int______S_buffer_size();
+  unsigned long b844 = t842 + r843;
+  unsigned long c845 = 1;
+  unsigned long b846 = b844 - c845;
+  unsigned long r847 = std__deque_int__std__allocator_int______S_buffer_size();
+  unsigned long b848 = b846 / r847;
+  __new_nodes833 = b848;
+  unsigned long t849 = __new_nodes833;
+  std__deque_int__std__allocator_int______M_reserve_map_at_back(t835, t849);
+  if (__cir_exc_active) {
+    return;
+  }
+        unsigned long c851 = 1;
+        __i834 = c851;
+        while (1) {
+          unsigned long t853 = __i834;
+          unsigned long t854 = __new_nodes833;
+          _Bool c855 = ((t853 <= t854)) ? 1 : 0;
+          if (!c855) break;
+          struct std___Deque_base_int__std__allocator_int__* base856 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t835 + 0);
+          int* r857 = std___Deque_base_int__std__allocator_int______M_allocate_node(base856);
+          if (__cir_exc_active) {
+            goto cir_try_dispatch850;
+          }
+          struct std___Deque_base_int__std__allocator_int__* base858 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t835 + 0);
+          struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base859 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base858->_M_impl) + 0);
+          int** t860 = base859->_M_finish._M_node;
+          unsigned long t861 = __i834;
+          int** ptr862 = &(t860)[t861];
+          *ptr862 = r857;
+        for_step852: ;
+          unsigned long t863 = __i834;
+          unsigned long u864 = t863 + 1;
+          __i834 = u864;
+        }
+    cir_try_dispatch850: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok865 = 0;
+      void* ca_exn866 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+          unsigned long __j867;
+          unsigned long c868 = 1;
+          __j867 = c868;
+          while (1) {
+            unsigned long t870 = __j867;
+            unsigned long t871 = __i834;
+            _Bool c872 = ((t870 < t871)) ? 1 : 0;
+            if (!c872) break;
+            struct std___Deque_base_int__std__allocator_int__* base873 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t835 + 0);
+            struct std___Deque_base_int__std__allocator_int__* base874 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t835 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base875 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base874->_M_impl) + 0);
+            int** t876 = base875->_M_finish._M_node;
+            unsigned long t877 = __j867;
+            int** ptr878 = &(t876)[t877];
+            int* t879 = *ptr878;
+            std___Deque_base_int__std__allocator_int______M_deallocate_node(base873, t879);
+          for_step869: ;
+            unsigned long t880 = __j867;
+            unsigned long u881 = t880 + 1;
+            __j867 = u881;
+          }
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE27_M_reserve_elements_at_backEm
+struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int______M_reserve_elements_at_back(struct std__deque_int__std__allocator_int__* v882, unsigned long v883) {
+bb884:
+  struct std__deque_int__std__allocator_int__* this885;
+  unsigned long __n886;
+  struct std___Deque_iterator_int__int____int___ __retval887;
+  unsigned long __vacancies888;
+  this885 = v882;
+  __n886 = v883;
+  struct std__deque_int__std__allocator_int__* t889 = this885;
+  struct std___Deque_base_int__std__allocator_int__* base890 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t889 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base891 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base890->_M_impl) + 0);
+  int* t892 = base891->_M_finish._M_last;
+  struct std___Deque_base_int__std__allocator_int__* base893 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t889 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base894 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base893->_M_impl) + 0);
+  int* t895 = base894->_M_finish._M_cur;
+  long diff896 = t892 - t895;
+  long c897 = 1;
+  long b898 = diff896 - c897;
+  unsigned long cast899 = (unsigned long)b898;
+  __vacancies888 = cast899;
+    unsigned long t900 = __n886;
+    unsigned long t901 = __vacancies888;
+    _Bool c902 = ((t900 > t901)) ? 1 : 0;
+    if (c902) {
+      unsigned long t903 = __n886;
+      unsigned long t904 = __vacancies888;
+      unsigned long b905 = t903 - t904;
+      std__deque_int__std__allocator_int______M_new_elements_at_back(t889, b905);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+    }
+  struct std___Deque_base_int__std__allocator_int__* base906 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t889 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base907 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base906->_M_impl) + 0);
+  unsigned long t908 = __n886;
+  long cast909 = (long)t908;
+  struct std___Deque_iterator_int__int____int___ r910 = std__operator__4(&base907->_M_finish, cast909);
+  __retval887 = r910;
+  struct std___Deque_iterator_int__int____int___ t911 = __retval887;
+  return t911;
+}
+
+// function: _ZStmiRKSt15_Deque_iteratorIiRiPiES4_
+long std__operator_(struct std___Deque_iterator_int__int____int___* v912, struct std___Deque_iterator_int__int____int___* v913) {
+bb914:
+  struct std___Deque_iterator_int__int____int___* __x915;
+  struct std___Deque_iterator_int__int____int___* __y916;
+  long __retval917;
+  __x915 = v912;
+  __y916 = v913;
+  unsigned long r918 = std___Deque_iterator_int__int___int_____S_buffer_size();
+  long cast919 = (long)r918;
+  struct std___Deque_iterator_int__int____int___* t920 = __x915;
+  int** t921 = t920->_M_node;
+  struct std___Deque_iterator_int__int____int___* t922 = __y916;
+  int** t923 = t922->_M_node;
+  long diff924 = t921 - t923;
+  struct std___Deque_iterator_int__int____int___* t925 = __x915;
+  int** t926 = t925->_M_node;
+  _Bool cast927 = (_Bool)t926;
+  long cast928 = (long)cast927;
+  long b929 = diff924 - cast928;
+  long b930 = cast919 * b929;
+  struct std___Deque_iterator_int__int____int___* t931 = __x915;
+  int* t932 = t931->_M_cur;
+  struct std___Deque_iterator_int__int____int___* t933 = __x915;
+  int* t934 = t933->_M_first;
+  long diff935 = t932 - t934;
+  long b936 = b930 + diff935;
+  struct std___Deque_iterator_int__int____int___* t937 = __y916;
+  int* t938 = t937->_M_last;
+  struct std___Deque_iterator_int__int____int___* t939 = __y916;
+  int* t940 = t939->_M_cur;
+  long diff941 = t938 - t940;
+  long b942 = b936 + diff941;
+  __retval917 = b942;
+  long t943 = __retval917;
+  return t943;
+}
+
+// function: _ZNKRSt13move_iteratorISt15_Deque_iteratorIiRiPiEE4baseEv
+struct std___Deque_iterator_int__int____int___* std__move_iterator_std___Deque_iterator_int__int___int______base___const__(struct std__move_iterator_std___Deque_iterator_int__int____int____* v944) {
+bb945:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* this946;
+  struct std___Deque_iterator_int__int____int___* __retval947;
+  this946 = v944;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t948 = this946;
+  __retval947 = &t948->_M_current;
+  struct std___Deque_iterator_int__int____int___* t949 = __retval947;
+  return t949;
+}
+
+// function: _ZSteqISt15_Deque_iteratorIiRiPiEEbRKSt13move_iteratorIT_ES8_
+_Bool bool_std__operator___std___Deque_iterator_int__int___int____(struct std__move_iterator_std___Deque_iterator_int__int____int____* v950, struct std__move_iterator_std___Deque_iterator_int__int____int____* v951) {
+bb952:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* __x953;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* __y954;
+  _Bool __retval955;
+  __x953 = v950;
+  __y954 = v951;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t956 = __x953;
+  struct std___Deque_iterator_int__int____int___* r957 = std__move_iterator_std___Deque_iterator_int__int___int______base___const__(t956);
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t958 = __y954;
+  struct std___Deque_iterator_int__int____int___* r959 = std__move_iterator_std___Deque_iterator_int__int___int______base___const__(t958);
+  _Bool r960 = std__operator__(r957, r959);
+  __retval955 = r960;
+  _Bool t961 = __retval955;
+  return t961;
+}
+
+// function: _ZSt12construct_atIiJiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S0_pispclsr3stdE7declvalIT0_EEEEEPS0_S3_DpOS2_
+int* _ZSt12construct_atIiJiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S0_pispclsr3stdE7declvalIT0_EEEEEPS0_S3_DpOS2_(int* v962, int* v963) {
+bb964:
+  int* __location965;
+  int* __args966;
+  int* __retval967;
+  void* __loc968;
+  __location965 = v962;
+  __args966 = v963;
+  int* t969 = __location965;
+  void* cast970 = (void*)t969;
+  __loc968 = cast970;
+    void* t971 = __loc968;
+    int* cast972 = (int*)t971;
+    int* t973 = __args966;
+    int t974 = *t973;
+    *cast972 = t974;
+    __retval967 = cast972;
+    int* t975 = __retval967;
+    return t975;
+  abort();
+}
+
+// function: _ZSt10_ConstructIiJiEEvPT_DpOT0_
+void void_std___Construct_int__int_(int* v976, int* v977) {
+bb978:
+  int* __p979;
+  int* __args980;
+  __p979 = v976;
+  __args980 = v977;
+    _Bool r981 = std____is_constant_evaluated();
+    if (r981) {
+      int* t982 = __p979;
+      int* t983 = __args980;
+      int* r984 = _ZSt12construct_atIiJiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S0_pispclsr3stdE7declvalIT0_EEEEEPS0_S3_DpOS2_(t982, t983);
+      return;
+    }
+  int* t985 = __p979;
+  void* cast986 = (void*)t985;
+  int* cast987 = (int*)cast986;
+  int* t988 = __args980;
+  int t989 = *t988;
+  *cast987 = t989;
+  return;
+}
+
+// function: _ZNKSt6ranges7__imove9_IterMoveclIRKSt15_Deque_iteratorIiRiPiEQoo11__adl_imoveIT_ErqTDTdeclsr3stdE7declvalIS9_EEEEEENS1_8__resultIS9_E4typeEOS9_
+int* _ZNKSt6ranges7__imove9_IterMoveclIRKSt15_Deque_iteratorIiRiPiEQoo11__adl_imoveIT_ErqTDTdeclsr3stdE7declvalIS9_EEEEEENS1_8__resultIS9_E4typeEOS9_(struct std__ranges____imove___IterMove* v990, struct std___Deque_iterator_int__int____int___* v991) {
+bb992:
+  struct std__ranges____imove___IterMove* this993;
+  struct std___Deque_iterator_int__int____int___* __e994;
+  int* __retval995;
+  this993 = v990;
+  __e994 = v991;
+  struct std__ranges____imove___IterMove* t996 = this993;
+      struct std___Deque_iterator_int__int____int___* t997 = __e994;
+      int* r998 = std___Deque_iterator_int__int___int____operator____const(t997);
+      __retval995 = r998;
+      int* t999 = __retval995;
+      return t999;
+  abort();
+}
+
+// function: _ZNKSt13move_iteratorISt15_Deque_iteratorIiRiPiEEdeEv
+int* std__move_iterator_std___Deque_iterator_int__int___int______operator____const(struct std__move_iterator_std___Deque_iterator_int__int____int____* v1000) {
+bb1001:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* this1002;
+  int* __retval1003;
+  this1002 = v1000;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1004 = this1002;
+  int* r1005 = _ZNKSt6ranges7__imove9_IterMoveclIRKSt15_Deque_iteratorIiRiPiEQoo11__adl_imoveIT_ErqTDTdeclsr3stdE7declvalIS9_EEEEEENS1_8__resultIS9_E4typeEOS9_(&_ZNSt6ranges4_Cpo9iter_moveE, &t1004->_M_current);
+  __retval1003 = r1005;
+  int* t1006 = __retval1003;
+  return t1006;
+}
+
+// function: _ZNSt13move_iteratorISt15_Deque_iteratorIiRiPiEEppEv
+struct std__move_iterator_std___Deque_iterator_int__int____int____* std__move_iterator_std___Deque_iterator_int__int___int______operator__(struct std__move_iterator_std___Deque_iterator_int__int____int____* v1007) {
+bb1008:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* this1009;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* __retval1010;
+  this1009 = v1007;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1011 = this1009;
+  struct std___Deque_iterator_int__int____int___* r1012 = std___Deque_iterator_int__int___int____operator___4(&t1011->_M_current);
+  __retval1010 = t1011;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1013 = __retval1010;
+  return t1013;
+}
+
+// function: _ZSt16__do_uninit_copyISt13move_iteratorISt15_Deque_iteratorIiRiPiEES5_S4_ET1_T_T0_S6_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____do_uninit_copy_std__move_iterator_std___Deque_iterator_int__int___int______std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____(struct std__move_iterator_std___Deque_iterator_int__int____int____ v1014, struct std__move_iterator_std___Deque_iterator_int__int____int____ v1015, struct std___Deque_iterator_int__int____int___ v1016) {
+bb1017:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ __first1018;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ __last1019;
+  struct std___Deque_iterator_int__int____int___ __result1020;
+  struct std___Deque_iterator_int__int____int___ __retval1021;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_ __guard1022;
+  __first1018 = v1014;
+  __last1019 = v1015;
+  __result1020 = v1016;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void____UninitDestroyGuard(&__guard1022, &__result1020);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+      while (1) {
+        _Bool r1024 = bool_std__operator___std___Deque_iterator_int__int___int____(&__first1018, &__last1019);
+        if (__cir_exc_active) {
+          {
+            std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard1022);
+          }
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        _Bool u1025 = !r1024;
+        if (!u1025) break;
+        int* r1026 = std___Deque_iterator_int__int___int____operator____const(&__result1020);
+        int* r1027 = std__move_iterator_std___Deque_iterator_int__int___int______operator____const(&__first1018);
+        if (__cir_exc_active) {
+          {
+            std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard1022);
+          }
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        void_std___Construct_int__int_(r1026, r1027);
+        if (__cir_exc_active) {
+          {
+            std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard1022);
+          }
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+      for_step1023: ;
+        struct std__move_iterator_std___Deque_iterator_int__int____int____* r1028 = std__move_iterator_std___Deque_iterator_int__int___int______operator__(&__first1018);
+        if (__cir_exc_active) {
+          {
+            std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard1022);
+          }
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        struct std___Deque_iterator_int__int____int___* r1029 = std___Deque_iterator_int__int___int____operator___4(&__result1020);
+      }
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void___release(&__guard1022);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard1022);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    std___Deque_iterator_int__int___int_____Deque_iterator(&__retval1021, &__result1020);
+    struct std___Deque_iterator_int__int____int___ t1030 = __retval1021;
+    struct std___Deque_iterator_int__int____int___ ret_val1031 = t1030;
+    {
+      std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard1022);
+    }
+    return ret_val1031;
+  abort();
+}
+
+// function: _ZNSt13move_iteratorISt15_Deque_iteratorIiRiPiEEC2EOS4_
+void std__move_iterator_std___Deque_iterator_int__int___int______move_iterator(struct std__move_iterator_std___Deque_iterator_int__int____int____* v1032, struct std__move_iterator_std___Deque_iterator_int__int____int____* v1033) {
+bb1034:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* this1035;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* unnamed1036;
+  this1035 = v1032;
+  unnamed1036 = v1033;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1037 = this1035;
+  struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____* base1038 = (struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____*)((char *)t1037 + 0);
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1039 = unnamed1036;
+  struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____* base1040 = (struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____*)((char *)t1039 + 0);
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1041 = unnamed1036;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&t1037->_M_current, &t1041->_M_current);
+  return;
+}
+
+// function: _ZNSt13move_iteratorISt15_Deque_iteratorIiRiPiEEC2ERKS4_
+void std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_2(struct std__move_iterator_std___Deque_iterator_int__int____int____* v1042, struct std__move_iterator_std___Deque_iterator_int__int____int____* v1043) {
+bb1044:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* this1045;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* unnamed1046;
+  this1045 = v1042;
+  unnamed1046 = v1043;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1047 = this1045;
+  struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____* base1048 = (struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____*)((char *)t1047 + 0);
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1049 = unnamed1046;
+  struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____* base1050 = (struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____*)((char *)t1049 + 0);
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1051 = unnamed1046;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&t1047->_M_current, &t1051->_M_current);
+  return;
+}
+
+// function: _ZSt18uninitialized_copyISt13move_iteratorISt15_Deque_iteratorIiRiPiEES4_ET0_T_S7_S6_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__uninitialized_copy_std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____(struct std__move_iterator_std___Deque_iterator_int__int____int____ v1052, struct std__move_iterator_std___Deque_iterator_int__int____int____ v1053, struct std___Deque_iterator_int__int____int___ v1054) {
+bb1055:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ __first1056;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ __last1057;
+  struct std___Deque_iterator_int__int____int___ __result1058;
+  struct std___Deque_iterator_int__int____int___ __retval1059;
+  __first1056 = v1052;
+  __last1057 = v1053;
+  __result1058 = v1054;
+        struct std__move_iterator_std___Deque_iterator_int__int____int____ agg_tmp01060;
+        struct std__move_iterator_std___Deque_iterator_int__int____int____ agg_tmp11061;
+        struct std___Deque_iterator_int__int____int___ agg_tmp21062;
+        std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_2(&agg_tmp01060, &__first1056);
+        std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_2(&agg_tmp11061, &__last1057);
+        std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21062, &__result1058);
+        struct std__move_iterator_std___Deque_iterator_int__int____int____ t1063 = agg_tmp01060;
+        struct std__move_iterator_std___Deque_iterator_int__int____int____ t1064 = agg_tmp11061;
+        struct std___Deque_iterator_int__int____int___ t1065 = agg_tmp21062;
+        struct std___Deque_iterator_int__int____int___ r1066 = std___Deque_iterator_int__int___int___std____do_uninit_copy_std__move_iterator_std___Deque_iterator_int__int___int______std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____(t1063, t1064, t1065);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        __retval1059 = r1066;
+        struct std___Deque_iterator_int__int____int___ t1067 = __retval1059;
+        return t1067;
+  abort();
+}
+
+// function: _ZSt22__uninitialized_copy_aISt13move_iteratorISt15_Deque_iteratorIiRiPiEES5_S4_iET1_T_T0_S6_RSaIT2_E
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std__move_iterator_std___Deque_iterator_int__int___int______std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____int_(struct std__move_iterator_std___Deque_iterator_int__int____int____ v1068, struct std__move_iterator_std___Deque_iterator_int__int____int____ v1069, struct std___Deque_iterator_int__int____int___ v1070, struct std__allocator_int_* v1071) {
+bb1072:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ __first1073;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ __last1074;
+  struct std___Deque_iterator_int__int____int___ __result1075;
+  struct std__allocator_int_* unnamed1076;
+  struct std___Deque_iterator_int__int____int___ __retval1077;
+  __first1073 = v1068;
+  __last1074 = v1069;
+  __result1075 = v1070;
+  unnamed1076 = v1071;
+    _Bool r1078 = std__is_constant_evaluated();
+    if (r1078) {
+      struct std__move_iterator_std___Deque_iterator_int__int____int____ agg_tmp01079;
+      struct std__move_iterator_std___Deque_iterator_int__int____int____ agg_tmp11080;
+      struct std___Deque_iterator_int__int____int___ agg_tmp21081;
+      std__move_iterator_std___Deque_iterator_int__int___int______move_iterator(&agg_tmp01079, &__first1073);
+      std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_2(&agg_tmp11080, &__last1074);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21081, &__result1075);
+      struct std__move_iterator_std___Deque_iterator_int__int____int____ t1082 = agg_tmp01079;
+      struct std__move_iterator_std___Deque_iterator_int__int____int____ t1083 = agg_tmp11080;
+      struct std___Deque_iterator_int__int____int___ t1084 = agg_tmp21081;
+      struct std___Deque_iterator_int__int____int___ r1085 = std___Deque_iterator_int__int___int___std____do_uninit_copy_std__move_iterator_std___Deque_iterator_int__int___int______std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____(t1082, t1083, t1084);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      __retval1077 = r1085;
+      struct std___Deque_iterator_int__int____int___ t1086 = __retval1077;
+      return t1086;
+    }
+    struct std__move_iterator_std___Deque_iterator_int__int____int____ agg_tmp31087;
+    struct std__move_iterator_std___Deque_iterator_int__int____int____ agg_tmp41088;
+    struct std___Deque_iterator_int__int____int___ agg_tmp51089;
+    std__move_iterator_std___Deque_iterator_int__int___int______move_iterator(&agg_tmp31087, &__first1073);
+    std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_2(&agg_tmp41088, &__last1074);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp51089, &__result1075);
+    struct std__move_iterator_std___Deque_iterator_int__int____int____ t1090 = agg_tmp31087;
+    struct std__move_iterator_std___Deque_iterator_int__int____int____ t1091 = agg_tmp41088;
+    struct std___Deque_iterator_int__int____int___ t1092 = agg_tmp51089;
+    struct std___Deque_iterator_int__int____int___ r1093 = std___Deque_iterator_int__int___int___std__uninitialized_copy_std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____(t1090, t1091, t1092);
+    if (__cir_exc_active) {
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    __retval1077 = r1093;
+    struct std___Deque_iterator_int__int____int___ t1094 = __retval1077;
+    return t1094;
+  abort();
+}
+
+// function: _ZNSt13move_iteratorISt15_Deque_iteratorIiRiPiEEC2ES3_
+void std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_3(struct std__move_iterator_std___Deque_iterator_int__int____int____* v1095, struct std___Deque_iterator_int__int____int___ v1096) {
+bb1097:
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* this1098;
+  struct std___Deque_iterator_int__int____int___ __i1099;
+  this1098 = v1095;
+  __i1099 = v1096;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____* t1100 = this1098;
+  struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____* base1101 = (struct std____detail____move_iter_cat_std___Deque_iterator_int__int____int____*)((char *)t1100 + 0);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&t1100->_M_current, &__i1099);
+  return;
+}
+
+// function: _ZSt18make_move_iteratorISt15_Deque_iteratorIiRiPiEESt13move_iteratorIT_ES5_
+struct std__move_iterator_std___Deque_iterator_int__int____int____ std__move_iterator_std___Deque_iterator_int__int___int_____std__make_move_iterator_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1102) {
+bb1103:
+  struct std___Deque_iterator_int__int____int___ __i1104;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ __retval1105;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01106;
+  __i1104 = v1102;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01106, &__i1104);
+  struct std___Deque_iterator_int__int____int___ t1107 = agg_tmp01106;
+  std__move_iterator_std___Deque_iterator_int__int___int______move_iterator_3(&__retval1105, t1107);
+  if (__cir_exc_active) {
+    struct std__move_iterator_std___Deque_iterator_int__int____int____ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ t1108 = __retval1105;
+  return t1108;
+}
+
+// function: _ZSt22__uninitialized_move_aISt15_Deque_iteratorIiRiPiES3_SaIiEET0_T_S6_S5_RT1_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ v1109, struct std___Deque_iterator_int__int____int___ v1110, struct std___Deque_iterator_int__int____int___ v1111, struct std__allocator_int_* v1112) {
+bb1113:
+  struct std___Deque_iterator_int__int____int___ __first1114;
+  struct std___Deque_iterator_int__int____int___ __last1115;
+  struct std___Deque_iterator_int__int____int___ __result1116;
+  struct std__allocator_int_* __alloc1117;
+  struct std___Deque_iterator_int__int____int___ __retval1118;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ agg_tmp01119;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11120;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ agg_tmp21121;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31122;
+  struct std___Deque_iterator_int__int____int___ agg_tmp41123;
+  __first1114 = v1109;
+  __last1115 = v1110;
+  __result1116 = v1111;
+  __alloc1117 = v1112;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11120, &__first1114);
+  struct std___Deque_iterator_int__int____int___ t1124 = agg_tmp11120;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ r1125 = std__move_iterator_std___Deque_iterator_int__int___int_____std__make_move_iterator_std___Deque_iterator_int__int___int____(t1124);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp01119 = r1125;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp31122, &__last1115);
+  struct std___Deque_iterator_int__int____int___ t1126 = agg_tmp31122;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ r1127 = std__move_iterator_std___Deque_iterator_int__int___int_____std__make_move_iterator_std___Deque_iterator_int__int___int____(t1126);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp21121 = r1127;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp41123, &__result1116);
+  struct std__allocator_int_* t1128 = __alloc1117;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ t1129 = agg_tmp01119;
+  struct std__move_iterator_std___Deque_iterator_int__int____int____ t1130 = agg_tmp21121;
+  struct std___Deque_iterator_int__int____int___ t1131 = agg_tmp41123;
+  struct std___Deque_iterator_int__int____int___ r1132 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std__move_iterator_std___Deque_iterator_int__int___int______std__move_iterator_std___Deque_iterator_int__int___int______std___Deque_iterator_int__int___int____int_(t1129, t1130, t1131, t1128);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1118 = r1132;
+  struct std___Deque_iterator_int__int____int___ t1133 = __retval1118;
+  return t1133;
+}
+
+// function: _ZSt12__niter_wrapISt15_Deque_iteratorIiRiPiEET_RKS4_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____niter_wrap_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___* v1134, struct std___Deque_iterator_int__int____int___ v1135) {
+bb1136:
+  struct std___Deque_iterator_int__int____int___* unnamed1137;
+  struct std___Deque_iterator_int__int____int___ __res1138;
+  struct std___Deque_iterator_int__int____int___ __retval1139;
+  unnamed1137 = v1134;
+  __res1138 = v1135;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval1139, &__res1138);
+  struct std___Deque_iterator_int__int____int___ t1140 = __retval1139;
+  return t1140;
+}
+
+// function: _ZSt3minIlERKT_S2_S2_
+long* long_const__std__min_long_(long* v1141, long* v1142) {
+bb1143:
+  long* __a1144;
+  long* __b1145;
+  long* __retval1146;
+  __a1144 = v1141;
+  __b1145 = v1142;
+    long* t1147 = __b1145;
+    long t1148 = *t1147;
+    long* t1149 = __a1144;
+    long t1150 = *t1149;
+    _Bool c1151 = ((t1148 < t1150)) ? 1 : 0;
+    if (c1151) {
+      long* t1152 = __b1145;
+      __retval1146 = t1152;
+      long* t1153 = __retval1146;
+      return t1153;
+    }
+  long* t1154 = __a1144;
+  __retval1146 = t1154;
+  long* t1155 = __retval1146;
+  return t1155;
+}
+
+// function: _ZSt10__distanceIPiENSt15iterator_traitsIT_E15difference_typeES2_S2_St26random_access_iterator_tag
+long std__iterator_traits_int____difference_type_std____distance_int__(int* v1156, int* v1157, struct std__random_access_iterator_tag v1158) {
+bb1159:
+  int* __first1160;
+  int* __last1161;
+  struct std__random_access_iterator_tag unnamed1162;
+  long __retval1163;
+  __first1160 = v1156;
+  __last1161 = v1157;
+  unnamed1162 = v1158;
+  int* t1164 = __last1161;
+  int* t1165 = __first1160;
+  long diff1166 = t1164 - t1165;
+  __retval1163 = diff1166;
+  long t1167 = __retval1163;
+  return t1167;
+}
+
+// function: _ZSt19__iterator_categoryIPiENSt15iterator_traitsIT_E17iterator_categoryERKS2_
+struct std__random_access_iterator_tag std__iterator_traits_int____iterator_category_std____iterator_category_int__(int** v1168) {
+bb1169:
+  int** unnamed1170;
+  struct std__random_access_iterator_tag __retval1171;
+  unnamed1170 = v1168;
+  struct std__random_access_iterator_tag t1172 = __retval1171;
+  return t1172;
+}
+
+// function: _ZSt8distanceIPiENSt15iterator_traitsIT_E15difference_typeES2_S2_
+long std__iterator_traits_int____difference_type_std__distance_int__(int* v1173, int* v1174) {
+bb1175:
+  int* __first1176;
+  int* __last1177;
+  long __retval1178;
+  struct std__random_access_iterator_tag agg_tmp01179;
+  __first1176 = v1173;
+  __last1177 = v1174;
+  int* t1180 = __first1176;
+  int* t1181 = __last1177;
+  struct std__random_access_iterator_tag r1182 = std__iterator_traits_int____iterator_category_std____iterator_category_int__(&__first1176);
+  if (__cir_exc_active) {
+    long __cir_eh_ret = (long)0;
+    return __cir_eh_ret;
+  }
+  agg_tmp01179 = r1182;
+  struct std__random_access_iterator_tag t1183 = agg_tmp01179;
+  long r1184 = std__iterator_traits_int____difference_type_std____distance_int__(t1180, t1181, t1183);
+  if (__cir_exc_active) {
+    long __cir_eh_ret = (long)0;
+    return __cir_eh_ret;
+  }
+  __retval1178 = r1184;
+  long t1185 = __retval1178;
+  return t1185;
+}
+
+// function: _ZSt12__assign_oneILb1EPiS0_EvRT0_RT1_
+void void_std____assign_one_true__int___int__(int** v1186, int** v1187) {
+bb1188:
+  int** __out1189;
+  int** __in1190;
+  __out1189 = v1186;
+  __in1190 = v1187;
+    int** t1191 = __in1190;
+    int* t1192 = *t1191;
+    int t1193 = *t1192;
+    int** t1194 = __out1189;
+    int* t1195 = *t1194;
+    *t1195 = t1193;
+  return;
+}
+
+// function: _ZSt14__copy_move_a2ILb1EPiS0_S0_ET2_T0_T1_S1_
+int* int__std____copy_move_a2_true__int___int___int__(int* v1196, int* v1197, int* v1198) {
+bb1199:
+  int* __first1200;
+  int* __last1201;
+  int* __result1202;
+  int* __retval1203;
+  __first1200 = v1196;
+  __last1201 = v1197;
+  __result1202 = v1198;
+      _Bool r1204 = std____is_constant_evaluated();
+      if (r1204) {
+      } else {
+          long __n1205;
+          int* t1206 = __first1200;
+          int* t1207 = __last1201;
+          long r1208 = std__iterator_traits_int____difference_type_std__distance_int__(t1206, t1207);
+          if (__cir_exc_active) {
+            int* __cir_eh_ret = (int*)0;
+            return __cir_eh_ret;
+          }
+          __n1205 = r1208;
+            long t1209 = __n1205;
+            long c1210 = 1;
+            _Bool c1211 = ((t1209 > c1210)) ? 1 : 0;
+            if (c1211) {
+              int* t1212 = __result1202;
+              void* cast1213 = (void*)t1212;
+              int* t1214 = __first1200;
+              void* cast1215 = (void*)t1214;
+              long t1216 = __n1205;
+              unsigned long cast1217 = (unsigned long)t1216;
+              unsigned long c1218 = 4;
+              unsigned long b1219 = cast1217 * c1218;
+              void* r1220 = memmove(cast1213, cast1215, b1219);
+              long t1221 = __n1205;
+              int* t1222 = __result1202;
+              int* ptr1223 = &(t1222)[t1221];
+              __result1202 = ptr1223;
+            } else {
+                long t1224 = __n1205;
+                long c1225 = 1;
+                _Bool c1226 = ((t1224 == c1225)) ? 1 : 0;
+                if (c1226) {
+                  void_std____assign_one_true__int___int__(&__result1202, &__first1200);
+                  if (__cir_exc_active) {
+                    int* __cir_eh_ret = (int*)0;
+                    return __cir_eh_ret;
+                  }
+                  int* t1227 = __result1202;
+                  int c1228 = 1;
+                  int* ptr1229 = &(t1227)[c1228];
+                  __result1202 = ptr1229;
+                }
+            }
+          int* t1230 = __result1202;
+          __retval1203 = t1230;
+          int* t1231 = __retval1203;
+          return t1231;
+      }
+    while (1) {
+      int* t1233 = __first1200;
+      int* t1234 = __last1201;
+      _Bool c1235 = ((t1233 != t1234)) ? 1 : 0;
+      if (!c1235) break;
+      void_std____assign_one_true__int___int__(&__result1202, &__first1200);
+      if (__cir_exc_active) {
+        int* __cir_eh_ret = (int*)0;
+        return __cir_eh_ret;
+      }
+    for_step1232: ;
+      int* t1236 = __result1202;
+      int c1237 = 1;
+      int* ptr1238 = &(t1236)[c1237];
+      __result1202 = ptr1238;
+      int* t1239 = __first1200;
+      int c1240 = 1;
+      int* ptr1241 = &(t1239)[c1240];
+      __first1200 = ptr1241;
+    }
+  int* t1242 = __result1202;
+  __retval1203 = t1242;
+  int* t1243 = __retval1203;
+  return t1243;
+}
+
+// function: _ZSt14__copy_move_a1ILb1EPiS0_ET1_T0_S2_S1_
+int* int__std____copy_move_a1_true__int___int__(int* v1244, int* v1245, int* v1246) {
+bb1247:
+  int* __first1248;
+  int* __last1249;
+  int* __result1250;
+  int* __retval1251;
+  __first1248 = v1244;
+  __last1249 = v1245;
+  __result1250 = v1246;
+  int* t1252 = __first1248;
+  int* t1253 = __last1249;
+  int* t1254 = __result1250;
+  int* r1255 = int__std____copy_move_a2_true__int___int___int__(t1252, t1253, t1254);
+  if (__cir_exc_active) {
+    int* __cir_eh_ret = (int*)0;
+    return __cir_eh_ret;
+  }
+  __retval1251 = r1255;
+  int* t1256 = __retval1251;
+  return t1256;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiEpLEl
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator___3(struct std___Deque_iterator_int__int____int___* v1257, long v1258) {
+bb1259:
+  struct std___Deque_iterator_int__int____int___* this1260;
+  long __n1261;
+  struct std___Deque_iterator_int__int____int___* __retval1262;
+  long __offset1263;
+  this1260 = v1257;
+  __n1261 = v1258;
+  struct std___Deque_iterator_int__int____int___* t1264 = this1260;
+  long t1265 = __n1261;
+  int* t1266 = t1264->_M_cur;
+  int* t1267 = t1264->_M_first;
+  long diff1268 = t1266 - t1267;
+  long b1269 = t1265 + diff1268;
+  __offset1263 = b1269;
+    long t1270 = __offset1263;
+    long c1271 = 0;
+    _Bool c1272 = ((t1270 >= c1271)) ? 1 : 0;
+    _Bool ternary1273;
+    if (c1272) {
+      long t1274 = __offset1263;
+      unsigned long r1275 = std___Deque_iterator_int__int___int_____S_buffer_size();
+      long cast1276 = (long)r1275;
+      _Bool c1277 = ((t1274 < cast1276)) ? 1 : 0;
+      ternary1273 = (_Bool)c1277;
+    } else {
+      _Bool c1278 = 0;
+      ternary1273 = (_Bool)c1278;
+    }
+    if (ternary1273) {
+      long t1279 = __n1261;
+      int* t1280 = t1264->_M_cur;
+      int* ptr1281 = &(t1280)[t1279];
+      t1264->_M_cur = ptr1281;
+    } else {
+      long __node_offset1282;
+      long t1283 = __offset1263;
+      long c1284 = 0;
+      _Bool c1285 = ((t1283 > c1284)) ? 1 : 0;
+      long ternary1286;
+      if (c1285) {
+        long t1287 = __offset1263;
+        unsigned long r1288 = std___Deque_iterator_int__int___int_____S_buffer_size();
+        long cast1289 = (long)r1288;
+        long b1290 = t1287 / cast1289;
+        ternary1286 = (long)b1290;
+      } else {
+        long t1291 = __offset1263;
+        long u1292 = -t1291;
+        long c1293 = 1;
+        long b1294 = u1292 - c1293;
+        unsigned long cast1295 = (unsigned long)b1294;
+        unsigned long r1296 = std___Deque_iterator_int__int___int_____S_buffer_size();
+        unsigned long b1297 = cast1295 / r1296;
+        long cast1298 = (long)b1297;
+        long u1299 = -cast1298;
+        long c1300 = 1;
+        long b1301 = u1299 - c1300;
+        ternary1286 = (long)b1301;
+      }
+      __node_offset1282 = ternary1286;
+      int** t1302 = t1264->_M_node;
+      long t1303 = __node_offset1282;
+      int** ptr1304 = &(t1302)[t1303];
+      std___Deque_iterator_int__int___int_____M_set_node(t1264, ptr1304);
+      int* t1305 = t1264->_M_first;
+      long t1306 = __offset1263;
+      long t1307 = __node_offset1282;
+      unsigned long r1308 = std___Deque_iterator_int__int___int_____S_buffer_size();
+      long cast1309 = (long)r1308;
+      long b1310 = t1307 * cast1309;
+      long b1311 = t1306 - b1310;
+      int* ptr1312 = &(t1305)[b1311];
+      t1264->_M_cur = ptr1312;
+    }
+  __retval1262 = t1264;
+  struct std___Deque_iterator_int__int____int___* t1313 = __retval1262;
+  return t1313;
+}
+
+// function: _ZSt14__copy_move_a1ILb1EPiiEN9__gnu_cxx11__enable_ifIXsr23__is_random_access_iterIT0_EE7__valueESt15_Deque_iteratorIT1_RS5_PS5_EE6__typeES3_S3_S8_
+struct std___Deque_iterator_int__int____int___ __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_true__int___int_(int* v1314, int* v1315, struct std___Deque_iterator_int__int____int___ v1316) {
+bb1317:
+  int* __first1318;
+  int* __last1319;
+  struct std___Deque_iterator_int__int____int___ __result1320;
+  struct std___Deque_iterator_int__int____int___ __retval1321;
+  long __len1322;
+  __first1318 = v1314;
+  __last1319 = v1315;
+  __result1320 = v1316;
+  int* t1323 = __last1319;
+  int* t1324 = __first1318;
+  long diff1325 = t1323 - t1324;
+  __len1322 = diff1325;
+    while (1) {
+      long t1326 = __len1322;
+      long c1327 = 0;
+      _Bool c1328 = ((t1326 > c1327)) ? 1 : 0;
+      if (!c1328) break;
+        long __clen1329;
+        long ref_tmp01330;
+        int* t1331 = __result1320._M_last;
+        int* t1332 = __result1320._M_cur;
+        long diff1333 = t1331 - t1332;
+        ref_tmp01330 = diff1333;
+        long* r1334 = long_const__std__min_long_(&__len1322, &ref_tmp01330);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        long t1335 = *r1334;
+        __clen1329 = t1335;
+        int* t1336 = __first1318;
+        int* t1337 = __first1318;
+        long t1338 = __clen1329;
+        int* ptr1339 = &(t1337)[t1338];
+        int* t1340 = __result1320._M_cur;
+        int* r1341 = int__std____copy_move_a1_true__int___int__(t1336, ptr1339, t1340);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        long t1342 = __clen1329;
+        int* t1343 = __first1318;
+        int* ptr1344 = &(t1343)[t1342];
+        __first1318 = ptr1344;
+        long t1345 = __clen1329;
+        struct std___Deque_iterator_int__int____int___* r1346 = std___Deque_iterator_int__int___int____operator___3(&__result1320, t1345);
+        long t1347 = __clen1329;
+        long t1348 = __len1322;
+        long b1349 = t1348 - t1347;
+        __len1322 = b1349;
+    }
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval1321, &__result1320);
+  struct std___Deque_iterator_int__int____int___ t1350 = __retval1321;
+  return t1350;
+}
+
+// function: _ZSt15__copy_move_ditILb1EiRiPiSt15_Deque_iteratorIiS0_S1_EET3_S2_IT0_T1_T2_ES8_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_dit_true__int__int___int___std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1351, struct std___Deque_iterator_int__int____int___ v1352, struct std___Deque_iterator_int__int____int___ v1353) {
+bb1354:
+  struct std___Deque_iterator_int__int____int___ __first1355;
+  struct std___Deque_iterator_int__int____int___ __last1356;
+  struct std___Deque_iterator_int__int____int___ __result1357;
+  struct std___Deque_iterator_int__int____int___ __retval1358;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31359;
+  __first1355 = v1351;
+  __last1356 = v1352;
+  __result1357 = v1353;
+    int** t1360 = __first1355._M_node;
+    int** t1361 = __last1356._M_node;
+    _Bool c1362 = ((t1360 != t1361)) ? 1 : 0;
+    if (c1362) {
+      struct std___Deque_iterator_int__int____int___ ref_tmp01363;
+      struct std___Deque_iterator_int__int____int___ agg_tmp01364;
+      struct std___Deque_iterator_int__int____int___ agg_tmp21365;
+      int* t1366 = __first1355._M_cur;
+      int* t1367 = __first1355._M_last;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01364, &__result1357);
+      struct std___Deque_iterator_int__int____int___ t1368 = agg_tmp01364;
+      struct std___Deque_iterator_int__int____int___ r1369 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_true__int___int_(t1366, t1367, t1368);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      ref_tmp01363 = r1369;
+      struct std___Deque_iterator_int__int____int___* r1370 = std___Deque_iterator_int__int___int____operator_(&__result1357, &ref_tmp01363);
+        int** __node1371;
+        struct std___Deque_iterator_int__int____int___ ref_tmp11372;
+        struct std___Deque_iterator_int__int____int___ agg_tmp11373;
+        int** t1374 = __first1355._M_node;
+        int c1375 = 1;
+        int** ptr1376 = &(t1374)[c1375];
+        __node1371 = ptr1376;
+        while (1) {
+          int** t1378 = __node1371;
+          int** t1379 = __last1356._M_node;
+          _Bool c1380 = ((t1378 != t1379)) ? 1 : 0;
+          if (!c1380) break;
+          int** t1381 = __node1371;
+          int* t1382 = *t1381;
+          int** t1383 = __node1371;
+          int* t1384 = *t1383;
+          unsigned long r1385 = std___Deque_iterator_int__int___int_____S_buffer_size();
+          int* ptr1386 = &(t1384)[r1385];
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11373, &__result1357);
+          struct std___Deque_iterator_int__int____int___ t1387 = agg_tmp11373;
+          struct std___Deque_iterator_int__int____int___ r1388 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_true__int___int_(t1382, ptr1386, t1387);
+          if (__cir_exc_active) {
+            struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+            return __cir_eh_ret;
+          }
+          ref_tmp11372 = r1388;
+          struct std___Deque_iterator_int__int____int___* r1389 = std___Deque_iterator_int__int___int____operator_(&__result1357, &ref_tmp11372);
+        for_step1377: ;
+          int** t1390 = __node1371;
+          int c1391 = 1;
+          int** ptr1392 = &(t1390)[c1391];
+          __node1371 = ptr1392;
+        }
+      int* t1393 = __last1356._M_first;
+      int* t1394 = __last1356._M_cur;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21365, &__result1357);
+      struct std___Deque_iterator_int__int____int___ t1395 = agg_tmp21365;
+      struct std___Deque_iterator_int__int____int___ r1396 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_true__int___int_(t1393, t1394, t1395);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      __retval1358 = r1396;
+      struct std___Deque_iterator_int__int____int___ t1397 = __retval1358;
+      return t1397;
+    }
+  int* t1398 = __first1355._M_cur;
+  int* t1399 = __last1356._M_cur;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp31359, &__result1357);
+  struct std___Deque_iterator_int__int____int___ t1400 = agg_tmp31359;
+  struct std___Deque_iterator_int__int____int___ r1401 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_true__int___int_(t1398, t1399, t1400);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1358 = r1401;
+  struct std___Deque_iterator_int__int____int___ t1402 = __retval1358;
+  return t1402;
+}
+
+// function: _ZSt14__copy_move_a1ILb1EiRiPiiESt15_Deque_iteratorIT3_RS3_PS3_ES2_IT0_T1_T2_ESA_S6_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a1_true__int__int___int___int_(struct std___Deque_iterator_int__int____int___ v1403, struct std___Deque_iterator_int__int____int___ v1404, struct std___Deque_iterator_int__int____int___ v1405) {
+bb1406:
+  struct std___Deque_iterator_int__int____int___ __first1407;
+  struct std___Deque_iterator_int__int____int___ __last1408;
+  struct std___Deque_iterator_int__int____int___ __result1409;
+  struct std___Deque_iterator_int__int____int___ __retval1410;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01411;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11412;
+  struct std___Deque_iterator_int__int____int___ agg_tmp21413;
+  __first1407 = v1403;
+  __last1408 = v1404;
+  __result1409 = v1405;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01411, &__first1407);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11412, &__last1408);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21413, &__result1409);
+  struct std___Deque_iterator_int__int____int___ t1414 = agg_tmp01411;
+  struct std___Deque_iterator_int__int____int___ t1415 = agg_tmp11412;
+  struct std___Deque_iterator_int__int____int___ t1416 = agg_tmp21413;
+  struct std___Deque_iterator_int__int____int___ r1417 = std___Deque_iterator_int__int___int___std____copy_move_dit_true__int__int___int___std___Deque_iterator_int__int___int____(t1414, t1415, t1416);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1410 = r1417;
+  struct std___Deque_iterator_int__int____int___ t1418 = __retval1410;
+  return t1418;
+}
+
+// function: _ZSt12__niter_baseISt15_Deque_iteratorIiRiPiEET_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1419) {
+bb1420:
+  struct std___Deque_iterator_int__int____int___ __it1421;
+  struct std___Deque_iterator_int__int____int___ __retval1422;
+  __it1421 = v1419;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval1422, &__it1421);
+  struct std___Deque_iterator_int__int____int___ t1423 = __retval1422;
+  return t1423;
+}
+
+// function: _ZSt13__copy_move_aILb1ESt15_Deque_iteratorIiRiPiES3_ET1_T0_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a_true__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1424, struct std___Deque_iterator_int__int____int___ v1425, struct std___Deque_iterator_int__int____int___ v1426) {
+bb1427:
+  struct std___Deque_iterator_int__int____int___ __first1428;
+  struct std___Deque_iterator_int__int____int___ __last1429;
+  struct std___Deque_iterator_int__int____int___ __result1430;
+  struct std___Deque_iterator_int__int____int___ __retval1431;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01432;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11433;
+  struct std___Deque_iterator_int__int____int___ agg_tmp21434;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31435;
+  struct std___Deque_iterator_int__int____int___ agg_tmp41436;
+  struct std___Deque_iterator_int__int____int___ agg_tmp51437;
+  struct std___Deque_iterator_int__int____int___ agg_tmp61438;
+  __first1428 = v1424;
+  __last1429 = v1425;
+  __result1430 = v1426;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21434, &__first1428);
+  struct std___Deque_iterator_int__int____int___ t1439 = agg_tmp21434;
+  struct std___Deque_iterator_int__int____int___ r1440 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t1439);
+  agg_tmp11433 = r1440;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp41436, &__last1429);
+  struct std___Deque_iterator_int__int____int___ t1441 = agg_tmp41436;
+  struct std___Deque_iterator_int__int____int___ r1442 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t1441);
+  agg_tmp31435 = r1442;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp61438, &__result1430);
+  struct std___Deque_iterator_int__int____int___ t1443 = agg_tmp61438;
+  struct std___Deque_iterator_int__int____int___ r1444 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t1443);
+  agg_tmp51437 = r1444;
+  struct std___Deque_iterator_int__int____int___ t1445 = agg_tmp11433;
+  struct std___Deque_iterator_int__int____int___ t1446 = agg_tmp31435;
+  struct std___Deque_iterator_int__int____int___ t1447 = agg_tmp51437;
+  struct std___Deque_iterator_int__int____int___ r1448 = std___Deque_iterator_int__int___int___std____copy_move_a1_true__int__int___int___int_(t1445, t1446, t1447);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp01432 = r1448;
+  struct std___Deque_iterator_int__int____int___ t1449 = agg_tmp01432;
+  struct std___Deque_iterator_int__int____int___ r1450 = std___Deque_iterator_int__int___int___std____niter_wrap_std___Deque_iterator_int__int___int____(&__result1430, t1449);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1431 = r1450;
+  struct std___Deque_iterator_int__int____int___ t1451 = __retval1431;
+  return t1451;
+}
+
+// function: _ZSt12__miter_baseISt15_Deque_iteratorIiRiPiEET_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____miter_base_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1452) {
+bb1453:
+  struct std___Deque_iterator_int__int____int___ __it1454;
+  struct std___Deque_iterator_int__int____int___ __retval1455;
+  __it1454 = v1452;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval1455, &__it1454);
+  struct std___Deque_iterator_int__int____int___ t1456 = __retval1455;
+  return t1456;
+}
+
+// function: _ZSt4moveISt15_Deque_iteratorIiRiPiES3_ET0_T_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__move_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1457, struct std___Deque_iterator_int__int____int___ v1458, struct std___Deque_iterator_int__int____int___ v1459) {
+bb1460:
+  struct std___Deque_iterator_int__int____int___ __first1461;
+  struct std___Deque_iterator_int__int____int___ __last1462;
+  struct std___Deque_iterator_int__int____int___ __result1463;
+  struct std___Deque_iterator_int__int____int___ __retval1464;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01465;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11466;
+  struct std___Deque_iterator_int__int____int___ agg_tmp21467;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31468;
+  struct std___Deque_iterator_int__int____int___ agg_tmp41469;
+  __first1461 = v1457;
+  __last1462 = v1458;
+  __result1463 = v1459;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11466, &__first1461);
+  struct std___Deque_iterator_int__int____int___ t1470 = agg_tmp11466;
+  struct std___Deque_iterator_int__int____int___ r1471 = std___Deque_iterator_int__int___int___std____miter_base_std___Deque_iterator_int__int___int____(t1470);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp01465 = r1471;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp31468, &__last1462);
+  struct std___Deque_iterator_int__int____int___ t1472 = agg_tmp31468;
+  struct std___Deque_iterator_int__int____int___ r1473 = std___Deque_iterator_int__int___int___std____miter_base_std___Deque_iterator_int__int___int____(t1472);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp21467 = r1473;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp41469, &__result1463);
+  struct std___Deque_iterator_int__int____int___ t1474 = agg_tmp01465;
+  struct std___Deque_iterator_int__int____int___ t1475 = agg_tmp21467;
+  struct std___Deque_iterator_int__int____int___ t1476 = agg_tmp41469;
+  struct std___Deque_iterator_int__int____int___ r1477 = std___Deque_iterator_int__int___int___std____copy_move_a_true__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t1474, t1475, t1476);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1464 = r1477;
+  struct std___Deque_iterator_int__int____int___ t1478 = __retval1464;
+  return t1478;
+}
+
+// function: _ZNSt19_UninitDestroyGuardISt15_Deque_iteratorIiRiPiESaIiEEC2ERS3_RS4_
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int______UninitDestroyGuard(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* v1479, struct std___Deque_iterator_int__int____int___* v1480, struct std__allocator_int_* v1481) {
+bb1482:
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* this1483;
+  struct std___Deque_iterator_int__int____int___* __first1484;
+  struct std__allocator_int_* __a1485;
+  this1483 = v1479;
+  __first1484 = v1480;
+  __a1485 = v1481;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* t1486 = this1483;
+  struct std___Deque_iterator_int__int____int___* t1487 = __first1484;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&t1486->_M_first, t1487);
+  struct std___Deque_iterator_int__int____int___* t1488 = __first1484;
+  t1486->_M_cur = t1488;
+  struct std__allocator_int_* t1489 = __a1485;
+  t1486->_M_alloc = t1489;
+  return;
+}
+
+// function: _ZNSt19_UninitDestroyGuardISt15_Deque_iteratorIiRiPiESaIiEE7releaseEv
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_____release(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* v1490) {
+bb1491:
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* this1492;
+  this1492 = v1490;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* t1493 = this1492;
+  struct std___Deque_iterator_int__int____int___* c1494 = ((void*)0);
+  t1493->_M_cur = c1494;
+  return;
+}
+
+// function: _ZNSt19_UninitDestroyGuardISt15_Deque_iteratorIiRiPiESaIiEED2Ev
+void std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* v1495) {
+bb1496:
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* this1497;
+  this1497 = v1495;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__* t1498 = this1497;
+    struct std___Deque_iterator_int__int____int___* t1499 = t1498->_M_cur;
+    struct std___Deque_iterator_int__int____int___* c1500 = ((void*)0);
+    _Bool c1501 = ((t1499 != c1500)) ? 1 : 0;
+    if (c1501) {
+      struct std___Deque_iterator_int__int____int___ agg_tmp01502;
+      struct std___Deque_iterator_int__int____int___ agg_tmp11503;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01502, &t1498->_M_first);
+      struct std___Deque_iterator_int__int____int___* t1504 = t1498->_M_cur;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11503, t1504);
+      struct std__allocator_int_* t1505 = t1498->_M_alloc;
+      struct std___Deque_iterator_int__int____int___ t1506 = agg_tmp01502;
+      struct std___Deque_iterator_int__int____int___ t1507 = agg_tmp11503;
+      void_std___Destroy_std___Deque_iterator_int__int___int____int_(t1506, t1507, t1505);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZSt25__uninitialized_move_fillISt15_Deque_iteratorIiRiPiES3_iSaIiEEvT_S5_T0_S6_RKT1_RT2_
+void void_std____uninitialized_move_fill_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int__std__allocator_int___(struct std___Deque_iterator_int__int____int___ v1508, struct std___Deque_iterator_int__int____int___ v1509, struct std___Deque_iterator_int__int____int___ v1510, struct std___Deque_iterator_int__int____int___ v1511, int* v1512, struct std__allocator_int_* v1513) {
+bb1514:
+  struct std___Deque_iterator_int__int____int___ __first11515;
+  struct std___Deque_iterator_int__int____int___ __last11516;
+  struct std___Deque_iterator_int__int____int___ __first21517;
+  struct std___Deque_iterator_int__int____int___ __last21518;
+  int* __x1519;
+  struct std__allocator_int_* __alloc1520;
+  struct std___Deque_iterator_int__int____int___ __mid21521;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01522;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11523;
+  struct std___Deque_iterator_int__int____int___ agg_tmp21524;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__ __guard1525;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31526;
+  struct std___Deque_iterator_int__int____int___ agg_tmp41527;
+  __first11515 = v1508;
+  __last11516 = v1509;
+  __first21517 = v1510;
+  __last21518 = v1511;
+  __x1519 = v1512;
+  __alloc1520 = v1513;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01522, &__first11515);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11523, &__last11516);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21524, &__first21517);
+  struct std__allocator_int_* t1528 = __alloc1520;
+  struct std___Deque_iterator_int__int____int___ t1529 = agg_tmp01522;
+  struct std___Deque_iterator_int__int____int___ t1530 = agg_tmp11523;
+  struct std___Deque_iterator_int__int____int___ t1531 = agg_tmp21524;
+  struct std___Deque_iterator_int__int____int___ r1532 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t1529, t1530, t1531, t1528);
+  if (__cir_exc_active) {
+    return;
+  }
+  __mid21521 = r1532;
+  struct std__allocator_int_* t1533 = __alloc1520;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int______UninitDestroyGuard(&__guard1525, &__first21517, t1533);
+  if (__cir_exc_active) {
+    return;
+  }
+    struct std___Deque_iterator_int__int____int___* r1534 = std___Deque_iterator_int__int___int____operator_(&__first21517, &__mid21521);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp31526, &__mid21521);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp41527, &__last21518);
+    int* t1535 = __x1519;
+    struct std__allocator_int_* t1536 = __alloc1520;
+    struct std___Deque_iterator_int__int____int___ t1537 = agg_tmp31526;
+    struct std___Deque_iterator_int__int____int___ t1538 = agg_tmp41527;
+    void_std____uninitialized_fill_a_std___Deque_iterator_int__int___int____int__int_(t1537, t1538, t1535, t1536);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard1525);
+      }
+      return;
+    }
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_____release(&__guard1525);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard1525);
+      }
+      return;
+    }
+  {
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard1525);
+  }
+  return;
+}
+
+// function: _ZSt9__advanceIPilEvRT_T0_St26random_access_iterator_tag
+void void_std____advance_int___long_(int** v1539, long v1540, struct std__random_access_iterator_tag v1541) {
+bb1542:
+  int** __i1543;
+  long __n1544;
+  struct std__random_access_iterator_tag unnamed1545;
+  __i1543 = v1539;
+  __n1544 = v1540;
+  unnamed1545 = v1541;
+    long t1546 = __n1544;
+    _Bool isconst1547 = 0;
+    _Bool ternary1548;
+    if (isconst1547) {
+      long t1549 = __n1544;
+      long c1550 = 1;
+      _Bool c1551 = ((t1549 == c1550)) ? 1 : 0;
+      ternary1548 = (_Bool)c1551;
+    } else {
+      _Bool c1552 = 0;
+      ternary1548 = (_Bool)c1552;
+    }
+    if (ternary1548) {
+      int** t1553 = __i1543;
+      int* t1554 = *t1553;
+      int c1555 = 1;
+      int* ptr1556 = &(t1554)[c1555];
+      *t1553 = ptr1556;
+    } else {
+        long t1557 = __n1544;
+        _Bool isconst1558 = 0;
+        _Bool ternary1559;
+        if (isconst1558) {
+          long t1560 = __n1544;
+          long c1561 = -1;
+          _Bool c1562 = ((t1560 == c1561)) ? 1 : 0;
+          ternary1559 = (_Bool)c1562;
+        } else {
+          _Bool c1563 = 0;
+          ternary1559 = (_Bool)c1563;
+        }
+        if (ternary1559) {
+          int** t1564 = __i1543;
+          int* t1565 = *t1564;
+          int c1566 = -1;
+          int* ptr1567 = &(t1565)[c1566];
+          *t1564 = ptr1567;
+        } else {
+          long t1568 = __n1544;
+          int** t1569 = __i1543;
+          int* t1570 = *t1569;
+          int* ptr1571 = &(t1570)[t1568];
+          *t1569 = ptr1571;
+        }
+    }
+  return;
+}
+
+// function: _ZSt7advanceIPilEvRT_T0_
+void void_std__advance_int___long_(int** v1572, long v1573) {
+bb1574:
+  int** __i1575;
+  long __n1576;
+  long __d1577;
+  struct std__random_access_iterator_tag agg_tmp01578;
+  __i1575 = v1572;
+  __n1576 = v1573;
+  long t1579 = __n1576;
+  __d1577 = t1579;
+  int** t1580 = __i1575;
+  long t1581 = __d1577;
+  int** t1582 = __i1575;
+  struct std__random_access_iterator_tag r1583 = std__iterator_traits_int____iterator_category_std____iterator_category_int__(t1582);
+  if (__cir_exc_active) {
+    return;
+  }
+  agg_tmp01578 = r1583;
+  struct std__random_access_iterator_tag t1584 = agg_tmp01578;
+  void_std____advance_int___long_(t1580, t1581, t1584);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt23__copy_move_backward_a2ILb1EPiS0_ET1_T0_S2_S1_
+int* int__std____copy_move_backward_a2_true__int___int__(int* v1585, int* v1586, int* v1587) {
+bb1588:
+  int* __first1589;
+  int* __last1590;
+  int* __result1591;
+  int* __retval1592;
+  __first1589 = v1585;
+  __last1590 = v1586;
+  __result1591 = v1587;
+      _Bool r1593 = std__is_constant_evaluated();
+      if (r1593) {
+      } else {
+          long __n1594;
+          int* t1595 = __first1589;
+          int* t1596 = __last1590;
+          long r1597 = std__iterator_traits_int____difference_type_std__distance_int__(t1595, t1596);
+          if (__cir_exc_active) {
+            int* __cir_eh_ret = (int*)0;
+            return __cir_eh_ret;
+          }
+          __n1594 = r1597;
+          long t1598 = __n1594;
+          long u1599 = -t1598;
+          void_std__advance_int___long_(&__result1591, u1599);
+          if (__cir_exc_active) {
+            int* __cir_eh_ret = (int*)0;
+            return __cir_eh_ret;
+          }
+            long t1600 = __n1594;
+            long c1601 = 1;
+            _Bool c1602 = ((t1600 > c1601)) ? 1 : 0;
+            if (c1602) {
+              int* t1603 = __result1591;
+              void* cast1604 = (void*)t1603;
+              int* t1605 = __first1589;
+              void* cast1606 = (void*)t1605;
+              long t1607 = __n1594;
+              unsigned long cast1608 = (unsigned long)t1607;
+              unsigned long c1609 = 4;
+              unsigned long b1610 = cast1608 * c1609;
+              void* r1611 = memmove(cast1604, cast1606, b1610);
+            } else {
+                long t1612 = __n1594;
+                long c1613 = 1;
+                _Bool c1614 = ((t1612 == c1613)) ? 1 : 0;
+                if (c1614) {
+                  void_std____assign_one_true__int___int__(&__result1591, &__first1589);
+                  if (__cir_exc_active) {
+                    int* __cir_eh_ret = (int*)0;
+                    return __cir_eh_ret;
+                  }
+                }
+            }
+          int* t1615 = __result1591;
+          __retval1592 = t1615;
+          int* t1616 = __retval1592;
+          return t1616;
+      }
+    while (1) {
+      int* t1617 = __first1589;
+      int* t1618 = __last1590;
+      _Bool c1619 = ((t1617 != t1618)) ? 1 : 0;
+      if (!c1619) break;
+        int* t1620 = __last1590;
+        int c1621 = -1;
+        int* ptr1622 = &(t1620)[c1621];
+        __last1590 = ptr1622;
+        int* t1623 = __result1591;
+        int c1624 = -1;
+        int* ptr1625 = &(t1623)[c1624];
+        __result1591 = ptr1625;
+        void_std____assign_one_true__int___int__(&__result1591, &__last1590);
+        if (__cir_exc_active) {
+          int* __cir_eh_ret = (int*)0;
+          return __cir_eh_ret;
+        }
+    }
+  int* t1626 = __result1591;
+  __retval1592 = t1626;
+  int* t1627 = __retval1592;
+  return t1627;
+}
+
+// function: _ZSt23__copy_move_backward_a1ILb1EPiS0_ET1_T0_S2_S1_
+int* int__std____copy_move_backward_a1_true__int___int__(int* v1628, int* v1629, int* v1630) {
+bb1631:
+  int* __first1632;
+  int* __last1633;
+  int* __result1634;
+  int* __retval1635;
+  __first1632 = v1628;
+  __last1633 = v1629;
+  __result1634 = v1630;
+  int* t1636 = __first1632;
+  int* t1637 = __last1633;
+  int* t1638 = __result1634;
+  int* r1639 = int__std____copy_move_backward_a2_true__int___int__(t1636, t1637, t1638);
+  if (__cir_exc_active) {
+    int* __cir_eh_ret = (int*)0;
+    return __cir_eh_ret;
+  }
+  __retval1635 = r1639;
+  int* t1640 = __retval1635;
+  return t1640;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiEmIEl
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator__(struct std___Deque_iterator_int__int____int___* v1641, long v1642) {
+bb1643:
+  struct std___Deque_iterator_int__int____int___* this1644;
+  long __n1645;
+  struct std___Deque_iterator_int__int____int___* __retval1646;
+  this1644 = v1641;
+  __n1645 = v1642;
+  struct std___Deque_iterator_int__int____int___* t1647 = this1644;
+  long t1648 = __n1645;
+  long u1649 = -t1648;
+  struct std___Deque_iterator_int__int____int___* r1650 = std___Deque_iterator_int__int___int____operator___3(t1647, u1649);
+  __retval1646 = r1650;
+  struct std___Deque_iterator_int__int____int___* t1651 = __retval1646;
+  return t1651;
+}
+
+// function: _ZSt23__copy_move_backward_a1ILb1EPiiEN9__gnu_cxx11__enable_ifIXsr23__is_random_access_iterIT0_EE7__valueESt15_Deque_iteratorIT1_RS5_PS5_EE6__typeES3_S3_S8_
+struct std___Deque_iterator_int__int____int___ __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_backward_a1_true__int___int_(int* v1652, int* v1653, struct std___Deque_iterator_int__int____int___ v1654) {
+bb1655:
+  int* __first1656;
+  int* __last1657;
+  struct std___Deque_iterator_int__int____int___ __result1658;
+  struct std___Deque_iterator_int__int____int___ __retval1659;
+  long __len1660;
+  __first1656 = v1652;
+  __last1657 = v1653;
+  __result1658 = v1654;
+  int* t1661 = __last1657;
+  int* t1662 = __first1656;
+  long diff1663 = t1661 - t1662;
+  __len1660 = diff1663;
+    while (1) {
+      long t1664 = __len1660;
+      long c1665 = 0;
+      _Bool c1666 = ((t1664 > c1665)) ? 1 : 0;
+      if (!c1666) break;
+        long __rlen1667;
+        int* __rend1668;
+        long __clen1669;
+        int* t1670 = __result1658._M_cur;
+        int* t1671 = __result1658._M_first;
+        long diff1672 = t1670 - t1671;
+        __rlen1667 = diff1672;
+        int* t1673 = __result1658._M_cur;
+        __rend1668 = t1673;
+          long t1674 = __rlen1667;
+          _Bool cast1675 = (_Bool)t1674;
+          _Bool u1676 = !cast1675;
+          if (u1676) {
+            unsigned long r1677 = std___Deque_iterator_int__int___int_____S_buffer_size();
+            long cast1678 = (long)r1677;
+            __rlen1667 = cast1678;
+            int** t1679 = __result1658._M_node;
+            int c1680 = -1;
+            int** ptr1681 = &(t1679)[c1680];
+            int* t1682 = *ptr1681;
+            long t1683 = __rlen1667;
+            int* ptr1684 = &(t1682)[t1683];
+            __rend1668 = ptr1684;
+          }
+        long* r1685 = long_const__std__min_long_(&__len1660, &__rlen1667);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        long t1686 = *r1685;
+        __clen1669 = t1686;
+        int* t1687 = __last1657;
+        long t1688 = __clen1669;
+        long u1689 = -t1688;
+        int* ptr1690 = &(t1687)[u1689];
+        int* t1691 = __last1657;
+        int* t1692 = __rend1668;
+        int* r1693 = int__std____copy_move_backward_a1_true__int___int__(ptr1690, t1691, t1692);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        long t1694 = __clen1669;
+        int* t1695 = __last1657;
+        long u1696 = -t1694;
+        int* ptr1697 = &(t1695)[u1696];
+        __last1657 = ptr1697;
+        long t1698 = __clen1669;
+        struct std___Deque_iterator_int__int____int___* r1699 = std___Deque_iterator_int__int___int____operator__(&__result1658, t1698);
+        long t1700 = __clen1669;
+        long t1701 = __len1660;
+        long b1702 = t1701 - t1700;
+        __len1660 = b1702;
+    }
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval1659, &__result1658);
+  struct std___Deque_iterator_int__int____int___ t1703 = __retval1659;
+  return t1703;
+}
+
+// function: _ZSt24__copy_move_backward_ditILb1EiRiPiSt15_Deque_iteratorIiS0_S1_EET3_S2_IT0_T1_T2_ES8_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_backward_dit_true__int__int___int___std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1704, struct std___Deque_iterator_int__int____int___ v1705, struct std___Deque_iterator_int__int____int___ v1706) {
+bb1707:
+  struct std___Deque_iterator_int__int____int___ __first1708;
+  struct std___Deque_iterator_int__int____int___ __last1709;
+  struct std___Deque_iterator_int__int____int___ __result1710;
+  struct std___Deque_iterator_int__int____int___ __retval1711;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31712;
+  __first1708 = v1704;
+  __last1709 = v1705;
+  __result1710 = v1706;
+    int** t1713 = __first1708._M_node;
+    int** t1714 = __last1709._M_node;
+    _Bool c1715 = ((t1713 != t1714)) ? 1 : 0;
+    if (c1715) {
+      struct std___Deque_iterator_int__int____int___ ref_tmp01716;
+      struct std___Deque_iterator_int__int____int___ agg_tmp01717;
+      struct std___Deque_iterator_int__int____int___ agg_tmp21718;
+      int* t1719 = __last1709._M_first;
+      int* t1720 = __last1709._M_cur;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01717, &__result1710);
+      struct std___Deque_iterator_int__int____int___ t1721 = agg_tmp01717;
+      struct std___Deque_iterator_int__int____int___ r1722 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_backward_a1_true__int___int_(t1719, t1720, t1721);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      ref_tmp01716 = r1722;
+      struct std___Deque_iterator_int__int____int___* r1723 = std___Deque_iterator_int__int___int____operator_(&__result1710, &ref_tmp01716);
+        int** __node1724;
+        struct std___Deque_iterator_int__int____int___ ref_tmp11725;
+        struct std___Deque_iterator_int__int____int___ agg_tmp11726;
+        int** t1727 = __last1709._M_node;
+        int c1728 = -1;
+        int** ptr1729 = &(t1727)[c1728];
+        __node1724 = ptr1729;
+        while (1) {
+          int** t1731 = __node1724;
+          int** t1732 = __first1708._M_node;
+          _Bool c1733 = ((t1731 != t1732)) ? 1 : 0;
+          if (!c1733) break;
+          int** t1734 = __node1724;
+          int* t1735 = *t1734;
+          int** t1736 = __node1724;
+          int* t1737 = *t1736;
+          unsigned long r1738 = std___Deque_iterator_int__int___int_____S_buffer_size();
+          int* ptr1739 = &(t1737)[r1738];
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11726, &__result1710);
+          struct std___Deque_iterator_int__int____int___ t1740 = agg_tmp11726;
+          struct std___Deque_iterator_int__int____int___ r1741 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_backward_a1_true__int___int_(t1735, ptr1739, t1740);
+          if (__cir_exc_active) {
+            struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+            return __cir_eh_ret;
+          }
+          ref_tmp11725 = r1741;
+          struct std___Deque_iterator_int__int____int___* r1742 = std___Deque_iterator_int__int___int____operator_(&__result1710, &ref_tmp11725);
+        for_step1730: ;
+          int** t1743 = __node1724;
+          int c1744 = -1;
+          int** ptr1745 = &(t1743)[c1744];
+          __node1724 = ptr1745;
+        }
+      int* t1746 = __first1708._M_cur;
+      int* t1747 = __first1708._M_last;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21718, &__result1710);
+      struct std___Deque_iterator_int__int____int___ t1748 = agg_tmp21718;
+      struct std___Deque_iterator_int__int____int___ r1749 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_backward_a1_true__int___int_(t1746, t1747, t1748);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      __retval1711 = r1749;
+      struct std___Deque_iterator_int__int____int___ t1750 = __retval1711;
+      return t1750;
+    }
+  int* t1751 = __first1708._M_cur;
+  int* t1752 = __last1709._M_cur;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp31712, &__result1710);
+  struct std___Deque_iterator_int__int____int___ t1753 = agg_tmp31712;
+  struct std___Deque_iterator_int__int____int___ r1754 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_backward_a1_true__int___int_(t1751, t1752, t1753);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1711 = r1754;
+  struct std___Deque_iterator_int__int____int___ t1755 = __retval1711;
+  return t1755;
+}
+
+// function: _ZSt23__copy_move_backward_a1ILb1EiRiPiiESt15_Deque_iteratorIT3_RS3_PS3_ES2_IT0_T1_T2_ESA_S6_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_backward_a1_true__int__int___int___int_(struct std___Deque_iterator_int__int____int___ v1756, struct std___Deque_iterator_int__int____int___ v1757, struct std___Deque_iterator_int__int____int___ v1758) {
+bb1759:
+  struct std___Deque_iterator_int__int____int___ __first1760;
+  struct std___Deque_iterator_int__int____int___ __last1761;
+  struct std___Deque_iterator_int__int____int___ __result1762;
+  struct std___Deque_iterator_int__int____int___ __retval1763;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01764;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11765;
+  struct std___Deque_iterator_int__int____int___ agg_tmp21766;
+  __first1760 = v1756;
+  __last1761 = v1757;
+  __result1762 = v1758;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01764, &__first1760);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11765, &__last1761);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21766, &__result1762);
+  struct std___Deque_iterator_int__int____int___ t1767 = agg_tmp01764;
+  struct std___Deque_iterator_int__int____int___ t1768 = agg_tmp11765;
+  struct std___Deque_iterator_int__int____int___ t1769 = agg_tmp21766;
+  struct std___Deque_iterator_int__int____int___ r1770 = std___Deque_iterator_int__int___int___std____copy_move_backward_dit_true__int__int___int___std___Deque_iterator_int__int___int____(t1767, t1768, t1769);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1763 = r1770;
+  struct std___Deque_iterator_int__int____int___ t1771 = __retval1763;
+  return t1771;
+}
+
+// function: _ZSt22__copy_move_backward_aILb1ESt15_Deque_iteratorIiRiPiES3_ET1_T0_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_backward_a_true__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1772, struct std___Deque_iterator_int__int____int___ v1773, struct std___Deque_iterator_int__int____int___ v1774) {
+bb1775:
+  struct std___Deque_iterator_int__int____int___ __first1776;
+  struct std___Deque_iterator_int__int____int___ __last1777;
+  struct std___Deque_iterator_int__int____int___ __result1778;
+  struct std___Deque_iterator_int__int____int___ __retval1779;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01780;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11781;
+  struct std___Deque_iterator_int__int____int___ agg_tmp21782;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31783;
+  struct std___Deque_iterator_int__int____int___ agg_tmp41784;
+  struct std___Deque_iterator_int__int____int___ agg_tmp51785;
+  struct std___Deque_iterator_int__int____int___ agg_tmp61786;
+  __first1776 = v1772;
+  __last1777 = v1773;
+  __result1778 = v1774;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21782, &__first1776);
+  struct std___Deque_iterator_int__int____int___ t1787 = agg_tmp21782;
+  struct std___Deque_iterator_int__int____int___ r1788 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t1787);
+  agg_tmp11781 = r1788;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp41784, &__last1777);
+  struct std___Deque_iterator_int__int____int___ t1789 = agg_tmp41784;
+  struct std___Deque_iterator_int__int____int___ r1790 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t1789);
+  agg_tmp31783 = r1790;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp61786, &__result1778);
+  struct std___Deque_iterator_int__int____int___ t1791 = agg_tmp61786;
+  struct std___Deque_iterator_int__int____int___ r1792 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t1791);
+  agg_tmp51785 = r1792;
+  struct std___Deque_iterator_int__int____int___ t1793 = agg_tmp11781;
+  struct std___Deque_iterator_int__int____int___ t1794 = agg_tmp31783;
+  struct std___Deque_iterator_int__int____int___ t1795 = agg_tmp51785;
+  struct std___Deque_iterator_int__int____int___ r1796 = std___Deque_iterator_int__int___int___std____copy_move_backward_a1_true__int__int___int___int_(t1793, t1794, t1795);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp01780 = r1796;
+  struct std___Deque_iterator_int__int____int___ t1797 = agg_tmp01780;
+  struct std___Deque_iterator_int__int____int___ r1798 = std___Deque_iterator_int__int___int___std____niter_wrap_std___Deque_iterator_int__int___int____(&__result1778, t1797);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1779 = r1798;
+  struct std___Deque_iterator_int__int____int___ t1799 = __retval1779;
+  return t1799;
+}
+
+// function: _ZSt13move_backwardISt15_Deque_iteratorIiRiPiES3_ET0_T_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__move_backward_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v1800, struct std___Deque_iterator_int__int____int___ v1801, struct std___Deque_iterator_int__int____int___ v1802) {
+bb1803:
+  struct std___Deque_iterator_int__int____int___ __first1804;
+  struct std___Deque_iterator_int__int____int___ __last1805;
+  struct std___Deque_iterator_int__int____int___ __result1806;
+  struct std___Deque_iterator_int__int____int___ __retval1807;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01808;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11809;
+  struct std___Deque_iterator_int__int____int___ agg_tmp21810;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31811;
+  struct std___Deque_iterator_int__int____int___ agg_tmp41812;
+  __first1804 = v1800;
+  __last1805 = v1801;
+  __result1806 = v1802;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11809, &__first1804);
+  struct std___Deque_iterator_int__int____int___ t1813 = agg_tmp11809;
+  struct std___Deque_iterator_int__int____int___ r1814 = std___Deque_iterator_int__int___int___std____miter_base_std___Deque_iterator_int__int___int____(t1813);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp01808 = r1814;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp31811, &__last1805);
+  struct std___Deque_iterator_int__int____int___ t1815 = agg_tmp31811;
+  struct std___Deque_iterator_int__int____int___ r1816 = std___Deque_iterator_int__int___int___std____miter_base_std___Deque_iterator_int__int___int____(t1815);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp21810 = r1816;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp41812, &__result1806);
+  struct std___Deque_iterator_int__int____int___ t1817 = agg_tmp01808;
+  struct std___Deque_iterator_int__int____int___ t1818 = agg_tmp21810;
+  struct std___Deque_iterator_int__int____int___ t1819 = agg_tmp41812;
+  struct std___Deque_iterator_int__int____int___ r1820 = std___Deque_iterator_int__int___int___std____copy_move_backward_a_true__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t1817, t1818, t1819);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval1807 = r1820;
+  struct std___Deque_iterator_int__int____int___ t1821 = __retval1807;
+  return t1821;
+}
+
+// function: _ZSt25__uninitialized_fill_moveISt15_Deque_iteratorIiRiPiEiS3_SaIiEET_S5_S5_RKT0_T1_S9_RT2_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_fill_move_std___Deque_iterator_int__int___int____int__std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ v1822, struct std___Deque_iterator_int__int____int___ v1823, int* v1824, struct std___Deque_iterator_int__int____int___ v1825, struct std___Deque_iterator_int__int____int___ v1826, struct std__allocator_int_* v1827) {
+bb1828:
+  struct std___Deque_iterator_int__int____int___ __result1829;
+  struct std___Deque_iterator_int__int____int___ __mid1830;
+  int* __x1831;
+  struct std___Deque_iterator_int__int____int___ __first1832;
+  struct std___Deque_iterator_int__int____int___ __last1833;
+  struct std__allocator_int_* __alloc1834;
+  struct std___Deque_iterator_int__int____int___ __retval1835;
+  struct std___Deque_iterator_int__int____int___ agg_tmp01836;
+  struct std___Deque_iterator_int__int____int___ agg_tmp11837;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__ __guard1838;
+  struct std___Deque_iterator_int__int____int___ ref_tmp01839;
+  struct std___Deque_iterator_int__int____int___ agg_tmp21840;
+  struct std___Deque_iterator_int__int____int___ agg_tmp31841;
+  struct std___Deque_iterator_int__int____int___ agg_tmp41842;
+  __result1829 = v1822;
+  __mid1830 = v1823;
+  __x1831 = v1824;
+  __first1832 = v1825;
+  __last1833 = v1826;
+  __alloc1834 = v1827;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01836, &__result1829);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11837, &__mid1830);
+  int* t1843 = __x1831;
+  struct std__allocator_int_* t1844 = __alloc1834;
+  struct std___Deque_iterator_int__int____int___ t1845 = agg_tmp01836;
+  struct std___Deque_iterator_int__int____int___ t1846 = agg_tmp11837;
+  void_std____uninitialized_fill_a_std___Deque_iterator_int__int___int____int__int_(t1845, t1846, t1843, t1844);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  struct std__allocator_int_* t1847 = __alloc1834;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int______UninitDestroyGuard(&__guard1838, &__result1829, t1847);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+    struct std___Deque_iterator_int__int____int___* r1848 = std___Deque_iterator_int__int___int____operator_(&__result1829, &__mid1830);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21840, &__first1832);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp31841, &__last1833);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp41842, &__mid1830);
+    struct std__allocator_int_* t1849 = __alloc1834;
+    struct std___Deque_iterator_int__int____int___ t1850 = agg_tmp21840;
+    struct std___Deque_iterator_int__int____int___ t1851 = agg_tmp31841;
+    struct std___Deque_iterator_int__int____int___ t1852 = agg_tmp41842;
+    struct std___Deque_iterator_int__int____int___ r1853 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t1850, t1851, t1852, t1849);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard1838);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    ref_tmp01839 = r1853;
+    struct std___Deque_iterator_int__int____int___* r1854 = std___Deque_iterator_int__int___int____operator_(&__result1829, &ref_tmp01839);
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_____release(&__guard1838);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard1838);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    std___Deque_iterator_int__int___int_____Deque_iterator(&__retval1835, &__result1829);
+    struct std___Deque_iterator_int__int____int___ t1855 = __retval1835;
+    struct std___Deque_iterator_int__int____int___ ret_val1856 = t1855;
+    {
+      std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard1838);
+    }
+    return ret_val1856;
+  abort();
+}
+
+// function: _ZNSt5dequeIiSaIiEE13_M_insert_auxESt15_Deque_iteratorIiRiPiEmRKi
+void std__deque_int__std__allocator_int______M_insert_aux(struct std__deque_int__std__allocator_int__* v1857, struct std___Deque_iterator_int__int____int___ v1858, unsigned long v1859, int* v1860) {
+bb1861:
+  struct std__deque_int__std__allocator_int__* this1862;
+  struct std___Deque_iterator_int__int____int___ __pos1863;
+  unsigned long __n1864;
+  int* __x1865;
+  long __elems_before1866;
+  unsigned long __length1867;
+  int __x_copy1868;
+  this1862 = v1857;
+  __pos1863 = v1858;
+  __n1864 = v1859;
+  __x1865 = v1860;
+  struct std__deque_int__std__allocator_int__* t1869 = this1862;
+  struct std___Deque_base_int__std__allocator_int__* base1870 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1871 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1870->_M_impl) + 0);
+  long r1872 = std__operator_(&__pos1863, &base1871->_M_start);
+  __elems_before1866 = r1872;
+  unsigned long r1873 = std__deque_int__std__allocator_int_____size___const(t1869);
+  __length1867 = r1873;
+  int* t1874 = __x1865;
+  int t1875 = *t1874;
+  __x_copy1868 = t1875;
+    long t1876 = __elems_before1866;
+    unsigned long t1877 = __length1867;
+    unsigned long c1878 = 2;
+    unsigned long b1879 = t1877 / c1878;
+    long cast1880 = (long)b1879;
+    _Bool c1881 = ((t1876 < cast1880)) ? 1 : 0;
+    if (c1881) {
+      struct std___Deque_iterator_int__int____int___ __new_start1882;
+      struct std___Deque_iterator_int__int____int___ __old_start1883;
+      struct std___Deque_iterator_int__int____int___ ref_tmp01884;
+      unsigned long t1885 = __n1864;
+      struct std___Deque_iterator_int__int____int___ r1886 = std__deque_int__std__allocator_int______M_reserve_elements_at_front(t1869, t1885);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_start1882 = r1886;
+      struct std___Deque_base_int__std__allocator_int__* base1887 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1888 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1887->_M_impl) + 0);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&__old_start1883, &base1888->_M_start);
+      struct std___Deque_base_int__std__allocator_int__* base1889 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1890 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1889->_M_impl) + 0);
+      long t1891 = __elems_before1866;
+      struct std___Deque_iterator_int__int____int___ r1892 = std__operator__4(&base1890->_M_start, t1891);
+      ref_tmp01884 = r1892;
+      struct std___Deque_iterator_int__int____int___* r1893 = std___Deque_iterator_int__int___int____operator_(&__pos1863, &ref_tmp01884);
+            long t1895 = __elems_before1866;
+            unsigned long t1896 = __n1864;
+            long cast1897 = (long)t1896;
+            _Bool c1898 = ((t1895 >= cast1897)) ? 1 : 0;
+            if (c1898) {
+              struct std___Deque_iterator_int__int____int___ __start_n1899;
+              struct std___Deque_iterator_int__int____int___ agg_tmp01900;
+              struct std___Deque_iterator_int__int____int___ agg_tmp11901;
+              struct std___Deque_iterator_int__int____int___ agg_tmp21902;
+              struct std___Deque_iterator_int__int____int___ agg_tmp31903;
+              struct std___Deque_iterator_int__int____int___ agg_tmp41904;
+              struct std___Deque_iterator_int__int____int___ agg_tmp51905;
+              struct std___Deque_iterator_int__int____int___ agg_tmp61906;
+              struct std___Deque_iterator_int__int____int___ agg_tmp71907;
+              struct std___Deque_iterator_int__int____int___ agg_tmp81908;
+              struct std___Deque_iterator_int__int____int___ agg_tmp91909;
+              struct std___Deque_base_int__std__allocator_int__* base1910 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1911 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1910->_M_impl) + 0);
+              unsigned long t1912 = __n1864;
+              long cast1913 = (long)t1912;
+              struct std___Deque_iterator_int__int____int___ r1914 = std__operator__4(&base1911->_M_start, cast1913);
+              __start_n1899 = r1914;
+              struct std___Deque_base_int__std__allocator_int__* base1915 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1916 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1915->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp01900, &base1916->_M_start);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp11901, &__start_n1899);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp21902, &__new_start1882);
+              struct std___Deque_base_int__std__allocator_int__* base1917 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std__allocator_int_* r1918 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base1917);
+              struct std___Deque_iterator_int__int____int___ t1919 = agg_tmp01900;
+              struct std___Deque_iterator_int__int____int___ t1920 = agg_tmp11901;
+              struct std___Deque_iterator_int__int____int___ t1921 = agg_tmp21902;
+              struct std___Deque_iterator_int__int____int___ r1922 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t1919, t1920, t1921, r1918);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1894;
+              }
+              agg_tmp31903 = r1922;
+              struct std___Deque_base_int__std__allocator_int__* base1923 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1924 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1923->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r1925 = std___Deque_iterator_int__int___int____operator_(&base1924->_M_start, &__new_start1882);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp41904, &__start_n1899);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp51905, &__pos1863);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp61906, &__old_start1883);
+              struct std___Deque_iterator_int__int____int___ t1926 = agg_tmp41904;
+              struct std___Deque_iterator_int__int____int___ t1927 = agg_tmp51905;
+              struct std___Deque_iterator_int__int____int___ t1928 = agg_tmp61906;
+              struct std___Deque_iterator_int__int____int___ r1929 = std___Deque_iterator_int__int___int___std__move_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t1926, t1927, t1928);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1894;
+              }
+              agg_tmp71907 = r1929;
+              unsigned long t1930 = __n1864;
+              long cast1931 = (long)t1930;
+              struct std___Deque_iterator_int__int____int___ r1932 = std__operator__2(&__pos1863, cast1931);
+              agg_tmp81908 = r1932;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp91909, &__pos1863);
+              struct std___Deque_iterator_int__int____int___ t1933 = agg_tmp81908;
+              struct std___Deque_iterator_int__int____int___ t1934 = agg_tmp91909;
+              void_std__fill_std___Deque_iterator_int__int___int____int_(t1933, t1934, &__x_copy1868);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1894;
+              }
+            } else {
+              struct std___Deque_iterator_int__int____int___ agg_tmp101935;
+              struct std___Deque_iterator_int__int____int___ agg_tmp111936;
+              struct std___Deque_iterator_int__int____int___ agg_tmp121937;
+              struct std___Deque_iterator_int__int____int___ agg_tmp131938;
+              struct std___Deque_iterator_int__int____int___ agg_tmp141939;
+              struct std___Deque_iterator_int__int____int___ agg_tmp151940;
+              struct std___Deque_base_int__std__allocator_int__* base1941 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1942 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1941->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp101935, &base1942->_M_start);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp111936, &__pos1863);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp121937, &__new_start1882);
+              struct std___Deque_base_int__std__allocator_int__* base1943 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1944 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1943->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp131938, &base1944->_M_start);
+              struct std___Deque_base_int__std__allocator_int__* base1945 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std__allocator_int_* r1946 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base1945);
+              struct std___Deque_iterator_int__int____int___ t1947 = agg_tmp101935;
+              struct std___Deque_iterator_int__int____int___ t1948 = agg_tmp111936;
+              struct std___Deque_iterator_int__int____int___ t1949 = agg_tmp121937;
+              struct std___Deque_iterator_int__int____int___ t1950 = agg_tmp131938;
+              void_std____uninitialized_move_fill_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int__std__allocator_int___(t1947, t1948, t1949, t1950, &__x_copy1868, r1946);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1894;
+              }
+              struct std___Deque_base_int__std__allocator_int__* base1951 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1952 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1951->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r1953 = std___Deque_iterator_int__int___int____operator_(&base1952->_M_start, &__new_start1882);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp141939, &__old_start1883);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp151940, &__pos1863);
+              struct std___Deque_iterator_int__int____int___ t1954 = agg_tmp141939;
+              struct std___Deque_iterator_int__int____int___ t1955 = agg_tmp151940;
+              void_std__fill_std___Deque_iterator_int__int___int____int_(t1954, t1955, &__x_copy1868);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1894;
+              }
+            }
+        cir_try_dispatch1894: ;
+        if (__cir_exc_active) {
+        {
+          int ca_tok1956 = 0;
+          void* ca_exn1957 = (void*)__cir_exc_ptr;
+          __cir_exc_active = 0;
+            struct std___Deque_base_int__std__allocator_int__* base1958 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+            int** t1959 = __new_start1882._M_node;
+            struct std___Deque_base_int__std__allocator_int__* base1960 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1961 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1960->_M_impl) + 0);
+            int** t1962 = base1961->_M_start._M_node;
+            std___Deque_base_int__std__allocator_int______M_destroy_nodes(base1958, t1959, t1962);
+            __cir_exc_active = 1;
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+            return;
+            __builtin_unreachable();
+        }
+        }
+    } else {
+      struct std___Deque_iterator_int__int____int___ __new_finish1963;
+      struct std___Deque_iterator_int__int____int___ __old_finish1964;
+      long __elems_after1965;
+      struct std___Deque_iterator_int__int____int___ ref_tmp11966;
+      unsigned long t1967 = __n1864;
+      struct std___Deque_iterator_int__int____int___ r1968 = std__deque_int__std__allocator_int______M_reserve_elements_at_back(t1869, t1967);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_finish1963 = r1968;
+      struct std___Deque_base_int__std__allocator_int__* base1969 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1970 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1969->_M_impl) + 0);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&__old_finish1964, &base1970->_M_finish);
+      unsigned long t1971 = __length1867;
+      long cast1972 = (long)t1971;
+      long t1973 = __elems_before1866;
+      long b1974 = cast1972 - t1973;
+      __elems_after1965 = b1974;
+      struct std___Deque_base_int__std__allocator_int__* base1975 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1976 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1975->_M_impl) + 0);
+      long t1977 = __elems_after1965;
+      struct std___Deque_iterator_int__int____int___ r1978 = std__operator__2(&base1976->_M_finish, t1977);
+      ref_tmp11966 = r1978;
+      struct std___Deque_iterator_int__int____int___* r1979 = std___Deque_iterator_int__int___int____operator_(&__pos1863, &ref_tmp11966);
+            long t1981 = __elems_after1965;
+            unsigned long t1982 = __n1864;
+            long cast1983 = (long)t1982;
+            _Bool c1984 = ((t1981 > cast1983)) ? 1 : 0;
+            if (c1984) {
+              struct std___Deque_iterator_int__int____int___ __finish_n1985;
+              struct std___Deque_iterator_int__int____int___ agg_tmp161986;
+              struct std___Deque_iterator_int__int____int___ agg_tmp171987;
+              struct std___Deque_iterator_int__int____int___ agg_tmp181988;
+              struct std___Deque_iterator_int__int____int___ agg_tmp191989;
+              struct std___Deque_iterator_int__int____int___ agg_tmp201990;
+              struct std___Deque_iterator_int__int____int___ agg_tmp211991;
+              struct std___Deque_iterator_int__int____int___ agg_tmp221992;
+              struct std___Deque_iterator_int__int____int___ agg_tmp231993;
+              struct std___Deque_iterator_int__int____int___ agg_tmp241994;
+              struct std___Deque_iterator_int__int____int___ agg_tmp251995;
+              struct std___Deque_base_int__std__allocator_int__* base1996 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base1997 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base1996->_M_impl) + 0);
+              unsigned long t1998 = __n1864;
+              long cast1999 = (long)t1998;
+              struct std___Deque_iterator_int__int____int___ r2000 = std__operator__2(&base1997->_M_finish, cast1999);
+              __finish_n1985 = r2000;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp161986, &__finish_n1985);
+              struct std___Deque_base_int__std__allocator_int__* base2001 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2002 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2001->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp171987, &base2002->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base2003 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2004 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2003->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp181988, &base2004->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base2005 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std__allocator_int_* r2006 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2005);
+              struct std___Deque_iterator_int__int____int___ t2007 = agg_tmp161986;
+              struct std___Deque_iterator_int__int____int___ t2008 = agg_tmp171987;
+              struct std___Deque_iterator_int__int____int___ t2009 = agg_tmp181988;
+              struct std___Deque_iterator_int__int____int___ r2010 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t2007, t2008, t2009, r2006);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1980;
+              }
+              agg_tmp191989 = r2010;
+              struct std___Deque_base_int__std__allocator_int__* base2011 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2012 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2011->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r2013 = std___Deque_iterator_int__int___int____operator_(&base2012->_M_finish, &__new_finish1963);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp201990, &__pos1863);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp211991, &__finish_n1985);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp221992, &__old_finish1964);
+              struct std___Deque_iterator_int__int____int___ t2014 = agg_tmp201990;
+              struct std___Deque_iterator_int__int____int___ t2015 = agg_tmp211991;
+              struct std___Deque_iterator_int__int____int___ t2016 = agg_tmp221992;
+              struct std___Deque_iterator_int__int____int___ r2017 = std___Deque_iterator_int__int___int___std__move_backward_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t2014, t2015, t2016);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1980;
+              }
+              agg_tmp231993 = r2017;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp241994, &__pos1863);
+              unsigned long t2018 = __n1864;
+              long cast2019 = (long)t2018;
+              struct std___Deque_iterator_int__int____int___ r2020 = std__operator__4(&__pos1863, cast2019);
+              agg_tmp251995 = r2020;
+              struct std___Deque_iterator_int__int____int___ t2021 = agg_tmp241994;
+              struct std___Deque_iterator_int__int____int___ t2022 = agg_tmp251995;
+              void_std__fill_std___Deque_iterator_int__int___int____int_(t2021, t2022, &__x_copy1868);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1980;
+              }
+            } else {
+              struct std___Deque_iterator_int__int____int___ agg_tmp262023;
+              struct std___Deque_iterator_int__int____int___ agg_tmp272024;
+              struct std___Deque_iterator_int__int____int___ agg_tmp282025;
+              struct std___Deque_iterator_int__int____int___ agg_tmp292026;
+              struct std___Deque_iterator_int__int____int___ agg_tmp302027;
+              struct std___Deque_iterator_int__int____int___ agg_tmp312028;
+              struct std___Deque_iterator_int__int____int___ agg_tmp322029;
+              struct std___Deque_base_int__std__allocator_int__* base2030 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2031 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2030->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp262023, &base2031->_M_finish);
+              unsigned long t2032 = __n1864;
+              long cast2033 = (long)t2032;
+              struct std___Deque_iterator_int__int____int___ r2034 = std__operator__4(&__pos1863, cast2033);
+              agg_tmp272024 = r2034;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp282025, &__pos1863);
+              struct std___Deque_base_int__std__allocator_int__* base2035 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2036 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2035->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp292026, &base2036->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base2037 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std__allocator_int_* r2038 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2037);
+              struct std___Deque_iterator_int__int____int___ t2039 = agg_tmp262023;
+              struct std___Deque_iterator_int__int____int___ t2040 = agg_tmp272024;
+              struct std___Deque_iterator_int__int____int___ t2041 = agg_tmp282025;
+              struct std___Deque_iterator_int__int____int___ t2042 = agg_tmp292026;
+              struct std___Deque_iterator_int__int____int___ r2043 = std___Deque_iterator_int__int___int___std____uninitialized_fill_move_std___Deque_iterator_int__int___int____int__std___Deque_iterator_int__int___int____std__allocator_int___(t2039, t2040, &__x_copy1868, t2041, t2042, r2038);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1980;
+              }
+              agg_tmp302027 = r2043;
+              struct std___Deque_base_int__std__allocator_int__* base2044 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2045 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2044->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r2046 = std___Deque_iterator_int__int___int____operator_(&base2045->_M_finish, &__new_finish1963);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp312028, &__pos1863);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp322029, &__old_finish1964);
+              struct std___Deque_iterator_int__int____int___ t2047 = agg_tmp312028;
+              struct std___Deque_iterator_int__int____int___ t2048 = agg_tmp322029;
+              void_std__fill_std___Deque_iterator_int__int___int____int_(t2047, t2048, &__x_copy1868);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch1980;
+              }
+            }
+        cir_try_dispatch1980: ;
+        if (__cir_exc_active) {
+        {
+          int ca_tok2049 = 0;
+          void* ca_exn2050 = (void*)__cir_exc_ptr;
+          __cir_exc_active = 0;
+            struct std___Deque_base_int__std__allocator_int__* base2051 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+            struct std___Deque_base_int__std__allocator_int__* base2052 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t1869 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2053 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2052->_M_impl) + 0);
+            int** t2054 = base2053->_M_finish._M_node;
+            int c2055 = 1;
+            int** ptr2056 = &(t2054)[c2055];
+            int** t2057 = __new_finish1963._M_node;
+            int c2058 = 1;
+            int** ptr2059 = &(t2057)[c2058];
+            std___Deque_base_int__std__allocator_int______M_destroy_nodes(base2051, ptr2056, ptr2059);
+            __cir_exc_active = 1;
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+            return;
+            __builtin_unreachable();
+        }
+        }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE14_M_fill_insertESt15_Deque_iteratorIiRiPiEmRKi
+void std__deque_int__std__allocator_int______M_fill_insert(struct std__deque_int__std__allocator_int__* v2060, struct std___Deque_iterator_int__int____int___ v2061, unsigned long v2062, int* v2063) {
+bb2064:
+  struct std__deque_int__std__allocator_int__* this2065;
+  struct std___Deque_iterator_int__int____int___ __pos2066;
+  unsigned long __n2067;
+  int* __x2068;
+  this2065 = v2060;
+  __pos2066 = v2061;
+  __n2067 = v2062;
+  __x2068 = v2063;
+  struct std__deque_int__std__allocator_int__* t2069 = this2065;
+    int* t2070 = __pos2066._M_cur;
+    struct std___Deque_base_int__std__allocator_int__* base2071 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2072 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2071->_M_impl) + 0);
+    int* t2073 = base2072->_M_start._M_cur;
+    _Bool c2074 = ((t2070 == t2073)) ? 1 : 0;
+    if (c2074) {
+      struct std___Deque_iterator_int__int____int___ __new_start2075;
+      unsigned long t2076 = __n2067;
+      struct std___Deque_iterator_int__int____int___ r2077 = std__deque_int__std__allocator_int______M_reserve_elements_at_front(t2069, t2076);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_start2075 = r2077;
+        struct std___Deque_iterator_int__int____int___ agg_tmp02078;
+        struct std___Deque_iterator_int__int____int___ agg_tmp12079;
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02078, &__new_start2075);
+          struct std___Deque_base_int__std__allocator_int__* base2081 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+          struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2082 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2081->_M_impl) + 0);
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12079, &base2082->_M_start);
+          int* t2083 = __x2068;
+          struct std___Deque_base_int__std__allocator_int__* base2084 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+          struct std__allocator_int_* r2085 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2084);
+          struct std___Deque_iterator_int__int____int___ t2086 = agg_tmp02078;
+          struct std___Deque_iterator_int__int____int___ t2087 = agg_tmp12079;
+          void_std____uninitialized_fill_a_std___Deque_iterator_int__int___int____int__int_(t2086, t2087, t2083, r2085);
+          if (__cir_exc_active) {
+            goto cir_try_dispatch2080;
+          }
+          struct std___Deque_base_int__std__allocator_int__* base2088 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+          struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2089 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2088->_M_impl) + 0);
+          struct std___Deque_iterator_int__int____int___* r2090 = std___Deque_iterator_int__int___int____operator_(&base2089->_M_start, &__new_start2075);
+        cir_try_dispatch2080: ;
+        if (__cir_exc_active) {
+        {
+          int ca_tok2091 = 0;
+          void* ca_exn2092 = (void*)__cir_exc_ptr;
+          __cir_exc_active = 0;
+            struct std___Deque_base_int__std__allocator_int__* base2093 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+            int** t2094 = __new_start2075._M_node;
+            struct std___Deque_base_int__std__allocator_int__* base2095 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2096 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2095->_M_impl) + 0);
+            int** t2097 = base2096->_M_start._M_node;
+            std___Deque_base_int__std__allocator_int______M_destroy_nodes(base2093, t2094, t2097);
+            __cir_exc_active = 1;
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+            return;
+            __builtin_unreachable();
+        }
+        }
+    } else {
+        int* t2098 = __pos2066._M_cur;
+        struct std___Deque_base_int__std__allocator_int__* base2099 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2100 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2099->_M_impl) + 0);
+        int* t2101 = base2100->_M_finish._M_cur;
+        _Bool c2102 = ((t2098 == t2101)) ? 1 : 0;
+        if (c2102) {
+          struct std___Deque_iterator_int__int____int___ __new_finish2103;
+          unsigned long t2104 = __n2067;
+          struct std___Deque_iterator_int__int____int___ r2105 = std__deque_int__std__allocator_int______M_reserve_elements_at_back(t2069, t2104);
+          if (__cir_exc_active) {
+            return;
+          }
+          __new_finish2103 = r2105;
+            struct std___Deque_iterator_int__int____int___ agg_tmp22106;
+            struct std___Deque_iterator_int__int____int___ agg_tmp32107;
+              struct std___Deque_base_int__std__allocator_int__* base2109 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2110 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2109->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22106, &base2110->_M_finish);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp32107, &__new_finish2103);
+              int* t2111 = __x2068;
+              struct std___Deque_base_int__std__allocator_int__* base2112 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+              struct std__allocator_int_* r2113 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2112);
+              struct std___Deque_iterator_int__int____int___ t2114 = agg_tmp22106;
+              struct std___Deque_iterator_int__int____int___ t2115 = agg_tmp32107;
+              void_std____uninitialized_fill_a_std___Deque_iterator_int__int___int____int__int_(t2114, t2115, t2111, r2113);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2108;
+              }
+              struct std___Deque_base_int__std__allocator_int__* base2116 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2117 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2116->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r2118 = std___Deque_iterator_int__int___int____operator_(&base2117->_M_finish, &__new_finish2103);
+            cir_try_dispatch2108: ;
+            if (__cir_exc_active) {
+            {
+              int ca_tok2119 = 0;
+              void* ca_exn2120 = (void*)__cir_exc_ptr;
+              __cir_exc_active = 0;
+                struct std___Deque_base_int__std__allocator_int__* base2121 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+                struct std___Deque_base_int__std__allocator_int__* base2122 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2069 + 0);
+                struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2123 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2122->_M_impl) + 0);
+                int** t2124 = base2123->_M_finish._M_node;
+                int c2125 = 1;
+                int** ptr2126 = &(t2124)[c2125];
+                int** t2127 = __new_finish2103._M_node;
+                int c2128 = 1;
+                int** ptr2129 = &(t2127)[c2128];
+                std___Deque_base_int__std__allocator_int______M_destroy_nodes(base2121, ptr2126, ptr2129);
+                __cir_exc_active = 1;
+                {
+                  if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+                }
+                return;
+                __builtin_unreachable();
+            }
+            }
+        } else {
+          struct std___Deque_iterator_int__int____int___ agg_tmp42130;
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp42130, &__pos2066);
+          unsigned long t2131 = __n2067;
+          int* t2132 = __x2068;
+          struct std___Deque_iterator_int__int____int___ t2133 = agg_tmp42130;
+          std__deque_int__std__allocator_int______M_insert_aux(t2069, t2133, t2131, t2132);
+          if (__cir_exc_active) {
+            return;
+          }
+        }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE15_M_erase_at_endESt15_Deque_iteratorIiRiPiE
+void std__deque_int__std__allocator_int______M_erase_at_end(struct std__deque_int__std__allocator_int__* v2134, struct std___Deque_iterator_int__int____int___ v2135) {
+bb2136:
+  struct std__deque_int__std__allocator_int__* this2137;
+  struct std___Deque_iterator_int__int____int___ __pos2138;
+  struct std___Deque_iterator_int__int____int___ agg_tmp02139;
+  struct std___Deque_iterator_int__int____int___ agg_tmp12140;
+  this2137 = v2134;
+  __pos2138 = v2135;
+  struct std__deque_int__std__allocator_int__* t2141 = this2137;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02139, &__pos2138);
+  struct std___Deque_iterator_int__int____int___ r2142 = std__deque_int__std__allocator_int_____end(t2141);
+  agg_tmp12140 = r2142;
+  struct std___Deque_base_int__std__allocator_int__* base2143 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2141 + 0);
+  struct std__allocator_int_* r2144 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2143);
+  struct std___Deque_iterator_int__int____int___ t2145 = agg_tmp02139;
+  struct std___Deque_iterator_int__int____int___ t2146 = agg_tmp12140;
+  std__deque_int__std__allocator_int______M_destroy_data(t2141, t2145, t2146, r2144);
+  if (__cir_exc_active) {
+    return;
+  }
+  struct std___Deque_base_int__std__allocator_int__* base2147 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2141 + 0);
+  int** t2148 = __pos2138._M_node;
+  int c2149 = 1;
+  int** ptr2150 = &(t2148)[c2149];
+  struct std___Deque_base_int__std__allocator_int__* base2151 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2141 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2152 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2151->_M_impl) + 0);
+  int** t2153 = base2152->_M_finish._M_node;
+  int c2154 = 1;
+  int** ptr2155 = &(t2153)[c2154];
+  std___Deque_base_int__std__allocator_int______M_destroy_nodes(base2147, ptr2150, ptr2155);
+  struct std___Deque_base_int__std__allocator_int__* base2156 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2141 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2157 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2156->_M_impl) + 0);
+  struct std___Deque_iterator_int__int____int___* r2158 = std___Deque_iterator_int__int___int____operator_(&base2157->_M_finish, &__pos2138);
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE14_M_fill_assignEmRKi
+void std__deque_int__std__allocator_int______M_fill_assign(struct std__deque_int__std__allocator_int__* v2159, unsigned long v2160, int* v2161) {
+bb2162:
+  struct std__deque_int__std__allocator_int__* this2163;
+  unsigned long __n2164;
+  int* __val2165;
+  this2163 = v2159;
+  __n2164 = v2160;
+  __val2165 = v2161;
+  struct std__deque_int__std__allocator_int__* t2166 = this2163;
+    unsigned long t2167 = __n2164;
+    unsigned long r2168 = std__deque_int__std__allocator_int_____size___const(t2166);
+    _Bool c2169 = ((t2167 > r2168)) ? 1 : 0;
+    if (c2169) {
+      struct std___Deque_iterator_int__int____int___ agg_tmp02170;
+      struct std___Deque_iterator_int__int____int___ agg_tmp12171;
+      struct std___Deque_iterator_int__int____int___ agg_tmp22172;
+      struct std___Deque_iterator_int__int____int___ r2173 = std__deque_int__std__allocator_int_____begin(t2166);
+      agg_tmp02170 = r2173;
+      struct std___Deque_iterator_int__int____int___ r2174 = std__deque_int__std__allocator_int_____end(t2166);
+      agg_tmp12171 = r2174;
+      int* t2175 = __val2165;
+      struct std___Deque_iterator_int__int____int___ t2176 = agg_tmp02170;
+      struct std___Deque_iterator_int__int____int___ t2177 = agg_tmp12171;
+      void_std__fill_std___Deque_iterator_int__int___int____int_(t2176, t2177, t2175);
+      if (__cir_exc_active) {
+        return;
+      }
+      struct std___Deque_iterator_int__int____int___ r2178 = std__deque_int__std__allocator_int_____end(t2166);
+      agg_tmp22172 = r2178;
+      unsigned long t2179 = __n2164;
+      unsigned long r2180 = std__deque_int__std__allocator_int_____size___const(t2166);
+      unsigned long b2181 = t2179 - r2180;
+      int* t2182 = __val2165;
+      struct std___Deque_iterator_int__int____int___ t2183 = agg_tmp22172;
+      std__deque_int__std__allocator_int______M_fill_insert(t2166, t2183, b2181, t2182);
+      if (__cir_exc_active) {
+        return;
+      }
+    } else {
+      struct std___Deque_iterator_int__int____int___ agg_tmp32184;
+      struct std___Deque_iterator_int__int____int___ ref_tmp02185;
+      struct std___Deque_iterator_int__int____int___ agg_tmp42186;
+      struct std___Deque_iterator_int__int____int___ agg_tmp52187;
+      struct std___Deque_iterator_int__int____int___ r2188 = std__deque_int__std__allocator_int_____begin(t2166);
+      ref_tmp02185 = r2188;
+      unsigned long t2189 = __n2164;
+      long cast2190 = (long)t2189;
+      struct std___Deque_iterator_int__int____int___ r2191 = std__operator__4(&ref_tmp02185, cast2190);
+      agg_tmp32184 = r2191;
+      struct std___Deque_iterator_int__int____int___ t2192 = agg_tmp32184;
+      std__deque_int__std__allocator_int______M_erase_at_end(t2166, t2192);
+      if (__cir_exc_active) {
+        return;
+      }
+      struct std___Deque_iterator_int__int____int___ r2193 = std__deque_int__std__allocator_int_____begin(t2166);
+      agg_tmp42186 = r2193;
+      struct std___Deque_iterator_int__int____int___ r2194 = std__deque_int__std__allocator_int_____end(t2166);
+      agg_tmp52187 = r2194;
+      int* t2195 = __val2165;
+      struct std___Deque_iterator_int__int____int___ t2196 = agg_tmp42186;
+      struct std___Deque_iterator_int__int____int___ t2197 = agg_tmp52187;
+      void_std__fill_std___Deque_iterator_int__int___int____int_(t2196, t2197, t2195);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE6assignEmRKi
+void std__deque_int__std__allocator_int_____assign(struct std__deque_int__std__allocator_int__* v2198, unsigned long v2199, int* v2200) {
+bb2201:
+  struct std__deque_int__std__allocator_int__* this2202;
+  unsigned long __n2203;
+  int* __val2204;
+  this2202 = v2198;
+  __n2203 = v2199;
+  __val2204 = v2200;
+  struct std__deque_int__std__allocator_int__* t2205 = this2202;
+  unsigned long t2206 = __n2203;
+  int* t2207 = __val2204;
+  std__deque_int__std__allocator_int______M_fill_assign(t2205, t2206, t2207);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNKSt5dequeIiSaIiEE4sizeEv
+unsigned long std__deque_int__std__allocator_int_____size___const(struct std__deque_int__std__allocator_int__* v2208) {
+bb2209:
+  struct std__deque_int__std__allocator_int__* this2210;
+  unsigned long __retval2211;
+  unsigned long __sz2212;
+  this2210 = v2208;
+  struct std__deque_int__std__allocator_int__* t2213 = this2210;
+  struct std___Deque_base_int__std__allocator_int__* base2214 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2213 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2215 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2214->_M_impl) + 0);
+  struct std___Deque_base_int__std__allocator_int__* base2216 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2213 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2217 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2216->_M_impl) + 0);
+  long r2218 = std__operator_(&base2215->_M_finish, &base2217->_M_start);
+  unsigned long cast2219 = (unsigned long)r2218;
+  __sz2212 = cast2219;
+    unsigned long t2220 = __sz2212;
+    unsigned long r2221 = std__deque_int__std__allocator_int_____max_size___const(t2213);
+    _Bool c2222 = ((t2220 > r2221)) ? 1 : 0;
+    if (c2222) {
+      __builtin_unreachable();
+    }
+  unsigned long t2223 = __sz2212;
+  __retval2211 = t2223;
+  unsigned long t2224 = __retval2211;
+  return t2224;
+}
+
+// function: _ZNKSt15_Deque_iteratorIiRiPiEixEl
+int* std___Deque_iterator_int__int___int____operator___long__const(struct std___Deque_iterator_int__int____int___* v2225, long v2226) {
+bb2227:
+  struct std___Deque_iterator_int__int____int___* this2228;
+  long __n2229;
+  int* __retval2230;
+  struct std___Deque_iterator_int__int____int___ ref_tmp02231;
+  this2228 = v2225;
+  __n2229 = v2226;
+  struct std___Deque_iterator_int__int____int___* t2232 = this2228;
+  long t2233 = __n2229;
+  struct std___Deque_iterator_int__int____int___ r2234 = std__operator__4(t2232, t2233);
+  ref_tmp02231 = r2234;
+  int* r2235 = std___Deque_iterator_int__int___int____operator____const(&ref_tmp02231);
+  __retval2230 = r2235;
+  int* t2236 = __retval2230;
+  return t2236;
+}
+
+// function: _ZNSt5dequeIiSaIiEEixEm
+int* std__deque_int__std__allocator_int_____operator__(struct std__deque_int__std__allocator_int__* v2237, unsigned long v2238) {
+bb2239:
+  struct std__deque_int__std__allocator_int__* this2240;
+  unsigned long __n2241;
+  int* __retval2242;
+  this2240 = v2237;
+  __n2241 = v2238;
+  struct std__deque_int__std__allocator_int__* t2243 = this2240;
+    do {
+          unsigned long t2244 = __n2241;
+          unsigned long r2245 = std__deque_int__std__allocator_int_____size___const(t2243);
+          _Bool c2246 = ((t2244 < r2245)) ? 1 : 0;
+          _Bool u2247 = !c2246;
+          if (u2247) {
+            char* cast2248 = (char*)&(_str_12);
+            int c2249 = 1433;
+            char* cast2250 = (char*)&(__PRETTY_FUNCTION____ZNSt5dequeIiSaIiEEixEm);
+            char* cast2251 = (char*)&(_str_13);
+            std____glibcxx_assert_fail(cast2248, c2249, cast2250, cast2251);
+          }
+      _Bool c2252 = 0;
+      if (!c2252) break;
+    } while (1);
+  struct std___Deque_base_int__std__allocator_int__* base2253 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2243 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2254 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2253->_M_impl) + 0);
+  unsigned long t2255 = __n2241;
+  long cast2256 = (long)t2255;
+  int* r2257 = std___Deque_iterator_int__int___int____operator___long__const(&base2254->_M_start, cast2256);
+  __retval2242 = r2257;
+  int* t2258 = __retval2242;
+  return t2258;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiEC2Ev
+void std___Deque_iterator_int__int___int_____Deque_iterator_2(struct std___Deque_iterator_int__int____int___* v2259) {
+bb2260:
+  struct std___Deque_iterator_int__int____int___* this2261;
+  this2261 = v2259;
+  struct std___Deque_iterator_int__int____int___* t2262 = this2261;
+  int* c2263 = ((void*)0);
+  t2262->_M_cur = c2263;
+  int* c2264 = ((void*)0);
+  t2262->_M_first = c2264;
+  int* c2265 = ((void*)0);
+  t2262->_M_last = c2265;
+  int** c2266 = ((void*)0);
+  t2262->_M_node = c2266;
+  return;
+}
+
+// function: _ZStplRKSt15_Deque_iteratorIiRiPiEl
+struct std___Deque_iterator_int__int____int___ std__operator__4(struct std___Deque_iterator_int__int____int___* v2267, long v2268) {
+bb2269:
+  struct std___Deque_iterator_int__int____int___* __x2270;
+  long __n2271;
+  struct std___Deque_iterator_int__int____int___ __retval2272;
+  __x2270 = v2267;
+  __n2271 = v2268;
+  struct std___Deque_iterator_int__int____int___* t2273 = __x2270;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval2272, t2273);
+  long t2274 = __n2271;
+  struct std___Deque_iterator_int__int____int___* r2275 = std___Deque_iterator_int__int___int____operator___3(&__retval2272, t2274);
+  struct std___Deque_iterator_int__int____int___ t2276 = __retval2272;
+  return t2276;
+}
+
+// function: _ZNSt5dequeIiSaIiEE5beginEv
+struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int_____begin(struct std__deque_int__std__allocator_int__* v2277) {
+bb2278:
+  struct std__deque_int__std__allocator_int__* this2279;
+  struct std___Deque_iterator_int__int____int___ __retval2280;
+  this2279 = v2277;
+  struct std__deque_int__std__allocator_int__* t2281 = this2279;
+  struct std___Deque_base_int__std__allocator_int__* base2282 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2281 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2283 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2282->_M_impl) + 0);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval2280, &base2283->_M_start);
+  struct std___Deque_iterator_int__int____int___ t2284 = __retval2280;
+  return t2284;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiEaSERKS2_
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator_(struct std___Deque_iterator_int__int____int___* v2285, struct std___Deque_iterator_int__int____int___* v2286) {
+bb2287:
+  struct std___Deque_iterator_int__int____int___* this2288;
+  struct std___Deque_iterator_int__int____int___* unnamed2289;
+  struct std___Deque_iterator_int__int____int___* __retval2290;
+  this2288 = v2285;
+  unnamed2289 = v2286;
+  struct std___Deque_iterator_int__int____int___* t2291 = this2288;
+  struct std___Deque_iterator_int__int____int___* t2292 = unnamed2289;
+  int* t2293 = t2292->_M_cur;
+  t2291->_M_cur = t2293;
+  struct std___Deque_iterator_int__int____int___* t2294 = unnamed2289;
+  int* t2295 = t2294->_M_first;
+  t2291->_M_first = t2295;
+  struct std___Deque_iterator_int__int____int___* t2296 = unnamed2289;
+  int* t2297 = t2296->_M_last;
+  t2291->_M_last = t2297;
+  struct std___Deque_iterator_int__int____int___* t2298 = unnamed2289;
+  int** t2299 = t2298->_M_node;
+  t2291->_M_node = t2299;
+  __retval2290 = t2291;
+  struct std___Deque_iterator_int__int____int___* t2300 = __retval2290;
+  return t2300;
+}
+
+// function: _ZSt10__distanceISt15_Deque_iteratorIiRiPiEENSt15iterator_traitsIT_E15difference_typeES5_S5_St26random_access_iterator_tag
+long std__iterator_traits_std___Deque_iterator_int__int___int______difference_type_std____distance_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v2301, struct std___Deque_iterator_int__int____int___ v2302, struct std__random_access_iterator_tag v2303) {
+bb2304:
+  struct std___Deque_iterator_int__int____int___ __first2305;
+  struct std___Deque_iterator_int__int____int___ __last2306;
+  struct std__random_access_iterator_tag unnamed2307;
+  long __retval2308;
+  __first2305 = v2301;
+  __last2306 = v2302;
+  unnamed2307 = v2303;
+  long r2309 = std__operator_(&__last2306, &__first2305);
+  __retval2308 = r2309;
+  long t2310 = __retval2308;
+  return t2310;
+}
+
+// function: _ZSt8distanceISt15_Deque_iteratorIiRiPiEENSt15iterator_traitsIT_E15difference_typeES5_S5_
+long std__iterator_traits_std___Deque_iterator_int__int___int______difference_type_std__distance_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v2311, struct std___Deque_iterator_int__int____int___ v2312) {
+bb2313:
+  struct std___Deque_iterator_int__int____int___ __first2314;
+  struct std___Deque_iterator_int__int____int___ __last2315;
+  long __retval2316;
+  struct std___Deque_iterator_int__int____int___ agg_tmp02317;
+  struct std___Deque_iterator_int__int____int___ agg_tmp12318;
+  struct std__random_access_iterator_tag agg_tmp22319;
+  __first2314 = v2311;
+  __last2315 = v2312;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02317, &__first2314);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12318, &__last2315);
+  struct std__random_access_iterator_tag r2320 = std__iterator_traits_std___Deque_iterator_int__int___int______iterator_category_std____iterator_category_std___Deque_iterator_int__int___int____(&__first2314);
+  if (__cir_exc_active) {
+    long __cir_eh_ret = (long)0;
+    return __cir_eh_ret;
+  }
+  agg_tmp22319 = r2320;
+  struct std___Deque_iterator_int__int____int___ t2321 = agg_tmp02317;
+  struct std___Deque_iterator_int__int____int___ t2322 = agg_tmp12318;
+  struct std__random_access_iterator_tag t2323 = agg_tmp22319;
+  long r2324 = std__iterator_traits_std___Deque_iterator_int__int___int______difference_type_std____distance_std___Deque_iterator_int__int___int____(t2321, t2322, t2323);
+  if (__cir_exc_active) {
+    long __cir_eh_ret = (long)0;
+    return __cir_eh_ret;
+  }
+  __retval2316 = r2324;
+  long t2325 = __retval2316;
+  return t2325;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiEmmEv
+struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator___2(struct std___Deque_iterator_int__int____int___* v2326) {
+bb2327:
+  struct std___Deque_iterator_int__int____int___* this2328;
+  struct std___Deque_iterator_int__int____int___* __retval2329;
+  this2328 = v2326;
+  struct std___Deque_iterator_int__int____int___* t2330 = this2328;
+    int* t2331 = t2330->_M_cur;
+    int* t2332 = t2330->_M_first;
+    _Bool c2333 = ((t2331 == t2332)) ? 1 : 0;
+    if (c2333) {
+      int** t2334 = t2330->_M_node;
+      int c2335 = -1;
+      int** ptr2336 = &(t2334)[c2335];
+      std___Deque_iterator_int__int___int_____M_set_node(t2330, ptr2336);
+      int* t2337 = t2330->_M_last;
+      t2330->_M_cur = t2337;
+    }
+  int* t2338 = t2330->_M_cur;
+  int c2339 = -1;
+  int* ptr2340 = &(t2338)[c2339];
+  t2330->_M_cur = ptr2340;
+  __retval2329 = t2330;
+  struct std___Deque_iterator_int__int____int___* t2341 = __retval2329;
+  return t2341;
+}
+
+// function: _ZSt9__advanceISt15_Deque_iteratorIiRiPiElEvRT_T0_St26random_access_iterator_tag
+void void_std____advance_std___Deque_iterator_int__int___int____long_(struct std___Deque_iterator_int__int____int___* v2342, long v2343, struct std__random_access_iterator_tag v2344) {
+bb2345:
+  struct std___Deque_iterator_int__int____int___* __i2346;
+  long __n2347;
+  struct std__random_access_iterator_tag unnamed2348;
+  __i2346 = v2342;
+  __n2347 = v2343;
+  unnamed2348 = v2344;
+    long t2349 = __n2347;
+    _Bool isconst2350 = 0;
+    _Bool ternary2351;
+    if (isconst2350) {
+      long t2352 = __n2347;
+      long c2353 = 1;
+      _Bool c2354 = ((t2352 == c2353)) ? 1 : 0;
+      ternary2351 = (_Bool)c2354;
+    } else {
+      _Bool c2355 = 0;
+      ternary2351 = (_Bool)c2355;
+    }
+    if (ternary2351) {
+      struct std___Deque_iterator_int__int____int___* t2356 = __i2346;
+      struct std___Deque_iterator_int__int____int___* r2357 = std___Deque_iterator_int__int___int____operator___4(t2356);
+    } else {
+        long t2358 = __n2347;
+        _Bool isconst2359 = 0;
+        _Bool ternary2360;
+        if (isconst2359) {
+          long t2361 = __n2347;
+          long c2362 = -1;
+          _Bool c2363 = ((t2361 == c2362)) ? 1 : 0;
+          ternary2360 = (_Bool)c2363;
+        } else {
+          _Bool c2364 = 0;
+          ternary2360 = (_Bool)c2364;
+        }
+        if (ternary2360) {
+          struct std___Deque_iterator_int__int____int___* t2365 = __i2346;
+          struct std___Deque_iterator_int__int____int___* r2366 = std___Deque_iterator_int__int___int____operator___2(t2365);
+        } else {
+          long t2367 = __n2347;
+          struct std___Deque_iterator_int__int____int___* t2368 = __i2346;
+          struct std___Deque_iterator_int__int____int___* r2369 = std___Deque_iterator_int__int___int____operator___3(t2368, t2367);
+        }
+    }
+  return;
+}
+
+// function: _ZSt7advanceISt15_Deque_iteratorIiRiPiEmEvRT_T0_
+void void_std__advance_std___Deque_iterator_int__int___int____unsigned_long_(struct std___Deque_iterator_int__int____int___* v2370, unsigned long v2371) {
+bb2372:
+  struct std___Deque_iterator_int__int____int___* __i2373;
+  unsigned long __n2374;
+  long __d2375;
+  struct std__random_access_iterator_tag agg_tmp02376;
+  __i2373 = v2370;
+  __n2374 = v2371;
+  unsigned long t2377 = __n2374;
+  long cast2378 = (long)t2377;
+  __d2375 = cast2378;
+  struct std___Deque_iterator_int__int____int___* t2379 = __i2373;
+  long t2380 = __d2375;
+  struct std___Deque_iterator_int__int____int___* t2381 = __i2373;
+  struct std__random_access_iterator_tag r2382 = std__iterator_traits_std___Deque_iterator_int__int___int______iterator_category_std____iterator_category_std___Deque_iterator_int__int___int____(t2381);
+  if (__cir_exc_active) {
+    return;
+  }
+  agg_tmp02376 = r2382;
+  struct std__random_access_iterator_tag t2383 = agg_tmp02376;
+  void_std____advance_std___Deque_iterator_int__int___int____long_(t2379, t2380, t2383);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt12__assign_oneILb0EPiS0_EvRT0_RT1_
+void void_std____assign_one_false__int___int__(int** v2384, int** v2385) {
+bb2386:
+  int** __out2387;
+  int** __in2388;
+  __out2387 = v2384;
+  __in2388 = v2385;
+    int** t2389 = __in2388;
+    int* t2390 = *t2389;
+    int t2391 = *t2390;
+    int** t2392 = __out2387;
+    int* t2393 = *t2392;
+    *t2393 = t2391;
+  return;
+}
+
+// function: _ZSt14__copy_move_a2ILb0EPiS0_S0_ET2_T0_T1_S1_
+int* int__std____copy_move_a2_false__int___int___int__(int* v2394, int* v2395, int* v2396) {
+bb2397:
+  int* __first2398;
+  int* __last2399;
+  int* __result2400;
+  int* __retval2401;
+  __first2398 = v2394;
+  __last2399 = v2395;
+  __result2400 = v2396;
+      _Bool r2402 = std____is_constant_evaluated();
+      if (r2402) {
+      } else {
+          long __n2403;
+          int* t2404 = __first2398;
+          int* t2405 = __last2399;
+          long r2406 = std__iterator_traits_int____difference_type_std__distance_int__(t2404, t2405);
+          if (__cir_exc_active) {
+            int* __cir_eh_ret = (int*)0;
+            return __cir_eh_ret;
+          }
+          __n2403 = r2406;
+            long t2407 = __n2403;
+            long c2408 = 1;
+            _Bool c2409 = ((t2407 > c2408)) ? 1 : 0;
+            if (c2409) {
+              int* t2410 = __result2400;
+              void* cast2411 = (void*)t2410;
+              int* t2412 = __first2398;
+              void* cast2413 = (void*)t2412;
+              long t2414 = __n2403;
+              unsigned long cast2415 = (unsigned long)t2414;
+              unsigned long c2416 = 4;
+              unsigned long b2417 = cast2415 * c2416;
+              void* r2418 = memmove(cast2411, cast2413, b2417);
+              long t2419 = __n2403;
+              int* t2420 = __result2400;
+              int* ptr2421 = &(t2420)[t2419];
+              __result2400 = ptr2421;
+            } else {
+                long t2422 = __n2403;
+                long c2423 = 1;
+                _Bool c2424 = ((t2422 == c2423)) ? 1 : 0;
+                if (c2424) {
+                  void_std____assign_one_false__int___int__(&__result2400, &__first2398);
+                  if (__cir_exc_active) {
+                    int* __cir_eh_ret = (int*)0;
+                    return __cir_eh_ret;
+                  }
+                  int* t2425 = __result2400;
+                  int c2426 = 1;
+                  int* ptr2427 = &(t2425)[c2426];
+                  __result2400 = ptr2427;
+                }
+            }
+          int* t2428 = __result2400;
+          __retval2401 = t2428;
+          int* t2429 = __retval2401;
+          return t2429;
+      }
+    while (1) {
+      int* t2431 = __first2398;
+      int* t2432 = __last2399;
+      _Bool c2433 = ((t2431 != t2432)) ? 1 : 0;
+      if (!c2433) break;
+      void_std____assign_one_false__int___int__(&__result2400, &__first2398);
+      if (__cir_exc_active) {
+        int* __cir_eh_ret = (int*)0;
+        return __cir_eh_ret;
+      }
+    for_step2430: ;
+      int* t2434 = __result2400;
+      int c2435 = 1;
+      int* ptr2436 = &(t2434)[c2435];
+      __result2400 = ptr2436;
+      int* t2437 = __first2398;
+      int c2438 = 1;
+      int* ptr2439 = &(t2437)[c2438];
+      __first2398 = ptr2439;
+    }
+  int* t2440 = __result2400;
+  __retval2401 = t2440;
+  int* t2441 = __retval2401;
+  return t2441;
+}
+
+// function: _ZSt14__copy_move_a1ILb0EPiS0_ET1_T0_S2_S1_
+int* int__std____copy_move_a1_false__int___int__(int* v2442, int* v2443, int* v2444) {
+bb2445:
+  int* __first2446;
+  int* __last2447;
+  int* __result2448;
+  int* __retval2449;
+  __first2446 = v2442;
+  __last2447 = v2443;
+  __result2448 = v2444;
+  int* t2450 = __first2446;
+  int* t2451 = __last2447;
+  int* t2452 = __result2448;
+  int* r2453 = int__std____copy_move_a2_false__int___int___int__(t2450, t2451, t2452);
+  if (__cir_exc_active) {
+    int* __cir_eh_ret = (int*)0;
+    return __cir_eh_ret;
+  }
+  __retval2449 = r2453;
+  int* t2454 = __retval2449;
+  return t2454;
+}
+
+// function: _ZSt14__copy_move_a1ILb0EPiiEN9__gnu_cxx11__enable_ifIXsr23__is_random_access_iterIT0_EE7__valueESt15_Deque_iteratorIT1_RS5_PS5_EE6__typeES3_S3_S8_
+struct std___Deque_iterator_int__int____int___ __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_false__int___int_(int* v2455, int* v2456, struct std___Deque_iterator_int__int____int___ v2457) {
+bb2458:
+  int* __first2459;
+  int* __last2460;
+  struct std___Deque_iterator_int__int____int___ __result2461;
+  struct std___Deque_iterator_int__int____int___ __retval2462;
+  long __len2463;
+  __first2459 = v2455;
+  __last2460 = v2456;
+  __result2461 = v2457;
+  int* t2464 = __last2460;
+  int* t2465 = __first2459;
+  long diff2466 = t2464 - t2465;
+  __len2463 = diff2466;
+    while (1) {
+      long t2467 = __len2463;
+      long c2468 = 0;
+      _Bool c2469 = ((t2467 > c2468)) ? 1 : 0;
+      if (!c2469) break;
+        long __clen2470;
+        long ref_tmp02471;
+        int* t2472 = __result2461._M_last;
+        int* t2473 = __result2461._M_cur;
+        long diff2474 = t2472 - t2473;
+        ref_tmp02471 = diff2474;
+        long* r2475 = long_const__std__min_long_(&__len2463, &ref_tmp02471);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        long t2476 = *r2475;
+        __clen2470 = t2476;
+        int* t2477 = __first2459;
+        int* t2478 = __first2459;
+        long t2479 = __clen2470;
+        int* ptr2480 = &(t2478)[t2479];
+        int* t2481 = __result2461._M_cur;
+        int* r2482 = int__std____copy_move_a1_false__int___int__(t2477, ptr2480, t2481);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        long t2483 = __clen2470;
+        int* t2484 = __first2459;
+        int* ptr2485 = &(t2484)[t2483];
+        __first2459 = ptr2485;
+        long t2486 = __clen2470;
+        struct std___Deque_iterator_int__int____int___* r2487 = std___Deque_iterator_int__int___int____operator___3(&__result2461, t2486);
+        long t2488 = __clen2470;
+        long t2489 = __len2463;
+        long b2490 = t2489 - t2488;
+        __len2463 = b2490;
+    }
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval2462, &__result2461);
+  struct std___Deque_iterator_int__int____int___ t2491 = __retval2462;
+  return t2491;
+}
+
+// function: _ZSt15__copy_move_ditILb0EiRiPiSt15_Deque_iteratorIiS0_S1_EET3_S2_IT0_T1_T2_ES8_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_dit_false__int__int___int___std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v2492, struct std___Deque_iterator_int__int____int___ v2493, struct std___Deque_iterator_int__int____int___ v2494) {
+bb2495:
+  struct std___Deque_iterator_int__int____int___ __first2496;
+  struct std___Deque_iterator_int__int____int___ __last2497;
+  struct std___Deque_iterator_int__int____int___ __result2498;
+  struct std___Deque_iterator_int__int____int___ __retval2499;
+  struct std___Deque_iterator_int__int____int___ agg_tmp32500;
+  __first2496 = v2492;
+  __last2497 = v2493;
+  __result2498 = v2494;
+    int** t2501 = __first2496._M_node;
+    int** t2502 = __last2497._M_node;
+    _Bool c2503 = ((t2501 != t2502)) ? 1 : 0;
+    if (c2503) {
+      struct std___Deque_iterator_int__int____int___ ref_tmp02504;
+      struct std___Deque_iterator_int__int____int___ agg_tmp02505;
+      struct std___Deque_iterator_int__int____int___ agg_tmp22506;
+      int* t2507 = __first2496._M_cur;
+      int* t2508 = __first2496._M_last;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02505, &__result2498);
+      struct std___Deque_iterator_int__int____int___ t2509 = agg_tmp02505;
+      struct std___Deque_iterator_int__int____int___ r2510 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_false__int___int_(t2507, t2508, t2509);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      ref_tmp02504 = r2510;
+      struct std___Deque_iterator_int__int____int___* r2511 = std___Deque_iterator_int__int___int____operator_(&__result2498, &ref_tmp02504);
+        int** __node2512;
+        struct std___Deque_iterator_int__int____int___ ref_tmp12513;
+        struct std___Deque_iterator_int__int____int___ agg_tmp12514;
+        int** t2515 = __first2496._M_node;
+        int c2516 = 1;
+        int** ptr2517 = &(t2515)[c2516];
+        __node2512 = ptr2517;
+        while (1) {
+          int** t2519 = __node2512;
+          int** t2520 = __last2497._M_node;
+          _Bool c2521 = ((t2519 != t2520)) ? 1 : 0;
+          if (!c2521) break;
+          int** t2522 = __node2512;
+          int* t2523 = *t2522;
+          int** t2524 = __node2512;
+          int* t2525 = *t2524;
+          unsigned long r2526 = std___Deque_iterator_int__int___int_____S_buffer_size();
+          int* ptr2527 = &(t2525)[r2526];
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12514, &__result2498);
+          struct std___Deque_iterator_int__int____int___ t2528 = agg_tmp12514;
+          struct std___Deque_iterator_int__int____int___ r2529 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_false__int___int_(t2523, ptr2527, t2528);
+          if (__cir_exc_active) {
+            struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+            return __cir_eh_ret;
+          }
+          ref_tmp12513 = r2529;
+          struct std___Deque_iterator_int__int____int___* r2530 = std___Deque_iterator_int__int___int____operator_(&__result2498, &ref_tmp12513);
+        for_step2518: ;
+          int** t2531 = __node2512;
+          int c2532 = 1;
+          int** ptr2533 = &(t2531)[c2532];
+          __node2512 = ptr2533;
+        }
+      int* t2534 = __last2497._M_first;
+      int* t2535 = __last2497._M_cur;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22506, &__result2498);
+      struct std___Deque_iterator_int__int____int___ t2536 = agg_tmp22506;
+      struct std___Deque_iterator_int__int____int___ r2537 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_false__int___int_(t2534, t2535, t2536);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      __retval2499 = r2537;
+      struct std___Deque_iterator_int__int____int___ t2538 = __retval2499;
+      return t2538;
+    }
+  int* t2539 = __first2496._M_cur;
+  int* t2540 = __last2497._M_cur;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp32500, &__result2498);
+  struct std___Deque_iterator_int__int____int___ t2541 = agg_tmp32500;
+  struct std___Deque_iterator_int__int____int___ r2542 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_false__int___int_(t2539, t2540, t2541);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval2499 = r2542;
+  struct std___Deque_iterator_int__int____int___ t2543 = __retval2499;
+  return t2543;
+}
+
+// function: _ZSt14__copy_move_a1ILb0EiRiPiiESt15_Deque_iteratorIT3_RS3_PS3_ES2_IT0_T1_T2_ESA_S6_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a1_false__int__int___int___int_(struct std___Deque_iterator_int__int____int___ v2544, struct std___Deque_iterator_int__int____int___ v2545, struct std___Deque_iterator_int__int____int___ v2546) {
+bb2547:
+  struct std___Deque_iterator_int__int____int___ __first2548;
+  struct std___Deque_iterator_int__int____int___ __last2549;
+  struct std___Deque_iterator_int__int____int___ __result2550;
+  struct std___Deque_iterator_int__int____int___ __retval2551;
+  struct std___Deque_iterator_int__int____int___ agg_tmp02552;
+  struct std___Deque_iterator_int__int____int___ agg_tmp12553;
+  struct std___Deque_iterator_int__int____int___ agg_tmp22554;
+  __first2548 = v2544;
+  __last2549 = v2545;
+  __result2550 = v2546;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02552, &__first2548);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12553, &__last2549);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22554, &__result2550);
+  struct std___Deque_iterator_int__int____int___ t2555 = agg_tmp02552;
+  struct std___Deque_iterator_int__int____int___ t2556 = agg_tmp12553;
+  struct std___Deque_iterator_int__int____int___ t2557 = agg_tmp22554;
+  struct std___Deque_iterator_int__int____int___ r2558 = std___Deque_iterator_int__int___int___std____copy_move_dit_false__int__int___int___std___Deque_iterator_int__int___int____(t2555, t2556, t2557);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval2551 = r2558;
+  struct std___Deque_iterator_int__int____int___ t2559 = __retval2551;
+  return t2559;
+}
+
+// function: _ZSt13__copy_move_aILb0ESt15_Deque_iteratorIiRiPiES3_ET1_T0_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a_false__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v2560, struct std___Deque_iterator_int__int____int___ v2561, struct std___Deque_iterator_int__int____int___ v2562) {
+bb2563:
+  struct std___Deque_iterator_int__int____int___ __first2564;
+  struct std___Deque_iterator_int__int____int___ __last2565;
+  struct std___Deque_iterator_int__int____int___ __result2566;
+  struct std___Deque_iterator_int__int____int___ __retval2567;
+  struct std___Deque_iterator_int__int____int___ agg_tmp02568;
+  struct std___Deque_iterator_int__int____int___ agg_tmp12569;
+  struct std___Deque_iterator_int__int____int___ agg_tmp22570;
+  struct std___Deque_iterator_int__int____int___ agg_tmp32571;
+  struct std___Deque_iterator_int__int____int___ agg_tmp42572;
+  struct std___Deque_iterator_int__int____int___ agg_tmp52573;
+  struct std___Deque_iterator_int__int____int___ agg_tmp62574;
+  __first2564 = v2560;
+  __last2565 = v2561;
+  __result2566 = v2562;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22570, &__first2564);
+  struct std___Deque_iterator_int__int____int___ t2575 = agg_tmp22570;
+  struct std___Deque_iterator_int__int____int___ r2576 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t2575);
+  agg_tmp12569 = r2576;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp42572, &__last2565);
+  struct std___Deque_iterator_int__int____int___ t2577 = agg_tmp42572;
+  struct std___Deque_iterator_int__int____int___ r2578 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t2577);
+  agg_tmp32571 = r2578;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp62574, &__result2566);
+  struct std___Deque_iterator_int__int____int___ t2579 = agg_tmp62574;
+  struct std___Deque_iterator_int__int____int___ r2580 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t2579);
+  agg_tmp52573 = r2580;
+  struct std___Deque_iterator_int__int____int___ t2581 = agg_tmp12569;
+  struct std___Deque_iterator_int__int____int___ t2582 = agg_tmp32571;
+  struct std___Deque_iterator_int__int____int___ t2583 = agg_tmp52573;
+  struct std___Deque_iterator_int__int____int___ r2584 = std___Deque_iterator_int__int___int___std____copy_move_a1_false__int__int___int___int_(t2581, t2582, t2583);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp02568 = r2584;
+  struct std___Deque_iterator_int__int____int___ t2585 = agg_tmp02568;
+  struct std___Deque_iterator_int__int____int___ r2586 = std___Deque_iterator_int__int___int___std____niter_wrap_std___Deque_iterator_int__int___int____(&__result2566, t2585);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval2567 = r2586;
+  struct std___Deque_iterator_int__int____int___ t2587 = __retval2567;
+  return t2587;
+}
+
+// function: _ZSt4copyISt15_Deque_iteratorIiRiPiES3_ET0_T_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v2588, struct std___Deque_iterator_int__int____int___ v2589, struct std___Deque_iterator_int__int____int___ v2590) {
+bb2591:
+  struct std___Deque_iterator_int__int____int___ __first2592;
+  struct std___Deque_iterator_int__int____int___ __last2593;
+  struct std___Deque_iterator_int__int____int___ __result2594;
+  struct std___Deque_iterator_int__int____int___ __retval2595;
+  struct std___Deque_iterator_int__int____int___ agg_tmp02596;
+  struct std___Deque_iterator_int__int____int___ agg_tmp12597;
+  struct std___Deque_iterator_int__int____int___ agg_tmp22598;
+  struct std___Deque_iterator_int__int____int___ agg_tmp32599;
+  struct std___Deque_iterator_int__int____int___ agg_tmp42600;
+  __first2592 = v2588;
+  __last2593 = v2589;
+  __result2594 = v2590;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12597, &__first2592);
+  struct std___Deque_iterator_int__int____int___ t2601 = agg_tmp12597;
+  struct std___Deque_iterator_int__int____int___ r2602 = std___Deque_iterator_int__int___int___std____miter_base_std___Deque_iterator_int__int___int____(t2601);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp02596 = r2602;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp32599, &__last2593);
+  struct std___Deque_iterator_int__int____int___ t2603 = agg_tmp32599;
+  struct std___Deque_iterator_int__int____int___ r2604 = std___Deque_iterator_int__int___int___std____miter_base_std___Deque_iterator_int__int___int____(t2603);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp22598 = r2604;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp42600, &__result2594);
+  struct std___Deque_iterator_int__int____int___ t2605 = agg_tmp02596;
+  struct std___Deque_iterator_int__int____int___ t2606 = agg_tmp22598;
+  struct std___Deque_iterator_int__int____int___ t2607 = agg_tmp42600;
+  struct std___Deque_iterator_int__int____int___ r2608 = std___Deque_iterator_int__int___int___std____copy_move_a_false__std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t2605, t2606, t2607);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval2595 = r2608;
+  struct std___Deque_iterator_int__int____int___ t2609 = __retval2595;
+  return t2609;
+}
+
+// function: _ZSt12construct_atIiJRiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_
+int* _ZSt12construct_atIiJRiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(int* v2610, int* v2611) {
+bb2612:
+  int* __location2613;
+  int* __args2614;
+  int* __retval2615;
+  void* __loc2616;
+  __location2613 = v2610;
+  __args2614 = v2611;
+  int* t2617 = __location2613;
+  void* cast2618 = (void*)t2617;
+  __loc2616 = cast2618;
+    void* t2619 = __loc2616;
+    int* cast2620 = (int*)t2619;
+    int* t2621 = __args2614;
+    int t2622 = *t2621;
+    *cast2620 = t2622;
+    __retval2615 = cast2620;
+    int* t2623 = __retval2615;
+    return t2623;
+  abort();
+}
+
+// function: _ZSt10_ConstructIiJRiEEvPT_DpOT0_
+void void_std___Construct_int__int__(int* v2624, int* v2625) {
+bb2626:
+  int* __p2627;
+  int* __args2628;
+  __p2627 = v2624;
+  __args2628 = v2625;
+    _Bool r2629 = std____is_constant_evaluated();
+    if (r2629) {
+      int* t2630 = __p2627;
+      int* t2631 = __args2628;
+      int* r2632 = _ZSt12construct_atIiJRiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(t2630, t2631);
+      return;
+    }
+  int* t2633 = __p2627;
+  void* cast2634 = (void*)t2633;
+  int* cast2635 = (int*)cast2634;
+  int* t2636 = __args2628;
+  int t2637 = *t2636;
+  *cast2635 = t2637;
+  return;
+}
+
+// function: _ZSt16__do_uninit_copyISt15_Deque_iteratorIiRiPiES3_S3_ET1_T_T0_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____do_uninit_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v2638, struct std___Deque_iterator_int__int____int___ v2639, struct std___Deque_iterator_int__int____int___ v2640) {
+bb2641:
+  struct std___Deque_iterator_int__int____int___ __first2642;
+  struct std___Deque_iterator_int__int____int___ __last2643;
+  struct std___Deque_iterator_int__int____int___ __result2644;
+  struct std___Deque_iterator_int__int____int___ __retval2645;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_ __guard2646;
+  __first2642 = v2638;
+  __last2643 = v2639;
+  __result2644 = v2640;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void____UninitDestroyGuard(&__guard2646, &__result2644);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+      while (1) {
+        _Bool r2648 = std__operator__(&__first2642, &__last2643);
+        _Bool u2649 = !r2648;
+        if (!u2649) break;
+        int* r2650 = std___Deque_iterator_int__int___int____operator____const(&__result2644);
+        int* r2651 = std___Deque_iterator_int__int___int____operator____const(&__first2642);
+        void_std___Construct_int__int__(r2650, r2651);
+        if (__cir_exc_active) {
+          {
+            std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard2646);
+          }
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+      for_step2647: ;
+        struct std___Deque_iterator_int__int____int___* r2652 = std___Deque_iterator_int__int___int____operator___4(&__first2642);
+        struct std___Deque_iterator_int__int____int___* r2653 = std___Deque_iterator_int__int___int____operator___4(&__result2644);
+      }
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void___release(&__guard2646);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard2646);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    std___Deque_iterator_int__int___int_____Deque_iterator(&__retval2645, &__result2644);
+    struct std___Deque_iterator_int__int____int___ t2654 = __retval2645;
+    struct std___Deque_iterator_int__int____int___ ret_val2655 = t2654;
+    {
+      std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard2646);
+    }
+    return ret_val2655;
+  abort();
+}
+
+// function: _ZSt18uninitialized_copyISt15_Deque_iteratorIiRiPiES3_ET0_T_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__uninitialized_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v2656, struct std___Deque_iterator_int__int____int___ v2657, struct std___Deque_iterator_int__int____int___ v2658) {
+bb2659:
+  struct std___Deque_iterator_int__int____int___ __first2660;
+  struct std___Deque_iterator_int__int____int___ __last2661;
+  struct std___Deque_iterator_int__int____int___ __result2662;
+  struct std___Deque_iterator_int__int____int___ __retval2663;
+  __first2660 = v2656;
+  __last2661 = v2657;
+  __result2662 = v2658;
+        struct std___Deque_iterator_int__int____int___ agg_tmp02664;
+        struct std___Deque_iterator_int__int____int___ agg_tmp12665;
+        struct std___Deque_iterator_int__int____int___ agg_tmp22666;
+        std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02664, &__first2660);
+        std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12665, &__last2661);
+        std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22666, &__result2662);
+        struct std___Deque_iterator_int__int____int___ t2667 = agg_tmp02664;
+        struct std___Deque_iterator_int__int____int___ t2668 = agg_tmp12665;
+        struct std___Deque_iterator_int__int____int___ t2669 = agg_tmp22666;
+        struct std___Deque_iterator_int__int____int___ r2670 = std___Deque_iterator_int__int___int___std____do_uninit_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t2667, t2668, t2669);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        __retval2663 = r2670;
+        struct std___Deque_iterator_int__int____int___ t2671 = __retval2663;
+        return t2671;
+  abort();
+}
+
+// function: _ZSt22__uninitialized_copy_aISt15_Deque_iteratorIiRiPiES3_S3_iET1_T_T0_S4_RSaIT2_E
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ v2672, struct std___Deque_iterator_int__int____int___ v2673, struct std___Deque_iterator_int__int____int___ v2674, struct std__allocator_int_* v2675) {
+bb2676:
+  struct std___Deque_iterator_int__int____int___ __first2677;
+  struct std___Deque_iterator_int__int____int___ __last2678;
+  struct std___Deque_iterator_int__int____int___ __result2679;
+  struct std__allocator_int_* unnamed2680;
+  struct std___Deque_iterator_int__int____int___ __retval2681;
+  __first2677 = v2672;
+  __last2678 = v2673;
+  __result2679 = v2674;
+  unnamed2680 = v2675;
+    _Bool r2682 = std__is_constant_evaluated();
+    if (r2682) {
+      struct std___Deque_iterator_int__int____int___ agg_tmp02683;
+      struct std___Deque_iterator_int__int____int___ agg_tmp12684;
+      struct std___Deque_iterator_int__int____int___ agg_tmp22685;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02683, &__first2677);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12684, &__last2678);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22685, &__result2679);
+      struct std___Deque_iterator_int__int____int___ t2686 = agg_tmp02683;
+      struct std___Deque_iterator_int__int____int___ t2687 = agg_tmp12684;
+      struct std___Deque_iterator_int__int____int___ t2688 = agg_tmp22685;
+      struct std___Deque_iterator_int__int____int___ r2689 = std___Deque_iterator_int__int___int___std____do_uninit_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t2686, t2687, t2688);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      __retval2681 = r2689;
+      struct std___Deque_iterator_int__int____int___ t2690 = __retval2681;
+      return t2690;
+    }
+    struct std___Deque_iterator_int__int____int___ agg_tmp32691;
+    struct std___Deque_iterator_int__int____int___ agg_tmp42692;
+    struct std___Deque_iterator_int__int____int___ agg_tmp52693;
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp32691, &__first2677);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp42692, &__last2678);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp52693, &__result2679);
+    struct std___Deque_iterator_int__int____int___ t2694 = agg_tmp32691;
+    struct std___Deque_iterator_int__int____int___ t2695 = agg_tmp42692;
+    struct std___Deque_iterator_int__int____int___ t2696 = agg_tmp52693;
+    struct std___Deque_iterator_int__int____int___ r2697 = std___Deque_iterator_int__int___int___std__uninitialized_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t2694, t2695, t2696);
+    if (__cir_exc_active) {
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    __retval2681 = r2697;
+    struct std___Deque_iterator_int__int____int___ t2698 = __retval2681;
+    return t2698;
+  abort();
+}
+
+// function: _ZNSt5dequeIiSaIiEE16_M_range_prependISt15_Deque_iteratorIiRiPiES6_EEvT_T0_m
+void void_std__deque_int__std__allocator_int______M_range_prepend_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* v2699, struct std___Deque_iterator_int__int____int___ v2700, struct std___Deque_iterator_int__int____int___ v2701, unsigned long v2702) {
+bb2703:
+  struct std__deque_int__std__allocator_int__* this2704;
+  struct std___Deque_iterator_int__int____int___ __first2705;
+  struct std___Deque_iterator_int__int____int___ __last2706;
+  unsigned long __n2707;
+  struct std___Deque_iterator_int__int____int___ __new_start2708;
+  this2704 = v2699;
+  __first2705 = v2700;
+  __last2706 = v2701;
+  __n2707 = v2702;
+  struct std__deque_int__std__allocator_int__* t2709 = this2704;
+  unsigned long t2710 = __n2707;
+  struct std___Deque_iterator_int__int____int___ r2711 = std__deque_int__std__allocator_int______M_reserve_elements_at_front(t2709, t2710);
+  if (__cir_exc_active) {
+    return;
+  }
+  __new_start2708 = r2711;
+    struct std___Deque_iterator_int__int____int___ agg_tmp02712;
+    struct std___Deque_iterator_int__int____int___ agg_tmp12713;
+    struct std___Deque_iterator_int__int____int___ agg_tmp22714;
+    struct std___Deque_iterator_int__int____int___ agg_tmp32715;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02712, &__first2705);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12713, &__last2706);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22714, &__new_start2708);
+      struct std___Deque_base_int__std__allocator_int__* base2717 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2709 + 0);
+      struct std__allocator_int_* r2718 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2717);
+      struct std___Deque_iterator_int__int____int___ t2719 = agg_tmp02712;
+      struct std___Deque_iterator_int__int____int___ t2720 = agg_tmp12713;
+      struct std___Deque_iterator_int__int____int___ t2721 = agg_tmp22714;
+      struct std___Deque_iterator_int__int____int___ r2722 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int_(t2719, t2720, t2721, r2718);
+      if (__cir_exc_active) {
+        goto cir_try_dispatch2716;
+      }
+      agg_tmp32715 = r2722;
+      struct std___Deque_base_int__std__allocator_int__* base2723 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2709 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2724 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2723->_M_impl) + 0);
+      struct std___Deque_iterator_int__int____int___* r2725 = std___Deque_iterator_int__int___int____operator_(&base2724->_M_start, &__new_start2708);
+    cir_try_dispatch2716: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok2726 = 0;
+      void* ca_exn2727 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct std___Deque_base_int__std__allocator_int__* base2728 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2709 + 0);
+        int** t2729 = __new_start2708._M_node;
+        struct std___Deque_base_int__std__allocator_int__* base2730 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2709 + 0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2731 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2730->_M_impl) + 0);
+        int** t2732 = base2731->_M_start._M_node;
+        std___Deque_base_int__std__allocator_int______M_destroy_nodes(base2728, t2729, t2732);
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE15_M_range_appendISt15_Deque_iteratorIiRiPiES6_EEvT_T0_m
+void void_std__deque_int__std__allocator_int______M_range_append_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* v2733, struct std___Deque_iterator_int__int____int___ v2734, struct std___Deque_iterator_int__int____int___ v2735, unsigned long v2736) {
+bb2737:
+  struct std__deque_int__std__allocator_int__* this2738;
+  struct std___Deque_iterator_int__int____int___ __first2739;
+  struct std___Deque_iterator_int__int____int___ __last2740;
+  unsigned long __n2741;
+  struct std___Deque_iterator_int__int____int___ __new_finish2742;
+  this2738 = v2733;
+  __first2739 = v2734;
+  __last2740 = v2735;
+  __n2741 = v2736;
+  struct std__deque_int__std__allocator_int__* t2743 = this2738;
+  unsigned long t2744 = __n2741;
+  struct std___Deque_iterator_int__int____int___ r2745 = std__deque_int__std__allocator_int______M_reserve_elements_at_back(t2743, t2744);
+  if (__cir_exc_active) {
+    return;
+  }
+  __new_finish2742 = r2745;
+    struct std___Deque_iterator_int__int____int___ agg_tmp02746;
+    struct std___Deque_iterator_int__int____int___ agg_tmp12747;
+    struct std___Deque_iterator_int__int____int___ agg_tmp22748;
+    struct std___Deque_iterator_int__int____int___ agg_tmp32749;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02746, &__first2739);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12747, &__last2740);
+      struct std___Deque_base_int__std__allocator_int__* base2751 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2743 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2752 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2751->_M_impl) + 0);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22748, &base2752->_M_finish);
+      struct std___Deque_base_int__std__allocator_int__* base2753 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2743 + 0);
+      struct std__allocator_int_* r2754 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2753);
+      struct std___Deque_iterator_int__int____int___ t2755 = agg_tmp02746;
+      struct std___Deque_iterator_int__int____int___ t2756 = agg_tmp12747;
+      struct std___Deque_iterator_int__int____int___ t2757 = agg_tmp22748;
+      struct std___Deque_iterator_int__int____int___ r2758 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int_(t2755, t2756, t2757, r2754);
+      if (__cir_exc_active) {
+        goto cir_try_dispatch2750;
+      }
+      agg_tmp32749 = r2758;
+      struct std___Deque_base_int__std__allocator_int__* base2759 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2743 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2760 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2759->_M_impl) + 0);
+      struct std___Deque_iterator_int__int____int___* r2761 = std___Deque_iterator_int__int___int____operator_(&base2760->_M_finish, &__new_finish2742);
+    cir_try_dispatch2750: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok2762 = 0;
+      void* ca_exn2763 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct std___Deque_base_int__std__allocator_int__* base2764 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2743 + 0);
+        struct std___Deque_base_int__std__allocator_int__* base2765 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2743 + 0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2766 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2765->_M_impl) + 0);
+        int** t2767 = base2766->_M_finish._M_node;
+        int c2768 = 1;
+        int** ptr2769 = &(t2767)[c2768];
+        int** t2770 = __new_finish2742._M_node;
+        int c2771 = 1;
+        int** ptr2772 = &(t2770)[c2771];
+        std___Deque_base_int__std__allocator_int______M_destroy_nodes(base2764, ptr2769, ptr2772);
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZSt7advanceISt15_Deque_iteratorIiRiPiElEvRT_T0_
+void void_std__advance_std___Deque_iterator_int__int___int____long_(struct std___Deque_iterator_int__int____int___* v2773, long v2774) {
+bb2775:
+  struct std___Deque_iterator_int__int____int___* __i2776;
+  long __n2777;
+  long __d2778;
+  struct std__random_access_iterator_tag agg_tmp02779;
+  __i2776 = v2773;
+  __n2777 = v2774;
+  long t2780 = __n2777;
+  __d2778 = t2780;
+  struct std___Deque_iterator_int__int____int___* t2781 = __i2776;
+  long t2782 = __d2778;
+  struct std___Deque_iterator_int__int____int___* t2783 = __i2776;
+  struct std__random_access_iterator_tag r2784 = std__iterator_traits_std___Deque_iterator_int__int___int______iterator_category_std____iterator_category_std___Deque_iterator_int__int___int____(t2783);
+  if (__cir_exc_active) {
+    return;
+  }
+  agg_tmp02779 = r2784;
+  struct std__random_access_iterator_tag t2785 = agg_tmp02779;
+  void_std____advance_std___Deque_iterator_int__int___int____long_(t2781, t2782, t2785);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt25__uninitialized_move_copyISt15_Deque_iteratorIiRiPiES3_S3_SaIiEET1_T_S6_T0_S7_S5_RT2_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_move_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ v2786, struct std___Deque_iterator_int__int____int___ v2787, struct std___Deque_iterator_int__int____int___ v2788, struct std___Deque_iterator_int__int____int___ v2789, struct std___Deque_iterator_int__int____int___ v2790, struct std__allocator_int_* v2791) {
+bb2792:
+  struct std___Deque_iterator_int__int____int___ __first12793;
+  struct std___Deque_iterator_int__int____int___ __last12794;
+  struct std___Deque_iterator_int__int____int___ __first22795;
+  struct std___Deque_iterator_int__int____int___ __last22796;
+  struct std___Deque_iterator_int__int____int___ __result2797;
+  struct std__allocator_int_* __alloc2798;
+  struct std___Deque_iterator_int__int____int___ __retval2799;
+  struct std___Deque_iterator_int__int____int___ __mid2800;
+  struct std___Deque_iterator_int__int____int___ agg_tmp02801;
+  struct std___Deque_iterator_int__int____int___ agg_tmp12802;
+  struct std___Deque_iterator_int__int____int___ agg_tmp22803;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__ __guard2804;
+  struct std___Deque_iterator_int__int____int___ ref_tmp02805;
+  struct std___Deque_iterator_int__int____int___ agg_tmp32806;
+  struct std___Deque_iterator_int__int____int___ agg_tmp42807;
+  struct std___Deque_iterator_int__int____int___ agg_tmp52808;
+  __first12793 = v2786;
+  __last12794 = v2787;
+  __first22795 = v2788;
+  __last22796 = v2789;
+  __result2797 = v2790;
+  __alloc2798 = v2791;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02801, &__first12793);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12802, &__last12794);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22803, &__result2797);
+  struct std__allocator_int_* t2809 = __alloc2798;
+  struct std___Deque_iterator_int__int____int___ t2810 = agg_tmp02801;
+  struct std___Deque_iterator_int__int____int___ t2811 = agg_tmp12802;
+  struct std___Deque_iterator_int__int____int___ t2812 = agg_tmp22803;
+  struct std___Deque_iterator_int__int____int___ r2813 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t2810, t2811, t2812, t2809);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __mid2800 = r2813;
+  struct std__allocator_int_* t2814 = __alloc2798;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int______UninitDestroyGuard(&__guard2804, &__result2797, t2814);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+    struct std___Deque_iterator_int__int____int___* r2815 = std___Deque_iterator_int__int___int____operator_(&__result2797, &__mid2800);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp32806, &__first22795);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp42807, &__last22796);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp52808, &__mid2800);
+    struct std__allocator_int_* t2816 = __alloc2798;
+    struct std___Deque_iterator_int__int____int___ t2817 = agg_tmp32806;
+    struct std___Deque_iterator_int__int____int___ t2818 = agg_tmp42807;
+    struct std___Deque_iterator_int__int____int___ t2819 = agg_tmp52808;
+    struct std___Deque_iterator_int__int____int___ r2820 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int_(t2817, t2818, t2819, t2816);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard2804);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    ref_tmp02805 = r2820;
+    struct std___Deque_iterator_int__int____int___* r2821 = std___Deque_iterator_int__int___int____operator_(&__result2797, &ref_tmp02805);
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_____release(&__guard2804);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard2804);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    std___Deque_iterator_int__int___int_____Deque_iterator(&__retval2799, &__result2797);
+    struct std___Deque_iterator_int__int____int___ t2822 = __retval2799;
+    struct std___Deque_iterator_int__int____int___ ret_val2823 = t2822;
+    {
+      std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard2804);
+    }
+    return ret_val2823;
+  abort();
+}
+
+// function: _ZSt25__uninitialized_copy_moveISt15_Deque_iteratorIiRiPiES3_S3_SaIiEET1_T_S6_T0_S7_S5_RT2_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_move_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ v2824, struct std___Deque_iterator_int__int____int___ v2825, struct std___Deque_iterator_int__int____int___ v2826, struct std___Deque_iterator_int__int____int___ v2827, struct std___Deque_iterator_int__int____int___ v2828, struct std__allocator_int_* v2829) {
+bb2830:
+  struct std___Deque_iterator_int__int____int___ __first12831;
+  struct std___Deque_iterator_int__int____int___ __last12832;
+  struct std___Deque_iterator_int__int____int___ __first22833;
+  struct std___Deque_iterator_int__int____int___ __last22834;
+  struct std___Deque_iterator_int__int____int___ __result2835;
+  struct std__allocator_int_* __alloc2836;
+  struct std___Deque_iterator_int__int____int___ __retval2837;
+  struct std___Deque_iterator_int__int____int___ __mid2838;
+  struct std___Deque_iterator_int__int____int___ agg_tmp02839;
+  struct std___Deque_iterator_int__int____int___ agg_tmp12840;
+  struct std___Deque_iterator_int__int____int___ agg_tmp22841;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__ __guard2842;
+  struct std___Deque_iterator_int__int____int___ ref_tmp02843;
+  struct std___Deque_iterator_int__int____int___ agg_tmp32844;
+  struct std___Deque_iterator_int__int____int___ agg_tmp42845;
+  struct std___Deque_iterator_int__int____int___ agg_tmp52846;
+  __first12831 = v2824;
+  __last12832 = v2825;
+  __first22833 = v2826;
+  __last22834 = v2827;
+  __result2835 = v2828;
+  __alloc2836 = v2829;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02839, &__first12831);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12840, &__last12832);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22841, &__result2835);
+  struct std__allocator_int_* t2847 = __alloc2836;
+  struct std___Deque_iterator_int__int____int___ t2848 = agg_tmp02839;
+  struct std___Deque_iterator_int__int____int___ t2849 = agg_tmp12840;
+  struct std___Deque_iterator_int__int____int___ t2850 = agg_tmp22841;
+  struct std___Deque_iterator_int__int____int___ r2851 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____int_(t2848, t2849, t2850, t2847);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __mid2838 = r2851;
+  struct std__allocator_int_* t2852 = __alloc2836;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int______UninitDestroyGuard(&__guard2842, &__result2835, t2852);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+    struct std___Deque_iterator_int__int____int___* r2853 = std___Deque_iterator_int__int___int____operator_(&__result2835, &__mid2838);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp32844, &__first22833);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp42845, &__last22834);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp52846, &__mid2838);
+    struct std__allocator_int_* t2854 = __alloc2836;
+    struct std___Deque_iterator_int__int____int___ t2855 = agg_tmp32844;
+    struct std___Deque_iterator_int__int____int___ t2856 = agg_tmp42845;
+    struct std___Deque_iterator_int__int____int___ t2857 = agg_tmp52846;
+    struct std___Deque_iterator_int__int____int___ r2858 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t2855, t2856, t2857, t2854);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard2842);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    ref_tmp02843 = r2858;
+    struct std___Deque_iterator_int__int____int___* r2859 = std___Deque_iterator_int__int___int____operator_(&__result2835, &ref_tmp02843);
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_____release(&__guard2842);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard2842);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    std___Deque_iterator_int__int___int_____Deque_iterator(&__retval2837, &__result2835);
+    struct std___Deque_iterator_int__int____int___ t2860 = __retval2837;
+    struct std___Deque_iterator_int__int____int___ ret_val2861 = t2860;
+    {
+      std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard2842);
+    }
+    return ret_val2861;
+  abort();
+}
+
+// function: _ZNSt5dequeIiSaIiEE13_M_insert_auxISt15_Deque_iteratorIiRiPiEEEvS6_T_S7_m
+void void_std__deque_int__std__allocator_int______M_insert_aux_std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* v2862, struct std___Deque_iterator_int__int____int___ v2863, struct std___Deque_iterator_int__int____int___ v2864, struct std___Deque_iterator_int__int____int___ v2865, unsigned long v2866) {
+bb2867:
+  struct std__deque_int__std__allocator_int__* this2868;
+  struct std___Deque_iterator_int__int____int___ __pos2869;
+  struct std___Deque_iterator_int__int____int___ __first2870;
+  struct std___Deque_iterator_int__int____int___ __last2871;
+  unsigned long __n2872;
+  long __elemsbefore2873;
+  unsigned long __length2874;
+  this2868 = v2862;
+  __pos2869 = v2863;
+  __first2870 = v2864;
+  __last2871 = v2865;
+  __n2872 = v2866;
+  struct std__deque_int__std__allocator_int__* t2875 = this2868;
+  struct std___Deque_base_int__std__allocator_int__* base2876 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2877 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2876->_M_impl) + 0);
+  long r2878 = std__operator_(&__pos2869, &base2877->_M_start);
+  __elemsbefore2873 = r2878;
+  unsigned long r2879 = std__deque_int__std__allocator_int_____size___const(t2875);
+  __length2874 = r2879;
+    long t2880 = __elemsbefore2873;
+    unsigned long cast2881 = (unsigned long)t2880;
+    unsigned long t2882 = __length2874;
+    unsigned long c2883 = 2;
+    unsigned long b2884 = t2882 / c2883;
+    _Bool c2885 = ((cast2881 < b2884)) ? 1 : 0;
+    if (c2885) {
+      struct std___Deque_iterator_int__int____int___ __new_start2886;
+      struct std___Deque_iterator_int__int____int___ __old_start2887;
+      struct std___Deque_iterator_int__int____int___ ref_tmp02888;
+      unsigned long t2889 = __n2872;
+      struct std___Deque_iterator_int__int____int___ r2890 = std__deque_int__std__allocator_int______M_reserve_elements_at_front(t2875, t2889);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_start2886 = r2890;
+      struct std___Deque_base_int__std__allocator_int__* base2891 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2892 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2891->_M_impl) + 0);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&__old_start2887, &base2892->_M_start);
+      struct std___Deque_base_int__std__allocator_int__* base2893 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2894 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2893->_M_impl) + 0);
+      long t2895 = __elemsbefore2873;
+      struct std___Deque_iterator_int__int____int___ r2896 = std__operator__4(&base2894->_M_start, t2895);
+      ref_tmp02888 = r2896;
+      struct std___Deque_iterator_int__int____int___* r2897 = std___Deque_iterator_int__int___int____operator_(&__pos2869, &ref_tmp02888);
+            long t2899 = __elemsbefore2873;
+            unsigned long t2900 = __n2872;
+            long cast2901 = (long)t2900;
+            _Bool c2902 = ((t2899 >= cast2901)) ? 1 : 0;
+            if (c2902) {
+              struct std___Deque_iterator_int__int____int___ __start_n2903;
+              struct std___Deque_iterator_int__int____int___ agg_tmp02904;
+              struct std___Deque_iterator_int__int____int___ agg_tmp12905;
+              struct std___Deque_iterator_int__int____int___ agg_tmp22906;
+              struct std___Deque_iterator_int__int____int___ agg_tmp32907;
+              struct std___Deque_iterator_int__int____int___ agg_tmp42908;
+              struct std___Deque_iterator_int__int____int___ agg_tmp52909;
+              struct std___Deque_iterator_int__int____int___ agg_tmp62910;
+              struct std___Deque_iterator_int__int____int___ agg_tmp72911;
+              struct std___Deque_iterator_int__int____int___ agg_tmp82912;
+              struct std___Deque_iterator_int__int____int___ agg_tmp92913;
+              struct std___Deque_iterator_int__int____int___ agg_tmp102914;
+              struct std___Deque_iterator_int__int____int___ agg_tmp112915;
+              struct std___Deque_base_int__std__allocator_int__* base2916 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2917 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2916->_M_impl) + 0);
+              unsigned long t2918 = __n2872;
+              long cast2919 = (long)t2918;
+              struct std___Deque_iterator_int__int____int___ r2920 = std__operator__4(&base2917->_M_start, cast2919);
+              __start_n2903 = r2920;
+              struct std___Deque_base_int__std__allocator_int__* base2921 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2922 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2921->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp02904, &base2922->_M_start);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp12905, &__start_n2903);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp22906, &__new_start2886);
+              struct std___Deque_base_int__std__allocator_int__* base2923 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std__allocator_int_* r2924 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2923);
+              struct std___Deque_iterator_int__int____int___ t2925 = agg_tmp02904;
+              struct std___Deque_iterator_int__int____int___ t2926 = agg_tmp12905;
+              struct std___Deque_iterator_int__int____int___ t2927 = agg_tmp22906;
+              struct std___Deque_iterator_int__int____int___ r2928 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t2925, t2926, t2927, r2924);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2898;
+              }
+              agg_tmp32907 = r2928;
+              struct std___Deque_base_int__std__allocator_int__* base2929 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2930 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2929->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r2931 = std___Deque_iterator_int__int___int____operator_(&base2930->_M_start, &__new_start2886);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp42908, &__start_n2903);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp52909, &__pos2869);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp62910, &__old_start2887);
+              struct std___Deque_iterator_int__int____int___ t2932 = agg_tmp42908;
+              struct std___Deque_iterator_int__int____int___ t2933 = agg_tmp52909;
+              struct std___Deque_iterator_int__int____int___ t2934 = agg_tmp62910;
+              struct std___Deque_iterator_int__int____int___ r2935 = std___Deque_iterator_int__int___int___std__move_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t2932, t2933, t2934);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2898;
+              }
+              agg_tmp72911 = r2935;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp82912, &__first2870);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp92913, &__last2871);
+              unsigned long t2936 = __n2872;
+              long cast2937 = (long)t2936;
+              struct std___Deque_iterator_int__int____int___ r2938 = std__operator__2(&__pos2869, cast2937);
+              agg_tmp102914 = r2938;
+              struct std___Deque_iterator_int__int____int___ t2939 = agg_tmp82912;
+              struct std___Deque_iterator_int__int____int___ t2940 = agg_tmp92913;
+              struct std___Deque_iterator_int__int____int___ t2941 = agg_tmp102914;
+              struct std___Deque_iterator_int__int____int___ r2942 = std___Deque_iterator_int__int___int___std__copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t2939, t2940, t2941);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2898;
+              }
+              agg_tmp112915 = r2942;
+            } else {
+              struct std___Deque_iterator_int__int____int___ __mid2943;
+              struct std___Deque_iterator_int__int____int___ agg_tmp122944;
+              struct std___Deque_iterator_int__int____int___ agg_tmp132945;
+              struct std___Deque_iterator_int__int____int___ agg_tmp142946;
+              struct std___Deque_iterator_int__int____int___ agg_tmp152947;
+              struct std___Deque_iterator_int__int____int___ agg_tmp162948;
+              struct std___Deque_iterator_int__int____int___ agg_tmp172949;
+              struct std___Deque_iterator_int__int____int___ agg_tmp182950;
+              struct std___Deque_iterator_int__int____int___ agg_tmp192951;
+              struct std___Deque_iterator_int__int____int___ agg_tmp202952;
+              struct std___Deque_iterator_int__int____int___ agg_tmp212953;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&__mid2943, &__first2870);
+              unsigned long t2954 = __n2872;
+              long cast2955 = (long)t2954;
+              long t2956 = __elemsbefore2873;
+              long b2957 = cast2955 - t2956;
+              void_std__advance_std___Deque_iterator_int__int___int____long_(&__mid2943, b2957);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2898;
+              }
+              struct std___Deque_base_int__std__allocator_int__* base2958 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2959 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2958->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp122944, &base2959->_M_start);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp132945, &__pos2869);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp142946, &__first2870);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp152947, &__mid2943);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp162948, &__new_start2886);
+              struct std___Deque_base_int__std__allocator_int__* base2960 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std__allocator_int_* r2961 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base2960);
+              struct std___Deque_iterator_int__int____int___ t2962 = agg_tmp122944;
+              struct std___Deque_iterator_int__int____int___ t2963 = agg_tmp132945;
+              struct std___Deque_iterator_int__int____int___ t2964 = agg_tmp142946;
+              struct std___Deque_iterator_int__int____int___ t2965 = agg_tmp152947;
+              struct std___Deque_iterator_int__int____int___ t2966 = agg_tmp162948;
+              struct std___Deque_iterator_int__int____int___ r2967 = std___Deque_iterator_int__int___int___std____uninitialized_move_copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t2962, t2963, t2964, t2965, t2966, r2961);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2898;
+              }
+              agg_tmp172949 = r2967;
+              struct std___Deque_base_int__std__allocator_int__* base2968 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2969 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2968->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r2970 = std___Deque_iterator_int__int___int____operator_(&base2969->_M_start, &__new_start2886);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp182950, &__mid2943);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp192951, &__last2871);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp202952, &__old_start2887);
+              struct std___Deque_iterator_int__int____int___ t2971 = agg_tmp182950;
+              struct std___Deque_iterator_int__int____int___ t2972 = agg_tmp192951;
+              struct std___Deque_iterator_int__int____int___ t2973 = agg_tmp202952;
+              struct std___Deque_iterator_int__int____int___ r2974 = std___Deque_iterator_int__int___int___std__copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t2971, t2972, t2973);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2898;
+              }
+              agg_tmp212953 = r2974;
+            }
+        cir_try_dispatch2898: ;
+        if (__cir_exc_active) {
+        {
+          int ca_tok2975 = 0;
+          void* ca_exn2976 = (void*)__cir_exc_ptr;
+          __cir_exc_active = 0;
+            struct std___Deque_base_int__std__allocator_int__* base2977 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+            int** t2978 = __new_start2886._M_node;
+            struct std___Deque_base_int__std__allocator_int__* base2979 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2980 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2979->_M_impl) + 0);
+            int** t2981 = base2980->_M_start._M_node;
+            std___Deque_base_int__std__allocator_int______M_destroy_nodes(base2977, t2978, t2981);
+            __cir_exc_active = 1;
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+            return;
+            __builtin_unreachable();
+        }
+        }
+    } else {
+      struct std___Deque_iterator_int__int____int___ __new_finish2982;
+      struct std___Deque_iterator_int__int____int___ __old_finish2983;
+      long __elemsafter2984;
+      struct std___Deque_iterator_int__int____int___ ref_tmp12985;
+      unsigned long t2986 = __n2872;
+      struct std___Deque_iterator_int__int____int___ r2987 = std__deque_int__std__allocator_int______M_reserve_elements_at_back(t2875, t2986);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_finish2982 = r2987;
+      struct std___Deque_base_int__std__allocator_int__* base2988 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2989 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2988->_M_impl) + 0);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&__old_finish2983, &base2989->_M_finish);
+      unsigned long t2990 = __length2874;
+      long cast2991 = (long)t2990;
+      long t2992 = __elemsbefore2873;
+      long b2993 = cast2991 - t2992;
+      __elemsafter2984 = b2993;
+      struct std___Deque_base_int__std__allocator_int__* base2994 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base2995 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base2994->_M_impl) + 0);
+      long t2996 = __elemsafter2984;
+      struct std___Deque_iterator_int__int____int___ r2997 = std__operator__2(&base2995->_M_finish, t2996);
+      ref_tmp12985 = r2997;
+      struct std___Deque_iterator_int__int____int___* r2998 = std___Deque_iterator_int__int___int____operator_(&__pos2869, &ref_tmp12985);
+            long t3000 = __elemsafter2984;
+            unsigned long t3001 = __n2872;
+            long cast3002 = (long)t3001;
+            _Bool c3003 = ((t3000 > cast3002)) ? 1 : 0;
+            if (c3003) {
+              struct std___Deque_iterator_int__int____int___ __finish_n3004;
+              struct std___Deque_iterator_int__int____int___ agg_tmp223005;
+              struct std___Deque_iterator_int__int____int___ agg_tmp233006;
+              struct std___Deque_iterator_int__int____int___ agg_tmp243007;
+              struct std___Deque_iterator_int__int____int___ agg_tmp253008;
+              struct std___Deque_iterator_int__int____int___ agg_tmp263009;
+              struct std___Deque_iterator_int__int____int___ agg_tmp273010;
+              struct std___Deque_iterator_int__int____int___ agg_tmp283011;
+              struct std___Deque_iterator_int__int____int___ agg_tmp293012;
+              struct std___Deque_iterator_int__int____int___ agg_tmp303013;
+              struct std___Deque_iterator_int__int____int___ agg_tmp313014;
+              struct std___Deque_iterator_int__int____int___ agg_tmp323015;
+              struct std___Deque_iterator_int__int____int___ agg_tmp333016;
+              struct std___Deque_base_int__std__allocator_int__* base3017 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3018 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3017->_M_impl) + 0);
+              unsigned long t3019 = __n2872;
+              long cast3020 = (long)t3019;
+              struct std___Deque_iterator_int__int____int___ r3021 = std__operator__2(&base3018->_M_finish, cast3020);
+              __finish_n3004 = r3021;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp223005, &__finish_n3004);
+              struct std___Deque_base_int__std__allocator_int__* base3022 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3023 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3022->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp233006, &base3023->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base3024 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3025 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3024->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp243007, &base3025->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base3026 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std__allocator_int_* r3027 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base3026);
+              struct std___Deque_iterator_int__int____int___ t3028 = agg_tmp223005;
+              struct std___Deque_iterator_int__int____int___ t3029 = agg_tmp233006;
+              struct std___Deque_iterator_int__int____int___ t3030 = agg_tmp243007;
+              struct std___Deque_iterator_int__int____int___ r3031 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t3028, t3029, t3030, r3027);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2999;
+              }
+              agg_tmp253008 = r3031;
+              struct std___Deque_base_int__std__allocator_int__* base3032 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3033 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3032->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r3034 = std___Deque_iterator_int__int___int____operator_(&base3033->_M_finish, &__new_finish2982);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp263009, &__pos2869);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp273010, &__finish_n3004);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp283011, &__old_finish2983);
+              struct std___Deque_iterator_int__int____int___ t3035 = agg_tmp263009;
+              struct std___Deque_iterator_int__int____int___ t3036 = agg_tmp273010;
+              struct std___Deque_iterator_int__int____int___ t3037 = agg_tmp283011;
+              struct std___Deque_iterator_int__int____int___ r3038 = std___Deque_iterator_int__int___int___std__move_backward_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3035, t3036, t3037);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2999;
+              }
+              agg_tmp293012 = r3038;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp303013, &__first2870);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp313014, &__last2871);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp323015, &__pos2869);
+              struct std___Deque_iterator_int__int____int___ t3039 = agg_tmp303013;
+              struct std___Deque_iterator_int__int____int___ t3040 = agg_tmp313014;
+              struct std___Deque_iterator_int__int____int___ t3041 = agg_tmp323015;
+              struct std___Deque_iterator_int__int____int___ r3042 = std___Deque_iterator_int__int___int___std__copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3039, t3040, t3041);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2999;
+              }
+              agg_tmp333016 = r3042;
+            } else {
+              struct std___Deque_iterator_int__int____int___ __mid3043;
+              struct std___Deque_iterator_int__int____int___ agg_tmp343044;
+              struct std___Deque_iterator_int__int____int___ agg_tmp353045;
+              struct std___Deque_iterator_int__int____int___ agg_tmp363046;
+              struct std___Deque_iterator_int__int____int___ agg_tmp373047;
+              struct std___Deque_iterator_int__int____int___ agg_tmp383048;
+              struct std___Deque_iterator_int__int____int___ agg_tmp393049;
+              struct std___Deque_iterator_int__int____int___ agg_tmp403050;
+              struct std___Deque_iterator_int__int____int___ agg_tmp413051;
+              struct std___Deque_iterator_int__int____int___ agg_tmp423052;
+              struct std___Deque_iterator_int__int____int___ agg_tmp433053;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&__mid3043, &__first2870);
+              long t3054 = __elemsafter2984;
+              void_std__advance_std___Deque_iterator_int__int___int____long_(&__mid3043, t3054);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2999;
+              }
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp343044, &__mid3043);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp353045, &__last2871);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp363046, &__pos2869);
+              struct std___Deque_base_int__std__allocator_int__* base3055 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3056 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3055->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp373047, &base3056->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base3057 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3058 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3057->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp383048, &base3058->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base3059 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std__allocator_int_* r3060 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base3059);
+              struct std___Deque_iterator_int__int____int___ t3061 = agg_tmp343044;
+              struct std___Deque_iterator_int__int____int___ t3062 = agg_tmp353045;
+              struct std___Deque_iterator_int__int____int___ t3063 = agg_tmp363046;
+              struct std___Deque_iterator_int__int____int___ t3064 = agg_tmp373047;
+              struct std___Deque_iterator_int__int____int___ t3065 = agg_tmp383048;
+              struct std___Deque_iterator_int__int____int___ r3066 = std___Deque_iterator_int__int___int___std____uninitialized_copy_move_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t3061, t3062, t3063, t3064, t3065, r3060);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2999;
+              }
+              agg_tmp393049 = r3066;
+              struct std___Deque_base_int__std__allocator_int__* base3067 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3068 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3067->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r3069 = std___Deque_iterator_int__int___int____operator_(&base3068->_M_finish, &__new_finish2982);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp403050, &__first2870);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp413051, &__mid3043);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp423052, &__pos2869);
+              struct std___Deque_iterator_int__int____int___ t3070 = agg_tmp403050;
+              struct std___Deque_iterator_int__int____int___ t3071 = agg_tmp413051;
+              struct std___Deque_iterator_int__int____int___ t3072 = agg_tmp423052;
+              struct std___Deque_iterator_int__int____int___ r3073 = std___Deque_iterator_int__int___int___std__copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3070, t3071, t3072);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch2999;
+              }
+              agg_tmp433053 = r3073;
+            }
+        cir_try_dispatch2999: ;
+        if (__cir_exc_active) {
+        {
+          int ca_tok3074 = 0;
+          void* ca_exn3075 = (void*)__cir_exc_ptr;
+          __cir_exc_active = 0;
+            struct std___Deque_base_int__std__allocator_int__* base3076 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+            struct std___Deque_base_int__std__allocator_int__* base3077 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t2875 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3078 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3077->_M_impl) + 0);
+            int** t3079 = base3078->_M_finish._M_node;
+            int c3080 = 1;
+            int** ptr3081 = &(t3079)[c3080];
+            int** t3082 = __new_finish2982._M_node;
+            int c3083 = 1;
+            int** ptr3084 = &(t3082)[c3083];
+            std___Deque_base_int__std__allocator_int______M_destroy_nodes(base3076, ptr3081, ptr3084);
+            __cir_exc_active = 1;
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+            return;
+            __builtin_unreachable();
+        }
+        }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE19_M_range_insert_auxISt15_Deque_iteratorIiRiPiEEEvS6_T_S7_St20forward_iterator_tag
+void void_std__deque_int__std__allocator_int______M_range_insert_aux_std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* v3085, struct std___Deque_iterator_int__int____int___ v3086, struct std___Deque_iterator_int__int____int___ v3087, struct std___Deque_iterator_int__int____int___ v3088, struct std__forward_iterator_tag v3089) {
+bb3090:
+  struct std__deque_int__std__allocator_int__* this3091;
+  struct std___Deque_iterator_int__int____int___ __pos3092;
+  struct std___Deque_iterator_int__int____int___ __first3093;
+  struct std___Deque_iterator_int__int____int___ __last3094;
+  struct std__forward_iterator_tag unnamed3095;
+  unsigned long __n3096;
+  struct std___Deque_iterator_int__int____int___ agg_tmp03097;
+  struct std___Deque_iterator_int__int____int___ agg_tmp13098;
+  this3091 = v3085;
+  __pos3092 = v3086;
+  __first3093 = v3087;
+  __last3094 = v3088;
+  unnamed3095 = v3089;
+  struct std__deque_int__std__allocator_int__* t3099 = this3091;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03097, &__first3093);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp13098, &__last3094);
+  struct std___Deque_iterator_int__int____int___ t3100 = agg_tmp03097;
+  struct std___Deque_iterator_int__int____int___ t3101 = agg_tmp13098;
+  long r3102 = std__iterator_traits_std___Deque_iterator_int__int___int______difference_type_std__distance_std___Deque_iterator_int__int___int____(t3100, t3101);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long cast3103 = (unsigned long)r3102;
+  __n3096 = cast3103;
+    unsigned long t3104 = __n3096;
+    unsigned long c3105 = 0;
+    _Bool c3106 = ((t3104 == c3105)) ? 1 : 0;
+    if (c3106) {
+      return;
+    }
+    int* t3107 = __pos3092._M_cur;
+    struct std___Deque_base_int__std__allocator_int__* base3108 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3099 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3109 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3108->_M_impl) + 0);
+    int* t3110 = base3109->_M_start._M_cur;
+    _Bool c3111 = ((t3107 == t3110)) ? 1 : 0;
+    if (c3111) {
+      struct std___Deque_iterator_int__int____int___ agg_tmp23112;
+      struct std___Deque_iterator_int__int____int___ agg_tmp33113;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp23112, &__first3093);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp33113, &__last3094);
+      unsigned long t3114 = __n3096;
+      struct std___Deque_iterator_int__int____int___ t3115 = agg_tmp23112;
+      struct std___Deque_iterator_int__int____int___ t3116 = agg_tmp33113;
+      void_std__deque_int__std__allocator_int______M_range_prepend_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3099, t3115, t3116, t3114);
+      if (__cir_exc_active) {
+        return;
+      }
+    } else {
+        int* t3117 = __pos3092._M_cur;
+        struct std___Deque_base_int__std__allocator_int__* base3118 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3099 + 0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3119 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3118->_M_impl) + 0);
+        int* t3120 = base3119->_M_finish._M_cur;
+        _Bool c3121 = ((t3117 == t3120)) ? 1 : 0;
+        if (c3121) {
+          struct std___Deque_iterator_int__int____int___ agg_tmp43122;
+          struct std___Deque_iterator_int__int____int___ agg_tmp53123;
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp43122, &__first3093);
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp53123, &__last3094);
+          unsigned long t3124 = __n3096;
+          struct std___Deque_iterator_int__int____int___ t3125 = agg_tmp43122;
+          struct std___Deque_iterator_int__int____int___ t3126 = agg_tmp53123;
+          void_std__deque_int__std__allocator_int______M_range_append_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3099, t3125, t3126, t3124);
+          if (__cir_exc_active) {
+            return;
+          }
+        } else {
+          struct std___Deque_iterator_int__int____int___ agg_tmp63127;
+          struct std___Deque_iterator_int__int____int___ agg_tmp73128;
+          struct std___Deque_iterator_int__int____int___ agg_tmp83129;
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp63127, &__pos3092);
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp73128, &__first3093);
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp83129, &__last3094);
+          unsigned long t3130 = __n3096;
+          struct std___Deque_iterator_int__int____int___ t3131 = agg_tmp63127;
+          struct std___Deque_iterator_int__int____int___ t3132 = agg_tmp73128;
+          struct std___Deque_iterator_int__int____int___ t3133 = agg_tmp83129;
+          void_std__deque_int__std__allocator_int______M_insert_aux_std___Deque_iterator_int__int___int____(t3099, t3131, t3132, t3133, t3130);
+          if (__cir_exc_active) {
+            return;
+          }
+        }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE13_M_assign_auxISt15_Deque_iteratorIiRiPiEEEvT_S7_St20forward_iterator_tag
+void void_std__deque_int__std__allocator_int______M_assign_aux_std___Deque_iterator_int__int___int____(struct std__deque_int__std__allocator_int__* v3134, struct std___Deque_iterator_int__int____int___ v3135, struct std___Deque_iterator_int__int____int___ v3136, struct std__forward_iterator_tag v3137) {
+bb3138:
+  struct std__deque_int__std__allocator_int__* this3139;
+  struct std___Deque_iterator_int__int____int___ __first3140;
+  struct std___Deque_iterator_int__int____int___ __last3141;
+  struct std__forward_iterator_tag unnamed3142;
+  unsigned long __len3143;
+  struct std___Deque_iterator_int__int____int___ agg_tmp03144;
+  struct std___Deque_iterator_int__int____int___ agg_tmp13145;
+  this3139 = v3134;
+  __first3140 = v3135;
+  __last3141 = v3136;
+  unnamed3142 = v3137;
+  struct std__deque_int__std__allocator_int__* t3146 = this3139;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03144, &__first3140);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp13145, &__last3141);
+  struct std___Deque_iterator_int__int____int___ t3147 = agg_tmp03144;
+  struct std___Deque_iterator_int__int____int___ t3148 = agg_tmp13145;
+  long r3149 = std__iterator_traits_std___Deque_iterator_int__int___int______difference_type_std__distance_std___Deque_iterator_int__int___int____(t3147, t3148);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long cast3150 = (unsigned long)r3149;
+  __len3143 = cast3150;
+    unsigned long t3151 = __len3143;
+    unsigned long r3152 = std__deque_int__std__allocator_int_____size___const(t3146);
+    _Bool c3153 = ((t3151 > r3152)) ? 1 : 0;
+    if (c3153) {
+      struct std___Deque_iterator_int__int____int___ __mid3154;
+      struct std___Deque_iterator_int__int____int___ agg_tmp23155;
+      struct std___Deque_iterator_int__int____int___ agg_tmp33156;
+      struct std___Deque_iterator_int__int____int___ agg_tmp43157;
+      struct std___Deque_iterator_int__int____int___ agg_tmp53158;
+      struct std___Deque_iterator_int__int____int___ agg_tmp63159;
+      struct std___Deque_iterator_int__int____int___ agg_tmp73160;
+      struct std___Deque_iterator_int__int____int___ agg_tmp83161;
+      struct std__forward_iterator_tag agg_tmp93162;
+      struct std__random_access_iterator_tag ref_tmp03163;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&__mid3154, &__first3140);
+      unsigned long r3164 = std__deque_int__std__allocator_int_____size___const(t3146);
+      void_std__advance_std___Deque_iterator_int__int___int____unsigned_long_(&__mid3154, r3164);
+      if (__cir_exc_active) {
+        return;
+      }
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp23155, &__first3140);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp33156, &__mid3154);
+      struct std___Deque_iterator_int__int____int___ r3165 = std__deque_int__std__allocator_int_____begin(t3146);
+      agg_tmp43157 = r3165;
+      struct std___Deque_iterator_int__int____int___ t3166 = agg_tmp23155;
+      struct std___Deque_iterator_int__int____int___ t3167 = agg_tmp33156;
+      struct std___Deque_iterator_int__int____int___ t3168 = agg_tmp43157;
+      struct std___Deque_iterator_int__int____int___ r3169 = std___Deque_iterator_int__int___int___std__copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3166, t3167, t3168);
+      if (__cir_exc_active) {
+        return;
+      }
+      agg_tmp53158 = r3169;
+      struct std___Deque_iterator_int__int____int___ r3170 = std__deque_int__std__allocator_int_____end(t3146);
+      agg_tmp63159 = r3170;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp73160, &__mid3154);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp83161, &__last3141);
+      struct std__random_access_iterator_tag r3171 = std__iterator_traits_std___Deque_iterator_int__int___int______iterator_category_std____iterator_category_std___Deque_iterator_int__int___int____(&__first3140);
+      if (__cir_exc_active) {
+        return;
+      }
+      ref_tmp03163 = r3171;
+      struct std__forward_iterator_tag* base3172 = (struct std__forward_iterator_tag*)((char *)&(ref_tmp03163) + 0);
+      struct std___Deque_iterator_int__int____int___ t3173 = agg_tmp63159;
+      struct std___Deque_iterator_int__int____int___ t3174 = agg_tmp73160;
+      struct std___Deque_iterator_int__int____int___ t3175 = agg_tmp83161;
+      struct std__forward_iterator_tag t3176 = agg_tmp93162;
+      void_std__deque_int__std__allocator_int______M_range_insert_aux_std___Deque_iterator_int__int___int____(t3146, t3173, t3174, t3175, t3176);
+      if (__cir_exc_active) {
+        return;
+      }
+    } else {
+      struct std___Deque_iterator_int__int____int___ agg_tmp103177;
+      struct std___Deque_iterator_int__int____int___ agg_tmp113178;
+      struct std___Deque_iterator_int__int____int___ agg_tmp123179;
+      struct std___Deque_iterator_int__int____int___ agg_tmp133180;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp113178, &__first3140);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp123179, &__last3141);
+      struct std___Deque_iterator_int__int____int___ r3181 = std__deque_int__std__allocator_int_____begin(t3146);
+      agg_tmp133180 = r3181;
+      struct std___Deque_iterator_int__int____int___ t3182 = agg_tmp113178;
+      struct std___Deque_iterator_int__int____int___ t3183 = agg_tmp123179;
+      struct std___Deque_iterator_int__int____int___ t3184 = agg_tmp133180;
+      struct std___Deque_iterator_int__int____int___ r3185 = std___Deque_iterator_int__int___int___std__copy_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3182, t3183, t3184);
+      if (__cir_exc_active) {
+        return;
+      }
+      agg_tmp103177 = r3185;
+      struct std___Deque_iterator_int__int____int___ t3186 = agg_tmp103177;
+      std__deque_int__std__allocator_int______M_erase_at_end(t3146, t3186);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZSt19__iterator_categoryISt15_Deque_iteratorIiRiPiEENSt15iterator_traitsIT_E17iterator_categoryERKS5_
+struct std__random_access_iterator_tag std__iterator_traits_std___Deque_iterator_int__int___int______iterator_category_std____iterator_category_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___* v3187) {
+bb3188:
+  struct std___Deque_iterator_int__int____int___* unnamed3189;
+  struct std__random_access_iterator_tag __retval3190;
+  unnamed3189 = v3187;
+  struct std__random_access_iterator_tag t3191 = __retval3190;
+  return t3191;
+}
+
+// function: _ZNSt5dequeIiSaIiEE6assignISt15_Deque_iteratorIiRiPiEvEEvT_S7_
+void void_std__deque_int__std__allocator_int_____assign_std___Deque_iterator_int__int___int____void_(struct std__deque_int__std__allocator_int__* v3192, struct std___Deque_iterator_int__int____int___ v3193, struct std___Deque_iterator_int__int____int___ v3194) {
+bb3195:
+  struct std__deque_int__std__allocator_int__* this3196;
+  struct std___Deque_iterator_int__int____int___ __first3197;
+  struct std___Deque_iterator_int__int____int___ __last3198;
+  struct std___Deque_iterator_int__int____int___ agg_tmp03199;
+  struct std___Deque_iterator_int__int____int___ agg_tmp13200;
+  struct std__forward_iterator_tag agg_tmp23201;
+  struct std__random_access_iterator_tag ref_tmp03202;
+  this3196 = v3192;
+  __first3197 = v3193;
+  __last3198 = v3194;
+  struct std__deque_int__std__allocator_int__* t3203 = this3196;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03199, &__first3197);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp13200, &__last3198);
+  struct std__random_access_iterator_tag r3204 = std__iterator_traits_std___Deque_iterator_int__int___int______iterator_category_std____iterator_category_std___Deque_iterator_int__int___int____(&__first3197);
+  if (__cir_exc_active) {
+    return;
+  }
+  ref_tmp03202 = r3204;
+  struct std__forward_iterator_tag* base3205 = (struct std__forward_iterator_tag*)((char *)&(ref_tmp03202) + 0);
+  struct std___Deque_iterator_int__int____int___ t3206 = agg_tmp03199;
+  struct std___Deque_iterator_int__int____int___ t3207 = agg_tmp13200;
+  struct std__forward_iterator_tag t3208 = agg_tmp23201;
+  void_std__deque_int__std__allocator_int______M_assign_aux_std___Deque_iterator_int__int___int____(t3203, t3206, t3207, t3208);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiEC2ERKS2_
+void std___Deque_iterator_int__int___int_____Deque_iterator(struct std___Deque_iterator_int__int____int___* v3209, struct std___Deque_iterator_int__int____int___* v3210) {
+bb3211:
+  struct std___Deque_iterator_int__int____int___* this3212;
+  struct std___Deque_iterator_int__int____int___* __x3213;
+  this3212 = v3209;
+  __x3213 = v3210;
+  struct std___Deque_iterator_int__int____int___* t3214 = this3212;
+  struct std___Deque_iterator_int__int____int___* t3215 = __x3213;
+  int* t3216 = t3215->_M_cur;
+  t3214->_M_cur = t3216;
+  struct std___Deque_iterator_int__int____int___* t3217 = __x3213;
+  int* t3218 = t3217->_M_first;
+  t3214->_M_first = t3218;
+  struct std___Deque_iterator_int__int____int___* t3219 = __x3213;
+  int* t3220 = t3219->_M_last;
+  t3214->_M_last = t3220;
+  struct std___Deque_iterator_int__int____int___* t3221 = __x3213;
+  int** t3222 = t3221->_M_node;
+  t3214->_M_node = t3222;
+  return;
+}
+
+// function: _ZStmiRKSt15_Deque_iteratorIiRiPiEl
+struct std___Deque_iterator_int__int____int___ std__operator__2(struct std___Deque_iterator_int__int____int___* v3223, long v3224) {
+bb3225:
+  struct std___Deque_iterator_int__int____int___* __x3226;
+  long __n3227;
+  struct std___Deque_iterator_int__int____int___ __retval3228;
+  __x3226 = v3223;
+  __n3227 = v3224;
+  struct std___Deque_iterator_int__int____int___* t3229 = __x3226;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval3228, t3229);
+  long t3230 = __n3227;
+  struct std___Deque_iterator_int__int____int___* r3231 = std___Deque_iterator_int__int___int____operator__(&__retval3228, t3230);
+  struct std___Deque_iterator_int__int____int___ t3232 = __retval3228;
+  return t3232;
+}
+
+// function: _ZNSt5dequeIiSaIiEE3endEv
+struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int_____end(struct std__deque_int__std__allocator_int__* v3233) {
+bb3234:
+  struct std__deque_int__std__allocator_int__* this3235;
+  struct std___Deque_iterator_int__int____int___ __retval3236;
+  this3235 = v3233;
+  struct std__deque_int__std__allocator_int__* t3237 = this3235;
+  struct std___Deque_base_int__std__allocator_int__* base3238 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3237 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3239 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3238->_M_impl) + 0);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&__retval3236, &base3239->_M_finish);
+  struct std___Deque_iterator_int__int____int___ t3240 = __retval3236;
+  return t3240;
+}
+
+// function: _ZSt7advanceIPimEvRT_T0_
+void void_std__advance_int___unsigned_long_(int** v3241, unsigned long v3242) {
+bb3243:
+  int** __i3244;
+  unsigned long __n3245;
+  long __d3246;
+  struct std__random_access_iterator_tag agg_tmp03247;
+  __i3244 = v3241;
+  __n3245 = v3242;
+  unsigned long t3248 = __n3245;
+  long cast3249 = (long)t3248;
+  __d3246 = cast3249;
+  int** t3250 = __i3244;
+  long t3251 = __d3246;
+  int** t3252 = __i3244;
+  struct std__random_access_iterator_tag r3253 = std__iterator_traits_int____iterator_category_std____iterator_category_int__(t3252);
+  if (__cir_exc_active) {
+    return;
+  }
+  agg_tmp03247 = r3253;
+  struct std__random_access_iterator_tag t3254 = agg_tmp03247;
+  void_std____advance_int___long_(t3250, t3251, t3254);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt12__niter_baseIPiET_S1_
+int* int__std____niter_base_int__(int* v3255) {
+bb3256:
+  int* __it3257;
+  int* __retval3258;
+  __it3257 = v3255;
+  int* t3259 = __it3257;
+  __retval3258 = t3259;
+  int* t3260 = __retval3258;
+  return t3260;
+}
+
+// function: _ZSt13__copy_move_aILb0EPiSt15_Deque_iteratorIiRiS0_EET1_T0_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____copy_move_a_false__int___std___Deque_iterator_int__int___int____(int* v3261, int* v3262, struct std___Deque_iterator_int__int____int___ v3263) {
+bb3264:
+  int* __first3265;
+  int* __last3266;
+  struct std___Deque_iterator_int__int____int___ __result3267;
+  struct std___Deque_iterator_int__int____int___ __retval3268;
+  struct std___Deque_iterator_int__int____int___ agg_tmp03269;
+  struct std___Deque_iterator_int__int____int___ agg_tmp13270;
+  struct std___Deque_iterator_int__int____int___ agg_tmp23271;
+  __first3265 = v3261;
+  __last3266 = v3262;
+  __result3267 = v3263;
+  int* t3272 = __first3265;
+  int* r3273 = int__std____niter_base_int__(t3272);
+  int* t3274 = __last3266;
+  int* r3275 = int__std____niter_base_int__(t3274);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp23271, &__result3267);
+  struct std___Deque_iterator_int__int____int___ t3276 = agg_tmp23271;
+  struct std___Deque_iterator_int__int____int___ r3277 = std___Deque_iterator_int__int___int___std____niter_base_std___Deque_iterator_int__int___int____(t3276);
+  agg_tmp13270 = r3277;
+  struct std___Deque_iterator_int__int____int___ t3278 = agg_tmp13270;
+  struct std___Deque_iterator_int__int____int___ r3279 = __gnu_cxx____enable_if___is_random_access_iter_int______value__std___Deque_iterator_int__int___int________type_std____copy_move_a1_false__int___int_(r3273, r3275, t3278);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  agg_tmp03269 = r3279;
+  struct std___Deque_iterator_int__int____int___ t3280 = agg_tmp03269;
+  struct std___Deque_iterator_int__int____int___ r3281 = std___Deque_iterator_int__int___int___std____niter_wrap_std___Deque_iterator_int__int___int____(&__result3267, t3280);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval3268 = r3281;
+  struct std___Deque_iterator_int__int____int___ t3282 = __retval3268;
+  return t3282;
+}
+
+// function: _ZSt12__miter_baseIPiET_S1_
+int* int__std____miter_base_int__(int* v3283) {
+bb3284:
+  int* __it3285;
+  int* __retval3286;
+  __it3285 = v3283;
+  int* t3287 = __it3285;
+  __retval3286 = t3287;
+  int* t3288 = __retval3286;
+  return t3288;
+}
+
+// function: _ZSt4copyIPiSt15_Deque_iteratorIiRiS0_EET0_T_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__copy_int___std___Deque_iterator_int__int___int____(int* v3289, int* v3290, struct std___Deque_iterator_int__int____int___ v3291) {
+bb3292:
+  int* __first3293;
+  int* __last3294;
+  struct std___Deque_iterator_int__int____int___ __result3295;
+  struct std___Deque_iterator_int__int____int___ __retval3296;
+  struct std___Deque_iterator_int__int____int___ agg_tmp03297;
+  __first3293 = v3289;
+  __last3294 = v3290;
+  __result3295 = v3291;
+  int* t3298 = __first3293;
+  int* r3299 = int__std____miter_base_int__(t3298);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  int* t3300 = __last3294;
+  int* r3301 = int__std____miter_base_int__(t3300);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03297, &__result3295);
+  struct std___Deque_iterator_int__int____int___ t3302 = agg_tmp03297;
+  struct std___Deque_iterator_int__int____int___ r3303 = std___Deque_iterator_int__int___int___std____copy_move_a_false__int___std___Deque_iterator_int__int___int____(r3299, r3301, t3302);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __retval3296 = r3303;
+  struct std___Deque_iterator_int__int____int___ t3304 = __retval3296;
+  return t3304;
+}
+
+// function: _ZSt16__do_uninit_copyIPiS0_St15_Deque_iteratorIiRiS0_EET1_T_T0_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____do_uninit_copy_int___int___std___Deque_iterator_int__int___int____(int* v3305, int* v3306, struct std___Deque_iterator_int__int____int___ v3307) {
+bb3308:
+  int* __first3309;
+  int* __last3310;
+  struct std___Deque_iterator_int__int____int___ __result3311;
+  struct std___Deque_iterator_int__int____int___ __retval3312;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____void_ __guard3313;
+  __first3309 = v3305;
+  __last3310 = v3306;
+  __result3311 = v3307;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void____UninitDestroyGuard(&__guard3313, &__result3311);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+      while (1) {
+        int* t3315 = __first3309;
+        int* t3316 = __last3310;
+        _Bool c3317 = ((t3315 != t3316)) ? 1 : 0;
+        if (!c3317) break;
+        int* r3318 = std___Deque_iterator_int__int___int____operator____const(&__result3311);
+        int* t3319 = __first3309;
+        void_std___Construct_int__int__(r3318, t3319);
+        if (__cir_exc_active) {
+          {
+            std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard3313);
+          }
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+      for_step3314: ;
+        int* t3320 = __first3309;
+        int c3321 = 1;
+        int* ptr3322 = &(t3320)[c3321];
+        __first3309 = ptr3322;
+        struct std___Deque_iterator_int__int____int___* r3323 = std___Deque_iterator_int__int___int____operator___4(&__result3311);
+      }
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void___release(&__guard3313);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard3313);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    std___Deque_iterator_int__int___int_____Deque_iterator(&__retval3312, &__result3311);
+    struct std___Deque_iterator_int__int____int___ t3324 = __retval3312;
+    struct std___Deque_iterator_int__int____int___ ret_val3325 = t3324;
+    {
+      std___UninitDestroyGuard_std___Deque_iterator_int__int___int____void_____UninitDestroyGuard(&__guard3313);
+    }
+    return ret_val3325;
+  abort();
+}
+
+// function: _ZSt18uninitialized_copyIPiSt15_Deque_iteratorIiRiS0_EET0_T_S5_S4_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std__uninitialized_copy_int___std___Deque_iterator_int__int___int____(int* v3326, int* v3327, struct std___Deque_iterator_int__int____int___ v3328) {
+bb3329:
+  int* __first3330;
+  int* __last3331;
+  struct std___Deque_iterator_int__int____int___ __result3332;
+  struct std___Deque_iterator_int__int____int___ __retval3333;
+  __first3330 = v3326;
+  __last3331 = v3327;
+  __result3332 = v3328;
+        struct std___Deque_iterator_int__int____int___ agg_tmp03334;
+        int* t3335 = __first3330;
+        int* t3336 = __last3331;
+        std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03334, &__result3332);
+        struct std___Deque_iterator_int__int____int___ t3337 = agg_tmp03334;
+        struct std___Deque_iterator_int__int____int___ r3338 = std___Deque_iterator_int__int___int___std____do_uninit_copy_int___int___std___Deque_iterator_int__int___int____(t3335, t3336, t3337);
+        if (__cir_exc_active) {
+          struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+          return __cir_eh_ret;
+        }
+        __retval3333 = r3338;
+        struct std___Deque_iterator_int__int____int___ t3339 = __retval3333;
+        return t3339;
+  abort();
+}
+
+// function: _ZSt22__uninitialized_copy_aIPiS0_St15_Deque_iteratorIiRiS0_EiET1_T_T0_S4_RSaIT2_E
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_a_int___int___std___Deque_iterator_int__int___int____int_(int* v3340, int* v3341, struct std___Deque_iterator_int__int____int___ v3342, struct std__allocator_int_* v3343) {
+bb3344:
+  int* __first3345;
+  int* __last3346;
+  struct std___Deque_iterator_int__int____int___ __result3347;
+  struct std__allocator_int_* unnamed3348;
+  struct std___Deque_iterator_int__int____int___ __retval3349;
+  __first3345 = v3340;
+  __last3346 = v3341;
+  __result3347 = v3342;
+  unnamed3348 = v3343;
+    _Bool r3350 = std__is_constant_evaluated();
+    if (r3350) {
+      struct std___Deque_iterator_int__int____int___ agg_tmp03351;
+      int* t3352 = __first3345;
+      int* t3353 = __last3346;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03351, &__result3347);
+      struct std___Deque_iterator_int__int____int___ t3354 = agg_tmp03351;
+      struct std___Deque_iterator_int__int____int___ r3355 = std___Deque_iterator_int__int___int___std____do_uninit_copy_int___int___std___Deque_iterator_int__int___int____(t3352, t3353, t3354);
+      if (__cir_exc_active) {
+        struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+        return __cir_eh_ret;
+      }
+      __retval3349 = r3355;
+      struct std___Deque_iterator_int__int____int___ t3356 = __retval3349;
+      return t3356;
+    }
+    struct std___Deque_iterator_int__int____int___ agg_tmp13357;
+    int* t3358 = __first3345;
+    int* t3359 = __last3346;
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp13357, &__result3347);
+    struct std___Deque_iterator_int__int____int___ t3360 = agg_tmp13357;
+    struct std___Deque_iterator_int__int____int___ r3361 = std___Deque_iterator_int__int___int___std__uninitialized_copy_int___std___Deque_iterator_int__int___int____(t3358, t3359, t3360);
+    if (__cir_exc_active) {
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    __retval3349 = r3361;
+    struct std___Deque_iterator_int__int____int___ t3362 = __retval3349;
+    return t3362;
+  abort();
+}
+
+// function: _ZNSt5dequeIiSaIiEE16_M_range_prependIPiS3_EEvT_T0_m
+void void_std__deque_int__std__allocator_int______M_range_prepend_int___int__(struct std__deque_int__std__allocator_int__* v3363, int* v3364, int* v3365, unsigned long v3366) {
+bb3367:
+  struct std__deque_int__std__allocator_int__* this3368;
+  int* __first3369;
+  int* __last3370;
+  unsigned long __n3371;
+  struct std___Deque_iterator_int__int____int___ __new_start3372;
+  this3368 = v3363;
+  __first3369 = v3364;
+  __last3370 = v3365;
+  __n3371 = v3366;
+  struct std__deque_int__std__allocator_int__* t3373 = this3368;
+  unsigned long t3374 = __n3371;
+  struct std___Deque_iterator_int__int____int___ r3375 = std__deque_int__std__allocator_int______M_reserve_elements_at_front(t3373, t3374);
+  if (__cir_exc_active) {
+    return;
+  }
+  __new_start3372 = r3375;
+    struct std___Deque_iterator_int__int____int___ agg_tmp03376;
+    struct std___Deque_iterator_int__int____int___ agg_tmp13377;
+      int* t3379 = __first3369;
+      int* t3380 = __last3370;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03376, &__new_start3372);
+      struct std___Deque_base_int__std__allocator_int__* base3381 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3373 + 0);
+      struct std__allocator_int_* r3382 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base3381);
+      struct std___Deque_iterator_int__int____int___ t3383 = agg_tmp03376;
+      struct std___Deque_iterator_int__int____int___ r3384 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_int___int___std___Deque_iterator_int__int___int____int_(t3379, t3380, t3383, r3382);
+      if (__cir_exc_active) {
+        goto cir_try_dispatch3378;
+      }
+      agg_tmp13377 = r3384;
+      struct std___Deque_base_int__std__allocator_int__* base3385 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3373 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3386 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3385->_M_impl) + 0);
+      struct std___Deque_iterator_int__int____int___* r3387 = std___Deque_iterator_int__int___int____operator_(&base3386->_M_start, &__new_start3372);
+    cir_try_dispatch3378: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok3388 = 0;
+      void* ca_exn3389 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct std___Deque_base_int__std__allocator_int__* base3390 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3373 + 0);
+        int** t3391 = __new_start3372._M_node;
+        struct std___Deque_base_int__std__allocator_int__* base3392 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3373 + 0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3393 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3392->_M_impl) + 0);
+        int** t3394 = base3393->_M_start._M_node;
+        std___Deque_base_int__std__allocator_int______M_destroy_nodes(base3390, t3391, t3394);
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE15_M_range_appendIPiS3_EEvT_T0_m
+void void_std__deque_int__std__allocator_int______M_range_append_int___int__(struct std__deque_int__std__allocator_int__* v3395, int* v3396, int* v3397, unsigned long v3398) {
+bb3399:
+  struct std__deque_int__std__allocator_int__* this3400;
+  int* __first3401;
+  int* __last3402;
+  unsigned long __n3403;
+  struct std___Deque_iterator_int__int____int___ __new_finish3404;
+  this3400 = v3395;
+  __first3401 = v3396;
+  __last3402 = v3397;
+  __n3403 = v3398;
+  struct std__deque_int__std__allocator_int__* t3405 = this3400;
+  unsigned long t3406 = __n3403;
+  struct std___Deque_iterator_int__int____int___ r3407 = std__deque_int__std__allocator_int______M_reserve_elements_at_back(t3405, t3406);
+  if (__cir_exc_active) {
+    return;
+  }
+  __new_finish3404 = r3407;
+    struct std___Deque_iterator_int__int____int___ agg_tmp03408;
+    struct std___Deque_iterator_int__int____int___ agg_tmp13409;
+      int* t3411 = __first3401;
+      int* t3412 = __last3402;
+      struct std___Deque_base_int__std__allocator_int__* base3413 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3405 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3414 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3413->_M_impl) + 0);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03408, &base3414->_M_finish);
+      struct std___Deque_base_int__std__allocator_int__* base3415 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3405 + 0);
+      struct std__allocator_int_* r3416 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base3415);
+      struct std___Deque_iterator_int__int____int___ t3417 = agg_tmp03408;
+      struct std___Deque_iterator_int__int____int___ r3418 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_int___int___std___Deque_iterator_int__int___int____int_(t3411, t3412, t3417, r3416);
+      if (__cir_exc_active) {
+        goto cir_try_dispatch3410;
+      }
+      agg_tmp13409 = r3418;
+      struct std___Deque_base_int__std__allocator_int__* base3419 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3405 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3420 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3419->_M_impl) + 0);
+      struct std___Deque_iterator_int__int____int___* r3421 = std___Deque_iterator_int__int___int____operator_(&base3420->_M_finish, &__new_finish3404);
+    cir_try_dispatch3410: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok3422 = 0;
+      void* ca_exn3423 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct std___Deque_base_int__std__allocator_int__* base3424 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3405 + 0);
+        struct std___Deque_base_int__std__allocator_int__* base3425 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3405 + 0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3426 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3425->_M_impl) + 0);
+        int** t3427 = base3426->_M_finish._M_node;
+        int c3428 = 1;
+        int** ptr3429 = &(t3427)[c3428];
+        int** t3430 = __new_finish3404._M_node;
+        int c3431 = 1;
+        int** ptr3432 = &(t3430)[c3431];
+        std___Deque_base_int__std__allocator_int______M_destroy_nodes(base3424, ptr3429, ptr3432);
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZSt25__uninitialized_move_copyISt15_Deque_iteratorIiRiPiES2_S3_SaIiEET1_T_S6_T0_S7_S5_RT2_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_move_copy_std___Deque_iterator_int__int___int____int___std___Deque_iterator_int__int___int____std__allocator_int___(struct std___Deque_iterator_int__int____int___ v3433, struct std___Deque_iterator_int__int____int___ v3434, int* v3435, int* v3436, struct std___Deque_iterator_int__int____int___ v3437, struct std__allocator_int_* v3438) {
+bb3439:
+  struct std___Deque_iterator_int__int____int___ __first13440;
+  struct std___Deque_iterator_int__int____int___ __last13441;
+  int* __first23442;
+  int* __last23443;
+  struct std___Deque_iterator_int__int____int___ __result3444;
+  struct std__allocator_int_* __alloc3445;
+  struct std___Deque_iterator_int__int____int___ __retval3446;
+  struct std___Deque_iterator_int__int____int___ __mid3447;
+  struct std___Deque_iterator_int__int____int___ agg_tmp03448;
+  struct std___Deque_iterator_int__int____int___ agg_tmp13449;
+  struct std___Deque_iterator_int__int____int___ agg_tmp23450;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__ __guard3451;
+  struct std___Deque_iterator_int__int____int___ ref_tmp03452;
+  struct std___Deque_iterator_int__int____int___ agg_tmp33453;
+  __first13440 = v3433;
+  __last13441 = v3434;
+  __first23442 = v3435;
+  __last23443 = v3436;
+  __result3444 = v3437;
+  __alloc3445 = v3438;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03448, &__first13440);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp13449, &__last13441);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp23450, &__result3444);
+  struct std__allocator_int_* t3454 = __alloc3445;
+  struct std___Deque_iterator_int__int____int___ t3455 = agg_tmp03448;
+  struct std___Deque_iterator_int__int____int___ t3456 = agg_tmp13449;
+  struct std___Deque_iterator_int__int____int___ t3457 = agg_tmp23450;
+  struct std___Deque_iterator_int__int____int___ r3458 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t3455, t3456, t3457, t3454);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __mid3447 = r3458;
+  struct std__allocator_int_* t3459 = __alloc3445;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int______UninitDestroyGuard(&__guard3451, &__result3444, t3459);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+    struct std___Deque_iterator_int__int____int___* r3460 = std___Deque_iterator_int__int___int____operator_(&__result3444, &__mid3447);
+    int* t3461 = __first23442;
+    int* t3462 = __last23443;
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp33453, &__mid3447);
+    struct std__allocator_int_* t3463 = __alloc3445;
+    struct std___Deque_iterator_int__int____int___ t3464 = agg_tmp33453;
+    struct std___Deque_iterator_int__int____int___ r3465 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_int___int___std___Deque_iterator_int__int___int____int_(t3461, t3462, t3464, t3463);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard3451);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    ref_tmp03452 = r3465;
+    struct std___Deque_iterator_int__int____int___* r3466 = std___Deque_iterator_int__int___int____operator_(&__result3444, &ref_tmp03452);
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_____release(&__guard3451);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard3451);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    std___Deque_iterator_int__int___int_____Deque_iterator(&__retval3446, &__result3444);
+    struct std___Deque_iterator_int__int____int___ t3467 = __retval3446;
+    struct std___Deque_iterator_int__int____int___ ret_val3468 = t3467;
+    {
+      std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard3451);
+    }
+    return ret_val3468;
+  abort();
+}
+
+// function: _ZSt25__uninitialized_copy_moveIPiSt15_Deque_iteratorIiRiS0_ES3_SaIiEET1_T_S6_T0_S7_S5_RT2_
+struct std___Deque_iterator_int__int____int___ std___Deque_iterator_int__int___int___std____uninitialized_copy_move_int___std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(int* v3469, int* v3470, struct std___Deque_iterator_int__int____int___ v3471, struct std___Deque_iterator_int__int____int___ v3472, struct std___Deque_iterator_int__int____int___ v3473, struct std__allocator_int_* v3474) {
+bb3475:
+  int* __first13476;
+  int* __last13477;
+  struct std___Deque_iterator_int__int____int___ __first23478;
+  struct std___Deque_iterator_int__int____int___ __last23479;
+  struct std___Deque_iterator_int__int____int___ __result3480;
+  struct std__allocator_int_* __alloc3481;
+  struct std___Deque_iterator_int__int____int___ __retval3482;
+  struct std___Deque_iterator_int__int____int___ __mid3483;
+  struct std___Deque_iterator_int__int____int___ agg_tmp03484;
+  struct std___UninitDestroyGuard_std___Deque_iterator_int__int____int_____std__allocator_int__ __guard3485;
+  struct std___Deque_iterator_int__int____int___ ref_tmp03486;
+  struct std___Deque_iterator_int__int____int___ agg_tmp13487;
+  struct std___Deque_iterator_int__int____int___ agg_tmp23488;
+  struct std___Deque_iterator_int__int____int___ agg_tmp33489;
+  __first13476 = v3469;
+  __last13477 = v3470;
+  __first23478 = v3471;
+  __last23479 = v3472;
+  __result3480 = v3473;
+  __alloc3481 = v3474;
+  int* t3490 = __first13476;
+  int* t3491 = __last13477;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03484, &__result3480);
+  struct std__allocator_int_* t3492 = __alloc3481;
+  struct std___Deque_iterator_int__int____int___ t3493 = agg_tmp03484;
+  struct std___Deque_iterator_int__int____int___ r3494 = std___Deque_iterator_int__int___int___std____uninitialized_copy_a_int___int___std___Deque_iterator_int__int___int____int_(t3490, t3491, t3493, t3492);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+  __mid3483 = r3494;
+  struct std__allocator_int_* t3495 = __alloc3481;
+  std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int______UninitDestroyGuard(&__guard3485, &__result3480, t3495);
+  if (__cir_exc_active) {
+    struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+    return __cir_eh_ret;
+  }
+    struct std___Deque_iterator_int__int____int___* r3496 = std___Deque_iterator_int__int___int____operator_(&__result3480, &__mid3483);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp13487, &__first23478);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp23488, &__last23479);
+    std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp33489, &__mid3483);
+    struct std__allocator_int_* t3497 = __alloc3481;
+    struct std___Deque_iterator_int__int____int___ t3498 = agg_tmp13487;
+    struct std___Deque_iterator_int__int____int___ t3499 = agg_tmp23488;
+    struct std___Deque_iterator_int__int____int___ t3500 = agg_tmp33489;
+    struct std___Deque_iterator_int__int____int___ r3501 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t3498, t3499, t3500, t3497);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard3485);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    ref_tmp03486 = r3501;
+    struct std___Deque_iterator_int__int____int___* r3502 = std___Deque_iterator_int__int___int____operator_(&__result3480, &ref_tmp03486);
+    std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_____release(&__guard3485);
+    if (__cir_exc_active) {
+      {
+        std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard3485);
+      }
+      struct std___Deque_iterator_int__int____int___ __cir_eh_ret = {0};
+      return __cir_eh_ret;
+    }
+    std___Deque_iterator_int__int___int_____Deque_iterator(&__retval3482, &__result3480);
+    struct std___Deque_iterator_int__int____int___ t3503 = __retval3482;
+    struct std___Deque_iterator_int__int____int___ ret_val3504 = t3503;
+    {
+      std___UninitDestroyGuard_std___Deque_iterator_int__int___int____std__allocator_int_______UninitDestroyGuard(&__guard3485);
+    }
+    return ret_val3504;
+  abort();
+}
+
+// function: _ZNSt5dequeIiSaIiEE13_M_insert_auxIPiEEvSt15_Deque_iteratorIiRiS3_ET_S7_m
+void void_std__deque_int__std__allocator_int______M_insert_aux_int__(struct std__deque_int__std__allocator_int__* v3505, struct std___Deque_iterator_int__int____int___ v3506, int* v3507, int* v3508, unsigned long v3509) {
+bb3510:
+  struct std__deque_int__std__allocator_int__* this3511;
+  struct std___Deque_iterator_int__int____int___ __pos3512;
+  int* __first3513;
+  int* __last3514;
+  unsigned long __n3515;
+  long __elemsbefore3516;
+  unsigned long __length3517;
+  this3511 = v3505;
+  __pos3512 = v3506;
+  __first3513 = v3507;
+  __last3514 = v3508;
+  __n3515 = v3509;
+  struct std__deque_int__std__allocator_int__* t3518 = this3511;
+  struct std___Deque_base_int__std__allocator_int__* base3519 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3520 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3519->_M_impl) + 0);
+  long r3521 = std__operator_(&__pos3512, &base3520->_M_start);
+  __elemsbefore3516 = r3521;
+  unsigned long r3522 = std__deque_int__std__allocator_int_____size___const(t3518);
+  __length3517 = r3522;
+    long t3523 = __elemsbefore3516;
+    unsigned long cast3524 = (unsigned long)t3523;
+    unsigned long t3525 = __length3517;
+    unsigned long c3526 = 2;
+    unsigned long b3527 = t3525 / c3526;
+    _Bool c3528 = ((cast3524 < b3527)) ? 1 : 0;
+    if (c3528) {
+      struct std___Deque_iterator_int__int____int___ __new_start3529;
+      struct std___Deque_iterator_int__int____int___ __old_start3530;
+      struct std___Deque_iterator_int__int____int___ ref_tmp03531;
+      unsigned long t3532 = __n3515;
+      struct std___Deque_iterator_int__int____int___ r3533 = std__deque_int__std__allocator_int______M_reserve_elements_at_front(t3518, t3532);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_start3529 = r3533;
+      struct std___Deque_base_int__std__allocator_int__* base3534 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3535 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3534->_M_impl) + 0);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&__old_start3530, &base3535->_M_start);
+      struct std___Deque_base_int__std__allocator_int__* base3536 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3537 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3536->_M_impl) + 0);
+      long t3538 = __elemsbefore3516;
+      struct std___Deque_iterator_int__int____int___ r3539 = std__operator__4(&base3537->_M_start, t3538);
+      ref_tmp03531 = r3539;
+      struct std___Deque_iterator_int__int____int___* r3540 = std___Deque_iterator_int__int___int____operator_(&__pos3512, &ref_tmp03531);
+            long t3542 = __elemsbefore3516;
+            unsigned long t3543 = __n3515;
+            long cast3544 = (long)t3543;
+            _Bool c3545 = ((t3542 >= cast3544)) ? 1 : 0;
+            if (c3545) {
+              struct std___Deque_iterator_int__int____int___ __start_n3546;
+              struct std___Deque_iterator_int__int____int___ agg_tmp03547;
+              struct std___Deque_iterator_int__int____int___ agg_tmp13548;
+              struct std___Deque_iterator_int__int____int___ agg_tmp23549;
+              struct std___Deque_iterator_int__int____int___ agg_tmp33550;
+              struct std___Deque_iterator_int__int____int___ agg_tmp43551;
+              struct std___Deque_iterator_int__int____int___ agg_tmp53552;
+              struct std___Deque_iterator_int__int____int___ agg_tmp63553;
+              struct std___Deque_iterator_int__int____int___ agg_tmp73554;
+              struct std___Deque_iterator_int__int____int___ agg_tmp83555;
+              struct std___Deque_iterator_int__int____int___ agg_tmp93556;
+              struct std___Deque_base_int__std__allocator_int__* base3557 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3558 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3557->_M_impl) + 0);
+              unsigned long t3559 = __n3515;
+              long cast3560 = (long)t3559;
+              struct std___Deque_iterator_int__int____int___ r3561 = std__operator__4(&base3558->_M_start, cast3560);
+              __start_n3546 = r3561;
+              struct std___Deque_base_int__std__allocator_int__* base3562 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3563 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3562->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03547, &base3563->_M_start);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp13548, &__start_n3546);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp23549, &__new_start3529);
+              struct std___Deque_base_int__std__allocator_int__* base3564 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std__allocator_int_* r3565 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base3564);
+              struct std___Deque_iterator_int__int____int___ t3566 = agg_tmp03547;
+              struct std___Deque_iterator_int__int____int___ t3567 = agg_tmp13548;
+              struct std___Deque_iterator_int__int____int___ t3568 = agg_tmp23549;
+              struct std___Deque_iterator_int__int____int___ r3569 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t3566, t3567, t3568, r3565);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3541;
+              }
+              agg_tmp33550 = r3569;
+              struct std___Deque_base_int__std__allocator_int__* base3570 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3571 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3570->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r3572 = std___Deque_iterator_int__int___int____operator_(&base3571->_M_start, &__new_start3529);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp43551, &__start_n3546);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp53552, &__pos3512);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp63553, &__old_start3530);
+              struct std___Deque_iterator_int__int____int___ t3573 = agg_tmp43551;
+              struct std___Deque_iterator_int__int____int___ t3574 = agg_tmp53552;
+              struct std___Deque_iterator_int__int____int___ t3575 = agg_tmp63553;
+              struct std___Deque_iterator_int__int____int___ r3576 = std___Deque_iterator_int__int___int___std__move_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3573, t3574, t3575);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3541;
+              }
+              agg_tmp73554 = r3576;
+              int* t3577 = __first3513;
+              int* t3578 = __last3514;
+              unsigned long t3579 = __n3515;
+              long cast3580 = (long)t3579;
+              struct std___Deque_iterator_int__int____int___ r3581 = std__operator__2(&__pos3512, cast3580);
+              agg_tmp83555 = r3581;
+              struct std___Deque_iterator_int__int____int___ t3582 = agg_tmp83555;
+              struct std___Deque_iterator_int__int____int___ r3583 = std___Deque_iterator_int__int___int___std__copy_int___std___Deque_iterator_int__int___int____(t3577, t3578, t3582);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3541;
+              }
+              agg_tmp93556 = r3583;
+            } else {
+              int* __mid3584;
+              struct std___Deque_iterator_int__int____int___ agg_tmp103585;
+              struct std___Deque_iterator_int__int____int___ agg_tmp113586;
+              struct std___Deque_iterator_int__int____int___ agg_tmp123587;
+              struct std___Deque_iterator_int__int____int___ agg_tmp133588;
+              struct std___Deque_iterator_int__int____int___ agg_tmp143589;
+              struct std___Deque_iterator_int__int____int___ agg_tmp153590;
+              int* t3591 = __first3513;
+              __mid3584 = t3591;
+              unsigned long t3592 = __n3515;
+              long cast3593 = (long)t3592;
+              long t3594 = __elemsbefore3516;
+              long b3595 = cast3593 - t3594;
+              void_std__advance_int___long_(&__mid3584, b3595);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3541;
+              }
+              struct std___Deque_base_int__std__allocator_int__* base3596 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3597 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3596->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp103585, &base3597->_M_start);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp113586, &__pos3512);
+              int* t3598 = __first3513;
+              int* t3599 = __mid3584;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp123587, &__new_start3529);
+              struct std___Deque_base_int__std__allocator_int__* base3600 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std__allocator_int_* r3601 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base3600);
+              struct std___Deque_iterator_int__int____int___ t3602 = agg_tmp103585;
+              struct std___Deque_iterator_int__int____int___ t3603 = agg_tmp113586;
+              struct std___Deque_iterator_int__int____int___ t3604 = agg_tmp123587;
+              struct std___Deque_iterator_int__int____int___ r3605 = std___Deque_iterator_int__int___int___std____uninitialized_move_copy_std___Deque_iterator_int__int___int____int___std___Deque_iterator_int__int___int____std__allocator_int___(t3602, t3603, t3598, t3599, t3604, r3601);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3541;
+              }
+              agg_tmp133588 = r3605;
+              struct std___Deque_base_int__std__allocator_int__* base3606 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3607 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3606->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r3608 = std___Deque_iterator_int__int___int____operator_(&base3607->_M_start, &__new_start3529);
+              int* t3609 = __mid3584;
+              int* t3610 = __last3514;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp143589, &__old_start3530);
+              struct std___Deque_iterator_int__int____int___ t3611 = agg_tmp143589;
+              struct std___Deque_iterator_int__int____int___ r3612 = std___Deque_iterator_int__int___int___std__copy_int___std___Deque_iterator_int__int___int____(t3609, t3610, t3611);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3541;
+              }
+              agg_tmp153590 = r3612;
+            }
+        cir_try_dispatch3541: ;
+        if (__cir_exc_active) {
+        {
+          int ca_tok3613 = 0;
+          void* ca_exn3614 = (void*)__cir_exc_ptr;
+          __cir_exc_active = 0;
+            struct std___Deque_base_int__std__allocator_int__* base3615 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+            int** t3616 = __new_start3529._M_node;
+            struct std___Deque_base_int__std__allocator_int__* base3617 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3618 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3617->_M_impl) + 0);
+            int** t3619 = base3618->_M_start._M_node;
+            std___Deque_base_int__std__allocator_int______M_destroy_nodes(base3615, t3616, t3619);
+            __cir_exc_active = 1;
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+            return;
+            __builtin_unreachable();
+        }
+        }
+    } else {
+      struct std___Deque_iterator_int__int____int___ __new_finish3620;
+      struct std___Deque_iterator_int__int____int___ __old_finish3621;
+      long __elemsafter3622;
+      struct std___Deque_iterator_int__int____int___ ref_tmp13623;
+      unsigned long t3624 = __n3515;
+      struct std___Deque_iterator_int__int____int___ r3625 = std__deque_int__std__allocator_int______M_reserve_elements_at_back(t3518, t3624);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_finish3620 = r3625;
+      struct std___Deque_base_int__std__allocator_int__* base3626 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3627 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3626->_M_impl) + 0);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&__old_finish3621, &base3627->_M_finish);
+      unsigned long t3628 = __length3517;
+      long cast3629 = (long)t3628;
+      long t3630 = __elemsbefore3516;
+      long b3631 = cast3629 - t3630;
+      __elemsafter3622 = b3631;
+      struct std___Deque_base_int__std__allocator_int__* base3632 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3633 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3632->_M_impl) + 0);
+      long t3634 = __elemsafter3622;
+      struct std___Deque_iterator_int__int____int___ r3635 = std__operator__2(&base3633->_M_finish, t3634);
+      ref_tmp13623 = r3635;
+      struct std___Deque_iterator_int__int____int___* r3636 = std___Deque_iterator_int__int___int____operator_(&__pos3512, &ref_tmp13623);
+            long t3638 = __elemsafter3622;
+            unsigned long t3639 = __n3515;
+            long cast3640 = (long)t3639;
+            _Bool c3641 = ((t3638 > cast3640)) ? 1 : 0;
+            if (c3641) {
+              struct std___Deque_iterator_int__int____int___ __finish_n3642;
+              struct std___Deque_iterator_int__int____int___ agg_tmp163643;
+              struct std___Deque_iterator_int__int____int___ agg_tmp173644;
+              struct std___Deque_iterator_int__int____int___ agg_tmp183645;
+              struct std___Deque_iterator_int__int____int___ agg_tmp193646;
+              struct std___Deque_iterator_int__int____int___ agg_tmp203647;
+              struct std___Deque_iterator_int__int____int___ agg_tmp213648;
+              struct std___Deque_iterator_int__int____int___ agg_tmp223649;
+              struct std___Deque_iterator_int__int____int___ agg_tmp233650;
+              struct std___Deque_iterator_int__int____int___ agg_tmp243651;
+              struct std___Deque_iterator_int__int____int___ agg_tmp253652;
+              struct std___Deque_base_int__std__allocator_int__* base3653 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3654 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3653->_M_impl) + 0);
+              unsigned long t3655 = __n3515;
+              long cast3656 = (long)t3655;
+              struct std___Deque_iterator_int__int____int___ r3657 = std__operator__2(&base3654->_M_finish, cast3656);
+              __finish_n3642 = r3657;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp163643, &__finish_n3642);
+              struct std___Deque_base_int__std__allocator_int__* base3658 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3659 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3658->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp173644, &base3659->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base3660 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3661 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3660->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp183645, &base3661->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base3662 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std__allocator_int_* r3663 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base3662);
+              struct std___Deque_iterator_int__int____int___ t3664 = agg_tmp163643;
+              struct std___Deque_iterator_int__int____int___ t3665 = agg_tmp173644;
+              struct std___Deque_iterator_int__int____int___ t3666 = agg_tmp183645;
+              struct std___Deque_iterator_int__int____int___ r3667 = std___Deque_iterator_int__int___int___std____uninitialized_move_a_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t3664, t3665, t3666, r3663);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3637;
+              }
+              agg_tmp193646 = r3667;
+              struct std___Deque_base_int__std__allocator_int__* base3668 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3669 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3668->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r3670 = std___Deque_iterator_int__int___int____operator_(&base3669->_M_finish, &__new_finish3620);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp203647, &__pos3512);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp213648, &__finish_n3642);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp223649, &__old_finish3621);
+              struct std___Deque_iterator_int__int____int___ t3671 = agg_tmp203647;
+              struct std___Deque_iterator_int__int____int___ t3672 = agg_tmp213648;
+              struct std___Deque_iterator_int__int____int___ t3673 = agg_tmp223649;
+              struct std___Deque_iterator_int__int____int___ r3674 = std___Deque_iterator_int__int___int___std__move_backward_std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____(t3671, t3672, t3673);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3637;
+              }
+              agg_tmp233650 = r3674;
+              int* t3675 = __first3513;
+              int* t3676 = __last3514;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp243651, &__pos3512);
+              struct std___Deque_iterator_int__int____int___ t3677 = agg_tmp243651;
+              struct std___Deque_iterator_int__int____int___ r3678 = std___Deque_iterator_int__int___int___std__copy_int___std___Deque_iterator_int__int___int____(t3675, t3676, t3677);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3637;
+              }
+              agg_tmp253652 = r3678;
+            } else {
+              int* __mid3679;
+              struct std___Deque_iterator_int__int____int___ agg_tmp263680;
+              struct std___Deque_iterator_int__int____int___ agg_tmp273681;
+              struct std___Deque_iterator_int__int____int___ agg_tmp283682;
+              struct std___Deque_iterator_int__int____int___ agg_tmp293683;
+              struct std___Deque_iterator_int__int____int___ agg_tmp303684;
+              struct std___Deque_iterator_int__int____int___ agg_tmp313685;
+              int* t3686 = __first3513;
+              __mid3679 = t3686;
+              long t3687 = __elemsafter3622;
+              void_std__advance_int___long_(&__mid3679, t3687);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3637;
+              }
+              int* t3688 = __mid3679;
+              int* t3689 = __last3514;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp263680, &__pos3512);
+              struct std___Deque_base_int__std__allocator_int__* base3690 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3691 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3690->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp273681, &base3691->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base3692 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3693 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3692->_M_impl) + 0);
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp283682, &base3693->_M_finish);
+              struct std___Deque_base_int__std__allocator_int__* base3694 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std__allocator_int_* r3695 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base3694);
+              struct std___Deque_iterator_int__int____int___ t3696 = agg_tmp263680;
+              struct std___Deque_iterator_int__int____int___ t3697 = agg_tmp273681;
+              struct std___Deque_iterator_int__int____int___ t3698 = agg_tmp283682;
+              struct std___Deque_iterator_int__int____int___ r3699 = std___Deque_iterator_int__int___int___std____uninitialized_copy_move_int___std___Deque_iterator_int__int___int____std___Deque_iterator_int__int___int____std__allocator_int___(t3688, t3689, t3696, t3697, t3698, r3695);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3637;
+              }
+              agg_tmp293683 = r3699;
+              struct std___Deque_base_int__std__allocator_int__* base3700 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+              struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3701 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3700->_M_impl) + 0);
+              struct std___Deque_iterator_int__int____int___* r3702 = std___Deque_iterator_int__int___int____operator_(&base3701->_M_finish, &__new_finish3620);
+              int* t3703 = __first3513;
+              int* t3704 = __mid3679;
+              std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp303684, &__pos3512);
+              struct std___Deque_iterator_int__int____int___ t3705 = agg_tmp303684;
+              struct std___Deque_iterator_int__int____int___ r3706 = std___Deque_iterator_int__int___int___std__copy_int___std___Deque_iterator_int__int___int____(t3703, t3704, t3705);
+              if (__cir_exc_active) {
+                goto cir_try_dispatch3637;
+              }
+              agg_tmp313685 = r3706;
+            }
+        cir_try_dispatch3637: ;
+        if (__cir_exc_active) {
+        {
+          int ca_tok3707 = 0;
+          void* ca_exn3708 = (void*)__cir_exc_ptr;
+          __cir_exc_active = 0;
+            struct std___Deque_base_int__std__allocator_int__* base3709 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+            struct std___Deque_base_int__std__allocator_int__* base3710 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3518 + 0);
+            struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3711 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3710->_M_impl) + 0);
+            int** t3712 = base3711->_M_finish._M_node;
+            int c3713 = 1;
+            int** ptr3714 = &(t3712)[c3713];
+            int** t3715 = __new_finish3620._M_node;
+            int c3716 = 1;
+            int** ptr3717 = &(t3715)[c3716];
+            std___Deque_base_int__std__allocator_int______M_destroy_nodes(base3709, ptr3714, ptr3717);
+            __cir_exc_active = 1;
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+            return;
+            __builtin_unreachable();
+        }
+        }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE19_M_range_insert_auxIPiEEvSt15_Deque_iteratorIiRiS3_ET_S7_St20forward_iterator_tag
+void void_std__deque_int__std__allocator_int______M_range_insert_aux_int__(struct std__deque_int__std__allocator_int__* v3718, struct std___Deque_iterator_int__int____int___ v3719, int* v3720, int* v3721, struct std__forward_iterator_tag v3722) {
+bb3723:
+  struct std__deque_int__std__allocator_int__* this3724;
+  struct std___Deque_iterator_int__int____int___ __pos3725;
+  int* __first3726;
+  int* __last3727;
+  struct std__forward_iterator_tag unnamed3728;
+  unsigned long __n3729;
+  this3724 = v3718;
+  __pos3725 = v3719;
+  __first3726 = v3720;
+  __last3727 = v3721;
+  unnamed3728 = v3722;
+  struct std__deque_int__std__allocator_int__* t3730 = this3724;
+  int* t3731 = __first3726;
+  int* t3732 = __last3727;
+  long r3733 = std__iterator_traits_int____difference_type_std__distance_int__(t3731, t3732);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long cast3734 = (unsigned long)r3733;
+  __n3729 = cast3734;
+    unsigned long t3735 = __n3729;
+    unsigned long c3736 = 0;
+    _Bool c3737 = ((t3735 == c3736)) ? 1 : 0;
+    if (c3737) {
+      return;
+    }
+    int* t3738 = __pos3725._M_cur;
+    struct std___Deque_base_int__std__allocator_int__* base3739 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3730 + 0);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3740 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3739->_M_impl) + 0);
+    int* t3741 = base3740->_M_start._M_cur;
+    _Bool c3742 = ((t3738 == t3741)) ? 1 : 0;
+    if (c3742) {
+      int* t3743 = __first3726;
+      int* t3744 = __last3727;
+      unsigned long t3745 = __n3729;
+      void_std__deque_int__std__allocator_int______M_range_prepend_int___int__(t3730, t3743, t3744, t3745);
+      if (__cir_exc_active) {
+        return;
+      }
+    } else {
+        int* t3746 = __pos3725._M_cur;
+        struct std___Deque_base_int__std__allocator_int__* base3747 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t3730 + 0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base3748 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(base3747->_M_impl) + 0);
+        int* t3749 = base3748->_M_finish._M_cur;
+        _Bool c3750 = ((t3746 == t3749)) ? 1 : 0;
+        if (c3750) {
+          int* t3751 = __first3726;
+          int* t3752 = __last3727;
+          unsigned long t3753 = __n3729;
+          void_std__deque_int__std__allocator_int______M_range_append_int___int__(t3730, t3751, t3752, t3753);
+          if (__cir_exc_active) {
+            return;
+          }
+        } else {
+          struct std___Deque_iterator_int__int____int___ agg_tmp03754;
+          std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp03754, &__pos3725);
+          int* t3755 = __first3726;
+          int* t3756 = __last3727;
+          unsigned long t3757 = __n3729;
+          struct std___Deque_iterator_int__int____int___ t3758 = agg_tmp03754;
+          void_std__deque_int__std__allocator_int______M_insert_aux_int__(t3730, t3758, t3755, t3756, t3757);
+          if (__cir_exc_active) {
+            return;
+          }
+        }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE13_M_assign_auxIPiEEvT_S4_St20forward_iterator_tag
+void void_std__deque_int__std__allocator_int______M_assign_aux_int__(struct std__deque_int__std__allocator_int__* v3759, int* v3760, int* v3761, struct std__forward_iterator_tag v3762) {
+bb3763:
+  struct std__deque_int__std__allocator_int__* this3764;
+  int* __first3765;
+  int* __last3766;
+  struct std__forward_iterator_tag unnamed3767;
+  unsigned long __len3768;
+  this3764 = v3759;
+  __first3765 = v3760;
+  __last3766 = v3761;
+  unnamed3767 = v3762;
+  struct std__deque_int__std__allocator_int__* t3769 = this3764;
+  int* t3770 = __first3765;
+  int* t3771 = __last3766;
+  long r3772 = std__iterator_traits_int____difference_type_std__distance_int__(t3770, t3771);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long cast3773 = (unsigned long)r3772;
+  __len3768 = cast3773;
+    unsigned long t3774 = __len3768;
+    unsigned long r3775 = std__deque_int__std__allocator_int_____size___const(t3769);
+    _Bool c3776 = ((t3774 > r3775)) ? 1 : 0;
+    if (c3776) {
+      int* __mid3777;
+      struct std___Deque_iterator_int__int____int___ agg_tmp03778;
+      struct std___Deque_iterator_int__int____int___ agg_tmp13779;
+      struct std___Deque_iterator_int__int____int___ agg_tmp23780;
+      struct std__forward_iterator_tag agg_tmp33781;
+      struct std__random_access_iterator_tag ref_tmp03782;
+      int* t3783 = __first3765;
+      __mid3777 = t3783;
+      unsigned long r3784 = std__deque_int__std__allocator_int_____size___const(t3769);
+      void_std__advance_int___unsigned_long_(&__mid3777, r3784);
+      if (__cir_exc_active) {
+        return;
+      }
+      int* t3785 = __first3765;
+      int* t3786 = __mid3777;
+      struct std___Deque_iterator_int__int____int___ r3787 = std__deque_int__std__allocator_int_____begin(t3769);
+      agg_tmp03778 = r3787;
+      struct std___Deque_iterator_int__int____int___ t3788 = agg_tmp03778;
+      struct std___Deque_iterator_int__int____int___ r3789 = std___Deque_iterator_int__int___int___std__copy_int___std___Deque_iterator_int__int___int____(t3785, t3786, t3788);
+      if (__cir_exc_active) {
+        return;
+      }
+      agg_tmp13779 = r3789;
+      struct std___Deque_iterator_int__int____int___ r3790 = std__deque_int__std__allocator_int_____end(t3769);
+      agg_tmp23780 = r3790;
+      int* t3791 = __mid3777;
+      int* t3792 = __last3766;
+      struct std__random_access_iterator_tag r3793 = std__iterator_traits_int____iterator_category_std____iterator_category_int__(&__first3765);
+      if (__cir_exc_active) {
+        return;
+      }
+      ref_tmp03782 = r3793;
+      struct std__forward_iterator_tag* base3794 = (struct std__forward_iterator_tag*)((char *)&(ref_tmp03782) + 0);
+      struct std___Deque_iterator_int__int____int___ t3795 = agg_tmp23780;
+      struct std__forward_iterator_tag t3796 = agg_tmp33781;
+      void_std__deque_int__std__allocator_int______M_range_insert_aux_int__(t3769, t3795, t3791, t3792, t3796);
+      if (__cir_exc_active) {
+        return;
+      }
+    } else {
+      struct std___Deque_iterator_int__int____int___ agg_tmp43797;
+      struct std___Deque_iterator_int__int____int___ agg_tmp53798;
+      int* t3799 = __first3765;
+      int* t3800 = __last3766;
+      struct std___Deque_iterator_int__int____int___ r3801 = std__deque_int__std__allocator_int_____begin(t3769);
+      agg_tmp53798 = r3801;
+      struct std___Deque_iterator_int__int____int___ t3802 = agg_tmp53798;
+      struct std___Deque_iterator_int__int____int___ r3803 = std___Deque_iterator_int__int___int___std__copy_int___std___Deque_iterator_int__int___int____(t3799, t3800, t3802);
+      if (__cir_exc_active) {
+        return;
+      }
+      agg_tmp43797 = r3803;
+      struct std___Deque_iterator_int__int____int___ t3804 = agg_tmp43797;
+      std__deque_int__std__allocator_int______M_erase_at_end(t3769, t3804);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE6assignIPivEEvT_S4_
+void void_std__deque_int__std__allocator_int_____assign_int___void_(struct std__deque_int__std__allocator_int__* v3805, int* v3806, int* v3807) {
+bb3808:
+  struct std__deque_int__std__allocator_int__* this3809;
+  int* __first3810;
+  int* __last3811;
+  struct std__forward_iterator_tag agg_tmp03812;
+  struct std__random_access_iterator_tag ref_tmp03813;
+  this3809 = v3805;
+  __first3810 = v3806;
+  __last3811 = v3807;
+  struct std__deque_int__std__allocator_int__* t3814 = this3809;
+  int* t3815 = __first3810;
+  int* t3816 = __last3811;
+  struct std__random_access_iterator_tag r3817 = std__iterator_traits_int____iterator_category_std____iterator_category_int__(&__first3810);
+  if (__cir_exc_active) {
+    return;
+  }
+  ref_tmp03813 = r3817;
+  struct std__forward_iterator_tag* base3818 = (struct std__forward_iterator_tag*)((char *)&(ref_tmp03813) + 0);
+  struct std__forward_iterator_tag t3819 = agg_tmp03812;
+  void_std__deque_int__std__allocator_int______M_assign_aux_int__(t3814, t3815, t3816, t3819);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZStorSt12_Ios_IostateS_
+int std__operator__3(int v3820, int v3821) {
+bb3822:
+  int __a3823;
+  int __b3824;
+  int __retval3825;
+  __a3823 = v3820;
+  __b3824 = v3821;
+  int t3826 = __a3823;
+  int t3827 = __b3824;
+  int b3828 = t3826 | t3827;
+  __retval3825 = b3828;
+  int t3829 = __retval3825;
+  return t3829;
+}
+
+// function: _ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
+int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* v3830) {
+bb3831:
+  struct std__basic_ios_char__std__char_traits_char__* this3832;
+  int __retval3833;
+  this3832 = v3830;
+  struct std__basic_ios_char__std__char_traits_char__* t3834 = this3832;
+  struct std__ios_base* base3835 = (struct std__ios_base*)((char *)t3834 + 0);
+  int t3836 = base3835->_M_streambuf_state;
+  __retval3833 = t3836;
+  int t3837 = __retval3833;
+  return t3837;
+}
+
+// function: _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* v3838, int v3839) {
+bb3840:
+  struct std__basic_ios_char__std__char_traits_char__* this3841;
+  int __state3842;
+  this3841 = v3838;
+  __state3842 = v3839;
+  struct std__basic_ios_char__std__char_traits_char__* t3843 = this3841;
+  int r3844 = std__basic_ios_char__std__char_traits_char_____rdstate___const(t3843);
+  if (__cir_exc_active) {
+    return;
+  }
+  int t3845 = __state3842;
+  int r3846 = std__operator__3(r3844, t3845);
+  std__basic_ios_char__std__char_traits_char_____clear(t3843, r3846);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZN9__gnu_cxx11char_traitsIcE2eqERKcS3_
+_Bool __gnu_cxx__char_traits_char___eq(char* v3847, char* v3848) {
+bb3849:
+  char* __c13850;
+  char* __c23851;
+  _Bool __retval3852;
+  __c13850 = v3847;
+  __c23851 = v3848;
+  char* t3853 = __c13850;
+  char t3854 = *t3853;
+  int cast3855 = (int)t3854;
+  char* t3856 = __c23851;
+  char t3857 = *t3856;
+  int cast3858 = (int)t3857;
+  _Bool c3859 = ((cast3855 == cast3858)) ? 1 : 0;
+  __retval3852 = c3859;
+  _Bool t3860 = __retval3852;
+  return t3860;
+}
+
+// function: _ZN9__gnu_cxx11char_traitsIcE6lengthEPKc
+unsigned long __gnu_cxx__char_traits_char___length(char* v3861) {
+bb3862:
+  char* __p3863;
+  unsigned long __retval3864;
+  unsigned long __i3865;
+  __p3863 = v3861;
+  unsigned long c3866 = 0;
+  __i3865 = c3866;
+    char ref_tmp03867;
+    while (1) {
+      unsigned long t3868 = __i3865;
+      char* t3869 = __p3863;
+      char* ptr3870 = &(t3869)[t3868];
+      char c3871 = 0;
+      ref_tmp03867 = c3871;
+      _Bool r3872 = __gnu_cxx__char_traits_char___eq(ptr3870, &ref_tmp03867);
+      if (__cir_exc_active) {
+        unsigned long __cir_eh_ret = (unsigned long)0;
+        return __cir_eh_ret;
+      }
+      _Bool u3873 = !r3872;
+      if (!u3873) break;
+      unsigned long t3874 = __i3865;
+      unsigned long u3875 = t3874 + 1;
+      __i3865 = u3875;
+    }
+  unsigned long t3876 = __i3865;
+  __retval3864 = t3876;
+  unsigned long t3877 = __retval3864;
+  return t3877;
+}
+
+// function: _ZNSt11char_traitsIcE6lengthEPKc
+unsigned long std__char_traits_char___length(char* v3878) {
+bb3879:
+  char* __s3880;
+  unsigned long __retval3881;
+  __s3880 = v3878;
+    _Bool r3882 = std____is_constant_evaluated();
+    if (r3882) {
+      char* t3883 = __s3880;
+      unsigned long r3884 = __gnu_cxx__char_traits_char___length(t3883);
+      if (__cir_exc_active) {
+        unsigned long __cir_eh_ret = (unsigned long)0;
+        return __cir_eh_ret;
+      }
+      __retval3881 = r3884;
+      unsigned long t3885 = __retval3881;
+      return t3885;
+    }
+  char* t3886 = __s3880;
+  unsigned long r3887 = strlen(t3886);
+  __retval3881 = r3887;
+  unsigned long t3888 = __retval3881;
+  return t3888;
+}
+
+// function: _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v3889, char* v3890) {
+bb3891:
+  struct std__basic_ostream_char__std__char_traits_char__* __out3892;
+  char* __s3893;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval3894;
+  __out3892 = v3889;
+  __s3893 = v3890;
+    char* t3895 = __s3893;
+    _Bool cast3896 = (_Bool)t3895;
+    _Bool u3897 = !cast3896;
+    if (u3897) {
+      struct std__basic_ostream_char__std__char_traits_char__* t3898 = __out3892;
+      void** v3899 = (void**)t3898;
+      void* v3900 = *((void**)v3899);
+      unsigned char* cast3901 = (unsigned char*)v3900;
+      long c3902 = -24;
+      unsigned char* ptr3903 = &(cast3901)[c3902];
+      long* cast3904 = (long*)ptr3903;
+      long t3905 = *cast3904;
+      unsigned char* cast3906 = (unsigned char*)t3898;
+      unsigned char* ptr3907 = &(cast3906)[t3905];
+      struct std__basic_ostream_char__std__char_traits_char__* cast3908 = (struct std__basic_ostream_char__std__char_traits_char__*)ptr3907;
+      struct std__basic_ios_char__std__char_traits_char__* cast3909 = (struct std__basic_ios_char__std__char_traits_char__*)cast3908;
+      int t3910 = _ZNSt8ios_base6badbitE_const;
+      std__basic_ios_char__std__char_traits_char_____setstate(cast3909, t3910);
+      if (__cir_exc_active) {
+        struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+        return __cir_eh_ret;
+      }
+    } else {
+      struct std__basic_ostream_char__std__char_traits_char__* t3911 = __out3892;
+      char* t3912 = __s3893;
+      char* t3913 = __s3893;
+      unsigned long r3914 = std__char_traits_char___length(t3913);
+      if (__cir_exc_active) {
+        struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+        return __cir_eh_ret;
+      }
+      long cast3915 = (long)r3914;
+      struct std__basic_ostream_char__std__char_traits_char__* r3916 = std__basic_ostream_char__std__char_traits_char_____std____ostream_insert_char__std__char_traits_char___(t3911, t3912, cast3915);
+      if (__cir_exc_active) {
+        struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+        return __cir_eh_ret;
+      }
+    }
+  struct std__basic_ostream_char__std__char_traits_char__* t3917 = __out3892;
+  __retval3894 = t3917;
+  struct std__basic_ostream_char__std__char_traits_char__* t3918 = __retval3894;
+  return t3918;
+}
+
+// function: _ZNSolsEPFRSoS_E
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* v3919, void* v3920) {
+bb3921:
+  struct std__basic_ostream_char__std__char_traits_char__* this3922;
+  void* __pf3923;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval3924;
+  this3922 = v3919;
+  __pf3923 = v3920;
+  struct std__basic_ostream_char__std__char_traits_char__* t3925 = this3922;
+  void* t3926 = __pf3923;
+  struct std__basic_ostream_char__std__char_traits_char__* r3927 = ((struct std__basic_ostream_char__std__char_traits_char__* (*)(struct std__basic_ostream_char__std__char_traits_char__*))t3926)(t3925);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  __retval3924 = r3927;
+  struct std__basic_ostream_char__std__char_traits_char__* t3928 = __retval3924;
+  return t3928;
+}
+
+// function: _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v3929) {
+bb3930:
+  struct std__basic_ostream_char__std__char_traits_char__* __os3931;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval3932;
+  __os3931 = v3929;
+  struct std__basic_ostream_char__std__char_traits_char__* t3933 = __os3931;
+  struct std__basic_ostream_char__std__char_traits_char__* r3934 = std__ostream__flush(t3933);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  __retval3932 = r3934;
+  struct std__basic_ostream_char__std__char_traits_char__* t3935 = __retval3932;
+  return t3935;
+}
+
+// function: _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
+struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* v3936) {
+bb3937:
+  struct std__ctype_char_* __f3938;
+  struct std__ctype_char_* __retval3939;
+  __f3938 = v3936;
+    struct std__ctype_char_* t3940 = __f3938;
+    _Bool cast3941 = (_Bool)t3940;
+    _Bool u3942 = !cast3941;
+    if (u3942) {
+      std____throw_bad_cast();
+      if (__cir_exc_active) {
+        struct std__ctype_char_* __cir_eh_ret = (struct std__ctype_char_*)0;
+        return __cir_eh_ret;
+      }
+    }
+  struct std__ctype_char_* t3943 = __f3938;
+  __retval3939 = t3943;
+  struct std__ctype_char_* t3944 = __retval3939;
+  return t3944;
+}
+
+// function: _ZNKSt5ctypeIcE5widenEc
+char std__ctype_char___widen_char__const(struct std__ctype_char_* v3945, char v3946) {
+bb3947:
+  struct std__ctype_char_* this3948;
+  char __c3949;
+  char __retval3950;
+  this3948 = v3945;
+  __c3949 = v3946;
+  struct std__ctype_char_* t3951 = this3948;
+    char t3952 = t3951->_M_widen_ok;
+    _Bool cast3953 = (_Bool)t3952;
+    if (cast3953) {
+      char t3954 = __c3949;
+      unsigned char cast3955 = (unsigned char)t3954;
+      unsigned long cast3956 = (unsigned long)cast3955;
+      char t3957 = t3951->_M_widen[cast3956];
+      __retval3950 = t3957;
+      char t3958 = __retval3950;
+      return t3958;
+    }
+  std__ctype_char____M_widen_init___const(t3951);
+  if (__cir_exc_active) {
+    char __cir_eh_ret = (char)0;
+    return __cir_eh_ret;
+  }
+  char t3959 = __c3949;
+  void** v3960 = (void**)t3951;
+  void* v3961 = *((void**)v3960);
+  char vcall3964 = (char)__VERIFIER_virtual_call_char_char(t3951, 6, t3959);
+  if (__cir_exc_active) {
+    char __cir_eh_ret = (char)0;
+    return __cir_eh_ret;
+  }
+  __retval3950 = vcall3964;
+  char t3965 = __retval3950;
+  return t3965;
+}
+
+// function: _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* v3966, char v3967) {
+bb3968:
+  struct std__basic_ios_char__std__char_traits_char__* this3969;
+  char __c3970;
+  char __retval3971;
+  this3969 = v3966;
+  __c3970 = v3967;
+  struct std__basic_ios_char__std__char_traits_char__* t3972 = this3969;
+  struct std__ctype_char_* t3973 = t3972->_M_ctype;
+  struct std__ctype_char_* r3974 = std__ctype_char__const__std____check_facet_std__ctype_char___(t3973);
+  if (__cir_exc_active) {
+    char __cir_eh_ret = (char)0;
+    return __cir_eh_ret;
+  }
+  char t3975 = __c3970;
+  char r3976 = std__ctype_char___widen_char__const(r3974, t3975);
+  if (__cir_exc_active) {
+    char __cir_eh_ret = (char)0;
+    return __cir_eh_ret;
+  }
+  __retval3971 = r3976;
+  char t3977 = __retval3971;
+  return t3977;
+}
+
+// function: _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v3978) {
+bb3979:
+  struct std__basic_ostream_char__std__char_traits_char__* __os3980;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval3981;
+  __os3980 = v3978;
+  struct std__basic_ostream_char__std__char_traits_char__* t3982 = __os3980;
+  struct std__basic_ostream_char__std__char_traits_char__* t3983 = __os3980;
+  void** v3984 = (void**)t3983;
+  void* v3985 = *((void**)v3984);
+  unsigned char* cast3986 = (unsigned char*)v3985;
+  long c3987 = -24;
+  unsigned char* ptr3988 = &(cast3986)[c3987];
+  long* cast3989 = (long*)ptr3988;
+  long t3990 = *cast3989;
+  unsigned char* cast3991 = (unsigned char*)t3983;
+  unsigned char* ptr3992 = &(cast3991)[t3990];
+  struct std__basic_ostream_char__std__char_traits_char__* cast3993 = (struct std__basic_ostream_char__std__char_traits_char__*)ptr3992;
+  struct std__basic_ios_char__std__char_traits_char__* cast3994 = (struct std__basic_ios_char__std__char_traits_char__*)cast3993;
+  char c3995 = 10;
+  char r3996 = std__basic_ios_char__std__char_traits_char_____widen_char__const(cast3994, c3995);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  struct std__basic_ostream_char__std__char_traits_char__* r3997 = std__ostream__put(t3982, r3996);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  struct std__basic_ostream_char__std__char_traits_char__* r3998 = std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(r3997);
+  if (__cir_exc_active) {
+    struct std__basic_ostream_char__std__char_traits_char__* __cir_eh_ret = (struct std__basic_ostream_char__std__char_traits_char__*)0;
+    return __cir_eh_ret;
+  }
+  __retval3981 = r3998;
+  struct std__basic_ostream_char__std__char_traits_char__* t3999 = __retval3981;
+  return t3999;
+}
+
+// function: _ZNSt5dequeIiSaIiEED2Ev
+void std__deque_int__std__allocator_int______deque(struct std__deque_int__std__allocator_int__* v4000) {
+bb4001:
+  struct std__deque_int__std__allocator_int__* this4002;
+  struct std___Deque_iterator_int__int____int___ agg_tmp04003;
+  struct std___Deque_iterator_int__int____int___ agg_tmp14004;
+  this4002 = v4000;
+  struct std__deque_int__std__allocator_int__* t4005 = this4002;
+    struct std___Deque_iterator_int__int____int___ r4006 = std__deque_int__std__allocator_int_____begin(t4005);
+    agg_tmp04003 = r4006;
+    struct std___Deque_iterator_int__int____int___ r4007 = std__deque_int__std__allocator_int_____end(t4005);
+    agg_tmp14004 = r4007;
+    struct std___Deque_base_int__std__allocator_int__* base4008 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t4005 + 0);
+    struct std__allocator_int_* r4009 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base4008);
+    struct std___Deque_iterator_int__int____int___ t4010 = agg_tmp04003;
+    struct std___Deque_iterator_int__int____int___ t4011 = agg_tmp14004;
+    std__deque_int__std__allocator_int______M_destroy_data(t4005, t4010, t4011, r4009);
+    if (__cir_exc_active) {
+      {
+        struct std___Deque_base_int__std__allocator_int__* base4012 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t4005 + 0);
+        std___Deque_base_int__std__allocator_int_______Deque_base(base4012);
+      }
+      return;
+    }
+  {
+    struct std___Deque_base_int__std__allocator_int__* base4013 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t4005 + 0);
+    std___Deque_base_int__std__allocator_int_______Deque_base(base4013);
+  }
+  return;
+}
+
+// function: main
+int main() {
+bb4014:
+  int __retval4015;
+  struct std__deque_int__std__allocator_int__ first4016;
+  struct std__deque_int__std__allocator_int__ second4017;
+  struct std__deque_int__std__allocator_int__ third4018;
+  int ref_tmp04019;
+  struct std___Deque_iterator_int__int____int___ it4020;
+  struct std___Deque_iterator_int__int____int___ ref_tmp14021;
+  struct std___Deque_iterator_int__int____int___ ref_tmp24022;
+  struct std___Deque_iterator_int__int____int___ agg_tmp04023;
+  struct std___Deque_iterator_int__int____int___ agg_tmp14024;
+  struct std___Deque_iterator_int__int____int___ ref_tmp34025;
+  int myints4026[3];
+  int c4027 = 0;
+  __retval4015 = c4027;
+  std__deque_int__std__allocator_int_____deque(&first4016);
+  if (__cir_exc_active) {
+    int __cir_eh_ret = (int)0;
+    return __cir_eh_ret;
+  }
+    std__deque_int__std__allocator_int_____deque(&second4017);
+    if (__cir_exc_active) {
+      {
+        std__deque_int__std__allocator_int______deque(&first4016);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+      std__deque_int__std__allocator_int_____deque(&third4018);
+      if (__cir_exc_active) {
+        {
+          std__deque_int__std__allocator_int______deque(&second4017);
+        }
+        {
+          std__deque_int__std__allocator_int______deque(&first4016);
+        }
+        int __cir_eh_ret = (int)0;
+        return __cir_eh_ret;
+      }
+        unsigned long c4028 = 7;
+        int c4029 = 100;
+        ref_tmp04019 = c4029;
+        std__deque_int__std__allocator_int_____assign(&first4016, c4028, &ref_tmp04019);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        unsigned long r4030 = std__deque_int__std__allocator_int_____size___const(&first4016);
+        unsigned long c4031 = 7;
+        _Bool c4032 = ((r4030 == c4031)) ? 1 : 0;
+        if (c4032) {
+        } else {
+          char* cast4033 = (char*)&(_str);
+          char* c4034 = _str_1;
+          unsigned int c4035 = 21;
+          char* cast4036 = (char*)&(__PRETTY_FUNCTION___main);
+          __assert_fail(cast4033, c4034, c4035, cast4036);
+        }
+        unsigned long c4037 = 6;
+        int* r4038 = std__deque_int__std__allocator_int_____operator__(&first4016, c4037);
+        int t4039 = *r4038;
+        int c4040 = 100;
+        _Bool c4041 = ((t4039 == c4040)) ? 1 : 0;
+        if (c4041) {
+        } else {
+          char* cast4042 = (char*)&(_str_2);
+          char* c4043 = _str_1;
+          unsigned int c4044 = 22;
+          char* cast4045 = (char*)&(__PRETTY_FUNCTION___main);
+          __assert_fail(cast4042, c4043, c4044, cast4045);
+        }
+        std___Deque_iterator_int__int___int_____Deque_iterator_2(&it4020);
+        struct std___Deque_iterator_int__int____int___ r4046 = std__deque_int__std__allocator_int_____begin(&first4016);
+        ref_tmp24022 = r4046;
+        long c4047 = 1;
+        struct std___Deque_iterator_int__int____int___ r4048 = std__operator__4(&ref_tmp24022, c4047);
+        ref_tmp14021 = r4048;
+        struct std___Deque_iterator_int__int____int___* r4049 = std___Deque_iterator_int__int___int____operator_(&it4020, &ref_tmp14021);
+        std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp04023, &it4020);
+        struct std___Deque_iterator_int__int____int___ r4050 = std__deque_int__std__allocator_int_____end(&first4016);
+        ref_tmp34025 = r4050;
+        long c4051 = 1;
+        struct std___Deque_iterator_int__int____int___ r4052 = std__operator__2(&ref_tmp34025, c4051);
+        agg_tmp14024 = r4052;
+        struct std___Deque_iterator_int__int____int___ t4053 = agg_tmp04023;
+        struct std___Deque_iterator_int__int____int___ t4054 = agg_tmp14024;
+        void_std__deque_int__std__allocator_int_____assign_std___Deque_iterator_int__int___int____void_(&second4017, t4053, t4054);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        unsigned long r4055 = std__deque_int__std__allocator_int_____size___const(&second4017);
+        unsigned long c4056 = 5;
+        _Bool c4057 = ((r4055 == c4056)) ? 1 : 0;
+        if (c4057) {
+        } else {
+          char* cast4058 = (char*)&(_str_3);
+          char* c4059 = _str_1;
+          unsigned int c4060 = 28;
+          char* cast4061 = (char*)&(__PRETTY_FUNCTION___main);
+          __assert_fail(cast4058, c4059, c4060, cast4061);
+        }
+        unsigned long c4062 = 4;
+        int* r4063 = std__deque_int__std__allocator_int_____operator__(&second4017, c4062);
+        int t4064 = *r4063;
+        int c4065 = 100;
+        _Bool c4066 = ((t4064 == c4065)) ? 1 : 0;
+        if (c4066) {
+        } else {
+          char* cast4067 = (char*)&(_str_4);
+          char* c4068 = _str_1;
+          unsigned int c4069 = 29;
+          char* cast4070 = (char*)&(__PRETTY_FUNCTION___main);
+          __assert_fail(cast4067, c4068, c4069, cast4070);
+        }
+        // array copy
+        __builtin_memcpy(myints4026, __const_main_myints, (unsigned long)3 * sizeof(__const_main_myints[0]));
+        int* cast4071 = (int*)&(myints4026);
+        int* cast4072 = (int*)&(myints4026);
+        int c4073 = 3;
+        int* ptr4074 = &(cast4072)[c4073];
+        void_std__deque_int__std__allocator_int_____assign_int___void_(&third4018, cast4071, ptr4074);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        unsigned long r4075 = std__deque_int__std__allocator_int_____size___const(&third4018);
+        unsigned long c4076 = 3;
+        _Bool c4077 = ((r4075 == c4076)) ? 1 : 0;
+        if (c4077) {
+        } else {
+          char* cast4078 = (char*)&(_str_5);
+          char* c4079 = _str_1;
+          unsigned int c4080 = 33;
+          char* cast4081 = (char*)&(__PRETTY_FUNCTION___main);
+          __assert_fail(cast4078, c4079, c4080, cast4081);
+        }
+        unsigned long c4082 = 2;
+        int* r4083 = std__deque_int__std__allocator_int_____operator__(&third4018, c4082);
+        int t4084 = *r4083;
+        int c4085 = 4;
+        _Bool c4086 = ((t4084 == c4085)) ? 1 : 0;
+        if (c4086) {
+        } else {
+          char* cast4087 = (char*)&(_str_6);
+          char* c4088 = _str_1;
+          unsigned int c4089 = 34;
+          char* cast4090 = (char*)&(__PRETTY_FUNCTION___main);
+          __assert_fail(cast4087, c4088, c4089, cast4090);
+        }
+        char* cast4091 = (char*)&(_str_7);
+        struct std__basic_ostream_char__std__char_traits_char__* r4092 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(&_ZSt4cout, cast4091);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        unsigned long r4093 = std__deque_int__std__allocator_int_____size___const(&first4016);
+        int cast4094 = (int)r4093;
+        struct std__basic_ostream_char__std__char_traits_char__* r4095 = std__ostream__operator__(r4092, cast4094);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        struct std__basic_ostream_char__std__char_traits_char__* r4096 = std__ostream__operator___std__ostream_____(r4095, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        char* cast4097 = (char*)&(_str_8);
+        struct std__basic_ostream_char__std__char_traits_char__* r4098 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(&_ZSt4cout, cast4097);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        unsigned long r4099 = std__deque_int__std__allocator_int_____size___const(&second4017);
+        int cast4100 = (int)r4099;
+        struct std__basic_ostream_char__std__char_traits_char__* r4101 = std__ostream__operator__(r4098, cast4100);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        struct std__basic_ostream_char__std__char_traits_char__* r4102 = std__ostream__operator___std__ostream_____(r4101, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        char* cast4103 = (char*)&(_str_9);
+        struct std__basic_ostream_char__std__char_traits_char__* r4104 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(&_ZSt4cout, cast4103);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        unsigned long r4105 = std__deque_int__std__allocator_int_____size___const(&third4018);
+        int cast4106 = (int)r4105;
+        struct std__basic_ostream_char__std__char_traits_char__* r4107 = std__ostream__operator__(r4104, cast4106);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        struct std__basic_ostream_char__std__char_traits_char__* r4108 = std__ostream__operator___std__ostream_____(r4107, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);
+        if (__cir_exc_active) {
+          {
+            std__deque_int__std__allocator_int______deque(&third4018);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&second4017);
+          }
+          {
+            std__deque_int__std__allocator_int______deque(&first4016);
+          }
+          int __cir_eh_ret = (int)0;
+          return __cir_eh_ret;
+        }
+        int c4109 = 0;
+        __retval4015 = c4109;
+        int t4110 = __retval4015;
+        int ret_val4111 = t4110;
+        {
+          std__deque_int__std__allocator_int______deque(&third4018);
+        }
+        {
+          std__deque_int__std__allocator_int______deque(&second4017);
+        }
+        {
+          std__deque_int__std__allocator_int______deque(&first4016);
+        }
+        return ret_val4111;
+  int t4112 = __retval4015;
+  return t4112;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE11_Deque_implC2Ev
+void std___Deque_base_int__std__allocator_int______Deque_impl___Deque_impl(struct std___Deque_base_int__std__allocator_int_____Deque_impl* v4113) {
+bb4114:
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl* this4115;
+  this4115 = v4113;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl* t4116 = this4115;
+  struct std__allocator_int_* base4117 = (struct std__allocator_int_*)((char *)t4116 + 0);
+  std__allocator_int___allocator(base4117);
+    struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4118 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)t4116 + 0);
+    std___Deque_base_int__std__allocator_int______Deque_impl_data___Deque_impl_data(base4118);
+  return;
+}
+
+// function: _ZSt16__deque_buf_sizem
+unsigned long std____deque_buf_size(unsigned long v4119) {
+bb4120:
+  unsigned long __size4121;
+  unsigned long __retval4122;
+  __size4121 = v4119;
+  unsigned long t4123 = __size4121;
+  unsigned long c4124 = 512;
+  _Bool c4125 = ((t4123 < c4124)) ? 1 : 0;
+  unsigned long ternary4126;
+  if (c4125) {
+    unsigned long c4127 = 512;
+    unsigned long t4128 = __size4121;
+    unsigned long b4129 = c4127 / t4128;
+    ternary4126 = (unsigned long)b4129;
+  } else {
+    unsigned long c4130 = 1;
+    ternary4126 = (unsigned long)c4130;
+  }
+  __retval4122 = ternary4126;
+  unsigned long t4131 = __retval4122;
+  return t4131;
+}
+
+// function: _ZSt3maxImERKT_S2_S2_
+unsigned long* unsigned_long_const__std__max_unsigned_long_(unsigned long* v4132, unsigned long* v4133) {
+bb4134:
+  unsigned long* __a4135;
+  unsigned long* __b4136;
+  unsigned long* __retval4137;
+  __a4135 = v4132;
+  __b4136 = v4133;
+    unsigned long* t4138 = __a4135;
+    unsigned long t4139 = *t4138;
+    unsigned long* t4140 = __b4136;
+    unsigned long t4141 = *t4140;
+    _Bool c4142 = ((t4139 < t4141)) ? 1 : 0;
+    if (c4142) {
+      unsigned long* t4143 = __b4136;
+      __retval4137 = t4143;
+      unsigned long* t4144 = __retval4137;
+      return t4144;
+    }
+  unsigned long* t4145 = __a4135;
+  __retval4137 = t4145;
+  unsigned long* t4146 = __retval4137;
+  return t4146;
+}
+
+// function: _ZNKSt11_Deque_baseIiSaIiEE19_M_get_Tp_allocatorEv
+struct std__allocator_int_* std___Deque_base_int__std__allocator_int______M_get_Tp_allocator___const(struct std___Deque_base_int__std__allocator_int__* v4147) {
+bb4148:
+  struct std___Deque_base_int__std__allocator_int__* this4149;
+  struct std__allocator_int_* __retval4150;
+  this4149 = v4147;
+  struct std___Deque_base_int__std__allocator_int__* t4151 = this4149;
+  struct std__allocator_int_* base4152 = (struct std__allocator_int_*)((char *)&(t4151->_M_impl) + 0);
+  __retval4150 = base4152;
+  struct std__allocator_int_* t4153 = __retval4150;
+  return t4153;
+}
+
+// function: _ZNSaIPiEC2IiEERKSaIT_E
+void std__allocator_int____allocator_int_(struct std__allocator_int___* v4154, struct std__allocator_int_* v4155) {
+bb4156:
+  struct std__allocator_int___* this4157;
+  struct std__allocator_int_* unnamed4158;
+  this4157 = v4154;
+  unnamed4158 = v4155;
+  struct std__allocator_int___* t4159 = this4157;
+  struct std____new_allocator_int___* base4160 = (struct std____new_allocator_int___*)((char *)t4159 + 0);
+  std____new_allocator_int______new_allocator(base4160);
+  return;
+}
+
+// function: _ZNKSt11_Deque_baseIiSaIiEE20_M_get_map_allocatorEv
+struct std__allocator_int___ std___Deque_base_int__std__allocator_int______M_get_map_allocator___const(struct std___Deque_base_int__std__allocator_int__* v4161) {
+bb4162:
+  struct std___Deque_base_int__std__allocator_int__* this4163;
+  struct std__allocator_int___ __retval4164;
+  this4163 = v4161;
+  struct std___Deque_base_int__std__allocator_int__* t4165 = this4163;
+  struct std__allocator_int_* r4166 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator___const(t4165);
+  std__allocator_int____allocator_int_(&__retval4164, r4166);
+  struct std__allocator_int___ t4167 = __retval4164;
+  return t4167;
+}
+
+// function: _ZSt23__is_constant_evaluatedv
+_Bool std____is_constant_evaluated() {
+bb4168:
+  _Bool __retval4169;
+    _Bool c4170 = 0;
+    __retval4169 = c4170;
+    _Bool t4171 = __retval4169;
+    return t4171;
+  abort();
+}
+
+// function: _ZNKSt15__new_allocatorIPiE11_M_max_sizeEv
+unsigned long std____new_allocator_int_____M_max_size___const(struct std____new_allocator_int___* v4172) {
+bb4173:
+  struct std____new_allocator_int___* this4174;
+  unsigned long __retval4175;
+  this4174 = v4172;
+  struct std____new_allocator_int___* t4176 = this4174;
+  unsigned long c4177 = 9223372036854775807;
+  unsigned long c4178 = 8;
+  unsigned long b4179 = c4177 / c4178;
+  __retval4175 = b4179;
+  unsigned long t4180 = __retval4175;
+  return t4180;
+}
+
+// function: _ZNSt15__new_allocatorIPiE8allocateEmPKv
+int** std____new_allocator_int____allocate(struct std____new_allocator_int___* v4181, unsigned long v4182, void* v4183) {
+bb4184:
+  struct std____new_allocator_int___* this4185;
+  unsigned long __n4186;
+  void* unnamed4187;
+  int** __retval4188;
+  this4185 = v4181;
+  __n4186 = v4182;
+  unnamed4187 = v4183;
+  struct std____new_allocator_int___* t4189 = this4185;
+    unsigned long t4190 = __n4186;
+    unsigned long r4191 = std____new_allocator_int_____M_max_size___const(t4189);
+    _Bool c4192 = ((t4190 > r4191)) ? 1 : 0;
+    if (c4192) {
+        unsigned long t4193 = __n4186;
+        unsigned long c4194 = -1;
+        unsigned long c4195 = 8;
+        unsigned long b4196 = c4194 / c4195;
+        _Bool c4197 = ((t4193 > b4196)) ? 1 : 0;
+        if (c4197) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            int** __cir_eh_ret = (int**)0;
+            return __cir_eh_ret;
+          }
+        }
+      std____throw_bad_alloc();
+      if (__cir_exc_active) {
+        int** __cir_eh_ret = (int**)0;
+        return __cir_eh_ret;
+      }
+    }
+    unsigned long c4198 = 8;
+    unsigned long c4199 = 16;
+    _Bool c4200 = ((c4198 > c4199)) ? 1 : 0;
+    if (c4200) {
+      unsigned long __al4201;
+      unsigned long c4202 = 8;
+      __al4201 = c4202;
+      unsigned long t4203 = __n4186;
+      unsigned long c4204 = 8;
+      unsigned long b4205 = t4203 * c4204;
+      unsigned long t4206 = __al4201;
+      void* r4207 = operator_new_2(b4205, t4206);
+      if (__cir_exc_active) {
+        int** __cir_eh_ret = (int**)0;
+        return __cir_eh_ret;
+      }
+      int** cast4208 = (int**)r4207;
+      __retval4188 = cast4208;
+      int** t4209 = __retval4188;
+      return t4209;
+    }
+  unsigned long t4210 = __n4186;
+  unsigned long c4211 = 8;
+  unsigned long b4212 = t4210 * c4211;
+  void* r4213 = operator_new(b4212);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  int** cast4214 = (int**)r4213;
+  __retval4188 = cast4214;
+  int** t4215 = __retval4188;
+  return t4215;
+}
+
+// function: _ZNSaIPiE8allocateEm
+int** std__allocator_int____allocate(struct std__allocator_int___* v4216, unsigned long v4217) {
+bb4218:
+  struct std__allocator_int___* this4219;
+  unsigned long __n4220;
+  int** __retval4221;
+  this4219 = v4216;
+  __n4220 = v4217;
+  struct std__allocator_int___* t4222 = this4219;
+    _Bool r4223 = std____is_constant_evaluated();
+    if (r4223) {
+        unsigned long t4224 = __n4220;
+        unsigned long c4225 = 8;
+        unsigned long ovr4226;
+        _Bool ovf4227 = __builtin_mul_overflow(t4224, c4225, &ovr4226);
+        __n4220 = ovr4226;
+        if (ovf4227) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            int** __cir_eh_ret = (int**)0;
+            return __cir_eh_ret;
+          }
+        }
+      unsigned long t4228 = __n4220;
+      void* r4229 = operator_new(t4228);
+      if (__cir_exc_active) {
+        int** __cir_eh_ret = (int**)0;
+        return __cir_eh_ret;
+      }
+      int** cast4230 = (int**)r4229;
+      __retval4221 = cast4230;
+      int** t4231 = __retval4221;
+      return t4231;
+    }
+  struct std____new_allocator_int___* base4232 = (struct std____new_allocator_int___*)((char *)t4222 + 0);
+  unsigned long t4233 = __n4220;
+  void* c4234 = ((void*)0);
+  int** r4235 = std____new_allocator_int____allocate(base4232, t4233, c4234);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval4221 = r4235;
+  int** t4236 = __retval4221;
+  return t4236;
+}
+
+// function: _ZNSt16allocator_traitsISaIPiEE8allocateERS1_m
+int** std__allocator_traits_std__allocator_int______allocate(struct std__allocator_int___* v4237, unsigned long v4238) {
+bb4239:
+  struct std__allocator_int___* __a4240;
+  unsigned long __n4241;
+  int** __retval4242;
+  __a4240 = v4237;
+  __n4241 = v4238;
+  struct std__allocator_int___* t4243 = __a4240;
+  unsigned long t4244 = __n4241;
+  int** r4245 = std__allocator_int____allocate(t4243, t4244);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval4242 = r4245;
+  int** t4246 = __retval4242;
+  return t4246;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE15_M_allocate_mapEm
+int** std___Deque_base_int__std__allocator_int______M_allocate_map(struct std___Deque_base_int__std__allocator_int__* v4247, unsigned long v4248) {
+bb4249:
+  struct std___Deque_base_int__std__allocator_int__* this4250;
+  unsigned long __n4251;
+  int** __retval4252;
+  struct std__allocator_int___ __map_alloc4253;
+  this4250 = v4247;
+  __n4251 = v4248;
+  struct std___Deque_base_int__std__allocator_int__* t4254 = this4250;
+  struct std__allocator_int___ r4255 = std___Deque_base_int__std__allocator_int______M_get_map_allocator___const(t4254);
+  __map_alloc4253 = r4255;
+  unsigned long t4256 = __n4251;
+  int** r4257 = std__allocator_traits_std__allocator_int______allocate(&__map_alloc4253, t4256);
+  if (__cir_exc_active) {
+    int** __cir_eh_ret = (int**)0;
+    return __cir_eh_ret;
+  }
+  __retval4252 = r4257;
+  int** t4258 = __retval4252;
+  return t4258;
+}
+
+// function: _ZNKSt15__new_allocatorIiE11_M_max_sizeEv
+unsigned long std____new_allocator_int____M_max_size___const(struct std____new_allocator_int_* v4259) {
+bb4260:
+  struct std____new_allocator_int_* this4261;
+  unsigned long __retval4262;
+  this4261 = v4259;
+  struct std____new_allocator_int_* t4263 = this4261;
+  unsigned long c4264 = 9223372036854775807;
+  unsigned long c4265 = 4;
+  unsigned long b4266 = c4264 / c4265;
+  __retval4262 = b4266;
+  unsigned long t4267 = __retval4262;
+  return t4267;
+}
+
+// function: _ZNSt15__new_allocatorIiE8allocateEmPKv
+int* std____new_allocator_int___allocate(struct std____new_allocator_int_* v4268, unsigned long v4269, void* v4270) {
+bb4271:
+  struct std____new_allocator_int_* this4272;
+  unsigned long __n4273;
+  void* unnamed4274;
+  int* __retval4275;
+  this4272 = v4268;
+  __n4273 = v4269;
+  unnamed4274 = v4270;
+  struct std____new_allocator_int_* t4276 = this4272;
+    unsigned long t4277 = __n4273;
+    unsigned long r4278 = std____new_allocator_int____M_max_size___const(t4276);
+    _Bool c4279 = ((t4277 > r4278)) ? 1 : 0;
+    if (c4279) {
+        unsigned long t4280 = __n4273;
+        unsigned long c4281 = -1;
+        unsigned long c4282 = 4;
+        unsigned long b4283 = c4281 / c4282;
+        _Bool c4284 = ((t4280 > b4283)) ? 1 : 0;
+        if (c4284) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            int* __cir_eh_ret = (int*)0;
+            return __cir_eh_ret;
+          }
+        }
+      std____throw_bad_alloc();
+      if (__cir_exc_active) {
+        int* __cir_eh_ret = (int*)0;
+        return __cir_eh_ret;
+      }
+    }
+    unsigned long c4285 = 4;
+    unsigned long c4286 = 16;
+    _Bool c4287 = ((c4285 > c4286)) ? 1 : 0;
+    if (c4287) {
+      unsigned long __al4288;
+      unsigned long c4289 = 4;
+      __al4288 = c4289;
+      unsigned long t4290 = __n4273;
+      unsigned long c4291 = 4;
+      unsigned long b4292 = t4290 * c4291;
+      unsigned long t4293 = __al4288;
+      void* r4294 = operator_new_2(b4292, t4293);
+      if (__cir_exc_active) {
+        int* __cir_eh_ret = (int*)0;
+        return __cir_eh_ret;
+      }
+      int* cast4295 = (int*)r4294;
+      __retval4275 = cast4295;
+      int* t4296 = __retval4275;
+      return t4296;
+    }
+  unsigned long t4297 = __n4273;
+  unsigned long c4298 = 4;
+  unsigned long b4299 = t4297 * c4298;
+  void* r4300 = operator_new(b4299);
+  if (__cir_exc_active) {
+    int* __cir_eh_ret = (int*)0;
+    return __cir_eh_ret;
+  }
+  int* cast4301 = (int*)r4300;
+  __retval4275 = cast4301;
+  int* t4302 = __retval4275;
+  return t4302;
+}
+
+// function: _ZNSaIiE8allocateEm
+int* std__allocator_int___allocate(struct std__allocator_int_* v4303, unsigned long v4304) {
+bb4305:
+  struct std__allocator_int_* this4306;
+  unsigned long __n4307;
+  int* __retval4308;
+  this4306 = v4303;
+  __n4307 = v4304;
+  struct std__allocator_int_* t4309 = this4306;
+    _Bool r4310 = std____is_constant_evaluated();
+    if (r4310) {
+        unsigned long t4311 = __n4307;
+        unsigned long c4312 = 4;
+        unsigned long ovr4313;
+        _Bool ovf4314 = __builtin_mul_overflow(t4311, c4312, &ovr4313);
+        __n4307 = ovr4313;
+        if (ovf4314) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            int* __cir_eh_ret = (int*)0;
+            return __cir_eh_ret;
+          }
+        }
+      unsigned long t4315 = __n4307;
+      void* r4316 = operator_new(t4315);
+      if (__cir_exc_active) {
+        int* __cir_eh_ret = (int*)0;
+        return __cir_eh_ret;
+      }
+      int* cast4317 = (int*)r4316;
+      __retval4308 = cast4317;
+      int* t4318 = __retval4308;
+      return t4318;
+    }
+  struct std____new_allocator_int_* base4319 = (struct std____new_allocator_int_*)((char *)t4309 + 0);
+  unsigned long t4320 = __n4307;
+  void* c4321 = ((void*)0);
+  int* r4322 = std____new_allocator_int___allocate(base4319, t4320, c4321);
+  if (__cir_exc_active) {
+    int* __cir_eh_ret = (int*)0;
+    return __cir_eh_ret;
+  }
+  __retval4308 = r4322;
+  int* t4323 = __retval4308;
+  return t4323;
+}
+
+// function: _ZNSt16allocator_traitsISaIiEE8allocateERS0_m
+int* std__allocator_traits_std__allocator_int_____allocate(struct std__allocator_int_* v4324, unsigned long v4325) {
+bb4326:
+  struct std__allocator_int_* __a4327;
+  unsigned long __n4328;
+  int* __retval4329;
+  __a4327 = v4324;
+  __n4328 = v4325;
+  struct std__allocator_int_* t4330 = __a4327;
+  unsigned long t4331 = __n4328;
+  int* r4332 = std__allocator_int___allocate(t4330, t4331);
+  if (__cir_exc_active) {
+    int* __cir_eh_ret = (int*)0;
+    return __cir_eh_ret;
+  }
+  __retval4329 = r4332;
+  int* t4333 = __retval4329;
+  return t4333;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE16_M_allocate_nodeEv
+int* std___Deque_base_int__std__allocator_int______M_allocate_node(struct std___Deque_base_int__std__allocator_int__* v4334) {
+bb4335:
+  struct std___Deque_base_int__std__allocator_int__* this4336;
+  int* __retval4337;
+  this4336 = v4334;
+  struct std___Deque_base_int__std__allocator_int__* t4338 = this4336;
+  struct std__allocator_int_* base4339 = (struct std__allocator_int_*)((char *)&(t4338->_M_impl) + 0);
+  unsigned long c4340 = 4;
+  unsigned long r4341 = std____deque_buf_size(c4340);
+  if (__cir_exc_active) {
+    int* __cir_eh_ret = (int*)0;
+    return __cir_eh_ret;
+  }
+  int* r4342 = std__allocator_traits_std__allocator_int_____allocate(base4339, r4341);
+  if (__cir_exc_active) {
+    int* __cir_eh_ret = (int*)0;
+    return __cir_eh_ret;
+  }
+  __retval4337 = r4342;
+  int* t4343 = __retval4337;
+  return t4343;
+}
+
+// function: _ZNSt15__new_allocatorIiE10deallocateEPim
+void std____new_allocator_int___deallocate(struct std____new_allocator_int_* v4344, int* v4345, unsigned long v4346) {
+bb4347:
+  struct std____new_allocator_int_* this4348;
+  int* __p4349;
+  unsigned long __n4350;
+  this4348 = v4344;
+  __p4349 = v4345;
+  __n4350 = v4346;
+  struct std____new_allocator_int_* t4351 = this4348;
+    unsigned long c4352 = 4;
+    unsigned long c4353 = 16;
+    _Bool c4354 = ((c4352 > c4353)) ? 1 : 0;
+    if (c4354) {
+      int* t4355 = __p4349;
+      void* cast4356 = (void*)t4355;
+      unsigned long t4357 = __n4350;
+      unsigned long c4358 = 4;
+      unsigned long b4359 = t4357 * c4358;
+      unsigned long c4360 = 4;
+      operator_delete_3(cast4356, b4359, c4360);
+      return;
+    }
+  int* t4361 = __p4349;
+  void* cast4362 = (void*)t4361;
+  unsigned long t4363 = __n4350;
+  unsigned long c4364 = 4;
+  unsigned long b4365 = t4363 * c4364;
+  operator_delete_2(cast4362, b4365);
+  return;
+}
+
+// function: _ZNSaIiE10deallocateEPim
+void std__allocator_int___deallocate(struct std__allocator_int_* v4366, int* v4367, unsigned long v4368) {
+bb4369:
+  struct std__allocator_int_* this4370;
+  int* __p4371;
+  unsigned long __n4372;
+  this4370 = v4366;
+  __p4371 = v4367;
+  __n4372 = v4368;
+  struct std__allocator_int_* t4373 = this4370;
+    _Bool r4374 = std____is_constant_evaluated();
+    if (r4374) {
+      int* t4375 = __p4371;
+      void* cast4376 = (void*)t4375;
+      operator_delete(cast4376);
+      return;
+    }
+  struct std____new_allocator_int_* base4377 = (struct std____new_allocator_int_*)((char *)t4373 + 0);
+  int* t4378 = __p4371;
+  unsigned long t4379 = __n4372;
+  std____new_allocator_int___deallocate(base4377, t4378, t4379);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaIiEE10deallocateERS0_Pim
+void std__allocator_traits_std__allocator_int_____deallocate(struct std__allocator_int_* v4380, int* v4381, unsigned long v4382) {
+bb4383:
+  struct std__allocator_int_* __a4384;
+  int* __p4385;
+  unsigned long __n4386;
+  __a4384 = v4380;
+  __p4385 = v4381;
+  __n4386 = v4382;
+  struct std__allocator_int_* t4387 = __a4384;
+  int* t4388 = __p4385;
+  unsigned long t4389 = __n4386;
+  std__allocator_int___deallocate(t4387, t4388, t4389);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE18_M_deallocate_nodeEPi
+void std___Deque_base_int__std__allocator_int______M_deallocate_node(struct std___Deque_base_int__std__allocator_int__* v4390, int* v4391) {
+bb4392:
+  struct std___Deque_base_int__std__allocator_int__* this4393;
+  int* __p4394;
+  this4393 = v4390;
+  __p4394 = v4391;
+  struct std___Deque_base_int__std__allocator_int__* t4395 = this4393;
+  struct std__allocator_int_* base4396 = (struct std__allocator_int_*)((char *)&(t4395->_M_impl) + 0);
+  int* t4397 = __p4394;
+  unsigned long c4398 = 4;
+  unsigned long r4399 = std____deque_buf_size(c4398);
+  if (__cir_exc_active) {
+    return;
+  }
+  std__allocator_traits_std__allocator_int_____deallocate(base4396, t4397, r4399);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE16_M_destroy_nodesEPPiS3_
+void std___Deque_base_int__std__allocator_int______M_destroy_nodes(struct std___Deque_base_int__std__allocator_int__* v4400, int** v4401, int** v4402) {
+bb4403:
+  struct std___Deque_base_int__std__allocator_int__* this4404;
+  int** __nstart4405;
+  int** __nfinish4406;
+  this4404 = v4400;
+  __nstart4405 = v4401;
+  __nfinish4406 = v4402;
+  struct std___Deque_base_int__std__allocator_int__* t4407 = this4404;
+    int** __n4408;
+    int** t4409 = __nstart4405;
+    __n4408 = t4409;
+    while (1) {
+      int** t4411 = __n4408;
+      int** t4412 = __nfinish4406;
+      _Bool c4413 = ((t4411 < t4412)) ? 1 : 0;
+      if (!c4413) break;
+      int** t4414 = __n4408;
+      int* t4415 = *t4414;
+      std___Deque_base_int__std__allocator_int______M_deallocate_node(t4407, t4415);
+    for_step4410: ;
+      int** t4416 = __n4408;
+      int c4417 = 1;
+      int** ptr4418 = &(t4416)[c4417];
+      __n4408 = ptr4418;
+    }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE15_M_create_nodesEPPiS3_
+void std___Deque_base_int__std__allocator_int______M_create_nodes(struct std___Deque_base_int__std__allocator_int__* v4419, int** v4420, int** v4421) {
+bb4422:
+  struct std___Deque_base_int__std__allocator_int__* this4423;
+  int** __nstart4424;
+  int** __nfinish4425;
+  int** __cur4426;
+  this4423 = v4419;
+  __nstart4424 = v4420;
+  __nfinish4425 = v4421;
+  struct std___Deque_base_int__std__allocator_int__* t4427 = this4423;
+        int** t4429 = __nstart4424;
+        __cur4426 = t4429;
+        while (1) {
+          int** t4431 = __cur4426;
+          int** t4432 = __nfinish4425;
+          _Bool c4433 = ((t4431 < t4432)) ? 1 : 0;
+          if (!c4433) break;
+          int* r4434 = std___Deque_base_int__std__allocator_int______M_allocate_node(t4427);
+          if (__cir_exc_active) {
+            goto cir_try_dispatch4428;
+          }
+          int** t4435 = __cur4426;
+          *t4435 = r4434;
+        for_step4430: ;
+          int** t4436 = __cur4426;
+          int c4437 = 1;
+          int** ptr4438 = &(t4436)[c4437];
+          __cur4426 = ptr4438;
+        }
+    cir_try_dispatch4428: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok4439 = 0;
+      void* ca_exn4440 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        int** t4441 = __nstart4424;
+        int** t4442 = __cur4426;
+        std___Deque_base_int__std__allocator_int______M_destroy_nodes(t4427, t4441, t4442);
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZNSt15__new_allocatorIPiE10deallocateEPS0_m
+void std____new_allocator_int____deallocate(struct std____new_allocator_int___* v4443, int** v4444, unsigned long v4445) {
+bb4446:
+  struct std____new_allocator_int___* this4447;
+  int** __p4448;
+  unsigned long __n4449;
+  this4447 = v4443;
+  __p4448 = v4444;
+  __n4449 = v4445;
+  struct std____new_allocator_int___* t4450 = this4447;
+    unsigned long c4451 = 8;
+    unsigned long c4452 = 16;
+    _Bool c4453 = ((c4451 > c4452)) ? 1 : 0;
+    if (c4453) {
+      int** t4454 = __p4448;
+      void* cast4455 = (void*)t4454;
+      unsigned long t4456 = __n4449;
+      unsigned long c4457 = 8;
+      unsigned long b4458 = t4456 * c4457;
+      unsigned long c4459 = 8;
+      operator_delete_3(cast4455, b4458, c4459);
+      return;
+    }
+  int** t4460 = __p4448;
+  void* cast4461 = (void*)t4460;
+  unsigned long t4462 = __n4449;
+  unsigned long c4463 = 8;
+  unsigned long b4464 = t4462 * c4463;
+  operator_delete_2(cast4461, b4464);
+  return;
+}
+
+// function: _ZNSaIPiE10deallocateEPS_m
+void std__allocator_int____deallocate(struct std__allocator_int___* v4465, int** v4466, unsigned long v4467) {
+bb4468:
+  struct std__allocator_int___* this4469;
+  int** __p4470;
+  unsigned long __n4471;
+  this4469 = v4465;
+  __p4470 = v4466;
+  __n4471 = v4467;
+  struct std__allocator_int___* t4472 = this4469;
+    _Bool r4473 = std____is_constant_evaluated();
+    if (r4473) {
+      int** t4474 = __p4470;
+      void* cast4475 = (void*)t4474;
+      operator_delete(cast4475);
+      return;
+    }
+  struct std____new_allocator_int___* base4476 = (struct std____new_allocator_int___*)((char *)t4472 + 0);
+  int** t4477 = __p4470;
+  unsigned long t4478 = __n4471;
+  std____new_allocator_int____deallocate(base4476, t4477, t4478);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaIPiEE10deallocateERS1_PS0_m
+void std__allocator_traits_std__allocator_int______deallocate(struct std__allocator_int___* v4479, int** v4480, unsigned long v4481) {
+bb4482:
+  struct std__allocator_int___* __a4483;
+  int** __p4484;
+  unsigned long __n4485;
+  __a4483 = v4479;
+  __p4484 = v4480;
+  __n4485 = v4481;
+  struct std__allocator_int___* t4486 = __a4483;
+  int** t4487 = __p4484;
+  unsigned long t4488 = __n4485;
+  std__allocator_int____deallocate(t4486, t4487, t4488);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE17_M_deallocate_mapEPPim
+void std___Deque_base_int__std__allocator_int______M_deallocate_map(struct std___Deque_base_int__std__allocator_int__* v4489, int** v4490, unsigned long v4491) {
+bb4492:
+  struct std___Deque_base_int__std__allocator_int__* this4493;
+  int** __p4494;
+  unsigned long __n4495;
+  struct std__allocator_int___ __map_alloc4496;
+  this4493 = v4489;
+  __p4494 = v4490;
+  __n4495 = v4491;
+  struct std___Deque_base_int__std__allocator_int__* t4497 = this4493;
+  struct std__allocator_int___ r4498 = std___Deque_base_int__std__allocator_int______M_get_map_allocator___const(t4497);
+  __map_alloc4496 = r4498;
+  int** t4499 = __p4494;
+  unsigned long t4500 = __n4495;
+  std__allocator_traits_std__allocator_int______deallocate(&__map_alloc4496, t4499, t4500);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiE14_S_buffer_sizeEv
+unsigned long std___Deque_iterator_int__int___int_____S_buffer_size() {
+bb4501:
+  unsigned long __retval4502;
+  unsigned long c4503 = 4;
+  unsigned long r4504 = std____deque_buf_size(c4503);
+  if (__cir_exc_active) {
+    unsigned long __cir_eh_ret = (unsigned long)0;
+    return __cir_eh_ret;
+  }
+  __retval4502 = r4504;
+  unsigned long t4505 = __retval4502;
+  return t4505;
+}
+
+// function: _ZNSt15_Deque_iteratorIiRiPiE11_M_set_nodeEPS1_
+void std___Deque_iterator_int__int___int_____M_set_node(struct std___Deque_iterator_int__int____int___* v4506, int** v4507) {
+bb4508:
+  struct std___Deque_iterator_int__int____int___* this4509;
+  int** __new_node4510;
+  this4509 = v4506;
+  __new_node4510 = v4507;
+  struct std___Deque_iterator_int__int____int___* t4511 = this4509;
+  int** t4512 = __new_node4510;
+  t4511->_M_node = t4512;
+  int** t4513 = __new_node4510;
+  int* t4514 = *t4513;
+  t4511->_M_first = t4514;
+  int* t4515 = t4511->_M_first;
+  unsigned long r4516 = std___Deque_iterator_int__int___int_____S_buffer_size();
+  long cast4517 = (long)r4516;
+  int* ptr4518 = &(t4515)[cast4517];
+  t4511->_M_last = ptr4518;
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE17_M_initialize_mapEm
+void std___Deque_base_int__std__allocator_int______M_initialize_map(struct std___Deque_base_int__std__allocator_int__* v4519, unsigned long v4520) {
+bb4521:
+  struct std___Deque_base_int__std__allocator_int__* this4522;
+  unsigned long __num_elements4523;
+  unsigned long __num_nodes4524;
+  unsigned long ref_tmp04525;
+  unsigned long ref_tmp14526;
+  int** __nstart4527;
+  int** __nfinish4528;
+  this4522 = v4519;
+  __num_elements4523 = v4520;
+  struct std___Deque_base_int__std__allocator_int__* t4529 = this4522;
+  unsigned long t4530 = __num_elements4523;
+  unsigned long c4531 = 4;
+  unsigned long r4532 = std____deque_buf_size(c4531);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long b4533 = t4530 / r4532;
+  unsigned long c4534 = 1;
+  unsigned long b4535 = b4533 + c4534;
+  __num_nodes4524 = b4535;
+  unsigned long c4536 = 8;
+  ref_tmp04525 = c4536;
+  unsigned long t4537 = __num_nodes4524;
+  unsigned long c4538 = 2;
+  unsigned long b4539 = t4537 + c4538;
+  ref_tmp14526 = b4539;
+  unsigned long* r4540 = unsigned_long_const__std__max_unsigned_long_(&ref_tmp04525, &ref_tmp14526);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long t4541 = *r4540;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4542 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  base4542->_M_map_size = t4541;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4543 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  unsigned long t4544 = base4543->_M_map_size;
+  int** r4545 = std___Deque_base_int__std__allocator_int______M_allocate_map(t4529, t4544);
+  if (__cir_exc_active) {
+    return;
+  }
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4546 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  base4546->_M_map = r4545;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4547 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  int** t4548 = base4547->_M_map;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4549 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  unsigned long t4550 = base4549->_M_map_size;
+  unsigned long t4551 = __num_nodes4524;
+  unsigned long b4552 = t4550 - t4551;
+  unsigned long c4553 = 2;
+  unsigned long b4554 = b4552 / c4553;
+  int** ptr4555 = &(t4548)[b4554];
+  __nstart4527 = ptr4555;
+  int** t4556 = __nstart4527;
+  unsigned long t4557 = __num_nodes4524;
+  int** ptr4558 = &(t4556)[t4557];
+  __nfinish4528 = ptr4558;
+      int** t4560 = __nstart4527;
+      int** t4561 = __nfinish4528;
+      std___Deque_base_int__std__allocator_int______M_create_nodes(t4529, t4560, t4561);
+      if (__cir_exc_active) {
+        goto cir_try_dispatch4559;
+      }
+    cir_try_dispatch4559: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok4562 = 0;
+      void* ca_exn4563 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4564 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+        int** t4565 = base4564->_M_map;
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4566 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+        unsigned long t4567 = base4566->_M_map_size;
+        std___Deque_base_int__std__allocator_int______M_deallocate_map(t4529, t4565, t4567);
+        int** c4568 = ((void*)0);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4569 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+        base4569->_M_map = c4568;
+        unsigned long c4570 = 0;
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4571 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+        base4571->_M_map_size = c4570;
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4572 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  int** t4573 = __nstart4527;
+  std___Deque_iterator_int__int___int_____M_set_node(&base4572->_M_start, t4573);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4574 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  int** t4575 = __nfinish4528;
+  int c4576 = -1;
+  int** ptr4577 = &(t4575)[c4576];
+  std___Deque_iterator_int__int___int_____M_set_node(&base4574->_M_finish, ptr4577);
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4578 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  int* t4579 = base4578->_M_start._M_first;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4580 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  base4580->_M_start._M_cur = t4579;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4581 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  int* t4582 = base4581->_M_finish._M_first;
+  unsigned long t4583 = __num_elements4523;
+  unsigned long c4584 = 4;
+  unsigned long r4585 = std____deque_buf_size(c4584);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long b4586 = t4583 % r4585;
+  int* ptr4587 = &(t4582)[b4586];
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4588 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4529->_M_impl) + 0);
+  base4588->_M_finish._M_cur = ptr4587;
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE11_Deque_implD2Ev
+void std___Deque_base_int__std__allocator_int______Deque_impl____Deque_impl(struct std___Deque_base_int__std__allocator_int_____Deque_impl* v4589) {
+bb4590:
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl* this4591;
+  this4591 = v4589;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl* t4592 = this4591;
+  {
+    struct std__allocator_int_* base4593 = (struct std__allocator_int_*)((char *)t4592 + 0);
+    std__allocator_int____allocator(base4593);
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEEC2Ev
+void std___Deque_base_int__std__allocator_int______Deque_base(struct std___Deque_base_int__std__allocator_int__* v4594) {
+bb4595:
+  struct std___Deque_base_int__std__allocator_int__* this4596;
+  this4596 = v4594;
+  struct std___Deque_base_int__std__allocator_int__* t4597 = this4596;
+  std___Deque_base_int__std__allocator_int______Deque_impl___Deque_impl(&t4597->_M_impl);
+    unsigned long c4598 = 0;
+    std___Deque_base_int__std__allocator_int______M_initialize_map(t4597, c4598);
+    if (__cir_exc_active) {
+      {
+        std___Deque_base_int__std__allocator_int______Deque_impl____Deque_impl(&t4597->_M_impl);
+      }
+      return;
+    }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEED2Ev
+void std___Deque_base_int__std__allocator_int_______Deque_base(struct std___Deque_base_int__std__allocator_int__* v4599) {
+bb4600:
+  struct std___Deque_base_int__std__allocator_int__* this4601;
+  this4601 = v4599;
+  struct std___Deque_base_int__std__allocator_int__* t4602 = this4601;
+      struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4603 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4602->_M_impl) + 0);
+      int** t4604 = base4603->_M_map;
+      _Bool cast4605 = (_Bool)t4604;
+      if (cast4605) {
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4606 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4602->_M_impl) + 0);
+        int** t4607 = base4606->_M_start._M_node;
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4608 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4602->_M_impl) + 0);
+        int** t4609 = base4608->_M_finish._M_node;
+        int c4610 = 1;
+        int** ptr4611 = &(t4609)[c4610];
+        std___Deque_base_int__std__allocator_int______M_destroy_nodes(t4602, t4607, ptr4611);
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4612 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4602->_M_impl) + 0);
+        int** t4613 = base4612->_M_map;
+        struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* base4614 = (struct std___Deque_base_int__std__allocator_int_____Deque_impl_data*)((char *)&(t4602->_M_impl) + 0);
+        unsigned long t4615 = base4614->_M_map_size;
+        std___Deque_base_int__std__allocator_int______M_deallocate_map(t4602, t4613, t4615);
+      }
+  {
+    std___Deque_base_int__std__allocator_int______Deque_impl____Deque_impl(&t4602->_M_impl);
+  }
+  return;
+}
+
+// function: _ZNSt15__new_allocatorIiEC2Ev
+void std____new_allocator_int_____new_allocator(struct std____new_allocator_int_* v4616) {
+bb4617:
+  struct std____new_allocator_int_* this4618;
+  this4618 = v4616;
+  struct std____new_allocator_int_* t4619 = this4618;
+  return;
+}
+
+// function: _ZNSaIiEC2Ev
+void std__allocator_int___allocator(struct std__allocator_int_* v4620) {
+bb4621:
+  struct std__allocator_int_* this4622;
+  this4622 = v4620;
+  struct std__allocator_int_* t4623 = this4622;
+  struct std____new_allocator_int_* base4624 = (struct std____new_allocator_int_*)((char *)t4623 + 0);
+  std____new_allocator_int_____new_allocator(base4624);
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE16_Deque_impl_dataC2Ev
+void std___Deque_base_int__std__allocator_int______Deque_impl_data___Deque_impl_data(struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* v4625) {
+bb4626:
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* this4627;
+  this4627 = v4625;
+  struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* t4628 = this4627;
+  int** c4629 = ((void*)0);
+  t4628->_M_map = c4629;
+  unsigned long c4630 = 0;
+  t4628->_M_map_size = c4630;
+  std___Deque_iterator_int__int___int_____Deque_iterator_2(&t4628->_M_start);
+  std___Deque_iterator_int__int___int_____Deque_iterator_2(&t4628->_M_finish);
+  return;
+}
+
+// function: _ZNSaIiED2Ev
+void std__allocator_int____allocator(struct std__allocator_int_* v4631) {
+bb4632:
+  struct std__allocator_int_* this4633;
+  this4633 = v4631;
+  struct std__allocator_int_* t4634 = this4633;
+  return;
+}
+
+// function: _ZNSt15__new_allocatorIPiEC2Ev
+void std____new_allocator_int______new_allocator(struct std____new_allocator_int___* v4635) {
+bb4636:
+  struct std____new_allocator_int___* this4637;
+  this4637 = v4635;
+  struct std____new_allocator_int___* t4638 = this4637;
+  return;
+}
+
+// function: _ZSt10destroy_atIiEvPT_
+void void_std__destroy_at_int_(int* v4639) {
+bb4640:
+  int* __location4641;
+  __location4641 = v4639;
+  return;
+}
+
+// function: _ZSt8_DestroyIPiEvT_S1_
+void void_std___Destroy_int__(int* v4642, int* v4643) {
+bb4644:
+  int* __first4645;
+  int* __last4646;
+  __first4645 = v4642;
+  __last4646 = v4643;
+      _Bool r4647 = std____is_constant_evaluated();
+      if (r4647) {
+          while (1) {
+            int* t4649 = __first4645;
+            int* t4650 = __last4646;
+            _Bool c4651 = ((t4649 != t4650)) ? 1 : 0;
+            if (!c4651) break;
+            int* t4652 = __first4645;
+            void_std__destroy_at_int_(t4652);
+            if (__cir_exc_active) {
+              return;
+            }
+          for_step4648: ;
+            int* t4653 = __first4645;
+            int c4654 = 1;
+            int* ptr4655 = &(t4653)[c4654];
+            __first4645 = ptr4655;
+          }
+      }
+  return;
+}
+
+// function: _ZSt8_DestroyIPiiEvT_S1_RSaIT0_E
+void void_std___Destroy_int___int_(int* v4656, int* v4657, struct std__allocator_int_* v4658) {
+bb4659:
+  int* __first4660;
+  int* __last4661;
+  struct std__allocator_int_* unnamed4662;
+  __first4660 = v4656;
+  __last4661 = v4657;
+  unnamed4662 = v4658;
+  int* t4663 = __first4660;
+  int* t4664 = __last4661;
+  void_std___Destroy_int__(t4663, t4664);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE14_S_buffer_sizeEv
+unsigned long std__deque_int__std__allocator_int______S_buffer_size() {
+bb4665:
+  unsigned long __retval4666;
+  unsigned long c4667 = 4;
+  unsigned long r4668 = std____deque_buf_size(c4667);
+  if (__cir_exc_active) {
+    unsigned long __cir_eh_ret = (unsigned long)0;
+    return __cir_eh_ret;
+  }
+  __retval4666 = r4668;
+  unsigned long t4669 = __retval4666;
+  return t4669;
+}
+
+// function: _ZNSt5dequeIiSaIiEE19_M_destroy_data_auxESt15_Deque_iteratorIiRiPiES5_
+void std__deque_int__std__allocator_int______M_destroy_data_aux(struct std__deque_int__std__allocator_int__* v4670, struct std___Deque_iterator_int__int____int___ v4671, struct std___Deque_iterator_int__int____int___ v4672) {
+bb4673:
+  struct std__deque_int__std__allocator_int__* this4674;
+  struct std___Deque_iterator_int__int____int___ __first4675;
+  struct std___Deque_iterator_int__int____int___ __last4676;
+  this4674 = v4670;
+  __first4675 = v4671;
+  __last4676 = v4672;
+  struct std__deque_int__std__allocator_int__* t4677 = this4674;
+    int** __node4678;
+    int** t4679 = __first4675._M_node;
+    int c4680 = 1;
+    int** ptr4681 = &(t4679)[c4680];
+    __node4678 = ptr4681;
+    while (1) {
+      int** t4683 = __node4678;
+      int** t4684 = __last4676._M_node;
+      _Bool c4685 = ((t4683 < t4684)) ? 1 : 0;
+      if (!c4685) break;
+      int** t4686 = __node4678;
+      int* t4687 = *t4686;
+      int** t4688 = __node4678;
+      int* t4689 = *t4688;
+      unsigned long r4690 = std__deque_int__std__allocator_int______S_buffer_size();
+      int* ptr4691 = &(t4689)[r4690];
+      struct std___Deque_base_int__std__allocator_int__* base4692 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t4677 + 0);
+      struct std__allocator_int_* r4693 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base4692);
+      void_std___Destroy_int___int_(t4687, ptr4691, r4693);
+      if (__cir_exc_active) {
+        return;
+      }
+    for_step4682: ;
+      int** t4694 = __node4678;
+      int c4695 = 1;
+      int** ptr4696 = &(t4694)[c4695];
+      __node4678 = ptr4696;
+    }
+    int** t4697 = __first4675._M_node;
+    int** t4698 = __last4676._M_node;
+    _Bool c4699 = ((t4697 != t4698)) ? 1 : 0;
+    if (c4699) {
+      int* t4700 = __first4675._M_cur;
+      int* t4701 = __first4675._M_last;
+      struct std___Deque_base_int__std__allocator_int__* base4702 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t4677 + 0);
+      struct std__allocator_int_* r4703 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base4702);
+      void_std___Destroy_int___int_(t4700, t4701, r4703);
+      if (__cir_exc_active) {
+        return;
+      }
+      int* t4704 = __last4676._M_first;
+      int* t4705 = __last4676._M_cur;
+      struct std___Deque_base_int__std__allocator_int__* base4706 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t4677 + 0);
+      struct std__allocator_int_* r4707 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base4706);
+      void_std___Destroy_int___int_(t4704, t4705, r4707);
+      if (__cir_exc_active) {
+        return;
+      }
+    } else {
+      int* t4708 = __first4675._M_cur;
+      int* t4709 = __last4676._M_cur;
+      struct std___Deque_base_int__std__allocator_int__* base4710 = (struct std___Deque_base_int__std__allocator_int__*)((char *)t4677 + 0);
+      struct std__allocator_int_* r4711 = std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(base4710);
+      void_std___Destroy_int___int_(t4708, t4709, r4711);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeIiSaIiEE15_M_destroy_dataESt15_Deque_iteratorIiRiPiES5_RKS0_
+void std__deque_int__std__allocator_int______M_destroy_data(struct std__deque_int__std__allocator_int__* v4712, struct std___Deque_iterator_int__int____int___ v4713, struct std___Deque_iterator_int__int____int___ v4714, struct std__allocator_int_* v4715) {
+bb4716:
+  struct std__deque_int__std__allocator_int__* this4717;
+  struct std___Deque_iterator_int__int____int___ __first4718;
+  struct std___Deque_iterator_int__int____int___ __last4719;
+  struct std__allocator_int_* unnamed4720;
+  this4717 = v4712;
+  __first4718 = v4713;
+  __last4719 = v4714;
+  unnamed4720 = v4715;
+  struct std__deque_int__std__allocator_int__* t4721 = this4717;
+    _Bool c4722 = 0;
+    if (c4722) {
+      struct std___Deque_iterator_int__int____int___ agg_tmp04723;
+      struct std___Deque_iterator_int__int____int___ agg_tmp14724;
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp04723, &__first4718);
+      std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp14724, &__last4719);
+      struct std___Deque_iterator_int__int____int___ t4725 = agg_tmp04723;
+      struct std___Deque_iterator_int__int____int___ t4726 = agg_tmp14724;
+      std__deque_int__std__allocator_int______M_destroy_data_aux(t4721, t4725, t4726);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseIiSaIiEE19_M_get_Tp_allocatorEv
+struct std__allocator_int_* std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(struct std___Deque_base_int__std__allocator_int__* v4727) {
+bb4728:
+  struct std___Deque_base_int__std__allocator_int__* this4729;
+  struct std__allocator_int_* __retval4730;
+  this4729 = v4727;
+  struct std___Deque_base_int__std__allocator_int__* t4731 = this4729;
+  struct std__allocator_int_* base4732 = (struct std__allocator_int_*)((char *)&(t4731->_M_impl) + 0);
+  __retval4730 = base4732;
+  struct std__allocator_int_* t4733 = __retval4730;
+  return t4733;
+}
+
+// function: _ZSt8_DestroyISt15_Deque_iteratorIiRiPiEEvT_S4_
+void void_std___Destroy_std___Deque_iterator_int__int___int____(struct std___Deque_iterator_int__int____int___ v4734, struct std___Deque_iterator_int__int____int___ v4735) {
+bb4736:
+  struct std___Deque_iterator_int__int____int___ __first4737;
+  struct std___Deque_iterator_int__int____int___ __last4738;
+  __first4737 = v4734;
+  __last4738 = v4735;
+      _Bool r4739 = std____is_constant_evaluated();
+      if (r4739) {
+          while (1) {
+            _Bool r4741 = std__operator__(&__first4737, &__last4738);
+            _Bool u4742 = !r4741;
+            if (!u4742) break;
+            int* r4743 = std___Deque_iterator_int__int___int____operator____const(&__first4737);
+            void_std__destroy_at_int_(r4743);
+            if (__cir_exc_active) {
+              return;
+            }
+          for_step4740: ;
+            struct std___Deque_iterator_int__int____int___* r4744 = std___Deque_iterator_int__int___int____operator___4(&__first4737);
+          }
+      }
+  return;
+}
+
+// function: _ZSt8_DestroyISt15_Deque_iteratorIiRiPiEiEvT_S4_RSaIT0_E
+void void_std___Destroy_std___Deque_iterator_int__int___int____int_(struct std___Deque_iterator_int__int____int___ v4745, struct std___Deque_iterator_int__int____int___ v4746, struct std__allocator_int_* v4747) {
+bb4748:
+  struct std___Deque_iterator_int__int____int___ __first4749;
+  struct std___Deque_iterator_int__int____int___ __last4750;
+  struct std__allocator_int_* unnamed4751;
+  struct std___Deque_iterator_int__int____int___ agg_tmp04752;
+  struct std___Deque_iterator_int__int____int___ agg_tmp14753;
+  __first4749 = v4745;
+  __last4750 = v4746;
+  unnamed4751 = v4747;
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp04752, &__first4749);
+  std___Deque_iterator_int__int___int_____Deque_iterator(&agg_tmp14753, &__last4750);
+  struct std___Deque_iterator_int__int____int___ t4754 = agg_tmp04752;
+  struct std___Deque_iterator_int__int____int___ t4755 = agg_tmp14753;
+  void_std___Destroy_std___Deque_iterator_int__int___int____(t4754, t4755);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+

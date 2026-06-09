@@ -1,0 +1,224 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____aligned_membuf_std__pair_const_char__int__ { unsigned char _M_storage[8]; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std___Head_base_0UL__char_____false_ { char* _M_head_impl; };
+struct std___Index_tuple_0UL_ { unsigned char __field0; };
+struct std___Index_tuple__ { unsigned char __field0; };
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Auto_node { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* _M_t; struct std___Rb_tree_node_std__pair_const_char__int__* _M_node; };
+struct std___Rb_tree_const_iterator_std__pair_const_char__int__ { struct std___Rb_tree_node_base* _M_node; };
+struct std___Rb_tree_iterator_std__pair_const_char__int__ { struct std___Rb_tree_node_base* _M_node; };
+struct std___Rb_tree_key_compare_std__less_char__ { unsigned char __field0; };
+struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
+struct std___Rb_tree_node_std__pair_const_char__int__;
+struct std___Select1st_std__pair_const_char__int__ { unsigned char __field0; };
+struct std___Tuple_impl_0UL__char____ { struct std___Head_base_0UL__char_____false_ __field0; };
+struct std____new_allocator_std___Rb_tree_node_std__pair_const_char__int___;
+struct std____pair_base_char__int_;
+struct std____pair_base_const_char__int_;
+struct std____pair_base_std___Rb_tree_iterator_std__pair_const_char__int____bool_;
+struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
+struct std__allocator_std___Rb_tree_node_std__pair_const_char__int___;
+struct std__less_char_ { unsigned char __field0; };
+struct std__pair_char__int_ { char first; int second; };
+struct std__pair_const_char__int_;
+struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_ { struct std___Rb_tree_iterator_std__pair_const_char__int__ first; _Bool second; unsigned char __field2[7]; } __attribute__((packed));
+struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
+struct std__piecewise_construct_t { unsigned char __field0; };
+struct std__tuple__ { unsigned char __field0; };
+struct std__tuple_char____ { struct std___Tuple_impl_0UL__char____ __field0; };
+struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
+struct std__ctype_char_;
+struct std__ios_base;
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Rb_tree_impl_std__less_char___true_ { struct std___Rb_tree_key_compare_std__less_char__ __field0; struct std___Rb_tree_header __field1; };
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___ { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Rb_tree_impl_std__less_char___true_ _M_impl; };
+struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___ { struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___ _M_t; };
+
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+char _str[18] = "mymap['a'] != 100";
+char _str_1[107] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/map/map_insert1_bug/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[18] = "mymap['z'] != 200";
+char _str_3[20] = "ret.second != false";
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str_4[28] = "element 'z' already existed";
+char _str_5[18] = " with a value of ";
+struct std__piecewise_construct_t _ZSt19piecewise_construct;
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___ mymap2;
+  struct std___Rb_tree_iterator_std__pair_const_char__int__ it3;
+  struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_ ret4;
+  struct std__pair_char__int_ ref_tmp05;
+  char ref_tmp16;
+  int ref_tmp27;
+  struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_ agg_tmp08;
+  char ref_tmp39;
+  struct std__pair_char__int_ ref_tmp410;
+  char ref_tmp511;
+  int ref_tmp612;
+  struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_ agg_tmp113;
+  char ref_tmp714;
+  struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_ ref_tmp815;
+  struct std__pair_char__int_ ref_tmp916;
+  char ref_tmp1017;
+  int ref_tmp1118;
+  int c19 = 0;
+  __retval1 = c19;
+  // externalized std:: op: std::map<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >::map()
+  __VERIFIER_nondet_memory(&mymap2, sizeof(mymap2));
+    // externalized std:: op: std::_Rb_tree_iterator<std::pair<char const, int> >::_Rb_tree_iterator()
+    __VERIFIER_nondet_memory(&it3, sizeof(it3));
+    // externalized std:: op: _ZNSt4pairISt17_Rb_tree_iteratorIS_IKciEEbEC2EvQaa26is_default_constructible_vIT_E26is_default_constructible_vIT0_E
+    __VERIFIER_nondet_memory(&ret4, sizeof(ret4));
+    char c20 = 97;
+    ref_tmp16 = c20;
+    int c21 = 100;
+    ref_tmp27 = c21;
+    // externalized std:: op: _ZNSt4pairIciEC2IciQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS2_S3_EEEEOT_OT0_
+    __VERIFIER_nondet_memory(&ref_tmp05, sizeof(ref_tmp05));
+    __VERIFIER_nondet_memory(&ref_tmp16, sizeof(ref_tmp16));
+    __VERIFIER_nondet_memory(&ref_tmp27, sizeof(ref_tmp27));
+    struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_ std22;
+    __VERIFIER_nondet_memory(&std22, sizeof(std22));
+    agg_tmp08 = std22;
+    char c23 = 97;
+    ref_tmp39 = c23;
+    int* std24;
+    __VERIFIER_nondet_memory(&std24, sizeof(std24));
+    int t25 = *std24;
+    int c26 = 100;
+    _Bool c27 = ((t25 != c26)) ? 1 : 0;
+    if (c27) {
+    } else {
+      char* cast28 = (char*)&(_str);
+      char* c29 = _str_1;
+      unsigned int c30 = 22;
+      char* cast31 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast28, c29, c30, cast31);
+    }
+    char c32 = 122;
+    ref_tmp511 = c32;
+    int c33 = 200;
+    ref_tmp612 = c33;
+    // externalized std:: op: _ZNSt4pairIciEC2IciQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS2_S3_EEEEOT_OT0_
+    __VERIFIER_nondet_memory(&ref_tmp410, sizeof(ref_tmp410));
+    __VERIFIER_nondet_memory(&ref_tmp511, sizeof(ref_tmp511));
+    __VERIFIER_nondet_memory(&ref_tmp612, sizeof(ref_tmp612));
+    struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_ std34;
+    __VERIFIER_nondet_memory(&std34, sizeof(std34));
+    agg_tmp113 = std34;
+    char c35 = 122;
+    ref_tmp714 = c35;
+    int* std36;
+    __VERIFIER_nondet_memory(&std36, sizeof(std36));
+    int t37 = *std36;
+    int c38 = 200;
+    _Bool c39 = ((t37 != c38)) ? 1 : 0;
+    if (c39) {
+    } else {
+      char* cast40 = (char*)&(_str_2);
+      char* c41 = _str_1;
+      unsigned int c42 = 24;
+      char* cast43 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast40, c41, c42, cast43);
+    }
+    char c44 = 122;
+    ref_tmp1017 = c44;
+    int c45 = 500;
+    ref_tmp1118 = c45;
+    // externalized std:: op: _ZNSt4pairIciEC2IciQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS2_S3_EEEEOT_OT0_
+    __VERIFIER_nondet_memory(&ref_tmp916, sizeof(ref_tmp916));
+    __VERIFIER_nondet_memory(&ref_tmp1017, sizeof(ref_tmp1017));
+    __VERIFIER_nondet_memory(&ref_tmp1118, sizeof(ref_tmp1118));
+    struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_ std46;
+    __VERIFIER_nondet_memory(&std46, sizeof(std46));
+    ref_tmp815 = std46;
+    struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_* std47;
+    __VERIFIER_nondet_memory(&std47, sizeof(std47));
+    _Bool t48 = ret4.second;
+    int cast49 = (int)t48;
+    _Bool c50 = 0;
+    int cast51 = (int)c50;
+    _Bool c52 = ((cast49 != cast51)) ? 1 : 0;
+    if (c52) {
+    } else {
+      char* cast53 = (char*)&(_str_3);
+      char* c54 = _str_1;
+      unsigned int c55 = 26;
+      char* cast56 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast53, c54, c55, cast56);
+    }
+      _Bool t57 = ret4.second;
+      int cast58 = (int)t57;
+      _Bool c59 = 0;
+      int cast60 = (int)c59;
+      _Bool c61 = ((cast58 == cast60)) ? 1 : 0;
+      if (c61) {
+        char* cast62 = (char*)&(_str_4);
+        struct std__basic_ostream_char__std__char_traits_char__* std63;
+        __VERIFIER_nondet_memory(&std63, sizeof(std63));
+        char* cast64 = (char*)&(_str_5);
+        struct std__basic_ostream_char__std__char_traits_char__* std65;
+        __VERIFIER_nondet_memory(&std65, sizeof(std65));
+        struct std__pair_const_char__int_* std66;
+        __VERIFIER_nondet_memory(&std66, sizeof(std66));
+        int t67 = std66->second;
+        struct std__basic_ostream_char__std__char_traits_char__* std68;
+        __VERIFIER_nondet_memory(&std68, sizeof(std68));
+        struct std__basic_ostream_char__std__char_traits_char__* std69;
+        __VERIFIER_nondet_memory(&std69, sizeof(std69));
+      }
+    int c70 = 0;
+    __retval1 = c70;
+    int t71 = __retval1;
+    int ret_val72 = t71;
+    {
+      // externalized std:: op: std::map<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >::~map()
+      __VERIFIER_nondet_memory(&mymap2, sizeof(mymap2));
+    }
+    return ret_val72;
+  int t73 = __retval1;
+  return t73;
+}
+

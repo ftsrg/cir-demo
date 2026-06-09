@@ -126,7 +126,7 @@ const CIR_OPT_BIN = path.join(TOOLCHAIN_ROOT, 'bin', 'cir-opt');
 console.log(`Using CIR toolchain from ${TOOLCHAIN_ROOT}`);
 const { execFile } = require('child_process');
 const execFileAsync = (file, args, opts = {}) => new Promise((resolve) => {
-  execFile(file, args, Object.assign({ timeout: 20000, maxBuffer: 50 * 1024 * 1024 }, opts), (err, stdout, stderr) => {
+  execFile(file, args, Object.assign({ timeout: 30000, maxBuffer: 50 * 1024 * 1024 }, opts), (err, stdout, stderr) => {
     const out = { stdout: stdout || '', stderr: stderr || '' };
     if (err && err.code !== 0) {
       out.code = err.code || 'ERR';
@@ -249,9 +249,8 @@ app.post('/api/generate', async (req, res) => {
   // flatten=false (default): skip flattening; cir2c receives structured CIR directly.
   // flatten=true: run cir-opt -cir-flatten-cfg before cir2c.
   const flatten = req.body.flatten === true;
-  // Issue #7: externalize std I/O (cout << ...) by default; container ops opt-in.
-  const externalizeIo = req.body.externalizeIo !== false;
-  const externalizeContainers = req.body.externalizeContainers === true;
+  // Issue #7: externalize all std:: calls by default (--externalize-std).
+  const externalizeStd = req.body.externalizeStd !== false;
   const ext = language === 'c' ? 'c' : 'cpp';
   const clangBin = language === 'c' ? CLANG_BIN : CLANGPP_BIN;
   const tmpDir = path.join(__dirname, '..', 'tmp');
@@ -355,8 +354,7 @@ app.post('/api/generate', async (req, res) => {
       const outC = path.join(tmpDir, `${base}.c`);
       const outTrace = path.join(tmpDir, `${base}.trace.json`);
       const mapArgs = ['--monitor-json', outTrace];
-      mapArgs.push(externalizeIo ? '--externalize-io' : '--no-externalize-io');
-      if (externalizeContainers) mapArgs.push('--externalize-containers');
+      mapArgs.push(externalizeStd ? '--externalize-std' : '--no-externalize-std');
       mapArgs.push(mlirPath, outC);
       const mapResult = await execFileAsync(cir2cBin, mapArgs);
       cOutput.code = (mapResult && typeof mapResult.code !== 'undefined') ? mapResult.code : 1;

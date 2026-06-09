@@ -1,0 +1,126 @@
+# Copyright 2025 Budapest University of Technology and Economics
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Report Test Results
+description: >
+  Download all suite result artifacts, update the sticky PR comment with
+  whatever results are available so far, and fail if any suite reported failures.
+
+runs:
+  using: composite
+  steps:
+    - name: Download integration results
+      uses: actions/download-artifact@v4
+      with:
+        name: results-integration
+        path: /tmp/
+      continue-on-error: true
+
+    - name: Download LLVM results
+      uses: actions/download-artifact@v4
+      with:
+        name: results-llvm
+        path: /tmp/
+      continue-on-error: true
+
+    - name: Download esbmc results
+      uses: actions/download-artifact@v4
+      with:
+        name: results-esbmc
+        path: /tmp/
+      continue-on-error: true
+
+    - name: Download esbmc-std results
+      uses: actions/download-artifact@v4
+      with:
+        name: results-esbmc-std
+        path: /tmp/
+      continue-on-error: true
+
+    - name: Build PR comment and check failures
+      id: report
+      shell: bash
+      run: |
+        python3 - << 'PYEOF'
+        import json, os
+
+        suites = [
+            ("Integration",      "/tmp/integration.json"),
+            ("LLVM SingleSource", "/tmp/llvm.json"),
+            ("esbmc-eval",        "/tmp/esbmc.json"),
+            ("esbmc-eval-std",    "/tmp/esbmc-std.json"),
+        ]
+
+        rows = {}
+        total_failed = 0
+        for name, path in suites:
+            try:
+                with open(path) as f:
+                    d = json.load(f)
+            except Exception:
+                d = {"total": "?", "passed": "?", "compiled_not_run": "?",
+                     "skipped": "?", "timed_out": "?", "failed": "?",
+                     "mapper_failed": "?", "compile_failed": "?", "mismatch": "?"}
+            rows[name] = d
+            if isinstance(d.get("failed"), int):
+                total_failed += d["failed"]
+
+        header = "| Metric | Integration | LLVM SingleSource | esbmc-eval | esbmc-eval-std |"
+        sep    = "| --- | ---: | ---: | ---: | ---: |"
+
+        def row(label, key):
+            vals = " | ".join(str(rows[n].get(key, "?")) for n, _ in suites)
+            return f"| {label} | {vals} |"
+
+        table = "\n".join([
+            "## cir2c Test Results",
+            "",
+            header, sep,
+            row("Total",               "total"),
+            row("✅ Passed",            "passed"),
+            row("🔗 Compiled, not run", "compiled_not_run"),
+            row("⏩ Skipped",            "skipped"),
+            row("⏱️ Timed out",           "timed_out"),
+            row("❌ **Failed**",          "failed"),
+            row("  mapper failed",      "mapper_failed"),
+            row("  compile failed",     "compile_failed"),
+            row("  output mismatch",    "mismatch"),
+        ])
+
+        if total_failed > 0:
+            table += f"\n\n> ⚠️ **{total_failed} test(s) failed.**"
+        else:
+            table += "\n\n> ✅ All tests passed (or still running)."
+
+        with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+            delim = "EOF_TABLE"
+            f.write(f"table<<{delim}\n{table}\n{delim}\n")
+            f.write(f"total_failed={total_failed}\n")
+
+        print(table)
+        PYEOF
+
+    - name: Comment on PR
+      if: github.event_name == 'pull_request'
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        header: cir2c-test-results
+        message: ${{ steps.report.outputs.table }}
+
+    - name: Fail if tests failed
+      if: steps.report.outputs.total_failed != '0'
+      shell: bash
+      run: |
+        echo "::error::${{ steps.report.outputs.total_failed }} test(s) failed."
+        exit 1

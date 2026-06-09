@@ -1,0 +1,82 @@
+/*
+ * Copyright 2025 Budapest University of Technology and Economics
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Struct definitions (auto-parsed)
+struct A_bool_ { _Bool i; };
+struct B { struct A_bool_ __field0; };
+
+char _str[12] = "b.i == true";
+char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates21/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+void A_bool___write(struct A_bool_* p0, _Bool p1);
+void B__write(struct B* p0, _Bool p1);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+// function: _ZN1AIbE5writeEb
+void A_bool___write(struct A_bool_* v0, _Bool v1) {
+bb2:
+  struct A_bool_* this3;
+  _Bool i4;
+  this3 = v0;
+  i4 = v1;
+  struct A_bool_* t5 = this3;
+  _Bool t6 = i4;
+  t5->i = t6;
+  return;
+}
+
+// function: _ZN1B5writeEb
+void B__write(struct B* v7, _Bool v8) {
+bb9:
+  struct B* this10;
+  _Bool i11;
+  this10 = v7;
+  i11 = v8;
+  struct B* t12 = this10;
+  struct A_bool_* base13 = (struct A_bool_*)((char *)t12 + 0);
+  _Bool t14 = i11;
+  A_bool___write(base13, t14);
+  return;
+}
+
+// function: main
+int main() {
+bb15:
+  int __retval16;
+  struct B b17;
+  int c18 = 0;
+  __retval16 = c18;
+  _Bool c19 = 1;
+  B__write(&b17, c19);
+  struct A_bool_* base20 = (struct A_bool_*)((char *)&(b17) + 0);
+  _Bool t21 = base20->i;
+  int cast22 = (int)t21;
+  _Bool c23 = 1;
+  int cast24 = (int)c23;
+  _Bool c25 = ((cast22 == cast24)) ? 1 : 0;
+  if (c25) {
+  } else {
+    char* cast26 = (char*)&(_str);
+    char* c27 = _str_1;
+    unsigned int c28 = 28;
+    char* cast29 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast26, c27, c28, cast29);
+  }
+  int t30 = __retval16;
+  return t30;
+}
+

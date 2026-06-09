@@ -177,8 +177,17 @@ print_summary() {
     fi
 }
 
-JSON_OUT=""    # set via --json-out FILE to write machine-readable summary at exit
-if [[ "${1:-}" == "--json-out" ]]; then JSON_OUT="$2"; shift 2; fi
+JSON_OUT=""              # set via --json-out FILE
+EXTERNALIZE_STD_FLAG="--no-externalize-std"   # default; override with --externalize-std
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --json-out)           JSON_OUT="$2"; shift 2 ;;
+        --externalize-std)    EXTERNALIZE_STD_FLAG="--externalize-std";    shift ;;
+        --no-externalize-std) EXTERNALIZE_STD_FLAG="--no-externalize-std"; shift ;;
+        *) break ;;
+    esac
+done
+export EXTERNALIZE_STD_FLAG
 
 # Write a JSON file summarising the run (used by the GitHub Actions workflow to
 # build the PR comment table without fragile text parsing).
@@ -335,7 +344,7 @@ run_c_test() {
     local mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
     local -a inc=(); local _d
     while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$c_file")
-    timeout "$TIMEOUT" "$RUNNER" --lang c \
+    timeout "$TIMEOUT" "$RUNNER" --lang c "$EXTERNALIZE_STD_FLAG" \
         --mlir "$mlir_file" \
         ${inc[@]+"${inc[@]}"} \
         "$c_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
@@ -377,7 +386,7 @@ run_cpp_test() {
     local mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
     local -a inc=(); local _d
     while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$cpp_file")
-    timeout "$TIMEOUT" "$RUNNER" \
+    timeout "$TIMEOUT" "$RUNNER" "$EXTERNALIZE_STD_FLAG" \
         --mlir "$mlir_file" \
         ${inc[@]+"${inc[@]}"} \
         "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
@@ -434,7 +443,7 @@ run_llvm_test() {
     local -a inc=(); local _d
     while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$src_file")
     # shellcheck disable=SC2086
-    timeout "$TIMEOUT" "$RUNNER" $lang_flag \
+    timeout "$TIMEOUT" "$RUNNER" $lang_flag "$EXTERNALIZE_STD_FLAG" \
         --mlir "$mlir_file" \
         ${inc[@]+"${inc[@]}"} \
         "$src_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
@@ -525,7 +534,7 @@ run_esbmc_test() {
     # Include the test's own directory so any sibling header files are found.
     local src_dir
     src_dir=$(cd "$(dirname "$src_file")" 2>/dev/null && pwd)
-    timeout "$TIMEOUT" "$RUNNER" \
+    timeout "$TIMEOUT" "$RUNNER" "$EXTERNALIZE_STD_FLAG" \
         --mlir "$mlir_file" \
         --include "$src_dir" \
         "$src_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
@@ -561,7 +570,7 @@ run_esbmc_test() {
 
 # Export everything workers need
 export TIMEOUT RUNNER GCC CLANGPP INTEGRATION_OUTPUT_DIR LLVM_EVAL_DIR LLVM_EVAL_OUTPUT_DIR
-export ESBMC_EVAL_DIR ESBMC_EVAL_OUTPUT_DIR
+export ESBMC_EVAL_DIR ESBMC_EVAL_OUTPUT_DIR EXTERNALIZE_STD_FLAG
 export -f pipeline_stage run_c_test run_cpp_test run_llvm_test run_esbmc_test
 
 # ---------------------------------------------------------------------------
