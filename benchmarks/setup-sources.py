@@ -102,7 +102,7 @@ def make_mapped_yml(data_model: str, expected_verdict: str) -> str:
         format_version: '2.0'
         input_files: main.c
         options:
-          data_model: {data_model}
+          data_model: LP64
           language: C
         properties:
         - expected_verdict: {expected_verdict}

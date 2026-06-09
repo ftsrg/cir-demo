@@ -27,7 +27,7 @@ TABLE_GEN      = PYTHONPATH=./benchexec ./benchexec/bin/table-generator
 
 # Full pipeline: tool runs (parallel) → normalize → tables.
 # Run as: make all -j4   (the four tool invocations are independent).
-all: tables
+all: esbmc cbmc theta cpachecker
 
 # ── Tool runs ──────────────────────────────────────────────────────────────────
 # These four targets are independent and run in parallel under -j4.
@@ -48,7 +48,7 @@ cpachecker:
 
 # Strip ../sources/<variant>/ from run names so each benchmark matches across
 # source sets when table-generator joins columns.
-normalize: esbmc cbmc theta cpachecker
+normalize:
 	python3 normalize-results.py $(RESULTS_DIR)/*.xml.bz2
 	cp $(RESULTS_DIR)/*.logfiles.zip $(NORM_DIR)/
 

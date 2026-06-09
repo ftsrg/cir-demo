@@ -16,7 +16,7 @@
 format_version: '2.0'
 input_files: main.c
 options:
-  data_model: ILP32
+  data_model: LP64
   language: C
 properties:
 - expected_verdict: true
