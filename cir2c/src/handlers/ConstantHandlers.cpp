@@ -166,7 +166,10 @@ private:
           }
 
           if (isBytePointer && !hasIndices) {
-            expr = symbolName;
+            // Cast explicitly: the symbol may be declared as void*[N] (RTTI stub),
+            // which decays to void** — incompatible with char*/unsigned char* without
+            // an explicit cast.
+            expr = "(" + m.mapTypeToC(ptrTy) + ")" + symbolName;
           }
         }
 

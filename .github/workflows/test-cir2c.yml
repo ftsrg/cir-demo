@@ -173,9 +173,51 @@ jobs:
           name: results-esbmc
           path: /tmp/esbmc.json
 
+
+  test-esbmc-std:
+    name: ESBMC eval tests (STD)
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/ftsrg/cir-demo-llvm:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download cir2c binary
+        uses: actions/download-artifact@v4
+        with:
+          name: cir2c-binary
+          path: cir2c/build/
+
+      - name: Mark cir2c executable
+        run: chmod +x cir2c/build/cir2c
+
+      - name: Link /opt/cir to backend/bin
+        run: ln -s /opt/cir backend/bin
+
+      - name: Install GNU parallel
+        run: apt-get update -qq && apt-get install -y --no-install-recommends parallel
+
+      - name: Run esbmc-eval tests
+        run: |
+          mkdir -p cir2c/test/esbmc-eval/output
+          JOBS=4 RUN_INTEGRATION=0 RUN_LLVM=0 RUN_ESBMC=1 \
+            bash cir2c/test/run_tests.sh \
+              --json-out /tmp/esbmc.json \
+            || true
+          cat /tmp/esbmc.json
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-esbmc-std
+          path: /tmp/esbmc-std.json
+
   collect:
     name: Collect results
-    needs: [test-integration, test-llvm, test-esbmc]
+    needs: [test-integration, test-llvm, test-esbmc, test-esbmc-std]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -200,6 +242,13 @@ jobs:
           path: /tmp/
         continue-on-error: true
 
+      - name: Download esbmc-std results
+        uses: actions/download-artifact@v4
+        with:
+          name: results-esbmc-std
+          path: /tmp/
+        continue-on-error: true
+
       # Build the PR comment table and decide the overall pass/fail.
       # We use Python to parse the JSON files and produce the markdown table.
       - name: Build PR comment and check failures
@@ -212,6 +261,7 @@ jobs:
               ("Integration", "/tmp/integration.json"),
               ("LLVM SingleSource", "/tmp/llvm.json"),
               ("esbmc-eval", "/tmp/esbmc.json"),
+              ("esbmc-eval-std", "/tmp/esbmc-std.json"),
           ]
 
           rows = {}
@@ -229,8 +279,8 @@ jobs:
                   total_failed += d["failed"]
 
           # Markdown table
-          header = "| Metric | Integration | LLVM SingleSource | esbmc-eval |"
-          sep    = "| --- | ---: | ---: | ---: |"
+          header = "| Metric | Integration | LLVM SingleSource | esbmc-eval | esbmc-eval-std |"
+          sep    = "| --- | ---: | ---: | ---: | ---: |"
 
           def row(label, key):
               vals = " | ".join(str(rows[n].get(key, "?")) for n, _ in suites)

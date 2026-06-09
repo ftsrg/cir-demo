@@ -17,6 +17,7 @@
 #include "handlers/HandlerModule.h"
 #include "handlers/HandlerSupport.h"
 #include "Mapper.h"
+#include "TypeMapper.h"
 #include "ErrorMessages.h"
 
 #include <mlir/IR/Operation.h>
@@ -175,11 +176,17 @@ private:
             if (!pt) continue;
             mlir::Type pointee = pt.getPointee();
             // Skip: function pointers (don't nondeterminize code), void*
-            // (unknown size), and incomplete record types (sizeof invalid).
+            // (unknown size), incomplete record types, and std:: structs that
+            // are only forward-declared in the output (sizeof would be invalid).
             if (mlir::isa<cir::FuncType>(pointee)) continue;
             if (mlir::isa<cir::VoidType>(pointee)) continue;
-            if (auto rt = mlir::dyn_cast<cir::RecordType>(pointee))
+            if (auto rt = mlir::dyn_cast<cir::RecordType>(pointee)) {
               if (!rt.isComplete()) continue;
+              if (rt.getName()) {
+                std::string cn = TypeMapper::recordCName(rt.getName());
+                if (!m.isStdStructFullyDefined(cn)) continue;
+              }
+            }
             m.ensureVerifierNondetMemoryDeclared();
             std::string name = m.getOrCreateName(argV);
             if (m.isDirectAccess(argV))

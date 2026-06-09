@@ -92,7 +92,7 @@ def parse_data_model(yml_path: Path) -> str:
 def parse_expected_verdict(yml_path: Path) -> str:
     for line in yml_path.read_text(encoding="utf-8").splitlines():
         stripped = line.strip()
-        if stripped.startswith("expected_verdict:"):
+        if "expected_verdict:" in stripped:
             return stripped.split(":", 1)[1].strip()
     return "true"
 

@@ -785,7 +785,13 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
       initExpr = ConstantEmitter::formatFpLiteral(fAttr.getValue(), mapTypeToC(symType));
     } else if (auto gvAttr = mlir::dyn_cast<cir::GlobalViewAttr>(attr)) {
       std::string target = gvAttr.getSymbol().getValue().str();
-      std::string targetName = sanitizeIdentifier(target);
+      // Functions are emitted with their demangled output name; using the raw
+      // sanitized mangled name would produce a reference to an undeclared symbol.
+      auto mod = gop->getParentOfType<mlir::ModuleOp>();
+      bool isFunc = mod && mlir::isa_and_nonnull<cir::FuncOp>(
+                               mlir::SymbolTable::lookupSymbolIn(mod, target));
+      std::string targetName = isFunc ? getFunctionOutputName(target)
+                                      : sanitizeIdentifier(target);
       mlir::Type targetType = findGlobalTypeBySymbol(target);
       // Vtable/construction-vtable globals are now flat void*[] arrays; their
       // address-point index [component, element] must be converted to a flat
@@ -1297,11 +1303,25 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     classScan = [&](mlir::Operation &op) {
       if (auto al = mlir::dyn_cast<cir::AllocaOp>(&op))
         classifyType(al.getAllocaType(), true);
-      else if (auto g = mlir::dyn_cast<cir::GlobalOp>(&op))
-        classifyType(g.getSymType(), g.getInitialValue().has_value());
+      else if (auto g = mlir::dyn_cast<cir::GlobalOp>(&op)) {
+        // A global of non-pointer struct type needs a complete definition: even
+        // an extern declaration may have sizeof applied to it (e.g. the void
+        // std:: call handler emits sizeof(*&global)).
+        bool isValue = !mlir::isa<cir::PointerType>(g.getSymType()) ||
+                       g.getInitialValue().has_value();
+        classifyType(g.getSymType(), isValue);
+      }
       else if (auto f = mlir::dyn_cast<cir::FuncOp>(&op)) {
         for (auto t : f.getFunctionType().getInputs()) classifyType(t, false);
         classifyType(f.getFunctionType().getReturnType(), false);
+      } else if (auto gm = mlir::dyn_cast<cir::GetMemberOp>(&op)) {
+        // Member access through a pointer requires the struct to be complete:
+        // ptr->field compiles only when the struct definition is visible.
+        mlir::Type baseType = gm.getOperation()->getOperand(0).getType();
+        if (auto ptrType = mlir::dyn_cast<cir::PointerType>(baseType))
+          classifyType(ptrType.getPointee(), true);
+        for (auto t : op.getResultTypes())
+          classifyType(t, !mlir::isa<cir::PointerType>(t));
       } else {
         for (auto t : op.getResultTypes())
           classifyType(t, !mlir::isa<cir::PointerType>(t));
@@ -1312,10 +1332,27 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
             classScan(nestedOp);
     };
     for (auto &op : module.getOps()) classScan(op);
-    // Propagate value-use: if struct A is value-used and embeds struct B by
-    // value, B also needs a full definition.
+    // Propagate value-use: if struct A needs a full definition and embeds
+    // struct B by value, B also needs a full definition.
+    // Seed the worklist from std__ structs already detected as value-used.
     std::vector<std::string> worklist(stdStructValueUsed.begin(),
                                       stdStructValueUsed.end());
+    // Also seed from non-std structs: they always get full definitions, so
+    // any std__ struct they embed by value must also be fully defined.
+    for (auto &kv : structFields) {
+      if (kv.first.rfind("std__", 0) == 0) continue;
+      for (auto &fi : kv.second) {
+        std::string dep;
+        if (fi.baseType.rfind("struct ", 0) == 0) dep = fi.baseType.substr(7);
+        else if (fi.baseType.rfind("union ", 0) == 0) dep = fi.baseType.substr(6);
+        if (!dep.empty() && dep.rfind("std__", 0) == 0 &&
+            !stdStructValueUsed.count(dep)) {
+          stdStructValueUsed.insert(dep);
+          stdStructAnyRef.insert(dep);
+          worklist.push_back(dep);
+        }
+      }
+    }
     while (!worklist.empty()) {
       std::string sn = worklist.back(); worklist.pop_back();
       auto it = structFields.find(sn);
@@ -1332,6 +1369,9 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         }
       }
     }
+    // Expose the value-used set to handlers so they can guard sizeof(*ptr) on
+    // potentially-forward-declared std types (e.g. the void std:: call handler).
+    stdValueUsedStructs_ = stdStructValueUsed;
   }
 
   // Order structs to satisfy dependencies: if a struct references another
@@ -1507,38 +1547,6 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   }
 
   if (!structsEmitted && !order.empty()) {
-    // Default __VERIFIER_virtual_call_<sig> implementations. The call site
-    // passes (object, slot, args...); the wrapper loads the object's vtable
-    // pointer (stored at offset 0 by the constructor), indexes it by `slot` to
-    // get the function pointer, and calls it with (object, args...). One wrapper
-    // per distinct (return type, arg types). Emitted `weak` so a verification
-    // tool can override the semantics while the file stays self-contained and
-    // linkable.
-    if (!virtualCallSigs_.empty()) {
-      out << "// Virtual dispatch: default implementations (override as `weak`).\n"
-             "// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable\n"
-             "// pointer is at offset 0; the function is vtable[slot].\n";
-      for (const auto &kv : virtualCallSigs_) {
-        const std::string &suffix = kv.first;
-        const std::string &ret = kv.second.first;
-        const std::vector<std::string> &args = kv.second.second;
-        // Parameter list and forwarded-argument list.
-        std::string params, fwd, fnArgTypes = "void*";
-        for (size_t i = 0; i < args.size(); ++i) {
-          params += ", " + args[i] + " __a" + std::to_string(i);
-          fwd += ", __a" + std::to_string(i);
-          fnArgTypes += ", " + args[i];
-        }
-        out << "__attribute__((weak)) " << ret << " __VERIFIER_virtual_call_"
-            << suffix << "(void* __obj, int __slot" << params << ") {\n";
-        out << "  void* __fn = ((void**)*(void**)__obj)[__slot];\n";
-        out << "  " << (ret == "void" ? "" : "return ")
-            << "((" << ret << "(*)(" << fnArgTypes << "))__fn)(__obj" << fwd << ");\n";
-        out << "}\n";
-      }
-      out << "\n";
-    }
-
     out << "// Struct definitions (auto-parsed)\n";
     for (auto &sname : order) {
       // When std:: externalization is on, filter std__ structs:
@@ -1607,6 +1615,40 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       out << (isPacked ? " } __attribute__((packed));\n" : " };\n");
     }
     out << "\n";
+
+    // Default __VERIFIER_virtual_call_<sig> implementations. Emitted after
+    // struct definitions because return types may be std__ structs that need
+    // a complete definition (e.g. a virtual function returning std::string).
+    // The call site passes (object, slot, args...); the wrapper loads the
+    // object's vtable pointer (at offset 0), indexes by `slot` to get the
+    // function pointer, and calls it with (object, args...). One wrapper per
+    // distinct (return type, arg types). Emitted `weak` so a verification
+    // tool can override the semantics.
+    if (!virtualCallSigs_.empty()) {
+      out << "// Virtual dispatch: default implementations (override as `weak`).\n"
+             "// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable\n"
+             "// pointer is at offset 0; the function is vtable[slot].\n";
+      for (const auto &kv : virtualCallSigs_) {
+        const std::string &suffix = kv.first;
+        const std::string &ret = kv.second.first;
+        const std::vector<std::string> &args = kv.second.second;
+        // Parameter list and forwarded-argument list.
+        std::string params, fwd, fnArgTypes = "void*";
+        for (size_t i = 0; i < args.size(); ++i) {
+          params += ", " + args[i] + " __a" + std::to_string(i);
+          fwd += ", __a" + std::to_string(i);
+          fnArgTypes += ", " + args[i];
+        }
+        out << "__attribute__((weak)) " << ret << " __VERIFIER_virtual_call_"
+            << suffix << "(void* __obj, int __slot" << params << ") {\n";
+        out << "  void* __fn = ((void**)*(void**)__obj)[__slot];\n";
+        out << "  " << (ret == "void" ? "" : "return ")
+            << "((" << ret << "(*)(" << fnArgTypes << "))__fn)(__obj" << fwd << ");\n";
+        out << "}\n";
+      }
+      out << "\n";
+    }
+
     structsEmitted = true;
   }
 

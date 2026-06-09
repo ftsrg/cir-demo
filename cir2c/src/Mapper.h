@@ -99,6 +99,14 @@ public:
   /// become __VERIFIER_nondet_*() calls.  This covers both I/O and containers.
   void setExternalizeStd(bool v) { externalizeStd_ = v; }
   bool externalizeStd() const { return externalizeStd_; }
+  /// True when the named C struct will be emitted with a full definition
+  /// (not just a forward declaration). Std__ structs that are pointer-only
+  /// get forward declarations only; handlers must guard sizeof on them.
+  bool isStdStructFullyDefined(const std::string &cname) const {
+    if (!externalizeStd_) return true;
+    if (cname.rfind("std__", 0) != 0) return true;
+    return stdValueUsedStructs_.count(cname) > 0;
+  }
 
   /// Set by the call handler when a call was replaced by an externalized model
   /// (e.g. __VERIFIER_log); lets the caller skip the post-call unwind guard.
@@ -268,6 +276,10 @@ private:
   // STD externalization (issue #7). On by default.
   bool externalizeStd_ = true;
   bool lastCallExternalized_ = false;
+  // Std__ structs that will be emitted with full definitions (not just forward
+  // declarations). Populated by emitModule's pre-scan; used by handlers to
+  // guard sizeof(*ptr) calls on potentially-forward-declared std types.
+  std::set<std::string> stdValueUsedStructs_;
   // Collects `extern __VERIFIER_nondet_*` declarations during function-body
   // emission; flushed to the output stream before function bodies by mapModule.
   std::ostringstream verifierDeclsBuf_;
