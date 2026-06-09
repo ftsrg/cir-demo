@@ -7,6 +7,8 @@
            memlimit="4000 MB"
            cpuCores="1">
 
+  <option name="--spec">tools/bin/cpachecker/CPAchecker-4.2.2-unix/config/specification/Assertion.spc</option>
+
   <rundefinition name="esbmc-eval-mapped">
     <tasks name="esbmc-eval-mapped">
       <includesfile>../sets/esbmc-eval-mapped.set</includesfile>
