@@ -21,11 +21,12 @@
 #
 # Usage: run-cir2c.sh [OPTIONS] <input-file> <output.c>
 # Options:
-#   --lang c|c++         Language (default: infer from file extension)
-#   --std STD            Standard (default: c23 or c++23)
-#   --flatten            Run cir-opt -cir-flatten-cfg before cir2c
-#   --mlir FILE          Save intermediate CIR MLIR to FILE (default: temp)
-#   --flat-mlir FILE     Save flattened MLIR to FILE (implies --flatten)
+#   --lang c|c++              Language (default: infer from file extension)
+#   --std STD                 Standard (default: c23 or c++23)
+#   --flatten                 Run cir-opt -cir-flatten-cfg before cir2c
+#   --mlir FILE               Save intermediate CIR MLIR to FILE (default: temp)
+#   --flat-mlir FILE          Save flattened MLIR to FILE (implies --flatten)
+#   --[no-]externalize-std    Externalize (default) or keep std:: calls
 
 set -euo pipefail
 
@@ -42,23 +43,27 @@ FLATTEN=false
 MLIR_OUT=""
 FLAT_MLIR_OUT=""
 INCLUDE_FLAGS=()   # -I dirs for CIR generation, supplied by the caller
+EXTERNALIZE_STD=true
 
 usage() {
     echo "Usage: $0 [OPTIONS] <input-file> <output.c>" >&2
     echo "  --lang c|c++, --std STD, --flatten" >&2
     echo "  --mlir FILE, --flat-mlir FILE" >&2
     echo "  --include DIR   add -I DIR to CIR generation (repeatable)" >&2
+    echo "  --[no-]externalize-std" >&2
     exit 1
 }
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --lang)      LANG="$2"; shift 2 ;;
-        --std)       STD="$2"; shift 2 ;;
-        --flatten)   FLATTEN=true; shift ;;
-        --mlir)      MLIR_OUT="$2"; shift 2 ;;
-        --flat-mlir) FLAT_MLIR_OUT="$2"; FLATTEN=true; shift 2 ;;
-        --include)   INCLUDE_FLAGS+=(-I "$2"); shift 2 ;;
+        --lang)               LANG="$2"; shift 2 ;;
+        --std)                STD="$2"; shift 2 ;;
+        --flatten)            FLATTEN=true; shift ;;
+        --mlir)               MLIR_OUT="$2"; shift 2 ;;
+        --flat-mlir)          FLAT_MLIR_OUT="$2"; FLATTEN=true; shift 2 ;;
+        --include)            INCLUDE_FLAGS+=(-I "$2"); shift 2 ;;
+        --externalize-std)    EXTERNALIZE_STD=true; shift ;;
+        --no-externalize-std) EXTERNALIZE_STD=false; shift ;;
         --) shift; break ;;
         -*) usage ;;
         *) break ;;
@@ -126,5 +131,6 @@ fi
 
 # Step 4: cir2c
 MAPPER_CMD=("$CIR2C")
+[[ "$EXTERNALIZE_STD" == true ]] && MAPPER_CMD+=(--externalize-std) || MAPPER_CMD+=(--no-externalize-std)
 MAPPER_CMD+=("$MAPPER_INPUT" "$OUTPUT_C")
 "${MAPPER_CMD[@]}" || exit 4

@@ -195,51 +195,45 @@ std::string Mapper::demangle(llvm::StringRef mangled) const {
   return demangleSymbol(mangled.str());
 }
 
-void Mapper::ensureVerifierLogDeclared(std::ostream &out) {
-  if (verifierLogDeclEmitted_) return;
-  // Unspecified parameter list so any inserted value type is accepted.
-  out << "extern void __VERIFIER_log();\n";
-  verifierLogDeclEmitted_ = true;
-}
-
-void Mapper::ensureVerifierNondetDeclared(std::ostream &out,
-                                          const std::string &ctype,
+void Mapper::ensureVerifierNondetDeclared(const std::string &ctype,
                                           const std::string &suffix) {
   if (!verifierNondetDeclared_.insert(suffix).second) return;
-  out << "extern " << ctype << " __VERIFIER_nondet_" << suffix << "(void);\n";
+  verifierDeclsBuf_ << "extern " << ctype << " __VERIFIER_nondet_" << suffix << "(void);\n";
 }
 
-bool Mapper::isIoInsertionName(const std::string &dem) {
-  // std::ostream's operator<< (member or free) — the building block of cout<<.
-  return dem.find("operator<<") != std::string::npos &&
-         dem.find("ostream") != std::string::npos;
+void Mapper::ensureVerifierNondetMemoryDeclared() {
+  if (verifierNondetMemoryDeclared_) return;
+  verifierNondetMemoryDeclared_ = true;
+  verifierDeclsBuf_ << "extern void __VERIFIER_nondet_memory(void*, unsigned long);\n";
 }
 
-bool Mapper::isStlContainerMethodName(const std::string &dem,
-                                      std::string &method) {
-  static const char *containers[] = {
-    "std::vector<", "std::deque<", "std::list<", "std::forward_list<",
-    "std::stack<", "std::queue<", "std::priority_queue<",
-    "std::set<", "std::map<", "std::unordered_set<", "std::unordered_map<",
-    "std::basic_string<"
-  };
-  bool isContainer = false;
-  for (const char *c : containers)
-    if (dem.find(c) != std::string::npos) { isContainer = true; break; }
-  if (!isContainer) return false;
-  // Trailing method name: "std::vector<int,...>::push_back(int&&)" -> push_back.
-  std::string::size_type paren = dem.find('(');
-  std::string head = paren == std::string::npos ? dem : dem.substr(0, paren);
-  std::string::size_type cc = head.rfind("::");
-  method = cc == std::string::npos ? std::string() : head.substr(cc + 2);
-  static const std::set<std::string> ops = {
-    "push_back", "emplace_back", "push_front", "emplace_front", "push",
-    "emplace", "insert", "pop_back", "pop_front", "pop", "clear", "reserve",
-    "resize", "shrink_to_fit", "assign", "erase",
-    "back", "front", "top", "at", "data", "size", "length", "empty",
-    "capacity", "count", "find", "begin", "end", "rbegin", "rend", "peek"
-  };
-  return ops.count(method) > 0;
+bool Mapper::isStdCallName(const std::string &mangled,
+                            const std::string &demangled) {
+  // Use the Itanium mangled name when available: the prefix unambiguously
+  // identifies the namespace without needing to strip a return-type prefix from
+  // the demangled form (which would fail for e.g. "void (*std::for_each<…>)(…)"
+  // or "myclass std::for_each<…>(…)").
+  if (mangled.size() >= 4 && mangled[0] == '_' && mangled[1] == 'Z') {
+    size_t pos = 2;
+    // _ZSt* = free function directly in std:: (e.g. std::for_each, std::endl)
+    if (pos + 1 < mangled.size() && mangled[pos] == 'S' && mangled[pos+1] == 't')
+      return true;
+    // _ZN[K[V[r]...]]* = nested name; skip optional CV/ref qualifiers
+    if (mangled[pos] == 'N') {
+      ++pos;
+      while (pos < mangled.size() &&
+             (mangled[pos] == 'K' || mangled[pos] == 'V' || mangled[pos] == 'r'))
+        ++pos;
+      auto rest = mangled.substr(pos);
+      if (rest.rfind("St", 0) == 0) return true;          // std::
+      if (rest.rfind("9__gnu_cxx", 0) == 0) return true;  // __gnu_cxx::
+      if (rest.rfind("11__gnu_debug", 0) == 0) return true; // __gnu_debug::
+    }
+  }
+  // Fallback for non-Itanium or non-mangled names: check demangled prefix.
+  auto paren = demangled.find('(');
+  std::string head = paren == std::string::npos ? demangled : demangled.substr(0, paren);
+  return head.find("std::") == 0;
 }
 
 bool Mapper::funcDefElided(llvm::StringRef sym) const {
@@ -281,9 +275,8 @@ void Mapper::computeReachableDefs(mlir::ModuleOp module) {
       return false;
     std::string callee = calleeOf(user);
     if (callee != sym) return false; // sym used as an argument, not the callee
-    std::string dem = demangleSymbol(sym), method;
-    return (externalizeIO_ && isIoInsertionName(dem)) ||
-           (externalizeContainers_ && isStlContainerMethodName(dem, method));
+    std::string dem = demangleSymbol(sym);
+    return externalizeStd_ && isStdCallName(sym, dem);
   };
 
   // A `cir.get_global @f` whose result feeds *only* externalized I/O calls is a
@@ -291,14 +284,14 @@ void Mapper::computeReachableDefs(mlir::ModuleOp module) {
   // references @f. Drop that edge too, otherwise the whole manipulator chain
   // would be kept alive although it is absent from the output.
   auto refIsDiscardedManipulator = [&](mlir::Operation *user) {
-    if (!externalizeIO_) return false;
+    if (!externalizeStd_) return false;
     auto gg = mlir::dyn_cast<cir::GetGlobalOp>(user);
     if (!gg || gg.getResult().use_empty()) return false;
     for (mlir::Operation *cu : gg.getResult().getUsers()) {
       if (!mlir::isa<cir::CallOp>(cu) && !mlir::isa<cir::TryCallOp>(cu))
         return false;
       std::string callee = calleeOf(cu);
-      if (callee.empty() || !isIoInsertionName(demangleSymbol(callee)))
+      if (callee.empty() || !isStdCallName(callee, demangleSymbol(callee)))
         return false;
     }
     return true;
@@ -1279,6 +1272,68 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     }
   }
 
+  // Pre-scan: when std:: externalization is on, classify which std__ structs
+  // are value-used (need a full definition) vs pointer-only (forward decl
+  // suffices) vs unreferenced (skip entirely).
+  std::set<std::string> stdStructAnyRef, stdStructValueUsed;
+  if (externalizeStd_) {
+    auto classifyType = [&](mlir::Type t, bool isValue) {
+      while (true) {
+        if (auto pt = mlir::dyn_cast<cir::PointerType>(t)) {
+          isValue = false; t = pt.getPointee();
+        } else if (auto at = mlir::dyn_cast<cir::ArrayType>(t)) {
+          t = at.getElementType();
+        } else break;
+      }
+      if (auto rt = mlir::dyn_cast<cir::RecordType>(t)) {
+        if (!rt.getName()) return;
+        std::string cn = TypeMapper::recordCName(rt.getName());
+        if (cn.rfind("std__", 0) != 0) return;
+        if (isValue) stdStructValueUsed.insert(cn);
+        stdStructAnyRef.insert(cn);
+      }
+    };
+    std::function<void(mlir::Operation &)> classScan;
+    classScan = [&](mlir::Operation &op) {
+      if (auto al = mlir::dyn_cast<cir::AllocaOp>(&op))
+        classifyType(al.getAllocaType(), true);
+      else if (auto g = mlir::dyn_cast<cir::GlobalOp>(&op))
+        classifyType(g.getSymType(), g.getInitialValue().has_value());
+      else if (auto f = mlir::dyn_cast<cir::FuncOp>(&op)) {
+        for (auto t : f.getFunctionType().getInputs()) classifyType(t, false);
+        classifyType(f.getFunctionType().getReturnType(), false);
+      } else {
+        for (auto t : op.getResultTypes())
+          classifyType(t, !mlir::isa<cir::PointerType>(t));
+      }
+      for (auto &region : op.getRegions())
+        for (auto &block : region.getBlocks())
+          for (auto &nestedOp : block.getOperations())
+            classScan(nestedOp);
+    };
+    for (auto &op : module.getOps()) classScan(op);
+    // Propagate value-use: if struct A is value-used and embeds struct B by
+    // value, B also needs a full definition.
+    std::vector<std::string> worklist(stdStructValueUsed.begin(),
+                                      stdStructValueUsed.end());
+    while (!worklist.empty()) {
+      std::string sn = worklist.back(); worklist.pop_back();
+      auto it = structFields.find(sn);
+      if (it == structFields.end()) continue;
+      for (auto &fi : it->second) {
+        std::string dep;
+        if (fi.baseType.rfind("struct ", 0) == 0) dep = fi.baseType.substr(7);
+        else if (fi.baseType.rfind("union ", 0) == 0) dep = fi.baseType.substr(6);
+        if (!dep.empty() && dep.rfind("std__", 0) == 0 &&
+            !stdStructValueUsed.count(dep)) {
+          stdStructValueUsed.insert(dep);
+          stdStructAnyRef.insert(dep);
+          worklist.push_back(dep);
+        }
+      }
+    }
+  }
+
   // Order structs to satisfy dependencies: if a struct references another
   // struct in its fields, emit the dependency first. Simple fixed-point topo.
   auto getDeps = [&](const std::string &sname){
@@ -1486,6 +1541,20 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
 
     out << "// Struct definitions (auto-parsed)\n";
     for (auto &sname : order) {
+      // When std:: externalization is on, filter std__ structs:
+      //   - unreferenced → skip entirely
+      //   - pointer-only → forward declaration only
+      //   - value-used   → full definition (falls through below)
+      if (externalizeStd_ && sname.rfind("std__", 0) == 0) {
+        if (!stdStructAnyRef.count(sname)) continue;
+        if (!stdStructValueUsed.count(sname)) {
+          bool isU2 = false;
+          auto itk2 = isUnionContainer.find(sname);
+          if (itk2 != isUnionContainer.end()) isU2 = itk2->second;
+          out << (isU2 ? "union " : "struct ") << sname << ";\n";
+          continue;
+        }
+      }
       // NOTE: reserved-name records (__foo, _Foo) used to be skipped here on the
       // assumption that system headers already define them. We now emit fully
       // header-free C, so nothing else provides these — skipping them left the
@@ -1670,14 +1739,14 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     out << "\n";
   }
 
-  // Third pass: emit function definitions only. A false return from mapFunc
-  // means an operation could not be mapped soundly (e.g. no handler for the
-  // op); propagate it so cir2c exits non-zero instead of emitting
-  // partial/unsound C.
+  // Third pass: buffer function definitions so __VERIFIER_nondet_* extern
+  // declarations (collected into verifierDeclsBuf_ during body emission) can
+  // be flushed above the function bodies rather than inline inside them.
+  std::ostringstream funcsBuf;
   for (auto &op : module.getOps()) {
     if (llvm::isa<mlir::ModuleOp>(op)) {
       mlir::ModuleOp inner = mlir::cast<mlir::ModuleOp>(op);
-      if (!mapModule(inner, out)) return false;
+      if (!mapModule(inner, funcsBuf)) return false;
       continue;
     }
 
@@ -1687,12 +1756,17 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         if (auto sym = op.getAttrOfType<mlir::StringAttr>(
                 mlir::SymbolTable::getSymbolAttrName()))
           if (funcDefElided(sym.getValue())) continue; // unreachable inline def
-        if (!mapFunc(&op, out)) return false;
+        if (!mapFunc(&op, funcsBuf)) return false;
       }
     }
     // Skip cir.global (already processed)
   }
 
+  std::string decls = verifierDeclsBuf_.str();
+  verifierDeclsBuf_.str("");
+  verifierDeclsBuf_.clear();
+  if (!decls.empty()) out << decls;
+  out << funcsBuf.str();
   return true;
 }
 

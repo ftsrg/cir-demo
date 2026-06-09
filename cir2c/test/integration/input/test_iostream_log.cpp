@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-// Issue #7: by default, std::ostream insertions (cout << ...) are externalized
-// to __VERIFIER_log(...) calls so verifiers need not reason about iostream.
+// Issue #7: by default, all std:: calls are externalized (--externalize-std).
+// I/O operations (cout << ...) become __VERIFIER_nondet_*() / no-ops.
 #include <iostream>
 
 int main() {

@@ -335,7 +335,7 @@ run_c_test() {
     local mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
     local -a inc=(); local _d
     while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$c_file")
-    timeout "$TIMEOUT" "$RUNNER" --lang c \
+    timeout "$TIMEOUT" "$RUNNER" --lang c --no-externalize-std \
         --mlir "$mlir_file" \
         ${inc[@]+"${inc[@]}"} \
         "$c_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
@@ -377,7 +377,7 @@ run_cpp_test() {
     local mlir_file="$INTEGRATION_OUTPUT_DIR/${test_name}.mlir"
     local -a inc=(); local _d
     while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$cpp_file")
-    timeout "$TIMEOUT" "$RUNNER" \
+    timeout "$TIMEOUT" "$RUNNER" --no-externalize-std \
         --mlir "$mlir_file" \
         ${inc[@]+"${inc[@]}"} \
         "$cpp_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
@@ -434,7 +434,7 @@ run_llvm_test() {
     local -a inc=(); local _d
     while IFS= read -r _d; do [ -n "$_d" ] && inc+=(--include "$_d"); done < <(compute_includes "$src_file")
     # shellcheck disable=SC2086
-    timeout "$TIMEOUT" "$RUNNER" $lang_flag \
+    timeout "$TIMEOUT" "$RUNNER" $lang_flag --no-externalize-std \
         --mlir "$mlir_file" \
         ${inc[@]+"${inc[@]}"} \
         "$src_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?
@@ -525,7 +525,7 @@ run_esbmc_test() {
     # Include the test's own directory so any sibling header files are found.
     local src_dir
     src_dir=$(cd "$(dirname "$src_file")" 2>/dev/null && pwd)
-    timeout "$TIMEOUT" "$RUNNER" \
+    timeout "$TIMEOUT" "$RUNNER" --externalize-std \
         --mlir "$mlir_file" \
         --include "$src_dir" \
         "$src_file" "$output_c_file" >"$pipeline_log" 2>&1 || pipeline_rc=$?

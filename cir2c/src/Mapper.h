@@ -25,6 +25,7 @@
 #include <mlir/IR/Builders.h>
 
 #include <ostream>
+#include <sstream>
 #include <memory>
 #include <set>
 #include <string>
@@ -92,15 +93,12 @@ public:
   /// declared them.
   void ensureMallocFreeDeclared(std::ostream &out);
 
-  // ── STD/STL externalization options (issue #7) ──────────────────────────
-  /// When enabled (default), calls to std::ostream's operator<< are modelled
-  /// as __VERIFIER_log(value) calls instead of emitting the real I/O.
-  void setExternalizeIO(bool v) { externalizeIO_ = v; }
-  bool externalizeIO() const { return externalizeIO_; }
-  /// When enabled (default off), calls to common STL container methods become
-  /// no-ops (void result) or nondeterministic values (non-void result).
-  void setExternalizeContainers(bool v) { externalizeContainers_ = v; }
-  bool externalizeContainers() const { return externalizeContainers_; }
+  // ── STD externalization option (issue #7) ───────────────────────────────
+  /// When enabled (default), any call whose demangled name starts with
+  /// "std::" is externalized: void calls become no-ops, value-returning calls
+  /// become __VERIFIER_nondet_*() calls.  This covers both I/O and containers.
+  void setExternalizeStd(bool v) { externalizeStd_ = v; }
+  bool externalizeStd() const { return externalizeStd_; }
 
   /// Set by the call handler when a call was replaced by an externalized model
   /// (e.g. __VERIFIER_log); lets the caller skip the post-call unwind guard.
@@ -111,12 +109,13 @@ public:
   /// a mangled C++ name).
   std::string demangle(llvm::StringRef mangled) const;
 
-  /// Name-based predicates for STD/STL externalization, shared by the call
-  /// handler and the dead-code elision pass so both agree on which calls are
-  /// modelled away. Operate on a *demangled* symbol name.
-  static bool isIoInsertionName(const std::string &demangled);
-  static bool isStlContainerMethodName(const std::string &demangled,
-                                       std::string &method);
+  /// True when the symbol belongs to the std:: or __gnu_cxx:: namespace.
+  /// Checks the Itanium mangled prefix (_ZSt, _ZN[K]St, _ZN[K]9__gnu_cxx, …)
+  /// which is unambiguous even when the demangled form has a return-type prefix
+  /// (e.g. "void (*std::for_each<…>)(int&)" or "myclass std::for_each<…>(…)").
+  /// Falls back to a demangled-name prefix check for non-mangled symbols.
+  static bool isStdCallName(const std::string &mangled,
+                             const std::string &demangled);
 
   /// Compute which function definitions are reachable, so unreachable inline /
   /// weak definitions (e.g. the std I/O machinery left dead after I/O
@@ -126,11 +125,14 @@ public:
   /// definition that is not reachable from any retained root.
   bool funcDefElided(llvm::StringRef sym) const;
 
-  /// Emit `extern void __VERIFIER_log();` at most once.
-  void ensureVerifierLogDeclared(std::ostream &out);
-  /// Emit `extern <ctype> __VERIFIER_nondet_<suffix>(void);` once per suffix.
-  void ensureVerifierNondetDeclared(std::ostream &out, const std::string &ctype,
+  /// Record `extern <ctype> __VERIFIER_nondet_<suffix>(void);` once per suffix
+  /// into an internal buffer; mapModule flushes it before function bodies.
+  void ensureVerifierNondetDeclared(const std::string &ctype,
                                     const std::string &suffix);
+
+  /// Record `extern void __VERIFIER_nondet_memory(void*, unsigned long);` once
+  /// into the internal buffer; used for complex (non-primitive) return types.
+  void ensureVerifierNondetMemoryDeclared();
 
   /// Map a single function. Returns true on success, false on unrecoverable error.
   bool mapFunc(mlir::Operation *fop, std::ostream &out);
@@ -263,12 +265,14 @@ private:
   // Set once the malloc/free externs needed by synthesised operator
   // new/delete stubs have been emitted, so they appear at most once.
   bool mallocFreeDeclEmitted_ = false;
-  // STD/STL externalization (issue #7). IO on by default; containers off.
-  bool externalizeIO_ = true;
-  bool externalizeContainers_ = false;
+  // STD externalization (issue #7). On by default.
+  bool externalizeStd_ = true;
   bool lastCallExternalized_ = false;
-  bool verifierLogDeclEmitted_ = false;
+  // Collects `extern __VERIFIER_nondet_*` declarations during function-body
+  // emission; flushed to the output stream before function bodies by mapModule.
+  std::ostringstream verifierDeclsBuf_;
   std::set<std::string> verifierNondetDeclared_;
+  bool verifierNondetMemoryDeclared_ = false;
   // Dead-code elision state (issue #7 follow-up).
   bool reachabilityComputed_ = false;
   std::set<std::string> reachableDefs_;   // function symbols to retain

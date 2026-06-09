@@ -20,6 +20,7 @@
 #include "ErrorMessages.h"
 
 #include <mlir/IR/Operation.h>
+#include <mlir/IR/BuiltinTypes.h>
 #include <llvm/Support/Casting.h>
 #include <clang/CIR/Dialect/IR/CIRDialect.h>
 
@@ -136,39 +137,58 @@ private:
       callee = "unknown_fn";
     }
 
-    // ── STD/STL externalization (issue #7) ──────────────────────────────────
-    // Model standard-library operations a verifier does not care about instead
-    // of emitting their real (inlined) bodies' calls.
-    if (!isIndirectCall) {
+    // ── STD externalization (issue #7) ──────────────────────────────────────
+    // Any call whose demangled name starts with "std::" is modelled away:
+    // value-returning calls become __VERIFIER_nondet_*(), void calls are no-ops.
+    if (!isIndirectCall && m.externalizeStd()) {
       std::string dem = m.demangle(callee);
-      // I/O: `cout << x` -> __VERIFIER_log(x). operator<< returns the stream,
-      // so bind the result to the stream operand to keep the chain working.
-      if (m.externalizeIO() && Mapper::isIoInsertionName(dem) && o->getNumOperands() >= 2) {
-        Value streamV = o->getOperand(0);
-        Value valueV = o->getOperand(o->getNumOperands() - 1);
-        if (!isFuncPtrType(valueV.getType())) { // skip manipulators (endl/flush)
-          m.ensureVerifierLogDeclared(out);
-          out << "  __VERIFIER_log(" << m.getOrCreateName(valueV) << ");\n";
-        }
-        if (o->getNumResults() > 0)
-          m.setName(o->getResult(0), m.getOrCreateName(streamV));
-        m.setLastCallExternalized(true);
-        return true;
-      }
-      // Containers (opt-in): value-returning ops become nondeterministic, void
-      // ops (insertions, pops) become no-ops.
-      std::string method;
-      if (m.externalizeContainers() && Mapper::isStlContainerMethodName(dem, method)) {
+      if (Mapper::isStdCallName(callee, dem)) {
         if (o->getNumResults() > 0) {
-          std::string ctype = m.mapTypeToC(o->getResult(0).getType());
-          std::string suffix = Mapper::virtualCallTypeSuffix(ctype);
-          m.ensureVerifierNondetDeclared(out, ctype, suffix);
-          std::string tmp = m.freshName("stl");
-          out << "  " << ctype << " " << tmp << " = __VERIFIER_nondet_"
-              << suffix << "();\n";
+          mlir::Type t = o->getResult(0).getType();
+          std::string ctype = m.mapTypeToC(t);
+          std::string tmp = m.freshName("std");
+          bool isSimple = mlir::isa<cir::IntType>(t) ||
+                          mlir::isa<cir::SingleType>(t) ||
+                          mlir::isa<cir::DoubleType>(t) ||
+                          mlir::isa<cir::LongDoubleType>(t) ||
+                          mlir::isa<cir::FP80Type>(t) ||
+                          mlir::isa<mlir::FloatType>(t);
+          if (isSimple) {
+            std::string suffix = Mapper::virtualCallTypeSuffix(ctype);
+            m.ensureVerifierNondetDeclared(ctype, suffix);
+            out << "  " << ctype << " " << tmp << " = __VERIFIER_nondet_"
+                << suffix << "();\n";
+          } else {
+            m.ensureVerifierNondetMemoryDeclared();
+            out << "  " << ctype << " " << tmp << ";\n";
+            out << "  __VERIFIER_nondet_memory(&" << tmp
+                << ", sizeof(" << tmp << "));\n";
+          }
           m.setName(o->getResult(0), tmp);
         } else {
-          out << "  // externalized STL op: " << method << "\n";
+          // Void std:: call: emit a comment, then model potential side effects
+          // on every pointer arg whose pointee type is known-complete.
+          out << "  // externalized std:: op: " << dem << "\n";
+          for (unsigned i = 0; i < o->getNumOperands(); ++i) {
+            Value argV = o->getOperand(i);
+            auto pt = mlir::dyn_cast<cir::PointerType>(argV.getType());
+            if (!pt) continue;
+            mlir::Type pointee = pt.getPointee();
+            // Skip: function pointers (don't nondeterminize code), void*
+            // (unknown size), and incomplete record types (sizeof invalid).
+            if (mlir::isa<cir::FuncType>(pointee)) continue;
+            if (mlir::isa<cir::VoidType>(pointee)) continue;
+            if (auto rt = mlir::dyn_cast<cir::RecordType>(pointee))
+              if (!rt.isComplete()) continue;
+            m.ensureVerifierNondetMemoryDeclared();
+            std::string name = m.getOrCreateName(argV);
+            if (m.isDirectAccess(argV))
+              out << "  __VERIFIER_nondet_memory(&" << name
+                  << ", sizeof(" << name << "));\n";
+            else
+              out << "  __VERIFIER_nondet_memory(" << name
+                  << ", sizeof(*" << name << "));\n";
+          }
         }
         m.setLastCallExternalized(true);
         return true;
