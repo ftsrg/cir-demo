@@ -18,3 +18,5 @@ build
 llvm-project
 CLAUDE.md
 .claude
+benchmarks/sources/
+benchmarks/benchexec/
