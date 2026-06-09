@@ -1,0 +1,252 @@
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) int __VERIFIER_virtual_call_int(void* __obj, int __slot) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((int(*)(void*))__fn)(__obj);
+}
+
+// Struct definitions (auto-parsed)
+struct Base1 { void* __field0; };
+struct Base2 { void* __field0; };
+struct Derived { struct Base1 __field0; struct Base2 __field1; };
+struct anon_struct_0 { unsigned char* __field0[4]; unsigned char* __field1[3]; };
+struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
+struct anon_struct_2 { unsigned char* __field0; unsigned char* __field1; unsigned int __field2; unsigned int __field3; unsigned char* __field4; long __field5; unsigned char* __field6; long __field7; };
+struct anon_struct_3 { unsigned char* __field0[3]; };
+
+extern void *_ZTVN10__cxxabiv121__vmi_class_type_infoE[];
+extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
+extern unsigned char _ZTI5Base1[];
+extern unsigned char _ZTI5Base2[];
+extern unsigned char _ZTI7Derived[];
+char _str[20] = "d->Base1::f() == 21";
+char _str_1[123] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/polymorphism_bringup/5_MI_Slvl_fail/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[20] = "d->Base2::f() == 42";
+char _str_3[14] = "d->g() == 100";
+char _str_4[13] = "d->f() == 21";
+extern void *_ZTVN10__cxxabiv121__vmi_class_type_infoE[];
+char _ZTS7Derived[9] = "7Derived";
+extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
+char _ZTS5Base1[7] = "5Base1";
+char _ZTS5Base2[7] = "5Base2";
+extern void *malloc(unsigned long);
+extern void free(void*);
+void* operator_new(unsigned long p0) { return malloc(p0); }
+void Derived__Derived(struct Derived* p0);
+void operator_delete(void* p0, unsigned long p1) { free(p0); }
+int Base1__f(struct Base1* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int Base2__f(struct Base2* p0);
+int main();
+void Base1__Base1(struct Base1* p0);
+void Base2__Base2(struct Base2* p0);
+int Derived__f(struct Derived* p0);
+int Derived__g(struct Derived* p0);
+int non_virtual_thunk_to_Derived__f(struct Derived* p0);
+
+void *_ZTV7Derived[] = { (void*)0, (void*)0, (void*)&Derived__f, (void*)&Derived__g, (void*)0, (void*)0, (void*)&non_virtual_thunk_to_Derived__f };
+void *_ZTV5Base1[] = { (void*)0, (void*)0, (void*)&Base1__f };
+void *_ZTV5Base2[] = { (void*)0, (void*)0, (void*)&Base2__f };
+
+// function: _ZN7DerivedC2Ev
+void Derived__Derived(struct Derived* v0) {
+bb1:
+  struct Derived* this2;
+  this2 = v0;
+  struct Derived* t3 = this2;
+  struct Base1* base4 = (struct Base1*)((char *)t3 + 0);
+  Base1__Base1(base4);
+  struct Base2* base5 = (struct Base2*)((char *)t3 + 8);
+  Base2__Base2(base5);
+  void* v6 = (void*)&_ZTV7Derived[2];
+  void** v7 = (void**)t3;
+  *(void**)(v7) = (void*)v6;
+  void* v8 = (void*)&_ZTV7Derived[6];
+  struct Base2* base9 = (struct Base2*)((char *)t3 + 8);
+  void** v10 = (void**)base9;
+  *(void**)(v10) = (void*)v8;
+  return;
+}
+
+// function: _ZN5Base11fEv
+int Base1__f(struct Base1* v11) {
+bb12:
+  struct Base1* this13;
+  int __retval14;
+  this13 = v11;
+  struct Base1* t15 = this13;
+  int c16 = 21;
+  __retval14 = c16;
+  int t17 = __retval14;
+  return t17;
+}
+
+// function: _ZN5Base21fEv
+int Base2__f(struct Base2* v18) {
+bb19:
+  struct Base2* this20;
+  int __retval21;
+  this20 = v18;
+  struct Base2* t22 = this20;
+  int c23 = 42;
+  __retval21 = c23;
+  int t24 = __retval21;
+  return t24;
+}
+
+// function: main
+int main() {
+bb25:
+  int __retval26;
+  struct Derived* d27;
+  struct Derived* __new_result28;
+  int c29 = 0;
+  __retval26 = c29;
+  unsigned long c30 = 16;
+  void* r31 = operator_new(c30);
+    struct Derived* cast32 = (struct Derived*)r31;
+    __new_result28 = cast32;
+    struct Derived c33 = {0};
+    *cast32 = c33;
+    Derived__Derived(cast32);
+  struct Derived* t34 = __new_result28;
+  d27 = t34;
+  struct Derived* t35 = d27;
+  struct Base1* base36 = (struct Base1*)((char *)t35 + 0);
+  int r37 = Base1__f(base36);
+  int c38 = 21;
+  _Bool c39 = ((r37 == c38)) ? 1 : 0;
+  if (c39) {
+  } else {
+    char* cast40 = (char*)&(_str);
+    char* c41 = _str_1;
+    unsigned int c42 = 31;
+    char* cast43 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast40, c41, c42, cast43);
+  }
+  struct Derived* t44 = d27;
+  struct Base2* base45 = (struct Base2*)((char *)t44 + 8);
+  int r46 = Base2__f(base45);
+  int c47 = 42;
+  _Bool c48 = ((r46 == c47)) ? 1 : 0;
+  if (c48) {
+  } else {
+    char* cast49 = (char*)&(_str_2);
+    char* c50 = _str_1;
+    unsigned int c51 = 32;
+    char* cast52 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast49, c50, c51, cast52);
+  }
+  struct Derived* t53 = d27;
+  void** v54 = (void**)t53;
+  void* v55 = *((void**)v54);
+  int vcall58 = (int)__VERIFIER_virtual_call_int(t53, 1);
+  int c59 = 100;
+  _Bool c60 = ((vcall58 == c59)) ? 1 : 0;
+  if (c60) {
+  } else {
+    char* cast61 = (char*)&(_str_3);
+    char* c62 = _str_1;
+    unsigned int c63 = 33;
+    char* cast64 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast61, c62, c63, cast64);
+  }
+  struct Derived* t65 = d27;
+  void** v66 = (void**)t65;
+  void* v67 = *((void**)v66);
+  int vcall70 = (int)__VERIFIER_virtual_call_int(t65, 0);
+  int c71 = 21;
+  _Bool c72 = ((vcall70 == c71)) ? 1 : 0;
+  if (c72) {
+  } else {
+    char* cast73 = (char*)&(_str_4);
+    char* c74 = _str_1;
+    unsigned int c75 = 34;
+    char* cast76 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast73, c74, c75, cast76);
+  }
+  struct Derived* t77 = d27;
+  struct Derived* c78 = ((void*)0);
+  _Bool c79 = ((t77 != c78)) ? 1 : 0;
+  if (c79) {
+    {
+      void* cast80 = (void*)t77;
+      unsigned long c81 = 16;
+      operator_delete(cast80, c81);
+    }
+  }
+  int c82 = 0;
+  __retval26 = c82;
+  int t83 = __retval26;
+  return t83;
+}
+
+// function: _ZN5Base1C2Ev
+void Base1__Base1(struct Base1* v84) {
+bb85:
+  struct Base1* this86;
+  this86 = v84;
+  struct Base1* t87 = this86;
+  void* v88 = (void*)&_ZTV5Base1[2];
+  void** v89 = (void**)t87;
+  *(void**)(v89) = (void*)v88;
+  return;
+}
+
+// function: _ZN5Base2C2Ev
+void Base2__Base2(struct Base2* v90) {
+bb91:
+  struct Base2* this92;
+  this92 = v90;
+  struct Base2* t93 = this92;
+  void* v94 = (void*)&_ZTV5Base2[2];
+  void** v95 = (void**)t93;
+  *(void**)(v95) = (void*)v94;
+  return;
+}
+
+// function: _ZN7Derived1fEv
+int Derived__f(struct Derived* v96) {
+bb97:
+  struct Derived* this98;
+  int __retval99;
+  this98 = v96;
+  struct Derived* t100 = this98;
+  int c101 = 1;
+  __retval99 = c101;
+  int t102 = __retval99;
+  return t102;
+}
+
+// function: _ZN7Derived1gEv
+int Derived__g(struct Derived* v103) {
+bb104:
+  struct Derived* this105;
+  int __retval106;
+  this105 = v103;
+  struct Derived* t107 = this105;
+  int c108 = 100;
+  __retval106 = c108;
+  int t109 = __retval106;
+  return t109;
+}
+
+// function: _ZThn8_N7Derived1fEv
+int non_virtual_thunk_to_Derived__f(struct Derived* v110) {
+bb111:
+  struct Derived* this112;
+  int __retval113;
+  this112 = v110;
+  struct Derived* t114 = this112;
+  unsigned char* cast115 = (unsigned char*)t114;
+  long c116 = -8;
+  unsigned char* ptr117 = &(cast115)[c116];
+  struct Derived* cast118 = (struct Derived*)ptr117;
+  int r119 = Derived__f(cast118);
+  __retval113 = r119;
+  int t120 = __retval113;
+  return t120;
+}
+

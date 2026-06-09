@@ -1,0 +1,103 @@
+extern void abort(void);
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std___List_iterator_int_ { struct std____detail___List_node_base* _M_node; };
+struct std____allocated_ptr_std__allocator_std___List_node_int___ { struct std__allocator_std___List_node_int__* _M_alloc; struct std___List_node_int_* _M_ptr; };
+struct std____detail___List_node_base { struct std____detail___List_node_base* _M_next; struct std____detail___List_node_base* _M_prev; };
+struct std____detail___List_size { unsigned long _M_size; };
+struct std____new_allocator_std___List_node_int__;
+struct std__allocator_std___List_node_int__;
+struct std___List_node_int_;
+struct std____allocated_obj_std__allocator_std___List_node_int___ { struct std____allocated_ptr_std__allocator_std___List_node_int___ __field0; };
+struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
+struct std__ios_base;
+struct std____cxx11___List_base_int__std__allocator_int_____List_impl { struct std____detail___List_node_header _M_node; };
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+struct std____cxx11___List_base_int__std__allocator_int__ { struct std____cxx11___List_base_int__std__allocator_int_____List_impl _M_impl; };
+struct std____cxx11__list_int__std__allocator_int__ { struct std____cxx11___List_base_int__std__allocator_int__ __field0; };
+
+struct std____detail___List_size __const__ZNSt8__detail17_List_node_header7_M_initEv_ref_tmp0;
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str[46] = "Please enter some integers (enter 0 to end):\n";
+char _str_1[15] = "mylist stores ";
+char _str_2[11] = " numbers.\n";
+char _str_3[25] = "(int) mylist.size() == 2";
+char _str_4[99] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/ch21_37/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+extern unsigned long __VERIFIER_nondet_unsigned_long(void);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std____cxx11__list_int__std__allocator_int__ mylist2;
+  int myint3;
+  int c4 = 0;
+  __retval1 = c4;
+  // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::list()
+  __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
+    int c5 = 0;
+    myint3 = c5;
+    char* cast6 = (char*)&(_str);
+    struct std__basic_ostream_char__std__char_traits_char__* std7;
+    __VERIFIER_nondet_memory(&std7, sizeof(std7));
+      do {
+          int t8 = myint3;
+          int u9 = t8 + 1;
+          myint3 = u9;
+          // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::push_back(int const&)
+          __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
+          __VERIFIER_nondet_memory(&myint3, sizeof(myint3));
+            int t10 = myint3;
+            int c11 = 2;
+            _Bool c12 = ((t10 == c11)) ? 1 : 0;
+            if (c12) {
+              int c13 = 0;
+              myint3 = c13;
+            }
+        int t14 = myint3;
+        _Bool cast15 = (_Bool)t14;
+        if (!cast15) break;
+      } while (1);
+    char* cast16 = (char*)&(_str_1);
+    struct std__basic_ostream_char__std__char_traits_char__* std17;
+    __VERIFIER_nondet_memory(&std17, sizeof(std17));
+    unsigned long std18 = __VERIFIER_nondet_unsigned_long();
+    int cast19 = (int)std18;
+    struct std__basic_ostream_char__std__char_traits_char__* std20;
+    __VERIFIER_nondet_memory(&std20, sizeof(std20));
+    char* cast21 = (char*)&(_str_2);
+    struct std__basic_ostream_char__std__char_traits_char__* std22;
+    __VERIFIER_nondet_memory(&std22, sizeof(std22));
+    unsigned long std23 = __VERIFIER_nondet_unsigned_long();
+    int cast24 = (int)std23;
+    int c25 = 2;
+    _Bool c26 = ((cast24 == c25)) ? 1 : 0;
+    if (c26) {
+    } else {
+      char* cast27 = (char*)&(_str_3);
+      char* c28 = _str_4;
+      unsigned int c29 = 29;
+      char* cast30 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast27, c28, c29, cast30);
+    }
+    int c31 = 0;
+    __retval1 = c31;
+    int t32 = __retval1;
+    int ret_val33 = t32;
+    {
+      // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::~list()
+      __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
+    }
+    return ret_val33;
+  int t34 = __retval1;
+  return t34;
+}
+

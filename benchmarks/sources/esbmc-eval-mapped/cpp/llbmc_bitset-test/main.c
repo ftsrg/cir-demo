@@ -1,0 +1,155 @@
+// Struct definitions (auto-parsed)
+struct std___Base_bitset_2UL_ { unsigned long _M_w[2]; };
+struct std__bitset_100UL_ { struct std___Base_bitset_2UL_ __field0; };
+struct std__bitset_100UL___reference { unsigned long* _M_wp; unsigned long _M_bpos; };
+
+char _str[26] = "bs.count() == bsf.count()";
+char _str_1[109] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/llbmc_bitset-test/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[12] = "!bs.test(i)";
+char _str_3[12] = "bsf.test(i)";
+char _str_4[11] = "bs.test(i)";
+char _str_5[13] = "!bsf.test(i)";
+char _str_6[13] = "bitset::test";
+char _str_7[52] = "%s: __position (which is %zu) >= _Nb (which is %zu)";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+extern unsigned long __VERIFIER_nondet_unsigned_long(void);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std__bitset_100UL_ bs2;
+  struct std__bitset_100UL_ bsf3;
+  int c4 = 0;
+  __retval1 = c4;
+  // externalized std:: op: std::bitset<100ul>::bitset()
+  __VERIFIER_nondet_memory(&bs2, sizeof(bs2));
+    int i5;
+    int c6 = 0;
+    i5 = c6;
+    while (1) {
+      int t8 = i5;
+      int c9 = 100;
+      _Bool c10 = ((t8 < c9)) ? 1 : 0;
+      if (!c10) break;
+          int t11 = i5;
+          int c12 = 2;
+          int b13 = t11 % c12;
+          _Bool cast14 = (_Bool)b13;
+          if (cast14) {
+            struct std__bitset_100UL___reference ref_tmp015;
+            struct std__bitset_100UL___reference* tmp_exprcleanup16;
+            _Bool c17 = 1;
+            int t18 = i5;
+            unsigned long cast19 = (unsigned long)t18;
+            struct std__bitset_100UL___reference std20;
+            __VERIFIER_nondet_memory(&std20, sizeof(std20));
+            ref_tmp015 = std20;
+              struct std__bitset_100UL___reference* std21;
+              __VERIFIER_nondet_memory(&std21, sizeof(std21));
+              tmp_exprcleanup16 = std21;
+            {
+              // externalized std:: op: std::bitset<100ul>::reference::~reference()
+              __VERIFIER_nondet_memory(&ref_tmp015, sizeof(ref_tmp015));
+            }
+            struct std__bitset_100UL___reference* t22 = tmp_exprcleanup16;
+          }
+    for_step7: ;
+      int t23 = i5;
+      int u24 = t23 + 1;
+      i5 = u24;
+    }
+  bsf3 = bs2; // copy
+  struct std__bitset_100UL_* std25;
+  __VERIFIER_nondet_memory(&std25, sizeof(std25));
+  unsigned long std26 = __VERIFIER_nondet_unsigned_long();
+  unsigned long std27 = __VERIFIER_nondet_unsigned_long();
+  _Bool c28 = ((std26 == std27)) ? 1 : 0;
+  if (c28) {
+  } else {
+    char* cast29 = (char*)&(_str);
+    char* c30 = _str_1;
+    unsigned int c31 = 25;
+    char* cast32 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast29, c30, c31, cast32);
+  }
+    int i33;
+    int c34 = 0;
+    i33 = c34;
+    while (1) {
+      int t36 = i33;
+      int c37 = 100;
+      _Bool c38 = ((t36 < c37)) ? 1 : 0;
+      if (!c38) break;
+          int t39 = i33;
+          int c40 = 2;
+          int b41 = t39 % c40;
+          _Bool cast42 = (_Bool)b41;
+          _Bool u43 = !cast42;
+          if (u43) {
+            int t44 = i33;
+            unsigned long cast45 = (unsigned long)t44;
+            _Bool std46;
+            __VERIFIER_nondet_memory(&std46, sizeof(std46));
+            _Bool u47 = !std46;
+            if (u47) {
+            } else {
+              char* cast48 = (char*)&(_str_2);
+              char* c49 = _str_1;
+              unsigned int c50 = 29;
+              char* cast51 = (char*)&(__PRETTY_FUNCTION___main);
+              __assert_fail(cast48, c49, c50, cast51);
+            }
+            int t52 = i33;
+            unsigned long cast53 = (unsigned long)t52;
+            _Bool std54;
+            __VERIFIER_nondet_memory(&std54, sizeof(std54));
+            if (std54) {
+            } else {
+              char* cast55 = (char*)&(_str_3);
+              char* c56 = _str_1;
+              unsigned int c57 = 30;
+              char* cast58 = (char*)&(__PRETTY_FUNCTION___main);
+              __assert_fail(cast55, c56, c57, cast58);
+            }
+          } else {
+            int t59 = i33;
+            unsigned long cast60 = (unsigned long)t59;
+            _Bool std61;
+            __VERIFIER_nondet_memory(&std61, sizeof(std61));
+            if (std61) {
+            } else {
+              char* cast62 = (char*)&(_str_4);
+              char* c63 = _str_1;
+              unsigned int c64 = 32;
+              char* cast65 = (char*)&(__PRETTY_FUNCTION___main);
+              __assert_fail(cast62, c63, c64, cast65);
+            }
+            int t66 = i33;
+            unsigned long cast67 = (unsigned long)t66;
+            _Bool std68;
+            __VERIFIER_nondet_memory(&std68, sizeof(std68));
+            _Bool u69 = !std68;
+            if (u69) {
+            } else {
+              char* cast70 = (char*)&(_str_5);
+              char* c71 = _str_1;
+              unsigned int c72 = 33;
+              char* cast73 = (char*)&(__PRETTY_FUNCTION___main);
+              __assert_fail(cast70, c71, c72, cast73);
+            }
+          }
+    for_step35: ;
+      int t74 = i33;
+      int u75 = t74 + 1;
+      i33 = u75;
+    }
+  int c76 = 0;
+  __retval1 = c76;
+  int t77 = __retval1;
+  return t77;
+}
+

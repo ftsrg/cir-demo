@@ -1,0 +1,50 @@
+// Struct definitions (auto-parsed)
+struct A_bool_ { _Bool t; };
+
+char _str[13] = "a.t == false";
+char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates30/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+void void_A_bool___set_int_(struct A_bool_* p0, int p1);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+// function: _ZN1AIbE3setIiEEvT_
+void void_A_bool___set_int_(struct A_bool_* v0, int v1) {
+bb2:
+  struct A_bool_* this3;
+  int t4;
+  this3 = v0;
+  t4 = v1;
+  struct A_bool_* t5 = this3;
+  int t6 = t4;
+  _Bool cast7 = (_Bool)t6;
+  t5->t = cast7;
+  return;
+}
+
+// function: main
+int main() {
+bb8:
+  int __retval9;
+  struct A_bool_ a10;
+  int c11 = 0;
+  __retval9 = c11;
+  int c12 = 0;
+  void_A_bool___set_int_(&a10, c12);
+  _Bool t13 = a10.t;
+  int cast14 = (int)t13;
+  _Bool c15 = 0;
+  int cast16 = (int)c15;
+  _Bool c17 = ((cast14 == cast16)) ? 1 : 0;
+  if (c17) {
+  } else {
+    char* cast18 = (char*)&(_str);
+    char* c19 = _str_1;
+    unsigned int c20 = 24;
+    char* cast21 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast18, c19, c20, cast21);
+  }
+  int t22 = __retval9;
+  return t22;
+}
+

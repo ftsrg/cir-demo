@@ -1,0 +1,423 @@
+extern void abort(void);
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std__ios_base___Callback_list { struct std__ios_base___Callback_list* __field0; void* __field1; int __field2; int __field3; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale___Impl { int __field0; struct std__locale__facet** __field1; unsigned long __field2; struct std__locale__facet** __field3; char** __field4; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___ { struct std__locale__facet __field0; unsigned char __field1[4]; };
+struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___ { struct std__locale__facet __field0; unsigned char __field1[4]; };
+struct std__basic_streambuf_char__std__char_traits_char__ { void* __field0; char* __field1; char* __field2; char* __field3; char* __field4; char* __field5; char* __field6; struct std__locale __field7; };
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_istream_char__std__char_traits_char__ { void* __field0; long __field1; struct std__basic_ios_char__std__char_traits_char__ __field2; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str[37] = "Enter the side length of your cube: ";
+extern struct std__basic_istream_char__std__char_traits_char__ _ZSt3cin __attribute__((aligned(8)));
+char _str_1[26] = "Volume of cube with side ";
+char _str_2[5] = " is ";
+extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
+int std__operator_(int p0, int p1);
+int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* p0);
+void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std____ostream_insert_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1, long p2);
+_Bool std____is_constant_evaluated();
+_Bool __gnu_cxx__char_traits_char___eq(char* p0, char* p1);
+unsigned long __gnu_cxx__char_traits_char___length(char* p0);
+extern unsigned long strlen(char* p0);
+unsigned long std__char_traits_char___length(char* p0);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1);
+extern struct std__basic_istream_char__std__char_traits_char__* std__istream__std__istream___M_extract_double_(struct std__basic_istream_char__std__char_traits_char__* p0, double* p1);
+struct std__basic_istream_char__std__char_traits_char__* std__istream__operator__(struct std__basic_istream_char__std__char_traits_char__* p0, double* p1);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__std__ostream___M_insert_double_(struct std__basic_ostream_char__std__char_traits_char__* p0, double p1);
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator__(struct std__basic_ostream_char__std__char_traits_char__* p0, double p1);
+double cube(double p0);
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__put(struct std__basic_ostream_char__std__char_traits_char__* p0, char p1);
+extern void std____throw_bad_cast();
+struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* p0);
+extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0);
+char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
+char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+int main();
+
+// function: _ZStorSt12_Ios_IostateS_
+int std__operator_(int v0, int v1) {
+bb2:
+  int __a3;
+  int __b4;
+  int __retval5;
+  __a3 = v0;
+  __b4 = v1;
+  int t6 = __a3;
+  int t7 = __b4;
+  int b8 = t6 | t7;
+  __retval5 = b8;
+  int t9 = __retval5;
+  return t9;
+}
+
+// function: _ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
+int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* v10) {
+bb11:
+  struct std__basic_ios_char__std__char_traits_char__* this12;
+  int __retval13;
+  this12 = v10;
+  struct std__basic_ios_char__std__char_traits_char__* t14 = this12;
+  struct std__ios_base* base15 = (struct std__ios_base*)((char *)t14 + 0);
+  int t16 = base15->_M_streambuf_state;
+  __retval13 = t16;
+  int t17 = __retval13;
+  return t17;
+}
+
+// function: _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
+void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* v18, int v19) {
+bb20:
+  struct std__basic_ios_char__std__char_traits_char__* this21;
+  int __state22;
+  this21 = v18;
+  __state22 = v19;
+  struct std__basic_ios_char__std__char_traits_char__* t23 = this21;
+  int r24 = std__basic_ios_char__std__char_traits_char_____rdstate___const(t23);
+  int t25 = __state22;
+  int r26 = std__operator_(r24, t25);
+  std__basic_ios_char__std__char_traits_char_____clear(t23, r26);
+  return;
+}
+
+// function: _ZSt23__is_constant_evaluatedv
+_Bool std____is_constant_evaluated() {
+bb27:
+  _Bool __retval28;
+    _Bool c29 = 0;
+    __retval28 = c29;
+    _Bool t30 = __retval28;
+    return t30;
+  abort();
+}
+
+// function: _ZN9__gnu_cxx11char_traitsIcE2eqERKcS3_
+_Bool __gnu_cxx__char_traits_char___eq(char* v31, char* v32) {
+bb33:
+  char* __c134;
+  char* __c235;
+  _Bool __retval36;
+  __c134 = v31;
+  __c235 = v32;
+  char* t37 = __c134;
+  char t38 = *t37;
+  int cast39 = (int)t38;
+  char* t40 = __c235;
+  char t41 = *t40;
+  int cast42 = (int)t41;
+  _Bool c43 = ((cast39 == cast42)) ? 1 : 0;
+  __retval36 = c43;
+  _Bool t44 = __retval36;
+  return t44;
+}
+
+// function: _ZN9__gnu_cxx11char_traitsIcE6lengthEPKc
+unsigned long __gnu_cxx__char_traits_char___length(char* v45) {
+bb46:
+  char* __p47;
+  unsigned long __retval48;
+  unsigned long __i49;
+  __p47 = v45;
+  unsigned long c50 = 0;
+  __i49 = c50;
+    char ref_tmp051;
+    while (1) {
+      unsigned long t52 = __i49;
+      char* t53 = __p47;
+      char* ptr54 = &(t53)[t52];
+      char c55 = 0;
+      ref_tmp051 = c55;
+      _Bool r56 = __gnu_cxx__char_traits_char___eq(ptr54, &ref_tmp051);
+      _Bool u57 = !r56;
+      if (!u57) break;
+      unsigned long t58 = __i49;
+      unsigned long u59 = t58 + 1;
+      __i49 = u59;
+    }
+  unsigned long t60 = __i49;
+  __retval48 = t60;
+  unsigned long t61 = __retval48;
+  return t61;
+}
+
+// function: _ZNSt11char_traitsIcE6lengthEPKc
+unsigned long std__char_traits_char___length(char* v62) {
+bb63:
+  char* __s64;
+  unsigned long __retval65;
+  __s64 = v62;
+    _Bool r66 = std____is_constant_evaluated();
+    if (r66) {
+      char* t67 = __s64;
+      unsigned long r68 = __gnu_cxx__char_traits_char___length(t67);
+      __retval65 = r68;
+      unsigned long t69 = __retval65;
+      return t69;
+    }
+  char* t70 = __s64;
+  unsigned long r71 = strlen(t70);
+  __retval65 = r71;
+  unsigned long t72 = __retval65;
+  return t72;
+}
+
+// function: _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v73, char* v74) {
+bb75:
+  struct std__basic_ostream_char__std__char_traits_char__* __out76;
+  char* __s77;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval78;
+  __out76 = v73;
+  __s77 = v74;
+    char* t79 = __s77;
+    _Bool cast80 = (_Bool)t79;
+    _Bool u81 = !cast80;
+    if (u81) {
+      struct std__basic_ostream_char__std__char_traits_char__* t82 = __out76;
+      void** v83 = (void**)t82;
+      void* v84 = *((void**)v83);
+      unsigned char* cast85 = (unsigned char*)v84;
+      long c86 = -24;
+      unsigned char* ptr87 = &(cast85)[c86];
+      long* cast88 = (long*)ptr87;
+      long t89 = *cast88;
+      unsigned char* cast90 = (unsigned char*)t82;
+      unsigned char* ptr91 = &(cast90)[t89];
+      struct std__basic_ostream_char__std__char_traits_char__* cast92 = (struct std__basic_ostream_char__std__char_traits_char__*)ptr91;
+      struct std__basic_ios_char__std__char_traits_char__* cast93 = (struct std__basic_ios_char__std__char_traits_char__*)cast92;
+      int t94 = _ZNSt8ios_base6badbitE_const;
+      std__basic_ios_char__std__char_traits_char_____setstate(cast93, t94);
+    } else {
+      struct std__basic_ostream_char__std__char_traits_char__* t95 = __out76;
+      char* t96 = __s77;
+      char* t97 = __s77;
+      unsigned long r98 = std__char_traits_char___length(t97);
+      long cast99 = (long)r98;
+      struct std__basic_ostream_char__std__char_traits_char__* r100 = std__basic_ostream_char__std__char_traits_char_____std____ostream_insert_char__std__char_traits_char___(t95, t96, cast99);
+    }
+  struct std__basic_ostream_char__std__char_traits_char__* t101 = __out76;
+  __retval78 = t101;
+  struct std__basic_ostream_char__std__char_traits_char__* t102 = __retval78;
+  return t102;
+}
+
+// function: _ZNSirsERd
+struct std__basic_istream_char__std__char_traits_char__* std__istream__operator__(struct std__basic_istream_char__std__char_traits_char__* v103, double* v104) {
+bb105:
+  struct std__basic_istream_char__std__char_traits_char__* this106;
+  double* __f107;
+  struct std__basic_istream_char__std__char_traits_char__* __retval108;
+  this106 = v103;
+  __f107 = v104;
+  struct std__basic_istream_char__std__char_traits_char__* t109 = this106;
+  double* t110 = __f107;
+  struct std__basic_istream_char__std__char_traits_char__* r111 = std__istream__std__istream___M_extract_double_(t109, t110);
+  __retval108 = r111;
+  struct std__basic_istream_char__std__char_traits_char__* t112 = __retval108;
+  return t112;
+}
+
+// function: _ZNSolsEd
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator__(struct std__basic_ostream_char__std__char_traits_char__* v113, double v114) {
+bb115:
+  struct std__basic_ostream_char__std__char_traits_char__* this116;
+  double __f117;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval118;
+  this116 = v113;
+  __f117 = v114;
+  struct std__basic_ostream_char__std__char_traits_char__* t119 = this116;
+  double t120 = __f117;
+  struct std__basic_ostream_char__std__char_traits_char__* r121 = std__ostream__std__ostream___M_insert_double_(t119, t120);
+  __retval118 = r121;
+  struct std__basic_ostream_char__std__char_traits_char__* t122 = __retval118;
+  return t122;
+}
+
+// function: _Z4cubed
+double cube(double v123) {
+bb124:
+  double side125;
+  double __retval126;
+  side125 = v123;
+  double t127 = side125;
+  double t128 = side125;
+  double b129 = t127 * t128;
+  double t130 = side125;
+  double b131 = b129 * t130;
+  __retval126 = b131;
+  double t132 = __retval126;
+  return t132;
+}
+
+// function: _ZNSolsEPFRSoS_E
+struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* v133, void* v134) {
+bb135:
+  struct std__basic_ostream_char__std__char_traits_char__* this136;
+  void* __pf137;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval138;
+  this136 = v133;
+  __pf137 = v134;
+  struct std__basic_ostream_char__std__char_traits_char__* t139 = this136;
+  void* t140 = __pf137;
+  struct std__basic_ostream_char__std__char_traits_char__* r141 = ((struct std__basic_ostream_char__std__char_traits_char__* (*)(struct std__basic_ostream_char__std__char_traits_char__*))t140)(t139);
+  __retval138 = r141;
+  struct std__basic_ostream_char__std__char_traits_char__* t142 = __retval138;
+  return t142;
+}
+
+// function: _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v143) {
+bb144:
+  struct std__basic_ostream_char__std__char_traits_char__* __os145;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval146;
+  __os145 = v143;
+  struct std__basic_ostream_char__std__char_traits_char__* t147 = __os145;
+  struct std__basic_ostream_char__std__char_traits_char__* r148 = std__ostream__flush(t147);
+  __retval146 = r148;
+  struct std__basic_ostream_char__std__char_traits_char__* t149 = __retval146;
+  return t149;
+}
+
+// function: _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
+struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* v150) {
+bb151:
+  struct std__ctype_char_* __f152;
+  struct std__ctype_char_* __retval153;
+  __f152 = v150;
+    struct std__ctype_char_* t154 = __f152;
+    _Bool cast155 = (_Bool)t154;
+    _Bool u156 = !cast155;
+    if (u156) {
+      std____throw_bad_cast();
+    }
+  struct std__ctype_char_* t157 = __f152;
+  __retval153 = t157;
+  struct std__ctype_char_* t158 = __retval153;
+  return t158;
+}
+
+// function: _ZNKSt5ctypeIcE5widenEc
+char std__ctype_char___widen_char__const(struct std__ctype_char_* v159, char v160) {
+bb161:
+  struct std__ctype_char_* this162;
+  char __c163;
+  char __retval164;
+  this162 = v159;
+  __c163 = v160;
+  struct std__ctype_char_* t165 = this162;
+    char t166 = t165->_M_widen_ok;
+    _Bool cast167 = (_Bool)t166;
+    if (cast167) {
+      char t168 = __c163;
+      unsigned char cast169 = (unsigned char)t168;
+      unsigned long cast170 = (unsigned long)cast169;
+      char t171 = t165->_M_widen[cast170];
+      __retval164 = t171;
+      char t172 = __retval164;
+      return t172;
+    }
+  std__ctype_char____M_widen_init___const(t165);
+  char t173 = __c163;
+  void** v174 = (void**)t165;
+  void* v175 = *((void**)v174);
+  char vcall178 = (char)__VERIFIER_virtual_call_char_char(t165, 6, t173);
+  __retval164 = vcall178;
+  char t179 = __retval164;
+  return t179;
+}
+
+// function: _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
+char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* v180, char v181) {
+bb182:
+  struct std__basic_ios_char__std__char_traits_char__* this183;
+  char __c184;
+  char __retval185;
+  this183 = v180;
+  __c184 = v181;
+  struct std__basic_ios_char__std__char_traits_char__* t186 = this183;
+  struct std__ctype_char_* t187 = t186->_M_ctype;
+  struct std__ctype_char_* r188 = std__ctype_char__const__std____check_facet_std__ctype_char___(t187);
+  char t189 = __c184;
+  char r190 = std__ctype_char___widen_char__const(r188, t189);
+  __retval185 = r190;
+  char t191 = __retval185;
+  return t191;
+}
+
+// function: _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
+struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v192) {
+bb193:
+  struct std__basic_ostream_char__std__char_traits_char__* __os194;
+  struct std__basic_ostream_char__std__char_traits_char__* __retval195;
+  __os194 = v192;
+  struct std__basic_ostream_char__std__char_traits_char__* t196 = __os194;
+  struct std__basic_ostream_char__std__char_traits_char__* t197 = __os194;
+  void** v198 = (void**)t197;
+  void* v199 = *((void**)v198);
+  unsigned char* cast200 = (unsigned char*)v199;
+  long c201 = -24;
+  unsigned char* ptr202 = &(cast200)[c201];
+  long* cast203 = (long*)ptr202;
+  long t204 = *cast203;
+  unsigned char* cast205 = (unsigned char*)t197;
+  unsigned char* ptr206 = &(cast205)[t204];
+  struct std__basic_ostream_char__std__char_traits_char__* cast207 = (struct std__basic_ostream_char__std__char_traits_char__*)ptr206;
+  struct std__basic_ios_char__std__char_traits_char__* cast208 = (struct std__basic_ios_char__std__char_traits_char__*)cast207;
+  char c209 = 10;
+  char r210 = std__basic_ios_char__std__char_traits_char_____widen_char__const(cast208, c209);
+  struct std__basic_ostream_char__std__char_traits_char__* r211 = std__ostream__put(t196, r210);
+  struct std__basic_ostream_char__std__char_traits_char__* r212 = std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(r211);
+  __retval195 = r212;
+  struct std__basic_ostream_char__std__char_traits_char__* t213 = __retval195;
+  return t213;
+}
+
+// function: main
+int main() {
+bb214:
+  int __retval215;
+  double sideValue216;
+  int c217 = 0;
+  __retval215 = c217;
+  char* cast218 = (char*)&(_str);
+  struct std__basic_ostream_char__std__char_traits_char__* r219 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(&_ZSt4cout, cast218);
+  struct std__basic_istream_char__std__char_traits_char__* r220 = std__istream__operator__(&_ZSt3cin, &sideValue216);
+  char* cast221 = (char*)&(_str_1);
+  struct std__basic_ostream_char__std__char_traits_char__* r222 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(&_ZSt4cout, cast221);
+  double t223 = sideValue216;
+  struct std__basic_ostream_char__std__char_traits_char__* r224 = std__ostream__operator__(r222, t223);
+  char* cast225 = (char*)&(_str_2);
+  struct std__basic_ostream_char__std__char_traits_char__* r226 = std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(r224, cast225);
+  double t227 = sideValue216;
+  double r228 = cube(t227);
+  struct std__basic_ostream_char__std__char_traits_char__* r229 = std__ostream__operator__(r226, r228);
+  struct std__basic_ostream_char__std__char_traits_char__* r230 = std__ostream__operator___std__ostream_____(r229, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);
+  int c231 = 0;
+  __retval215 = c231;
+  int t232 = __retval215;
+  return t232;
+}
+

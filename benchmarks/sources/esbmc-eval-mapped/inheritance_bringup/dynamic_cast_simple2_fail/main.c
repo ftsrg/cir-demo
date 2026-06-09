@@ -1,0 +1,112 @@
+// Struct definitions (auto-parsed)
+struct CPolygon { int width; int height; };
+
+char _str[18] = "rec->area() == 99";
+char _str_1[133] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/inheritance_bringup/dynamic_cast_simple2_fail/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+extern void *malloc(unsigned long);
+extern void free(void*);
+void* operator_new(unsigned long p0) { return malloc(p0); }
+void CPolygon__CPolygon(struct CPolygon* p0, int p1, int p2);
+void operator_delete(void* p0, unsigned long p1) { free(p0); }
+void CPolygon__set_values(struct CPolygon* p0, int p1, int p2);
+int CPolygon__area(struct CPolygon* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+// function: _ZN8CPolygonC2Eii
+void CPolygon__CPolygon(struct CPolygon* v0, int v1, int v2) {
+bb3:
+  struct CPolygon* this4;
+  int w5;
+  int h6;
+  this4 = v0;
+  w5 = v1;
+  h6 = v2;
+  struct CPolygon* t7 = this4;
+  int t8 = w5;
+  t7->width = t8;
+  int t9 = h6;
+  t7->height = t9;
+  return;
+}
+
+// function: _ZN8CPolygon10set_valuesEii
+void CPolygon__set_values(struct CPolygon* v10, int v11, int v12) {
+bb13:
+  struct CPolygon* this14;
+  int a15;
+  int b16;
+  this14 = v10;
+  a15 = v11;
+  b16 = v12;
+  struct CPolygon* t17 = this14;
+  int t18 = a15;
+  t17->width = t18;
+  int t19 = b16;
+  t17->height = t19;
+  return;
+}
+
+// function: _ZN8CPolygon4areaEv
+int CPolygon__area(struct CPolygon* v20) {
+bb21:
+  struct CPolygon* this22;
+  int __retval23;
+  this22 = v20;
+  struct CPolygon* t24 = this22;
+  int t25 = t24->width;
+  int t26 = t24->height;
+  int b27 = t25 * t26;
+  __retval23 = b27;
+  int t28 = __retval23;
+  return t28;
+}
+
+// function: main
+int main() {
+bb29:
+  int __retval30;
+  struct CPolygon* polygons31;
+  struct CPolygon* __new_result32;
+  struct CPolygon* rec33;
+  int c34 = 0;
+  __retval30 = c34;
+  unsigned long c35 = 8;
+  void* r36 = operator_new(c35);
+    struct CPolygon* cast37 = (struct CPolygon*)r36;
+    __new_result32 = cast37;
+    int c38 = 20;
+    int c39 = 30;
+    CPolygon__CPolygon(cast37, c38, c39);
+  struct CPolygon* t40 = __new_result32;
+  polygons31 = t40;
+  struct CPolygon* t41 = polygons31;
+  rec33 = t41;
+    struct CPolygon* t42 = rec33;
+    struct CPolygon* c43 = ((void*)0);
+    _Bool c44 = ((t42 != c43)) ? 1 : 0;
+    if (c44) {
+      struct CPolygon* t45 = rec33;
+      int c46 = 10;
+      int c47 = 10;
+      CPolygon__set_values(t45, c46, c47);
+      struct CPolygon* t48 = rec33;
+      int r49 = CPolygon__area(t48);
+      int c50 = 99;
+      _Bool c51 = ((r49 == c50)) ? 1 : 0;
+      if (c51) {
+      } else {
+        char* cast52 = (char*)&(_str);
+        char* c53 = _str_1;
+        unsigned int c54 = 37;
+        char* cast55 = (char*)&(__PRETTY_FUNCTION___main);
+        __assert_fail(cast52, c53, c54, cast55);
+      }
+    }
+  int c56 = 0;
+  __retval30 = c56;
+  int t57 = __retval30;
+  return t57;
+}
+

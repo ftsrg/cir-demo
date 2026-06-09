@@ -1,0 +1,220 @@
+extern void abort(void);
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____ops___Iter_comp_iter_bool_____char__char__ { void* _M_comp; };
+struct __gnu_cxx____ops___Iter_less_iter { unsigned char __field0; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std__ctype_char_;
+struct std__ios_base;
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+
+char __const_main_second[10] = "apartment";
+char __const_main_first[6] = "Apple";
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str[39] = "Using default comparison (operator<): ";
+char _str_1[15] = " is less than ";
+char _str_2[18] = " is greater than ";
+char _str_3[6] = " and ";
+char _str_4[17] = " are equivalent\n";
+char _str_5[62] = "lexicographical_compare(first,first+5,second,second+9,mycomp)";
+char _str_6[110] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/algorithm/algorithm121/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_7[36] = "Using mycomp as comparison object: ";
+extern int tolower(int p0);
+_Bool mycomp(char p0, char p1);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: _Z6mycompcc
+_Bool mycomp(char v0, char v1) {
+bb2:
+  char c13;
+  char c24;
+  _Bool __retval5;
+  c13 = v0;
+  c24 = v1;
+  char t6 = c13;
+  int cast7 = (int)t6;
+  int r8 = tolower(cast7);
+  char t9 = c24;
+  int cast10 = (int)t9;
+  int r11 = tolower(cast10);
+  _Bool c12 = ((r8 < r11)) ? 1 : 0;
+  __retval5 = c12;
+  _Bool t13 = __retval5;
+  return t13;
+}
+
+// function: main
+int main() {
+bb14:
+  int __retval15;
+  char first16[6];
+  char second17[10];
+  int c18 = 0;
+  __retval15 = c18;
+  // array copy
+  __builtin_memcpy(first16, __const_main_first, (unsigned long)6 * sizeof(__const_main_first[0]));
+  // array copy
+  __builtin_memcpy(second17, __const_main_second, (unsigned long)10 * sizeof(__const_main_second[0]));
+  char* cast19 = (char*)&(_str);
+  struct std__basic_ostream_char__std__char_traits_char__* std20;
+  __VERIFIER_nondet_memory(&std20, sizeof(std20));
+    char* cast21 = (char*)&(first16);
+    char* cast22 = (char*)&(first16);
+    int c23 = 5;
+    char* ptr24 = &(cast22)[c23];
+    char* cast25 = (char*)&(second17);
+    char* cast26 = (char*)&(second17);
+    int c27 = 9;
+    char* ptr28 = &(cast26)[c27];
+    _Bool std29;
+    __VERIFIER_nondet_memory(&std29, sizeof(std29));
+    if (std29) {
+      char* cast30 = (char*)&(first16);
+      struct std__basic_ostream_char__std__char_traits_char__* std31;
+      __VERIFIER_nondet_memory(&std31, sizeof(std31));
+      char* cast32 = (char*)&(_str_1);
+      struct std__basic_ostream_char__std__char_traits_char__* std33;
+      __VERIFIER_nondet_memory(&std33, sizeof(std33));
+      char* cast34 = (char*)&(second17);
+      struct std__basic_ostream_char__std__char_traits_char__* std35;
+      __VERIFIER_nondet_memory(&std35, sizeof(std35));
+      struct std__basic_ostream_char__std__char_traits_char__* std36;
+      __VERIFIER_nondet_memory(&std36, sizeof(std36));
+    } else {
+        char* cast37 = (char*)&(second17);
+        char* cast38 = (char*)&(second17);
+        int c39 = 9;
+        char* ptr40 = &(cast38)[c39];
+        char* cast41 = (char*)&(first16);
+        char* cast42 = (char*)&(first16);
+        int c43 = 5;
+        char* ptr44 = &(cast42)[c43];
+        _Bool std45;
+        __VERIFIER_nondet_memory(&std45, sizeof(std45));
+        if (std45) {
+          char* cast46 = (char*)&(first16);
+          struct std__basic_ostream_char__std__char_traits_char__* std47;
+          __VERIFIER_nondet_memory(&std47, sizeof(std47));
+          char* cast48 = (char*)&(_str_2);
+          struct std__basic_ostream_char__std__char_traits_char__* std49;
+          __VERIFIER_nondet_memory(&std49, sizeof(std49));
+          char* cast50 = (char*)&(second17);
+          struct std__basic_ostream_char__std__char_traits_char__* std51;
+          __VERIFIER_nondet_memory(&std51, sizeof(std51));
+          struct std__basic_ostream_char__std__char_traits_char__* std52;
+          __VERIFIER_nondet_memory(&std52, sizeof(std52));
+        } else {
+          char* cast53 = (char*)&(first16);
+          struct std__basic_ostream_char__std__char_traits_char__* std54;
+          __VERIFIER_nondet_memory(&std54, sizeof(std54));
+          char* cast55 = (char*)&(_str_3);
+          struct std__basic_ostream_char__std__char_traits_char__* std56;
+          __VERIFIER_nondet_memory(&std56, sizeof(std56));
+          char* cast57 = (char*)&(second17);
+          struct std__basic_ostream_char__std__char_traits_char__* std58;
+          __VERIFIER_nondet_memory(&std58, sizeof(std58));
+          char* cast59 = (char*)&(_str_4);
+          struct std__basic_ostream_char__std__char_traits_char__* std60;
+          __VERIFIER_nondet_memory(&std60, sizeof(std60));
+        }
+    }
+  char* cast61 = (char*)&(first16);
+  char* cast62 = (char*)&(first16);
+  int c63 = 5;
+  char* ptr64 = &(cast62)[c63];
+  char* cast65 = (char*)&(second17);
+  char* cast66 = (char*)&(second17);
+  int c67 = 9;
+  char* ptr68 = &(cast66)[c67];
+  _Bool std69;
+  __VERIFIER_nondet_memory(&std69, sizeof(std69));
+  if (std69) {
+  } else {
+    char* cast70 = (char*)&(_str_5);
+    char* c71 = _str_6;
+    unsigned int c72 = 32;
+    char* cast73 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast70, c71, c72, cast73);
+  }
+  char* cast74 = (char*)&(_str_7);
+  struct std__basic_ostream_char__std__char_traits_char__* std75;
+  __VERIFIER_nondet_memory(&std75, sizeof(std75));
+    char* cast76 = (char*)&(first16);
+    char* cast77 = (char*)&(first16);
+    int c78 = 5;
+    char* ptr79 = &(cast77)[c78];
+    char* cast80 = (char*)&(second17);
+    char* cast81 = (char*)&(second17);
+    int c82 = 9;
+    char* ptr83 = &(cast81)[c82];
+    _Bool std84;
+    __VERIFIER_nondet_memory(&std84, sizeof(std84));
+    if (std84) {
+      char* cast85 = (char*)&(first16);
+      struct std__basic_ostream_char__std__char_traits_char__* std86;
+      __VERIFIER_nondet_memory(&std86, sizeof(std86));
+      char* cast87 = (char*)&(_str_1);
+      struct std__basic_ostream_char__std__char_traits_char__* std88;
+      __VERIFIER_nondet_memory(&std88, sizeof(std88));
+      char* cast89 = (char*)&(second17);
+      struct std__basic_ostream_char__std__char_traits_char__* std90;
+      __VERIFIER_nondet_memory(&std90, sizeof(std90));
+      struct std__basic_ostream_char__std__char_traits_char__* std91;
+      __VERIFIER_nondet_memory(&std91, sizeof(std91));
+    } else {
+        char* cast92 = (char*)&(second17);
+        char* cast93 = (char*)&(second17);
+        int c94 = 9;
+        char* ptr95 = &(cast93)[c94];
+        char* cast96 = (char*)&(first16);
+        char* cast97 = (char*)&(first16);
+        int c98 = 5;
+        char* ptr99 = &(cast97)[c98];
+        _Bool std100;
+        __VERIFIER_nondet_memory(&std100, sizeof(std100));
+        if (std100) {
+          char* cast101 = (char*)&(first16);
+          struct std__basic_ostream_char__std__char_traits_char__* std102;
+          __VERIFIER_nondet_memory(&std102, sizeof(std102));
+          char* cast103 = (char*)&(_str_2);
+          struct std__basic_ostream_char__std__char_traits_char__* std104;
+          __VERIFIER_nondet_memory(&std104, sizeof(std104));
+          char* cast105 = (char*)&(second17);
+          struct std__basic_ostream_char__std__char_traits_char__* std106;
+          __VERIFIER_nondet_memory(&std106, sizeof(std106));
+          struct std__basic_ostream_char__std__char_traits_char__* std107;
+          __VERIFIER_nondet_memory(&std107, sizeof(std107));
+        } else {
+          char* cast108 = (char*)&(first16);
+          struct std__basic_ostream_char__std__char_traits_char__* std109;
+          __VERIFIER_nondet_memory(&std109, sizeof(std109));
+          char* cast110 = (char*)&(_str_3);
+          struct std__basic_ostream_char__std__char_traits_char__* std111;
+          __VERIFIER_nondet_memory(&std111, sizeof(std111));
+          char* cast112 = (char*)&(second17);
+          struct std__basic_ostream_char__std__char_traits_char__* std113;
+          __VERIFIER_nondet_memory(&std113, sizeof(std113));
+          char* cast114 = (char*)&(_str_4);
+          struct std__basic_ostream_char__std__char_traits_char__* std115;
+          __VERIFIER_nondet_memory(&std115, sizeof(std115));
+        }
+    }
+  int c116 = 0;
+  __retval15 = c116;
+  int t117 = __retval15;
+  return t117;
+}
+

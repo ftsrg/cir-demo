@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE benchmark PUBLIC "+//IDN sosy-lab.org//DTD BenchExec benchmark 3.30//EN"
+          "https://www.sosy-lab.org/benchexec/benchmark-3.30.dtd">
+<benchmark tool="theta"
+           timelimit="60s"
+           hardtimelimit="90s"
+           memlimit="4000 MB"
+           cpuCores="1">
+
+  <rundefinition name="esbmc-eval-mapped">
+    <tasks name="esbmc-eval-mapped">
+      <includesfile>../sets/esbmc-eval-mapped.set</includesfile>
+      <propertyfile>../sources/esbmc-eval-mapped/no-assertion-violation.prp</propertyfile>
+    </tasks>
+  </rundefinition>
+
+  <rundefinition name="esbmc-eval-mapped-nostd">
+    <tasks name="esbmc-eval-mapped-nostd">
+      <includesfile>../sets/esbmc-eval-mapped-nostd.set</includesfile>
+      <propertyfile>../sources/esbmc-eval-mapped-nostd/no-assertion-violation.prp</propertyfile>
+    </tasks>
+  </rundefinition>
+
+</benchmark>

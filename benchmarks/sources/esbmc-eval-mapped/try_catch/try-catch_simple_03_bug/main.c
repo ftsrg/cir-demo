@@ -1,0 +1,261 @@
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTI21DivideByZeroException[] = "_ZTI21DivideByZeroException";
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct anon_struct_0 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
+struct anon_struct_1 { unsigned char* __field0[5]; };
+struct std__exception;
+struct DivideByZeroException { struct std__exception __field0; char* message; };
+struct std__ctype_char_;
+struct std__ios_base;
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_istream_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+
+extern void *_ZTVN10__cxxabiv120__si_class_type_infoE[];
+extern void *_ZTVSt9exception[];
+extern unsigned char _ZTI21DivideByZeroException[];
+int _ZNSt8ios_base7failbitE_const __attribute__((aligned(4))) = 4;
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern void *_ZTVN10__cxxabiv120__si_class_type_infoE[];
+char _ZTS21DivideByZeroException[24] = "21DivideByZeroException";
+static const char _ZTISt9exception__n_[] = "_ZTISt9exception";
+static void* _ZTISt9exception[2] = {(void*)0, (void*)_ZTISt9exception__n_};
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str[42] = "Enter two integers (end-of-file to end): ";
+extern struct std__basic_istream_char__std__char_traits_char__ _ZSt3cin __attribute__((aligned(8)));
+char _str_1[18] = "The quotient is: ";
+char _str_2[21] = "Exception occurred: ";
+char _str_3[2] = "0";
+char _str_4[121] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/try_catch/try-catch_simple_03_bug/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_5[43] = "\nEnter two integers (end-of-file to end): ";
+char _str_6[28] = "attempted to divide by zero";
+extern void *_ZTVSt9exception[];
+void DivideByZeroException__DivideByZeroException(struct DivideByZeroException* p0);
+void DivideByZeroException___DivideByZeroException_2(struct DivideByZeroException* p0);
+double quotient(int p0, int p1);
+extern int __gxx_personality_v0();
+char* DivideByZeroException__whato___const(struct DivideByZeroException* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+extern void *malloc(unsigned long);
+extern void free(void*);
+void operator_delete(void* p0, unsigned long p1) { free(p0); }
+void DivideByZeroException___DivideByZeroException(struct DivideByZeroException* p0);
+extern char* std__exception__what___const(struct std__exception* p0);
+
+void *_ZTV21DivideByZeroException[] = { (void*)0, (void*)0, (void*)&DivideByZeroException___DivideByZeroException_2, (void*)&DivideByZeroException___DivideByZeroException, (void*)&std__exception__what___const };
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: _ZN21DivideByZeroExceptionC2Ev
+void DivideByZeroException__DivideByZeroException(struct DivideByZeroException* v0) {
+bb1:
+  struct DivideByZeroException* this2;
+  this2 = v0;
+  struct DivideByZeroException* t3 = this2;
+  struct std__exception* base4 = (struct std__exception*)((char *)t3 + 0);
+  // externalized std:: op: std::exception::exception()
+  __VERIFIER_nondet_memory(base4, sizeof(*base4));
+    void* v5 = (void*)&_ZTV21DivideByZeroException[2];
+    void** v6 = (void**)t3;
+    *(void**)(v6) = (void*)v5;
+    char* cast7 = (char*)&(_str_6);
+    t3->message = cast7;
+  return;
+}
+
+// function: _ZN21DivideByZeroExceptionD2Ev
+void DivideByZeroException___DivideByZeroException_2(struct DivideByZeroException* v8) {
+bb9:
+  struct DivideByZeroException* this10;
+  this10 = v8;
+  struct DivideByZeroException* t11 = this10;
+  {
+    struct std__exception* base12 = (struct std__exception*)((char *)t11 + 0);
+    // externalized std:: op: std::exception::~exception()
+    __VERIFIER_nondet_memory(base12, sizeof(*base12));
+  }
+  return;
+}
+
+// function: _Z8quotientii
+double quotient(int v13, int v14) {
+bb15:
+  int numerator16;
+  int denominator17;
+  double __retval18;
+  numerator16 = v13;
+  denominator17 = v14;
+    int t19 = denominator17;
+    int c20 = 0;
+    _Bool c21 = ((t19 == c20)) ? 1 : 0;
+    if (c21) {
+      static char exc_buf22[16] = {0};
+      struct DivideByZeroException* exc23 = (struct DivideByZeroException*)exc_buf22;
+      DivideByZeroException__DivideByZeroException(exc23);
+      if (__cir_exc_active) {
+        double __cir_eh_ret = (double)0;
+        return __cir_eh_ret;
+      }
+      __cir_exc_ptr = (void*)exc23;
+      __cir_exc_dtor = (void*)&DivideByZeroException___DivideByZeroException_2;
+      __cir_exc_type = (const void*)__cir_eh_type__ZTI21DivideByZeroException;
+      __cir_exc_type_id = (unsigned long)__cir_eh_type__ZTI21DivideByZeroException;
+      __cir_exc_active = 1;
+      { double __cir_eh_ret = (double)0; return __cir_eh_ret; }
+      __builtin_unreachable();
+    }
+  int t24 = numerator16;
+  double cast25 = (double)t24;
+  __retval18 = cast25;
+  double t26 = __retval18;
+  return t26;
+}
+
+// function: _ZNK21DivideByZeroException5whatoEv
+char* DivideByZeroException__whato___const(struct DivideByZeroException* v27) {
+bb28:
+  struct DivideByZeroException* this29;
+  char* __retval30;
+  this29 = v27;
+  struct DivideByZeroException* t31 = this29;
+  char* t32 = t31->message;
+  __retval30 = t32;
+  char* t33 = __retval30;
+  return t33;
+}
+
+// function: main
+int main() {
+bb34:
+  int __retval35;
+  int number136;
+  int number237;
+  int result38;
+  int c39 = 0;
+  __retval35 = c39;
+  char* cast40 = (char*)&(_str);
+  struct std__basic_ostream_char__std__char_traits_char__* std41;
+  __VERIFIER_nondet_memory(&std41, sizeof(std41));
+    while (1) {
+      struct std__basic_istream_char__std__char_traits_char__* std42;
+      __VERIFIER_nondet_memory(&std42, sizeof(std42));
+      struct std__basic_istream_char__std__char_traits_char__* std43;
+      __VERIFIER_nondet_memory(&std43, sizeof(std43));
+      void** v44 = (void**)std43;
+      void* v45 = *((void**)v44);
+      unsigned char* cast46 = (unsigned char*)v45;
+      long c47 = -24;
+      unsigned char* ptr48 = &(cast46)[c47];
+      long* cast49 = (long*)ptr48;
+      long t50 = *cast49;
+      unsigned char* cast51 = (unsigned char*)std43;
+      unsigned char* ptr52 = &(cast51)[t50];
+      struct std__basic_istream_char__std__char_traits_char__* cast53 = (struct std__basic_istream_char__std__char_traits_char__*)ptr52;
+      struct std__basic_ios_char__std__char_traits_char__* cast54 = (struct std__basic_ios_char__std__char_traits_char__*)cast53;
+      _Bool std55;
+      __VERIFIER_nondet_memory(&std55, sizeof(std55));
+      if (!std55) break;
+          struct DivideByZeroException* divideByZeroException56;
+            int t58 = number136;
+            result38 = t58;
+            int t59 = number136;
+            int t60 = number237;
+            double r61 = quotient(t59, t60);
+            if (__cir_exc_active) {
+              goto cir_try_dispatch57;
+            }
+            int cast62 = (int)r61;
+            result38 = cast62;
+            char* cast63 = (char*)&(_str_1);
+            struct std__basic_ostream_char__std__char_traits_char__* std64;
+            __VERIFIER_nondet_memory(&std64, sizeof(std64));
+            int t65 = result38;
+            struct std__basic_ostream_char__std__char_traits_char__* std66;
+            __VERIFIER_nondet_memory(&std66, sizeof(std66));
+            struct std__basic_ostream_char__std__char_traits_char__* std67;
+            __VERIFIER_nondet_memory(&std67, sizeof(std67));
+          cir_try_dispatch57: ;
+          if (__cir_exc_active) {
+          if (__cir_exc_type == (const void*)__cir_eh_type__ZTI21DivideByZeroException) {
+            int ca_tok68 = 0;
+            void* ca_exn69 = (void*)__cir_exc_ptr;
+            __cir_exc_active = 0;
+              divideByZeroException56 = (struct DivideByZeroException*)__cir_exc_ptr;
+              char* cast70 = (char*)&(_str_2);
+              struct std__basic_ostream_char__std__char_traits_char__* std71;
+              __VERIFIER_nondet_memory(&std71, sizeof(std71));
+              struct DivideByZeroException* t72 = divideByZeroException56;
+              char* r73 = DivideByZeroException__whato___const(t72);
+              if (__cir_exc_active) {
+                {
+                  if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+                }
+                int __cir_eh_ret = (int)0;
+                return __cir_eh_ret;
+              }
+              struct std__basic_ostream_char__std__char_traits_char__* std74;
+              __VERIFIER_nondet_memory(&std74, sizeof(std74));
+              struct std__basic_ostream_char__std__char_traits_char__* std75;
+              __VERIFIER_nondet_memory(&std75, sizeof(std75));
+              char* cast76 = (char*)&(_str_3);
+              char* c77 = _str_4;
+              unsigned int c78 = 53;
+              char* cast79 = (char*)&(__PRETTY_FUNCTION___main);
+              __assert_fail(cast76, c77, c78, cast79);
+            {
+              if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+            }
+          }
+          else {
+            __cir_exc_active = 1;
+            { int __cir_eh_ret = (int)0; return __cir_eh_ret; }
+          { int __cir_eh_ret = (int)0; return __cir_eh_ret; }
+          }
+          }
+        char* cast80 = (char*)&(_str_5);
+        struct std__basic_ostream_char__std__char_traits_char__* std81;
+        __VERIFIER_nondet_memory(&std81, sizeof(std81));
+    }
+  struct std__basic_ostream_char__std__char_traits_char__* std82;
+  __VERIFIER_nondet_memory(&std82, sizeof(std82));
+  int c83 = 0;
+  __retval35 = c83;
+  int t84 = __retval35;
+  return t84;
+}
+
+// function: _ZN21DivideByZeroExceptionD0Ev
+void DivideByZeroException___DivideByZeroException(struct DivideByZeroException* v85) {
+bb86:
+  struct DivideByZeroException* this87;
+  this87 = v85;
+  struct DivideByZeroException* t88 = this87;
+    DivideByZeroException___DivideByZeroException_2(t88);
+  {
+    void* cast89 = (void*)t88;
+    unsigned long c90 = 16;
+    operator_delete(cast89, c90);
+  }
+  return;
+}
+

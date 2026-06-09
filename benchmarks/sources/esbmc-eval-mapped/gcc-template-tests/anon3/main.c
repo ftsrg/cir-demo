@@ -1,0 +1,42 @@
+int* _ZN12_GLOBAL__N_11AIiE1aE __attribute__((aligned(8)));
+char _str[19] = "0 == ( foo() != 0)";
+char _str_1[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/gcc-template-tests/anon3/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+int* foo();
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+// function: _Z3foov
+int* foo() {
+bb0:
+  int* __retval1;
+  int* t2 = _ZN12_GLOBAL__N_11AIiE1aE;
+  __retval1 = t2;
+  int* t3 = __retval1;
+  return t3;
+}
+
+// function: main
+int main() {
+bb4:
+  int __retval5;
+  int c6 = 0;
+  __retval5 = c6;
+  int c7 = 0;
+  int* r8 = foo();
+  int* c9 = ((void*)0);
+  _Bool c10 = ((r8 != c9)) ? 1 : 0;
+  int cast11 = (int)c10;
+  _Bool c12 = ((c7 == cast11)) ? 1 : 0;
+  if (c12) {
+  } else {
+    char* cast13 = (char*)&(_str);
+    char* c14 = _str_1;
+    unsigned int c15 = 27;
+    char* cast16 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast13, c14, c15, cast16);
+  }
+  int t17 = __retval5;
+  return t17;
+}
+

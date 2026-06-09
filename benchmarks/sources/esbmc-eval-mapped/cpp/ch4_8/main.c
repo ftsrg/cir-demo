@@ -1,0 +1,72 @@
+extern void abort(void);
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std__ctype_char_;
+struct std__ios_base;
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+
+int __const_main_a[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str[34] = "Total of array element values is ";
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  int arraySize2;
+  int a3[10];
+  int total4;
+  int c5 = 0;
+  __retval1 = c5;
+  int c6 = 10;
+  arraySize2 = c6;
+  // array copy
+  __builtin_memcpy(a3, __const_main_a, (unsigned long)10 * sizeof(__const_main_a[0]));
+  int c7 = 0;
+  total4 = c7;
+    int i8;
+    int c9 = 0;
+    i8 = c9;
+    while (1) {
+      int t11 = i8;
+      int t12 = arraySize2;
+      _Bool c13 = ((t11 < t12)) ? 1 : 0;
+      if (!c13) break;
+      int t14 = i8;
+      long cast15 = (long)t14;
+      int t16 = a3[cast15];
+      int t17 = total4;
+      int b18 = t17 + t16;
+      total4 = b18;
+    for_step10: ;
+      int t19 = i8;
+      int u20 = t19 + 1;
+      i8 = u20;
+    }
+  char* cast21 = (char*)&(_str);
+  struct std__basic_ostream_char__std__char_traits_char__* std22;
+  __VERIFIER_nondet_memory(&std22, sizeof(std22));
+  int t23 = total4;
+  struct std__basic_ostream_char__std__char_traits_char__* std24;
+  __VERIFIER_nondet_memory(&std24, sizeof(std24));
+  struct std__basic_ostream_char__std__char_traits_char__* std25;
+  __VERIFIER_nondet_memory(&std25, sizeof(std25));
+  int c26 = 0;
+  __retval1 = c26;
+  int t27 = __retval1;
+  return t27;
+}
+

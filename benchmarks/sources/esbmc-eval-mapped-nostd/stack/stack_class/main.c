@@ -1,0 +1,3089 @@
+extern void abort(void);
+// Exception handling state (modelled in plain C)
+static void *__cir_exc_ptr;
+static const void *__cir_exc_type;
+static unsigned long __cir_exc_type_id;
+static int __cir_exc_active;
+static void *__cir_exc_dtor;
+
+// Struct definitions (auto-parsed)
+struct A_bool_ { _Bool a; };
+struct std___Deque_iterator_A_bool___A_bool_____A_bool____ { struct A_bool_* _M_cur; struct A_bool_* _M_first; struct A_bool_* _M_last; struct A_bool_** _M_node; };
+struct std____new_allocator_A_bool__ { unsigned char __field0; };
+struct std____new_allocator_A_bool____ { unsigned char __field0; };
+struct std__allocator_A_bool__ { unsigned char __field0; };
+struct std__allocator_A_bool____ { unsigned char __field0; };
+struct std__random_access_iterator_tag { unsigned char __field0; };
+struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data { struct A_bool_** _M_map; unsigned long _M_map_size; struct std___Deque_iterator_A_bool___A_bool_____A_bool____ _M_start; struct std___Deque_iterator_A_bool___A_bool_____A_bool____ _M_finish; };
+struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl { struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data __field0; };
+struct std___Deque_base_A_bool___std__allocator_A_bool___ { struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl _M_impl; };
+struct std__deque_A_bool___std__allocator_A_bool___ { struct std___Deque_base_A_bool___std__allocator_A_bool___ __field0; };
+struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____ { struct std__deque_A_bool___std__allocator_A_bool___ c; };
+
+char _str[17] = "!(first.empty())";
+char _str_1[105] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/stack/stack_class/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+char _str_2[20] = "(first.top()).get()";
+char _str_3[18] = "first.size() == 2";
+char _str_4[48] = "cannot create std::deque larger than max_size()";
+char _str_5[90] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_stack.h";
+char __PRETTY_FUNCTION____ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3popEv[81] = "void std::stack<A<bool>>::pop() [_Tp = A<bool>, _Sequence = std::deque<A<bool>>]";
+char _str_6[15] = "!this->empty()";
+char _str_7[90] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_deque.h";
+char __PRETTY_FUNCTION____ZNSt5dequeI1AIbESaIS1_EE8pop_backEv[87] = "void std::deque<A<bool>>::pop_back() [_Tp = A<bool>, _Alloc = std::allocator<A<bool>>]";
+char __PRETTY_FUNCTION____ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3topEv[86] = "reference std::stack<A<bool>>::top() [_Tp = A<bool>, _Sequence = std::deque<A<bool>>]";
+char __PRETTY_FUNCTION____ZNSt5dequeI1AIbESaIS1_EE4backEv[88] = "reference std::deque<A<bool>>::back() [_Tp = A<bool>, _Alloc = std::allocator<A<bool>>]";
+_Bool A_bool___get(struct A_bool_* p0);
+_Bool operator___2(struct A_bool_ p0, struct A_bool_ p1);
+_Bool operator__(struct A_bool_ p0, struct A_bool_ p1);
+_Bool operator_(struct A_bool_ p0, struct A_bool_ p1);
+void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________stack_std__deque_A_bool___std__allocator_A_bool_______void_(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0);
+void A_bool___A(struct A_bool_* p0);
+struct A_bool_* _ZSt12construct_atI1AIbEJRKS1_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S4_pispclsr3stdE7declvalIT0_EEEEEPS4_S7_DpOS6_(struct A_bool_* p0, struct A_bool_* p1);
+void void_std__allocator_traits_std__allocator_A_bool_______construct_A_bool___A_bool__const__(struct std__allocator_A_bool__* p0, struct A_bool_* p1, struct A_bool_* p2);
+long std__operator_(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p1);
+unsigned long std__deque_A_bool___std__allocator_A_bool_______size___const(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* p0, unsigned long* p1);
+unsigned long std__deque_A_bool___std__allocator_A_bool________S_max_size(struct std__allocator_A_bool__* p0);
+unsigned long std__deque_A_bool___std__allocator_A_bool_______max_size___const(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+extern void std____throw_length_error(char* p0);
+struct A_bool_** A_bool____std____niter_wrap_A_bool____(struct A_bool_*** p0, struct A_bool_** p1);
+long std__iterator_traits_A_bool______difference_type_std____distance_A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct std__random_access_iterator_tag p2);
+struct std__random_access_iterator_tag std__iterator_traits_A_bool______iterator_category_std____iterator_category_A_bool____(struct A_bool_*** p0);
+long std__iterator_traits_A_bool______difference_type_std__distance_A_bool____(struct A_bool_** p0, struct A_bool_** p1);
+extern void* memmove(void* p0, void* p1, unsigned long p2);
+void void_std____assign_one_false__A_bool_____A_bool____(struct A_bool_*** p0, struct A_bool_*** p1);
+struct A_bool_** A_bool____std____copy_move_a2_false__A_bool_____A_bool_____A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct A_bool_** p2);
+struct A_bool_** A_bool____std____copy_move_a1_false__A_bool_____A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct A_bool_** p2);
+struct A_bool_** A_bool____std____niter_base_A_bool____(struct A_bool_** p0);
+struct A_bool_** A_bool____std____copy_move_a_false__A_bool_____A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct A_bool_** p2);
+struct A_bool_** A_bool____std____miter_base_A_bool____(struct A_bool_** p0);
+struct A_bool_** A_bool____std__copy_A_bool_____A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct A_bool_** p2);
+_Bool std__is_constant_evaluated();
+void void_std____advance_A_bool_____long_(struct A_bool_*** p0, long p1, struct std__random_access_iterator_tag p2);
+void void_std__advance_A_bool_____long_(struct A_bool_*** p0, long p1);
+struct A_bool_** A_bool____std____copy_move_backward_a2_false__A_bool_____A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct A_bool_** p2);
+struct A_bool_** A_bool____std____copy_move_backward_a1_false__A_bool_____A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct A_bool_** p2);
+struct A_bool_** A_bool____std____copy_move_backward_a_false__A_bool_____A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct A_bool_** p2);
+struct A_bool_** A_bool____std__copy_backward_A_bool_____A_bool____(struct A_bool_** p0, struct A_bool_** p1, struct A_bool_** p2);
+void std__deque_A_bool___std__allocator_A_bool________M_reallocate_map(struct std__deque_A_bool___std__allocator_A_bool___* p0, unsigned long p1, _Bool p2);
+void std__deque_A_bool___std__allocator_A_bool________M_reserve_map_at_back(struct std__deque_A_bool___std__allocator_A_bool___* p0, unsigned long p1);
+void void_std__deque_A_bool___std__allocator_A_bool________M_push_back_aux_A_bool__const__(struct std__deque_A_bool___std__allocator_A_bool___* p0, struct A_bool_* p1);
+void std__deque_A_bool___std__allocator_A_bool_______push_back(struct std__deque_A_bool___std__allocator_A_bool___* p0, struct A_bool_* p1);
+void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________push(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0, struct A_bool_* p1);
+extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
+_Bool std__operator__(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p1);
+_Bool std__deque_A_bool___std__allocator_A_bool_______empty___const(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+void void_std__allocator_traits_std__allocator_A_bool_______destroy_A_bool___(struct std__allocator_A_bool__* p0, struct A_bool_* p1);
+void std__deque_A_bool___std__allocator_A_bool________M_pop_back_aux(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+void std__deque_A_bool___std__allocator_A_bool_______pop_back(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________pop(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0);
+_Bool std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________empty___const(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+struct std___Deque_iterator_A_bool___A_bool_____A_bool____* std___Deque_iterator_A_bool___A_bool____A_bool_____operator__(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0);
+struct A_bool_* std___Deque_iterator_A_bool___A_bool____A_bool_____operator____const(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0);
+struct A_bool_* std__deque_A_bool___std__allocator_A_bool_______back(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+struct A_bool_* std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________top(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0);
+unsigned long std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________size___const(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0);
+void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0);
+int main();
+void std__deque_A_bool___std__allocator_A_bool________deque(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+_Bool std____is_constant_evaluated();
+void void_std__destroy_at_A_bool___(struct A_bool_* p0);
+void void_std___Destroy_A_bool___(struct A_bool_* p0, struct A_bool_* p1);
+void void_std___Destroy_A_bool____A_bool___(struct A_bool_* p0, struct A_bool_* p1, struct std__allocator_A_bool__* p2);
+unsigned long std____deque_buf_size(unsigned long p0);
+unsigned long std__deque_A_bool___std__allocator_A_bool________S_buffer_size();
+void std__deque_A_bool___std__allocator_A_bool________M_destroy_data_aux(struct std__deque_A_bool___std__allocator_A_bool___* p0, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ p1, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ p2);
+void std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p1);
+void std__deque_A_bool___std__allocator_A_bool________M_destroy_data(struct std__deque_A_bool___std__allocator_A_bool___* p0, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ p1, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ p2, struct std__allocator_A_bool__* p3);
+struct std___Deque_iterator_A_bool___A_bool_____A_bool____ std__deque_A_bool___std__allocator_A_bool_______begin(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+struct std___Deque_iterator_A_bool___A_bool_____A_bool____ std__deque_A_bool___std__allocator_A_bool_______end(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+struct std__allocator_A_bool__* std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0);
+extern void *malloc(unsigned long);
+extern void free(void*);
+void operator_delete(void* p0) { free(p0); }
+void operator_delete_3(void* p0, unsigned long p1, unsigned long p2) { free(p0); }
+void operator_delete_2(void* p0, unsigned long p1) { free(p0); }
+void std____new_allocator_A_bool_____deallocate(struct std____new_allocator_A_bool__* p0, struct A_bool_* p1, unsigned long p2);
+void std__allocator_A_bool_____deallocate(struct std__allocator_A_bool__* p0, struct A_bool_* p1, unsigned long p2);
+void std__allocator_traits_std__allocator_A_bool_______deallocate(struct std__allocator_A_bool__* p0, struct A_bool_* p1, unsigned long p2);
+void std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_node(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0, struct A_bool_* p1);
+void std___Deque_base_A_bool___std__allocator_A_bool________M_destroy_nodes(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0, struct A_bool_** p1, struct A_bool_** p2);
+struct std__allocator_A_bool__* std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator___const(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0);
+void std__allocator_A_bool_____allocator_A_bool___(struct std__allocator_A_bool____* p0, struct std__allocator_A_bool__* p1);
+struct std__allocator_A_bool____ std___Deque_base_A_bool___std__allocator_A_bool________M_get_map_allocator___const(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0);
+void std____new_allocator_A_bool_____deallocate_2(struct std____new_allocator_A_bool____* p0, struct A_bool_** p1, unsigned long p2);
+void std__allocator_A_bool_____deallocate_2(struct std__allocator_A_bool____* p0, struct A_bool_** p1, unsigned long p2);
+void std__allocator_traits_std__allocator_A_bool_______deallocate_2(struct std__allocator_A_bool____* p0, struct A_bool_** p1, unsigned long p2);
+void std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0, struct A_bool_** p1, unsigned long p2);
+void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl____Deque_impl(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* p0);
+void std___Deque_base_A_bool___std__allocator_A_bool_________Deque_base(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0);
+void std____new_allocator_A_bool_______new_allocator_2(struct std____new_allocator_A_bool____* p0);
+void std__allocator_A_bool______allocator(struct std__allocator_A_bool__* p0);
+void std__deque_A_bool___std__allocator_A_bool_______deque(struct std__deque_A_bool___std__allocator_A_bool___* p0);
+void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl___Deque_impl(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* p0);
+unsigned long* unsigned_long_const__std__max_unsigned_long_(unsigned long* p0, unsigned long* p1);
+extern void std____throw_bad_array_new_length();
+void* operator_new(unsigned long p0) { return malloc(p0); }
+unsigned long std____new_allocator_A_bool______M_max_size___const_2(struct std____new_allocator_A_bool____* p0);
+extern void std____throw_bad_alloc();
+void* operator_new_2(unsigned long p0, unsigned long p1) { return malloc(p0); }
+struct A_bool_** std____new_allocator_A_bool_____allocate_2(struct std____new_allocator_A_bool____* p0, unsigned long p1, void* p2);
+struct A_bool_** std__allocator_A_bool_____allocate_2(struct std__allocator_A_bool____* p0, unsigned long p1);
+struct A_bool_** std__allocator_traits_std__allocator_A_bool_______allocate_2(struct std__allocator_A_bool____* p0, unsigned long p1);
+struct A_bool_** std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0, unsigned long p1);
+extern int __gxx_personality_v0();
+unsigned long std____new_allocator_A_bool______M_max_size___const(struct std____new_allocator_A_bool__* p0);
+struct A_bool_* std____new_allocator_A_bool_____allocate(struct std____new_allocator_A_bool__* p0, unsigned long p1, void* p2);
+struct A_bool_* std__allocator_A_bool_____allocate(struct std__allocator_A_bool__* p0, unsigned long p1);
+struct A_bool_* std__allocator_traits_std__allocator_A_bool_______allocate(struct std__allocator_A_bool__* p0, unsigned long p1);
+struct A_bool_* std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_node(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0);
+void std___Deque_base_A_bool___std__allocator_A_bool________M_create_nodes(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0, struct A_bool_** p1, struct A_bool_** p2);
+unsigned long std___Deque_iterator_A_bool___A_bool____A_bool______S_buffer_size();
+void std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0, struct A_bool_** p1);
+void std___Deque_base_A_bool___std__allocator_A_bool________M_initialize_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0, unsigned long p1);
+void std___Deque_base_A_bool___std__allocator_A_bool________Deque_base(struct std___Deque_base_A_bool___std__allocator_A_bool___* p0);
+void std____new_allocator_A_bool_______new_allocator(struct std____new_allocator_A_bool__* p0);
+void std__allocator_A_bool_____allocator(struct std__allocator_A_bool__* p0);
+void std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator_2(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0);
+void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl_data___Deque_impl_data(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* p0);
+
+// function: _ZN1AIbE3getEv
+_Bool A_bool___get(struct A_bool_* v0) {
+bb1:
+  struct A_bool_* this2;
+  _Bool __retval3;
+  this2 = v0;
+  struct A_bool_* t4 = this2;
+  _Bool t5 = t4->a;
+  __retval3 = t5;
+  _Bool t6 = __retval3;
+  return t6;
+}
+
+// function: _Zne1AIbES0_
+_Bool operator___2(struct A_bool_ v7, struct A_bool_ v8) {
+bb9:
+  struct A_bool_ x10;
+  struct A_bool_ y11;
+  _Bool __retval12;
+  x10 = v7;
+  y11 = v8;
+    _Bool r13 = A_bool___get(&x10);
+    if (__cir_exc_active) {
+      _Bool __cir_eh_ret = (_Bool)0;
+      return __cir_eh_ret;
+    }
+    int cast14 = (int)r13;
+    _Bool r15 = A_bool___get(&y11);
+    if (__cir_exc_active) {
+      _Bool __cir_eh_ret = (_Bool)0;
+      return __cir_eh_ret;
+    }
+    int cast16 = (int)r15;
+    _Bool c17 = ((cast14 != cast16)) ? 1 : 0;
+    if (c17) {
+      _Bool c18 = 1;
+      __retval12 = c18;
+      _Bool t19 = __retval12;
+      return t19;
+    }
+  _Bool c20 = 0;
+  __retval12 = c20;
+  _Bool t21 = __retval12;
+  return t21;
+}
+
+// function: _Zeq1AIbES0_
+_Bool operator__(struct A_bool_ v22, struct A_bool_ v23) {
+bb24:
+  struct A_bool_ x25;
+  struct A_bool_ y26;
+  _Bool __retval27;
+  x25 = v22;
+  y26 = v23;
+    _Bool r28 = A_bool___get(&x25);
+    if (__cir_exc_active) {
+      _Bool __cir_eh_ret = (_Bool)0;
+      return __cir_eh_ret;
+    }
+    int cast29 = (int)r28;
+    _Bool r30 = A_bool___get(&y26);
+    if (__cir_exc_active) {
+      _Bool __cir_eh_ret = (_Bool)0;
+      return __cir_eh_ret;
+    }
+    int cast31 = (int)r30;
+    _Bool c32 = ((cast29 == cast31)) ? 1 : 0;
+    if (c32) {
+      _Bool c33 = 1;
+      __retval27 = c33;
+      _Bool t34 = __retval27;
+      return t34;
+    }
+  _Bool c35 = 0;
+  __retval27 = c35;
+  _Bool t36 = __retval27;
+  return t36;
+}
+
+// function: _Zlt1AIbES0_
+_Bool operator_(struct A_bool_ v37, struct A_bool_ v38) {
+bb39:
+  struct A_bool_ x40;
+  struct A_bool_ y41;
+  _Bool __retval42;
+  x40 = v37;
+  y41 = v38;
+  _Bool c43 = 0;
+  __retval42 = c43;
+  _Bool t44 = __retval42;
+  return t44;
+}
+
+// function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEEC2IS4_vEEv
+void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________stack_std__deque_A_bool___std__allocator_A_bool_______void_(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v45) {
+bb46:
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this47;
+  this47 = v45;
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t48 = this47;
+  struct std__deque_A_bool___std__allocator_A_bool___ c49 = {0};
+  t48->c = c49;
+  std__deque_A_bool___std__allocator_A_bool_______deque(&t48->c);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZN1AIbEC2Ev
+void A_bool___A(struct A_bool_* v50) {
+bb51:
+  struct A_bool_* this52;
+  this52 = v50;
+  struct A_bool_* t53 = this52;
+  _Bool c54 = 1;
+  t53->a = c54;
+  return;
+}
+
+// function: _ZSt12construct_atI1AIbEJRKS1_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S4_pispclsr3stdE7declvalIT0_EEEEEPS4_S7_DpOS6_
+struct A_bool_* _ZSt12construct_atI1AIbEJRKS1_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S4_pispclsr3stdE7declvalIT0_EEEEEPS4_S7_DpOS6_(struct A_bool_* v55, struct A_bool_* v56) {
+bb57:
+  struct A_bool_* __location58;
+  struct A_bool_* __args59;
+  struct A_bool_* __retval60;
+  void* __loc61;
+  __location58 = v55;
+  __args59 = v56;
+  struct A_bool_* t62 = __location58;
+  void* cast63 = (void*)t62;
+  __loc61 = cast63;
+    void* t64 = __loc61;
+    struct A_bool_* cast65 = (struct A_bool_*)t64;
+    struct A_bool_* t66 = __args59;
+    *cast65 = *t66; // copy
+    __retval60 = cast65;
+    struct A_bool_* t67 = __retval60;
+    return t67;
+  abort();
+}
+
+// function: _ZNSt16allocator_traitsISaI1AIbEEE9constructIS1_JRKS1_EEEvRS2_PT_DpOT0_
+void void_std__allocator_traits_std__allocator_A_bool_______construct_A_bool___A_bool__const__(struct std__allocator_A_bool__* v68, struct A_bool_* v69, struct A_bool_* v70) {
+bb71:
+  struct std__allocator_A_bool__* __a72;
+  struct A_bool_* __p73;
+  struct A_bool_* __args74;
+  __a72 = v68;
+  __p73 = v69;
+  __args74 = v70;
+  struct A_bool_* t75 = __p73;
+  struct A_bool_* t76 = __args74;
+  struct A_bool_* r77 = _ZSt12construct_atI1AIbEJRKS1_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S4_pispclsr3stdE7declvalIT0_EEEEEPS4_S7_DpOS6_(t75, t76);
+  return;
+}
+
+// function: _ZStmiRKSt15_Deque_iteratorI1AIbERS1_PS1_ES6_
+long std__operator_(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v78, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v79) {
+bb80:
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __x81;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __y82;
+  long __retval83;
+  __x81 = v78;
+  __y82 = v79;
+  unsigned long r84 = std___Deque_iterator_A_bool___A_bool____A_bool______S_buffer_size();
+  long cast85 = (long)r84;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t86 = __x81;
+  struct A_bool_** t87 = t86->_M_node;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t88 = __y82;
+  struct A_bool_** t89 = t88->_M_node;
+  long diff90 = t87 - t89;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t91 = __x81;
+  struct A_bool_** t92 = t91->_M_node;
+  _Bool cast93 = (_Bool)t92;
+  long cast94 = (long)cast93;
+  long b95 = diff90 - cast94;
+  long b96 = cast85 * b95;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t97 = __x81;
+  struct A_bool_* t98 = t97->_M_cur;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t99 = __x81;
+  struct A_bool_* t100 = t99->_M_first;
+  long diff101 = t98 - t100;
+  long b102 = b96 + diff101;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t103 = __y82;
+  struct A_bool_* t104 = t103->_M_last;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t105 = __y82;
+  struct A_bool_* t106 = t105->_M_cur;
+  long diff107 = t104 - t106;
+  long b108 = b102 + diff107;
+  __retval83 = b108;
+  long t109 = __retval83;
+  return t109;
+}
+
+// function: _ZNKSt5dequeI1AIbESaIS1_EE4sizeEv
+unsigned long std__deque_A_bool___std__allocator_A_bool_______size___const(struct std__deque_A_bool___std__allocator_A_bool___* v110) {
+bb111:
+  struct std__deque_A_bool___std__allocator_A_bool___* this112;
+  unsigned long __retval113;
+  unsigned long __sz114;
+  this112 = v110;
+  struct std__deque_A_bool___std__allocator_A_bool___* t115 = this112;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base116 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t115 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base117 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base116->_M_impl) + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base118 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t115 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base119 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base118->_M_impl) + 0);
+  long r120 = std__operator_(&base117->_M_finish, &base119->_M_start);
+  unsigned long cast121 = (unsigned long)r120;
+  __sz114 = cast121;
+    unsigned long t122 = __sz114;
+    unsigned long r123 = std__deque_A_bool___std__allocator_A_bool_______max_size___const(t115);
+    _Bool c124 = ((t122 > r123)) ? 1 : 0;
+    if (c124) {
+      __builtin_unreachable();
+    }
+  unsigned long t125 = __sz114;
+  __retval113 = t125;
+  unsigned long t126 = __retval113;
+  return t126;
+}
+
+// function: _ZSt3minImERKT_S2_S2_
+unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* v127, unsigned long* v128) {
+bb129:
+  unsigned long* __a130;
+  unsigned long* __b131;
+  unsigned long* __retval132;
+  __a130 = v127;
+  __b131 = v128;
+    unsigned long* t133 = __b131;
+    unsigned long t134 = *t133;
+    unsigned long* t135 = __a130;
+    unsigned long t136 = *t135;
+    _Bool c137 = ((t134 < t136)) ? 1 : 0;
+    if (c137) {
+      unsigned long* t138 = __b131;
+      __retval132 = t138;
+      unsigned long* t139 = __retval132;
+      return t139;
+    }
+  unsigned long* t140 = __a130;
+  __retval132 = t140;
+  unsigned long* t141 = __retval132;
+  return t141;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE11_S_max_sizeERKS2_
+unsigned long std__deque_A_bool___std__allocator_A_bool________S_max_size(struct std__allocator_A_bool__* v142) {
+bb143:
+  struct std__allocator_A_bool__* __a144;
+  unsigned long __retval145;
+  unsigned long __diffmax146;
+  unsigned long __allocmax147;
+  __a144 = v142;
+  unsigned long c148 = 9223372036854775807;
+  __diffmax146 = c148;
+  unsigned long c149 = -1;
+  __allocmax147 = c149;
+  unsigned long* r150 = unsigned_long_const__std__min_unsigned_long_(&__diffmax146, &__allocmax147);
+  if (__cir_exc_active) {
+    unsigned long __cir_eh_ret = (unsigned long)0;
+    return __cir_eh_ret;
+  }
+  unsigned long t151 = *r150;
+  __retval145 = t151;
+  unsigned long t152 = __retval145;
+  return t152;
+}
+
+// function: _ZNKSt5dequeI1AIbESaIS1_EE8max_sizeEv
+unsigned long std__deque_A_bool___std__allocator_A_bool_______max_size___const(struct std__deque_A_bool___std__allocator_A_bool___* v153) {
+bb154:
+  struct std__deque_A_bool___std__allocator_A_bool___* this155;
+  unsigned long __retval156;
+  this155 = v153;
+  struct std__deque_A_bool___std__allocator_A_bool___* t157 = this155;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base158 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t157 + 0);
+  struct std__allocator_A_bool__* r159 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator___const(base158);
+  unsigned long r160 = std__deque_A_bool___std__allocator_A_bool________S_max_size(r159);
+  __retval156 = r160;
+  unsigned long t161 = __retval156;
+  return t161;
+}
+
+// function: _ZSt12__niter_wrapIPP1AIbEET_RKS4_S4_
+struct A_bool_** A_bool____std____niter_wrap_A_bool____(struct A_bool_*** v162, struct A_bool_** v163) {
+bb164:
+  struct A_bool_*** unnamed165;
+  struct A_bool_** __res166;
+  struct A_bool_** __retval167;
+  unnamed165 = v162;
+  __res166 = v163;
+  struct A_bool_** t168 = __res166;
+  __retval167 = t168;
+  struct A_bool_** t169 = __retval167;
+  return t169;
+}
+
+// function: _ZSt10__distanceIPP1AIbEENSt15iterator_traitsIT_E15difference_typeES5_S5_St26random_access_iterator_tag
+long std__iterator_traits_A_bool______difference_type_std____distance_A_bool____(struct A_bool_** v170, struct A_bool_** v171, struct std__random_access_iterator_tag v172) {
+bb173:
+  struct A_bool_** __first174;
+  struct A_bool_** __last175;
+  struct std__random_access_iterator_tag unnamed176;
+  long __retval177;
+  __first174 = v170;
+  __last175 = v171;
+  unnamed176 = v172;
+  struct A_bool_** t178 = __last175;
+  struct A_bool_** t179 = __first174;
+  long diff180 = t178 - t179;
+  __retval177 = diff180;
+  long t181 = __retval177;
+  return t181;
+}
+
+// function: _ZSt19__iterator_categoryIPP1AIbEENSt15iterator_traitsIT_E17iterator_categoryERKS5_
+struct std__random_access_iterator_tag std__iterator_traits_A_bool______iterator_category_std____iterator_category_A_bool____(struct A_bool_*** v182) {
+bb183:
+  struct A_bool_*** unnamed184;
+  struct std__random_access_iterator_tag __retval185;
+  unnamed184 = v182;
+  struct std__random_access_iterator_tag t186 = __retval185;
+  return t186;
+}
+
+// function: _ZSt8distanceIPP1AIbEENSt15iterator_traitsIT_E15difference_typeES5_S5_
+long std__iterator_traits_A_bool______difference_type_std__distance_A_bool____(struct A_bool_** v187, struct A_bool_** v188) {
+bb189:
+  struct A_bool_** __first190;
+  struct A_bool_** __last191;
+  long __retval192;
+  struct std__random_access_iterator_tag agg_tmp0193;
+  __first190 = v187;
+  __last191 = v188;
+  struct A_bool_** t194 = __first190;
+  struct A_bool_** t195 = __last191;
+  struct std__random_access_iterator_tag r196 = std__iterator_traits_A_bool______iterator_category_std____iterator_category_A_bool____(&__first190);
+  if (__cir_exc_active) {
+    long __cir_eh_ret = (long)0;
+    return __cir_eh_ret;
+  }
+  agg_tmp0193 = r196;
+  struct std__random_access_iterator_tag t197 = agg_tmp0193;
+  long r198 = std__iterator_traits_A_bool______difference_type_std____distance_A_bool____(t194, t195, t197);
+  if (__cir_exc_active) {
+    long __cir_eh_ret = (long)0;
+    return __cir_eh_ret;
+  }
+  __retval192 = r198;
+  long t199 = __retval192;
+  return t199;
+}
+
+// function: _ZSt12__assign_oneILb0EPP1AIbES3_EvRT0_RT1_
+void void_std____assign_one_false__A_bool_____A_bool____(struct A_bool_*** v200, struct A_bool_*** v201) {
+bb202:
+  struct A_bool_*** __out203;
+  struct A_bool_*** __in204;
+  __out203 = v200;
+  __in204 = v201;
+    struct A_bool_*** t205 = __in204;
+    struct A_bool_** t206 = *t205;
+    struct A_bool_* t207 = *t206;
+    struct A_bool_*** t208 = __out203;
+    struct A_bool_** t209 = *t208;
+    *t209 = t207;
+  return;
+}
+
+// function: _ZSt14__copy_move_a2ILb0EPP1AIbES3_S3_ET2_T0_T1_S4_
+struct A_bool_** A_bool____std____copy_move_a2_false__A_bool_____A_bool_____A_bool____(struct A_bool_** v210, struct A_bool_** v211, struct A_bool_** v212) {
+bb213:
+  struct A_bool_** __first214;
+  struct A_bool_** __last215;
+  struct A_bool_** __result216;
+  struct A_bool_** __retval217;
+  __first214 = v210;
+  __last215 = v211;
+  __result216 = v212;
+      _Bool r218 = std____is_constant_evaluated();
+      if (r218) {
+      } else {
+          long __n219;
+          struct A_bool_** t220 = __first214;
+          struct A_bool_** t221 = __last215;
+          long r222 = std__iterator_traits_A_bool______difference_type_std__distance_A_bool____(t220, t221);
+          if (__cir_exc_active) {
+            struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+            return __cir_eh_ret;
+          }
+          __n219 = r222;
+            long t223 = __n219;
+            long c224 = 1;
+            _Bool c225 = ((t223 > c224)) ? 1 : 0;
+            if (c225) {
+              struct A_bool_** t226 = __result216;
+              void* cast227 = (void*)t226;
+              struct A_bool_** t228 = __first214;
+              void* cast229 = (void*)t228;
+              long t230 = __n219;
+              unsigned long cast231 = (unsigned long)t230;
+              unsigned long c232 = 8;
+              unsigned long b233 = cast231 * c232;
+              void* r234 = memmove(cast227, cast229, b233);
+              long t235 = __n219;
+              struct A_bool_** t236 = __result216;
+              struct A_bool_** ptr237 = &(t236)[t235];
+              __result216 = ptr237;
+            } else {
+                long t238 = __n219;
+                long c239 = 1;
+                _Bool c240 = ((t238 == c239)) ? 1 : 0;
+                if (c240) {
+                  void_std____assign_one_false__A_bool_____A_bool____(&__result216, &__first214);
+                  if (__cir_exc_active) {
+                    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+                    return __cir_eh_ret;
+                  }
+                  struct A_bool_** t241 = __result216;
+                  int c242 = 1;
+                  struct A_bool_** ptr243 = &(t241)[c242];
+                  __result216 = ptr243;
+                }
+            }
+          struct A_bool_** t244 = __result216;
+          __retval217 = t244;
+          struct A_bool_** t245 = __retval217;
+          return t245;
+      }
+    while (1) {
+      struct A_bool_** t247 = __first214;
+      struct A_bool_** t248 = __last215;
+      _Bool c249 = ((t247 != t248)) ? 1 : 0;
+      if (!c249) break;
+      void_std____assign_one_false__A_bool_____A_bool____(&__result216, &__first214);
+      if (__cir_exc_active) {
+        struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+        return __cir_eh_ret;
+      }
+    for_step246: ;
+      struct A_bool_** t250 = __result216;
+      int c251 = 1;
+      struct A_bool_** ptr252 = &(t250)[c251];
+      __result216 = ptr252;
+      struct A_bool_** t253 = __first214;
+      int c254 = 1;
+      struct A_bool_** ptr255 = &(t253)[c254];
+      __first214 = ptr255;
+    }
+  struct A_bool_** t256 = __result216;
+  __retval217 = t256;
+  struct A_bool_** t257 = __retval217;
+  return t257;
+}
+
+// function: _ZSt14__copy_move_a1ILb0EPP1AIbES3_ET1_T0_S5_S4_
+struct A_bool_** A_bool____std____copy_move_a1_false__A_bool_____A_bool____(struct A_bool_** v258, struct A_bool_** v259, struct A_bool_** v260) {
+bb261:
+  struct A_bool_** __first262;
+  struct A_bool_** __last263;
+  struct A_bool_** __result264;
+  struct A_bool_** __retval265;
+  __first262 = v258;
+  __last263 = v259;
+  __result264 = v260;
+  struct A_bool_** t266 = __first262;
+  struct A_bool_** t267 = __last263;
+  struct A_bool_** t268 = __result264;
+  struct A_bool_** r269 = A_bool____std____copy_move_a2_false__A_bool_____A_bool_____A_bool____(t266, t267, t268);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval265 = r269;
+  struct A_bool_** t270 = __retval265;
+  return t270;
+}
+
+// function: _ZSt12__niter_baseIPP1AIbEET_S4_
+struct A_bool_** A_bool____std____niter_base_A_bool____(struct A_bool_** v271) {
+bb272:
+  struct A_bool_** __it273;
+  struct A_bool_** __retval274;
+  __it273 = v271;
+  struct A_bool_** t275 = __it273;
+  __retval274 = t275;
+  struct A_bool_** t276 = __retval274;
+  return t276;
+}
+
+// function: _ZSt13__copy_move_aILb0EPP1AIbES3_ET1_T0_S5_S4_
+struct A_bool_** A_bool____std____copy_move_a_false__A_bool_____A_bool____(struct A_bool_** v277, struct A_bool_** v278, struct A_bool_** v279) {
+bb280:
+  struct A_bool_** __first281;
+  struct A_bool_** __last282;
+  struct A_bool_** __result283;
+  struct A_bool_** __retval284;
+  __first281 = v277;
+  __last282 = v278;
+  __result283 = v279;
+  struct A_bool_** t285 = __first281;
+  struct A_bool_** r286 = A_bool____std____niter_base_A_bool____(t285);
+  struct A_bool_** t287 = __last282;
+  struct A_bool_** r288 = A_bool____std____niter_base_A_bool____(t287);
+  struct A_bool_** t289 = __result283;
+  struct A_bool_** r290 = A_bool____std____niter_base_A_bool____(t289);
+  struct A_bool_** r291 = A_bool____std____copy_move_a1_false__A_bool_____A_bool____(r286, r288, r290);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_** r292 = A_bool____std____niter_wrap_A_bool____(&__result283, r291);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval284 = r292;
+  struct A_bool_** t293 = __retval284;
+  return t293;
+}
+
+// function: _ZSt12__miter_baseIPP1AIbEET_S4_
+struct A_bool_** A_bool____std____miter_base_A_bool____(struct A_bool_** v294) {
+bb295:
+  struct A_bool_** __it296;
+  struct A_bool_** __retval297;
+  __it296 = v294;
+  struct A_bool_** t298 = __it296;
+  __retval297 = t298;
+  struct A_bool_** t299 = __retval297;
+  return t299;
+}
+
+// function: _ZSt4copyIPP1AIbES3_ET0_T_S5_S4_
+struct A_bool_** A_bool____std__copy_A_bool_____A_bool____(struct A_bool_** v300, struct A_bool_** v301, struct A_bool_** v302) {
+bb303:
+  struct A_bool_** __first304;
+  struct A_bool_** __last305;
+  struct A_bool_** __result306;
+  struct A_bool_** __retval307;
+  __first304 = v300;
+  __last305 = v301;
+  __result306 = v302;
+  struct A_bool_** t308 = __first304;
+  struct A_bool_** r309 = A_bool____std____miter_base_A_bool____(t308);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_** t310 = __last305;
+  struct A_bool_** r311 = A_bool____std____miter_base_A_bool____(t310);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_** t312 = __result306;
+  struct A_bool_** r313 = A_bool____std____copy_move_a_false__A_bool_____A_bool____(r309, r311, t312);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval307 = r313;
+  struct A_bool_** t314 = __retval307;
+  return t314;
+}
+
+// function: _ZSt21is_constant_evaluatedv
+_Bool std__is_constant_evaluated() {
+bb315:
+  _Bool __retval316;
+    _Bool c317 = 0;
+    __retval316 = c317;
+    _Bool t318 = __retval316;
+    return t318;
+  abort();
+}
+
+// function: _ZSt9__advanceIPP1AIbElEvRT_T0_St26random_access_iterator_tag
+void void_std____advance_A_bool_____long_(struct A_bool_*** v319, long v320, struct std__random_access_iterator_tag v321) {
+bb322:
+  struct A_bool_*** __i323;
+  long __n324;
+  struct std__random_access_iterator_tag unnamed325;
+  __i323 = v319;
+  __n324 = v320;
+  unnamed325 = v321;
+    long t326 = __n324;
+    _Bool isconst327 = 0;
+    _Bool ternary328;
+    if (isconst327) {
+      long t329 = __n324;
+      long c330 = 1;
+      _Bool c331 = ((t329 == c330)) ? 1 : 0;
+      ternary328 = (_Bool)c331;
+    } else {
+      _Bool c332 = 0;
+      ternary328 = (_Bool)c332;
+    }
+    if (ternary328) {
+      struct A_bool_*** t333 = __i323;
+      struct A_bool_** t334 = *t333;
+      int c335 = 1;
+      struct A_bool_** ptr336 = &(t334)[c335];
+      *t333 = ptr336;
+    } else {
+        long t337 = __n324;
+        _Bool isconst338 = 0;
+        _Bool ternary339;
+        if (isconst338) {
+          long t340 = __n324;
+          long c341 = -1;
+          _Bool c342 = ((t340 == c341)) ? 1 : 0;
+          ternary339 = (_Bool)c342;
+        } else {
+          _Bool c343 = 0;
+          ternary339 = (_Bool)c343;
+        }
+        if (ternary339) {
+          struct A_bool_*** t344 = __i323;
+          struct A_bool_** t345 = *t344;
+          int c346 = -1;
+          struct A_bool_** ptr347 = &(t345)[c346];
+          *t344 = ptr347;
+        } else {
+          long t348 = __n324;
+          struct A_bool_*** t349 = __i323;
+          struct A_bool_** t350 = *t349;
+          struct A_bool_** ptr351 = &(t350)[t348];
+          *t349 = ptr351;
+        }
+    }
+  return;
+}
+
+// function: _ZSt7advanceIPP1AIbElEvRT_T0_
+void void_std__advance_A_bool_____long_(struct A_bool_*** v352, long v353) {
+bb354:
+  struct A_bool_*** __i355;
+  long __n356;
+  long __d357;
+  struct std__random_access_iterator_tag agg_tmp0358;
+  __i355 = v352;
+  __n356 = v353;
+  long t359 = __n356;
+  __d357 = t359;
+  struct A_bool_*** t360 = __i355;
+  long t361 = __d357;
+  struct A_bool_*** t362 = __i355;
+  struct std__random_access_iterator_tag r363 = std__iterator_traits_A_bool______iterator_category_std____iterator_category_A_bool____(t362);
+  if (__cir_exc_active) {
+    return;
+  }
+  agg_tmp0358 = r363;
+  struct std__random_access_iterator_tag t364 = agg_tmp0358;
+  void_std____advance_A_bool_____long_(t360, t361, t364);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt23__copy_move_backward_a2ILb0EPP1AIbES3_ET1_T0_S5_S4_
+struct A_bool_** A_bool____std____copy_move_backward_a2_false__A_bool_____A_bool____(struct A_bool_** v365, struct A_bool_** v366, struct A_bool_** v367) {
+bb368:
+  struct A_bool_** __first369;
+  struct A_bool_** __last370;
+  struct A_bool_** __result371;
+  struct A_bool_** __retval372;
+  __first369 = v365;
+  __last370 = v366;
+  __result371 = v367;
+      _Bool r373 = std__is_constant_evaluated();
+      if (r373) {
+      } else {
+          long __n374;
+          struct A_bool_** t375 = __first369;
+          struct A_bool_** t376 = __last370;
+          long r377 = std__iterator_traits_A_bool______difference_type_std__distance_A_bool____(t375, t376);
+          if (__cir_exc_active) {
+            struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+            return __cir_eh_ret;
+          }
+          __n374 = r377;
+          long t378 = __n374;
+          long u379 = -t378;
+          void_std__advance_A_bool_____long_(&__result371, u379);
+          if (__cir_exc_active) {
+            struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+            return __cir_eh_ret;
+          }
+            long t380 = __n374;
+            long c381 = 1;
+            _Bool c382 = ((t380 > c381)) ? 1 : 0;
+            if (c382) {
+              struct A_bool_** t383 = __result371;
+              void* cast384 = (void*)t383;
+              struct A_bool_** t385 = __first369;
+              void* cast386 = (void*)t385;
+              long t387 = __n374;
+              unsigned long cast388 = (unsigned long)t387;
+              unsigned long c389 = 8;
+              unsigned long b390 = cast388 * c389;
+              void* r391 = memmove(cast384, cast386, b390);
+            } else {
+                long t392 = __n374;
+                long c393 = 1;
+                _Bool c394 = ((t392 == c393)) ? 1 : 0;
+                if (c394) {
+                  void_std____assign_one_false__A_bool_____A_bool____(&__result371, &__first369);
+                  if (__cir_exc_active) {
+                    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+                    return __cir_eh_ret;
+                  }
+                }
+            }
+          struct A_bool_** t395 = __result371;
+          __retval372 = t395;
+          struct A_bool_** t396 = __retval372;
+          return t396;
+      }
+    while (1) {
+      struct A_bool_** t397 = __first369;
+      struct A_bool_** t398 = __last370;
+      _Bool c399 = ((t397 != t398)) ? 1 : 0;
+      if (!c399) break;
+        struct A_bool_** t400 = __last370;
+        int c401 = -1;
+        struct A_bool_** ptr402 = &(t400)[c401];
+        __last370 = ptr402;
+        struct A_bool_** t403 = __result371;
+        int c404 = -1;
+        struct A_bool_** ptr405 = &(t403)[c404];
+        __result371 = ptr405;
+        void_std____assign_one_false__A_bool_____A_bool____(&__result371, &__last370);
+        if (__cir_exc_active) {
+          struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+          return __cir_eh_ret;
+        }
+    }
+  struct A_bool_** t406 = __result371;
+  __retval372 = t406;
+  struct A_bool_** t407 = __retval372;
+  return t407;
+}
+
+// function: _ZSt23__copy_move_backward_a1ILb0EPP1AIbES3_ET1_T0_S5_S4_
+struct A_bool_** A_bool____std____copy_move_backward_a1_false__A_bool_____A_bool____(struct A_bool_** v408, struct A_bool_** v409, struct A_bool_** v410) {
+bb411:
+  struct A_bool_** __first412;
+  struct A_bool_** __last413;
+  struct A_bool_** __result414;
+  struct A_bool_** __retval415;
+  __first412 = v408;
+  __last413 = v409;
+  __result414 = v410;
+  struct A_bool_** t416 = __first412;
+  struct A_bool_** t417 = __last413;
+  struct A_bool_** t418 = __result414;
+  struct A_bool_** r419 = A_bool____std____copy_move_backward_a2_false__A_bool_____A_bool____(t416, t417, t418);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval415 = r419;
+  struct A_bool_** t420 = __retval415;
+  return t420;
+}
+
+// function: _ZSt22__copy_move_backward_aILb0EPP1AIbES3_ET1_T0_S5_S4_
+struct A_bool_** A_bool____std____copy_move_backward_a_false__A_bool_____A_bool____(struct A_bool_** v421, struct A_bool_** v422, struct A_bool_** v423) {
+bb424:
+  struct A_bool_** __first425;
+  struct A_bool_** __last426;
+  struct A_bool_** __result427;
+  struct A_bool_** __retval428;
+  __first425 = v421;
+  __last426 = v422;
+  __result427 = v423;
+  struct A_bool_** t429 = __first425;
+  struct A_bool_** r430 = A_bool____std____niter_base_A_bool____(t429);
+  struct A_bool_** t431 = __last426;
+  struct A_bool_** r432 = A_bool____std____niter_base_A_bool____(t431);
+  struct A_bool_** t433 = __result427;
+  struct A_bool_** r434 = A_bool____std____niter_base_A_bool____(t433);
+  struct A_bool_** r435 = A_bool____std____copy_move_backward_a1_false__A_bool_____A_bool____(r430, r432, r434);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_** r436 = A_bool____std____niter_wrap_A_bool____(&__result427, r435);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval428 = r436;
+  struct A_bool_** t437 = __retval428;
+  return t437;
+}
+
+// function: _ZSt13copy_backwardIPP1AIbES3_ET0_T_S5_S4_
+struct A_bool_** A_bool____std__copy_backward_A_bool_____A_bool____(struct A_bool_** v438, struct A_bool_** v439, struct A_bool_** v440) {
+bb441:
+  struct A_bool_** __first442;
+  struct A_bool_** __last443;
+  struct A_bool_** __result444;
+  struct A_bool_** __retval445;
+  __first442 = v438;
+  __last443 = v439;
+  __result444 = v440;
+  struct A_bool_** t446 = __first442;
+  struct A_bool_** r447 = A_bool____std____miter_base_A_bool____(t446);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_** t448 = __last443;
+  struct A_bool_** r449 = A_bool____std____miter_base_A_bool____(t448);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_** t450 = __result444;
+  struct A_bool_** r451 = A_bool____std____copy_move_backward_a_false__A_bool_____A_bool____(r447, r449, t450);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval445 = r451;
+  struct A_bool_** t452 = __retval445;
+  return t452;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE17_M_reallocate_mapEmb
+void std__deque_A_bool___std__allocator_A_bool________M_reallocate_map(struct std__deque_A_bool___std__allocator_A_bool___* v453, unsigned long v454, _Bool v455) {
+bb456:
+  struct std__deque_A_bool___std__allocator_A_bool___* this457;
+  unsigned long __nodes_to_add458;
+  _Bool __add_at_front459;
+  unsigned long __old_num_nodes460;
+  unsigned long __new_num_nodes461;
+  struct A_bool_** __new_nstart462;
+  this457 = v453;
+  __nodes_to_add458 = v454;
+  __add_at_front459 = v455;
+  struct std__deque_A_bool___std__allocator_A_bool___* t463 = this457;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base464 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base465 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base464->_M_impl) + 0);
+  struct A_bool_** t466 = base465->_M_finish._M_node;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base467 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base468 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base467->_M_impl) + 0);
+  struct A_bool_** t469 = base468->_M_start._M_node;
+  long diff470 = t466 - t469;
+  long c471 = 1;
+  long b472 = diff470 + c471;
+  unsigned long cast473 = (unsigned long)b472;
+  __old_num_nodes460 = cast473;
+  unsigned long t474 = __old_num_nodes460;
+  unsigned long t475 = __nodes_to_add458;
+  unsigned long b476 = t474 + t475;
+  __new_num_nodes461 = b476;
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base477 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base478 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base477->_M_impl) + 0);
+    unsigned long t479 = base478->_M_map_size;
+    unsigned long c480 = 2;
+    unsigned long t481 = __new_num_nodes461;
+    unsigned long b482 = c480 * t481;
+    _Bool c483 = ((t479 > b482)) ? 1 : 0;
+    if (c483) {
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base484 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base485 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base484->_M_impl) + 0);
+      struct A_bool_** t486 = base485->_M_map;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base487 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base488 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base487->_M_impl) + 0);
+      unsigned long t489 = base488->_M_map_size;
+      unsigned long t490 = __new_num_nodes461;
+      unsigned long b491 = t489 - t490;
+      unsigned long c492 = 2;
+      unsigned long b493 = b491 / c492;
+      struct A_bool_** ptr494 = &(t486)[b493];
+      _Bool t495 = __add_at_front459;
+      unsigned long ternary496;
+      if (t495) {
+        unsigned long t497 = __nodes_to_add458;
+        ternary496 = (unsigned long)t497;
+      } else {
+        unsigned long c498 = 0;
+        ternary496 = (unsigned long)c498;
+      }
+      struct A_bool_** ptr499 = &(ptr494)[ternary496];
+      __new_nstart462 = ptr499;
+        struct A_bool_** t500 = __new_nstart462;
+        struct std___Deque_base_A_bool___std__allocator_A_bool___* base501 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base502 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base501->_M_impl) + 0);
+        struct A_bool_** t503 = base502->_M_start._M_node;
+        _Bool c504 = ((t500 < t503)) ? 1 : 0;
+        if (c504) {
+          struct std___Deque_base_A_bool___std__allocator_A_bool___* base505 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+          struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base506 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base505->_M_impl) + 0);
+          struct A_bool_** t507 = base506->_M_start._M_node;
+          struct std___Deque_base_A_bool___std__allocator_A_bool___* base508 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+          struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base509 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base508->_M_impl) + 0);
+          struct A_bool_** t510 = base509->_M_finish._M_node;
+          int c511 = 1;
+          struct A_bool_** ptr512 = &(t510)[c511];
+          struct A_bool_** t513 = __new_nstart462;
+          struct A_bool_** r514 = A_bool____std__copy_A_bool_____A_bool____(t507, ptr512, t513);
+          if (__cir_exc_active) {
+            return;
+          }
+        } else {
+          struct std___Deque_base_A_bool___std__allocator_A_bool___* base515 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+          struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base516 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base515->_M_impl) + 0);
+          struct A_bool_** t517 = base516->_M_start._M_node;
+          struct std___Deque_base_A_bool___std__allocator_A_bool___* base518 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+          struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base519 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base518->_M_impl) + 0);
+          struct A_bool_** t520 = base519->_M_finish._M_node;
+          int c521 = 1;
+          struct A_bool_** ptr522 = &(t520)[c521];
+          struct A_bool_** t523 = __new_nstart462;
+          unsigned long t524 = __old_num_nodes460;
+          struct A_bool_** ptr525 = &(t523)[t524];
+          struct A_bool_** r526 = A_bool____std__copy_backward_A_bool_____A_bool____(t517, ptr522, ptr525);
+          if (__cir_exc_active) {
+            return;
+          }
+        }
+    } else {
+      unsigned long __new_map_size527;
+      unsigned long __bufsz528;
+      struct A_bool_** __new_map529;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base530 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base531 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base530->_M_impl) + 0);
+      unsigned long t532 = base531->_M_map_size;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base533 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base534 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base533->_M_impl) + 0);
+      unsigned long* r535 = unsigned_long_const__std__max_unsigned_long_(&base534->_M_map_size, &__nodes_to_add458);
+      if (__cir_exc_active) {
+        return;
+      }
+      unsigned long t536 = *r535;
+      unsigned long b537 = t532 + t536;
+      unsigned long c538 = 2;
+      unsigned long b539 = b537 + c538;
+      __new_map_size527 = b539;
+      unsigned long c540 = 512;
+      __bufsz528 = c540;
+        unsigned long t541 = __new_map_size527;
+        unsigned long r542 = std__deque_A_bool___std__allocator_A_bool_______max_size___const(t463);
+        unsigned long t543 = __bufsz528;
+        unsigned long b544 = r542 + t543;
+        unsigned long c545 = 1;
+        unsigned long b546 = b544 - c545;
+        unsigned long t547 = __bufsz528;
+        unsigned long b548 = b546 / t547;
+        unsigned long c549 = 2;
+        unsigned long b550 = b548 * c549;
+        _Bool c551 = ((t541 > b550)) ? 1 : 0;
+        if (c551) {
+          __builtin_unreachable();
+        }
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base552 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      unsigned long t553 = __new_map_size527;
+      struct A_bool_** r554 = std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_map(base552, t553);
+      if (__cir_exc_active) {
+        return;
+      }
+      __new_map529 = r554;
+      struct A_bool_** t555 = __new_map529;
+      unsigned long t556 = __new_map_size527;
+      unsigned long t557 = __new_num_nodes461;
+      unsigned long b558 = t556 - t557;
+      unsigned long c559 = 2;
+      unsigned long b560 = b558 / c559;
+      struct A_bool_** ptr561 = &(t555)[b560];
+      _Bool t562 = __add_at_front459;
+      unsigned long ternary563;
+      if (t562) {
+        unsigned long t564 = __nodes_to_add458;
+        ternary563 = (unsigned long)t564;
+      } else {
+        unsigned long c565 = 0;
+        ternary563 = (unsigned long)c565;
+      }
+      struct A_bool_** ptr566 = &(ptr561)[ternary563];
+      __new_nstart462 = ptr566;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base567 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base568 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base567->_M_impl) + 0);
+      struct A_bool_** t569 = base568->_M_start._M_node;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base570 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base571 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base570->_M_impl) + 0);
+      struct A_bool_** t572 = base571->_M_finish._M_node;
+      int c573 = 1;
+      struct A_bool_** ptr574 = &(t572)[c573];
+      struct A_bool_** t575 = __new_nstart462;
+      struct A_bool_** r576 = A_bool____std__copy_A_bool_____A_bool____(t569, ptr574, t575);
+      if (__cir_exc_active) {
+        return;
+      }
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base577 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base578 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base579 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base578->_M_impl) + 0);
+      struct A_bool_** t580 = base579->_M_map;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base581 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base582 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base581->_M_impl) + 0);
+      unsigned long t583 = base582->_M_map_size;
+      std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_map(base577, t580, t583);
+      struct A_bool_** t584 = __new_map529;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base585 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base586 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base585->_M_impl) + 0);
+      base586->_M_map = t584;
+      unsigned long t587 = __new_map_size527;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base588 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base589 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base588->_M_impl) + 0);
+      base589->_M_map_size = t587;
+    }
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base590 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base591 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base590->_M_impl) + 0);
+  struct A_bool_** t592 = __new_nstart462;
+  std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(&base591->_M_start, t592);
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base593 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t463 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base594 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base593->_M_impl) + 0);
+  struct A_bool_** t595 = __new_nstart462;
+  unsigned long t596 = __old_num_nodes460;
+  struct A_bool_** ptr597 = &(t595)[t596];
+  int c598 = -1;
+  struct A_bool_** ptr599 = &(ptr597)[c598];
+  std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(&base594->_M_finish, ptr599);
+  return;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE22_M_reserve_map_at_backEm
+void std__deque_A_bool___std__allocator_A_bool________M_reserve_map_at_back(struct std__deque_A_bool___std__allocator_A_bool___* v600, unsigned long v601) {
+bb602:
+  struct std__deque_A_bool___std__allocator_A_bool___* this603;
+  unsigned long __nodes_to_add604;
+  this603 = v600;
+  __nodes_to_add604 = v601;
+  struct std__deque_A_bool___std__allocator_A_bool___* t605 = this603;
+    unsigned long t606 = __nodes_to_add604;
+    unsigned long c607 = 1;
+    unsigned long b608 = t606 + c607;
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base609 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t605 + 0);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base610 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base609->_M_impl) + 0);
+    unsigned long t611 = base610->_M_map_size;
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base612 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t605 + 0);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base613 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base612->_M_impl) + 0);
+    struct A_bool_** t614 = base613->_M_finish._M_node;
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base615 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t605 + 0);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base616 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base615->_M_impl) + 0);
+    struct A_bool_** t617 = base616->_M_map;
+    long diff618 = t614 - t617;
+    unsigned long cast619 = (unsigned long)diff618;
+    unsigned long b620 = t611 - cast619;
+    _Bool c621 = ((b608 > b620)) ? 1 : 0;
+    if (c621) {
+      unsigned long t622 = __nodes_to_add604;
+      _Bool c623 = 0;
+      std__deque_A_bool___std__allocator_A_bool________M_reallocate_map(t605, t622, c623);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE16_M_push_back_auxIJRKS1_EEEvDpOT_
+void void_std__deque_A_bool___std__allocator_A_bool________M_push_back_aux_A_bool__const__(struct std__deque_A_bool___std__allocator_A_bool___* v624, struct A_bool_* v625) {
+bb626:
+  struct std__deque_A_bool___std__allocator_A_bool___* this627;
+  struct A_bool_* __args628;
+  this627 = v624;
+  __args628 = v625;
+  struct std__deque_A_bool___std__allocator_A_bool___* t629 = this627;
+    unsigned long r630 = std__deque_A_bool___std__allocator_A_bool_______size___const(t629);
+    unsigned long r631 = std__deque_A_bool___std__allocator_A_bool_______max_size___const(t629);
+    _Bool c632 = ((r630 == r631)) ? 1 : 0;
+    if (c632) {
+      char* cast633 = (char*)&(_str_4);
+      std____throw_length_error(cast633);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  unsigned long c634 = 1;
+  std__deque_A_bool___std__allocator_A_bool________M_reserve_map_at_back(t629, c634);
+  if (__cir_exc_active) {
+    return;
+  }
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base635 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+  struct A_bool_* r636 = std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_node(base635);
+  if (__cir_exc_active) {
+    return;
+  }
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base637 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base638 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base637->_M_impl) + 0);
+  struct A_bool_** t639 = base638->_M_finish._M_node;
+  int c640 = 1;
+  struct A_bool_** ptr641 = &(t639)[c640];
+  *ptr641 = r636;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base643 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+      struct std__allocator_A_bool__* base644 = (struct std__allocator_A_bool__*)((char *)&(base643->_M_impl) + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base645 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base646 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base645->_M_impl) + 0);
+      struct A_bool_* t647 = base646->_M_finish._M_cur;
+      struct A_bool_* t648 = __args628;
+      void_std__allocator_traits_std__allocator_A_bool_______construct_A_bool___A_bool__const__(base644, t647, t648);
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base649 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base650 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base649->_M_impl) + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base651 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base652 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base651->_M_impl) + 0);
+      struct A_bool_** t653 = base652->_M_finish._M_node;
+      int c654 = 1;
+      struct A_bool_** ptr655 = &(t653)[c654];
+      std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(&base650->_M_finish, ptr655);
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base656 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base657 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base656->_M_impl) + 0);
+      struct A_bool_* t658 = base657->_M_finish._M_first;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base659 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base660 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base659->_M_impl) + 0);
+      base660->_M_finish._M_cur = t658;
+    cir_try_dispatch642: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok661 = 0;
+      void* ca_exn662 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct std___Deque_base_A_bool___std__allocator_A_bool___* base663 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+        struct std___Deque_base_A_bool___std__allocator_A_bool___* base664 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t629 + 0);
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base665 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base664->_M_impl) + 0);
+        struct A_bool_** t666 = base665->_M_finish._M_node;
+        int c667 = 1;
+        struct A_bool_** ptr668 = &(t666)[c667];
+        struct A_bool_* t669 = *ptr668;
+        std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_node(base663, t669);
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE9push_backERKS1_
+void std__deque_A_bool___std__allocator_A_bool_______push_back(struct std__deque_A_bool___std__allocator_A_bool___* v670, struct A_bool_* v671) {
+bb672:
+  struct std__deque_A_bool___std__allocator_A_bool___* this673;
+  struct A_bool_* __x674;
+  this673 = v670;
+  __x674 = v671;
+  struct std__deque_A_bool___std__allocator_A_bool___* t675 = this673;
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base676 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t675 + 0);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base677 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base676->_M_impl) + 0);
+    struct A_bool_* t678 = base677->_M_finish._M_cur;
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base679 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t675 + 0);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base680 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base679->_M_impl) + 0);
+    struct A_bool_* t681 = base680->_M_finish._M_last;
+    int c682 = -1;
+    struct A_bool_* ptr683 = &(t681)[c682];
+    _Bool c684 = ((t678 != ptr683)) ? 1 : 0;
+    if (c684) {
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base685 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t675 + 0);
+      struct std__allocator_A_bool__* base686 = (struct std__allocator_A_bool__*)((char *)&(base685->_M_impl) + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base687 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t675 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base688 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base687->_M_impl) + 0);
+      struct A_bool_* t689 = base688->_M_finish._M_cur;
+      struct A_bool_* t690 = __x674;
+      void_std__allocator_traits_std__allocator_A_bool_______construct_A_bool___A_bool__const__(base686, t689, t690);
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base691 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t675 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base692 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base691->_M_impl) + 0);
+      struct A_bool_* t693 = base692->_M_finish._M_cur;
+      int c694 = 1;
+      struct A_bool_* ptr695 = &(t693)[c694];
+      base692->_M_finish._M_cur = ptr695;
+    } else {
+      struct A_bool_* t696 = __x674;
+      void_std__deque_A_bool___std__allocator_A_bool________M_push_back_aux_A_bool__const__(t675, t696);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE4pushERKS1_
+void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________push(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v697, struct A_bool_* v698) {
+bb699:
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this700;
+  struct A_bool_* __x701;
+  this700 = v697;
+  __x701 = v698;
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t702 = this700;
+  struct A_bool_* t703 = __x701;
+  std__deque_A_bool___std__allocator_A_bool_______push_back(&t702->c, t703);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSteqRKSt15_Deque_iteratorI1AIbERS1_PS1_ES6_
+_Bool std__operator__(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v704, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v705) {
+bb706:
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __x707;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __y708;
+  _Bool __retval709;
+  __x707 = v704;
+  __y708 = v705;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t710 = __x707;
+  struct A_bool_* t711 = t710->_M_cur;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t712 = __y708;
+  struct A_bool_* t713 = t712->_M_cur;
+  _Bool c714 = ((t711 == t713)) ? 1 : 0;
+  __retval709 = c714;
+  _Bool t715 = __retval709;
+  return t715;
+}
+
+// function: _ZNKSt5dequeI1AIbESaIS1_EE5emptyEv
+_Bool std__deque_A_bool___std__allocator_A_bool_______empty___const(struct std__deque_A_bool___std__allocator_A_bool___* v716) {
+bb717:
+  struct std__deque_A_bool___std__allocator_A_bool___* this718;
+  _Bool __retval719;
+  this718 = v716;
+  struct std__deque_A_bool___std__allocator_A_bool___* t720 = this718;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base721 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t720 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base722 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base721->_M_impl) + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base723 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t720 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base724 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base723->_M_impl) + 0);
+  _Bool r725 = std__operator__(&base722->_M_finish, &base724->_M_start);
+  __retval719 = r725;
+  _Bool t726 = __retval719;
+  return t726;
+}
+
+// function: _ZNSt16allocator_traitsISaI1AIbEEE7destroyIS1_EEvRS2_PT_
+void void_std__allocator_traits_std__allocator_A_bool_______destroy_A_bool___(struct std__allocator_A_bool__* v727, struct A_bool_* v728) {
+bb729:
+  struct std__allocator_A_bool__* __a730;
+  struct A_bool_* __p731;
+  __a730 = v727;
+  __p731 = v728;
+  struct A_bool_* t732 = __p731;
+  void_std__destroy_at_A_bool___(t732);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE15_M_pop_back_auxEv
+void std__deque_A_bool___std__allocator_A_bool________M_pop_back_aux(struct std__deque_A_bool___std__allocator_A_bool___* v733) {
+bb734:
+  struct std__deque_A_bool___std__allocator_A_bool___* this735;
+  this735 = v733;
+  struct std__deque_A_bool___std__allocator_A_bool___* t736 = this735;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base737 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t736 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base738 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t736 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base739 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base738->_M_impl) + 0);
+  struct A_bool_* t740 = base739->_M_finish._M_first;
+  std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_node(base737, t740);
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base741 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t736 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base742 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base741->_M_impl) + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base743 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t736 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base744 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base743->_M_impl) + 0);
+  struct A_bool_** t745 = base744->_M_finish._M_node;
+  int c746 = -1;
+  struct A_bool_** ptr747 = &(t745)[c746];
+  std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(&base742->_M_finish, ptr747);
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base748 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t736 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base749 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base748->_M_impl) + 0);
+  struct A_bool_* t750 = base749->_M_finish._M_last;
+  int c751 = -1;
+  struct A_bool_* ptr752 = &(t750)[c751];
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base753 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t736 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base754 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base753->_M_impl) + 0);
+  base754->_M_finish._M_cur = ptr752;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base755 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t736 + 0);
+  struct std__allocator_A_bool__* r756 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(base755);
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base757 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t736 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base758 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base757->_M_impl) + 0);
+  struct A_bool_* t759 = base758->_M_finish._M_cur;
+  void_std__allocator_traits_std__allocator_A_bool_______destroy_A_bool___(r756, t759);
+  return;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE8pop_backEv
+void std__deque_A_bool___std__allocator_A_bool_______pop_back(struct std__deque_A_bool___std__allocator_A_bool___* v760) {
+bb761:
+  struct std__deque_A_bool___std__allocator_A_bool___* this762;
+  this762 = v760;
+  struct std__deque_A_bool___std__allocator_A_bool___* t763 = this762;
+    do {
+          _Bool r764 = std__deque_A_bool___std__allocator_A_bool_______empty___const(t763);
+          if (r764) {
+            char* cast765 = (char*)&(_str_7);
+            int c766 = 1666;
+            char* cast767 = (char*)&(__PRETTY_FUNCTION____ZNSt5dequeI1AIbESaIS1_EE8pop_backEv);
+            char* cast768 = (char*)&(_str_6);
+            std____glibcxx_assert_fail(cast765, c766, cast767, cast768);
+          }
+      _Bool c769 = 0;
+      if (!c769) break;
+    } while (1);
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base770 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t763 + 0);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base771 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base770->_M_impl) + 0);
+    struct A_bool_* t772 = base771->_M_finish._M_cur;
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base773 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t763 + 0);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base774 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base773->_M_impl) + 0);
+    struct A_bool_* t775 = base774->_M_finish._M_first;
+    _Bool c776 = ((t772 != t775)) ? 1 : 0;
+    if (c776) {
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base777 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t763 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base778 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base777->_M_impl) + 0);
+      struct A_bool_* t779 = base778->_M_finish._M_cur;
+      int c780 = -1;
+      struct A_bool_* ptr781 = &(t779)[c780];
+      base778->_M_finish._M_cur = ptr781;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base782 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t763 + 0);
+      struct std__allocator_A_bool__* r783 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(base782);
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base784 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t763 + 0);
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base785 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base784->_M_impl) + 0);
+      struct A_bool_* t786 = base785->_M_finish._M_cur;
+      void_std__allocator_traits_std__allocator_A_bool_______destroy_A_bool___(r783, t786);
+    } else {
+      std__deque_A_bool___std__allocator_A_bool________M_pop_back_aux(t763);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3popEv
+void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________pop(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v787) {
+bb788:
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this789;
+  this789 = v787;
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t790 = this789;
+    do {
+          _Bool r791 = std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________empty___const(t790);
+          if (__cir_exc_active) {
+            return;
+          }
+          if (r791) {
+            char* cast792 = (char*)&(_str_5);
+            int c793 = 333;
+            char* cast794 = (char*)&(__PRETTY_FUNCTION____ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3popEv);
+            char* cast795 = (char*)&(_str_6);
+            std____glibcxx_assert_fail(cast792, c793, cast794, cast795);
+          }
+      _Bool c796 = 0;
+      if (!c796) break;
+    } while (1);
+  std__deque_A_bool___std__allocator_A_bool_______pop_back(&t790->c);
+  return;
+}
+
+// function: _ZNKSt5stackI1AIbESt5dequeIS1_SaIS1_EEE5emptyEv
+_Bool std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________empty___const(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v797) {
+bb798:
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this799;
+  _Bool __retval800;
+  this799 = v797;
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t801 = this799;
+  _Bool r802 = std__deque_A_bool___std__allocator_A_bool_______empty___const(&t801->c);
+  __retval800 = r802;
+  _Bool t803 = __retval800;
+  return t803;
+}
+
+// function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_EmmEv
+struct std___Deque_iterator_A_bool___A_bool_____A_bool____* std___Deque_iterator_A_bool___A_bool____A_bool_____operator__(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v804) {
+bb805:
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this806;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __retval807;
+  this806 = v804;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t808 = this806;
+    struct A_bool_* t809 = t808->_M_cur;
+    struct A_bool_* t810 = t808->_M_first;
+    _Bool c811 = ((t809 == t810)) ? 1 : 0;
+    if (c811) {
+      struct A_bool_** t812 = t808->_M_node;
+      int c813 = -1;
+      struct A_bool_** ptr814 = &(t812)[c813];
+      std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(t808, ptr814);
+      struct A_bool_* t815 = t808->_M_last;
+      t808->_M_cur = t815;
+    }
+  struct A_bool_* t816 = t808->_M_cur;
+  int c817 = -1;
+  struct A_bool_* ptr818 = &(t816)[c817];
+  t808->_M_cur = ptr818;
+  __retval807 = t808;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t819 = __retval807;
+  return t819;
+}
+
+// function: _ZNKSt15_Deque_iteratorI1AIbERS1_PS1_EdeEv
+struct A_bool_* std___Deque_iterator_A_bool___A_bool____A_bool_____operator____const(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v820) {
+bb821:
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this822;
+  struct A_bool_* __retval823;
+  this822 = v820;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t824 = this822;
+  struct A_bool_* t825 = t824->_M_cur;
+  __retval823 = t825;
+  struct A_bool_* t826 = __retval823;
+  return t826;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE4backEv
+struct A_bool_* std__deque_A_bool___std__allocator_A_bool_______back(struct std__deque_A_bool___std__allocator_A_bool___* v827) {
+bb828:
+  struct std__deque_A_bool___std__allocator_A_bool___* this829;
+  struct A_bool_* __retval830;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __tmp831;
+  this829 = v827;
+  struct std__deque_A_bool___std__allocator_A_bool___* t832 = this829;
+    do {
+          _Bool r833 = std__deque_A_bool___std__allocator_A_bool_______empty___const(t832);
+          if (r833) {
+            char* cast834 = (char*)&(_str_7);
+            int c835 = 1537;
+            char* cast836 = (char*)&(__PRETTY_FUNCTION____ZNSt5dequeI1AIbESaIS1_EE4backEv);
+            char* cast837 = (char*)&(_str_6);
+            std____glibcxx_assert_fail(cast834, c835, cast836, cast837);
+          }
+      _Bool c838 = 0;
+      if (!c838) break;
+    } while (1);
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ r839 = std__deque_A_bool___std__allocator_A_bool_______end(t832);
+  __tmp831 = r839;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* r840 = std___Deque_iterator_A_bool___A_bool____A_bool_____operator__(&__tmp831);
+  struct A_bool_* r841 = std___Deque_iterator_A_bool___A_bool____A_bool_____operator____const(&__tmp831);
+  __retval830 = r841;
+  struct A_bool_* t842 = __retval830;
+  return t842;
+}
+
+// function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3topEv
+struct A_bool_* std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________top(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v843) {
+bb844:
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this845;
+  struct A_bool_* __retval846;
+  this845 = v843;
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t847 = this845;
+    do {
+          _Bool r848 = std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________empty___const(t847);
+          if (__cir_exc_active) {
+            struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+            return __cir_eh_ret;
+          }
+          if (r848) {
+            char* cast849 = (char*)&(_str_5);
+            int c850 = 260;
+            char* cast851 = (char*)&(__PRETTY_FUNCTION____ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3topEv);
+            char* cast852 = (char*)&(_str_6);
+            std____glibcxx_assert_fail(cast849, c850, cast851, cast852);
+          }
+      _Bool c853 = 0;
+      if (!c853) break;
+    } while (1);
+  struct A_bool_* r854 = std__deque_A_bool___std__allocator_A_bool_______back(&t847->c);
+  __retval846 = r854;
+  struct A_bool_* t855 = __retval846;
+  return t855;
+}
+
+// function: _ZNKSt5stackI1AIbESt5dequeIS1_SaIS1_EEE4sizeEv
+unsigned long std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________size___const(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v856) {
+bb857:
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this858;
+  unsigned long __retval859;
+  this858 = v856;
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t860 = this858;
+  unsigned long r861 = std__deque_A_bool___std__allocator_A_bool_______size___const(&t860->c);
+  __retval859 = r861;
+  unsigned long t862 = __retval859;
+  return t862;
+}
+
+// function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEED2Ev
+void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v863) {
+bb864:
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this865;
+  this865 = v863;
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t866 = this865;
+  {
+    std__deque_A_bool___std__allocator_A_bool________deque(&t866->c);
+  }
+  return;
+}
+
+// function: main
+int main() {
+bb867:
+  int __retval868;
+  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____ first869;
+  struct A_bool_ x870;
+  struct A_bool_ y871;
+  struct A_bool_ z872;
+  int c873 = 0;
+  __retval868 = c873;
+  std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________stack_std__deque_A_bool___std__allocator_A_bool_______void_(&first869);
+  if (__cir_exc_active) {
+    int __cir_eh_ret = (int)0;
+    return __cir_eh_ret;
+  }
+    A_bool___A(&x870);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    A_bool___A(&y871);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    A_bool___A(&z872);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________push(&first869, &x870);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________push(&first869, &y871);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________push(&first869, &z872);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________pop(&first869);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    _Bool r874 = std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________empty___const(&first869);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    _Bool u875 = !r874;
+    if (u875) {
+    } else {
+      char* cast876 = (char*)&(_str);
+      char* c877 = _str_1;
+      unsigned int c878 = 56;
+      char* cast879 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast876, c877, c878, cast879);
+    }
+    struct A_bool_* r880 = std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________top(&first869);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    _Bool r881 = A_bool___get(r880);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    if (r881) {
+    } else {
+      char* cast882 = (char*)&(_str_2);
+      char* c883 = _str_1;
+      unsigned int c884 = 57;
+      char* cast885 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast882, c883, c884, cast885);
+    }
+    unsigned long r886 = std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________size___const(&first869);
+    if (__cir_exc_active) {
+      {
+        std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+      }
+      int __cir_eh_ret = (int)0;
+      return __cir_eh_ret;
+    }
+    unsigned long c887 = 2;
+    _Bool c888 = ((r886 == c887)) ? 1 : 0;
+    if (c888) {
+    } else {
+      char* cast889 = (char*)&(_str_3);
+      char* c890 = _str_1;
+      unsigned int c891 = 58;
+      char* cast892 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast889, c890, c891, cast892);
+    }
+    int c893 = 0;
+    __retval868 = c893;
+    int t894 = __retval868;
+    int ret_val895 = t894;
+    {
+      std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(&first869);
+    }
+    return ret_val895;
+  int t896 = __retval868;
+  return t896;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EED2Ev
+void std__deque_A_bool___std__allocator_A_bool________deque(struct std__deque_A_bool___std__allocator_A_bool___* v897) {
+bb898:
+  struct std__deque_A_bool___std__allocator_A_bool___* this899;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ agg_tmp0900;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ agg_tmp1901;
+  this899 = v897;
+  struct std__deque_A_bool___std__allocator_A_bool___* t902 = this899;
+    struct std___Deque_iterator_A_bool___A_bool_____A_bool____ r903 = std__deque_A_bool___std__allocator_A_bool_______begin(t902);
+    agg_tmp0900 = r903;
+    struct std___Deque_iterator_A_bool___A_bool_____A_bool____ r904 = std__deque_A_bool___std__allocator_A_bool_______end(t902);
+    agg_tmp1901 = r904;
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base905 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t902 + 0);
+    struct std__allocator_A_bool__* r906 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(base905);
+    struct std___Deque_iterator_A_bool___A_bool_____A_bool____ t907 = agg_tmp0900;
+    struct std___Deque_iterator_A_bool___A_bool_____A_bool____ t908 = agg_tmp1901;
+    std__deque_A_bool___std__allocator_A_bool________M_destroy_data(t902, t907, t908, r906);
+    if (__cir_exc_active) {
+      {
+        struct std___Deque_base_A_bool___std__allocator_A_bool___* base909 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t902 + 0);
+        std___Deque_base_A_bool___std__allocator_A_bool_________Deque_base(base909);
+      }
+      return;
+    }
+  {
+    struct std___Deque_base_A_bool___std__allocator_A_bool___* base910 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t902 + 0);
+    std___Deque_base_A_bool___std__allocator_A_bool_________Deque_base(base910);
+  }
+  return;
+}
+
+// function: _ZSt23__is_constant_evaluatedv
+_Bool std____is_constant_evaluated() {
+bb911:
+  _Bool __retval912;
+    _Bool c913 = 0;
+    __retval912 = c913;
+    _Bool t914 = __retval912;
+    return t914;
+  abort();
+}
+
+// function: _ZSt10destroy_atI1AIbEEvPT_
+void void_std__destroy_at_A_bool___(struct A_bool_* v915) {
+bb916:
+  struct A_bool_* __location917;
+  __location917 = v915;
+  return;
+}
+
+// function: _ZSt8_DestroyIP1AIbEEvT_S3_
+void void_std___Destroy_A_bool___(struct A_bool_* v918, struct A_bool_* v919) {
+bb920:
+  struct A_bool_* __first921;
+  struct A_bool_* __last922;
+  __first921 = v918;
+  __last922 = v919;
+      _Bool r923 = std____is_constant_evaluated();
+      if (r923) {
+          while (1) {
+            struct A_bool_* t925 = __first921;
+            struct A_bool_* t926 = __last922;
+            _Bool c927 = ((t925 != t926)) ? 1 : 0;
+            if (!c927) break;
+            struct A_bool_* t928 = __first921;
+            void_std__destroy_at_A_bool___(t928);
+            if (__cir_exc_active) {
+              return;
+            }
+          for_step924: ;
+            struct A_bool_* t929 = __first921;
+            int c930 = 1;
+            struct A_bool_* ptr931 = &(t929)[c930];
+            __first921 = ptr931;
+          }
+      }
+  return;
+}
+
+// function: _ZSt8_DestroyIP1AIbES1_EvT_S3_RSaIT0_E
+void void_std___Destroy_A_bool____A_bool___(struct A_bool_* v932, struct A_bool_* v933, struct std__allocator_A_bool__* v934) {
+bb935:
+  struct A_bool_* __first936;
+  struct A_bool_* __last937;
+  struct std__allocator_A_bool__* unnamed938;
+  __first936 = v932;
+  __last937 = v933;
+  unnamed938 = v934;
+  struct A_bool_* t939 = __first936;
+  struct A_bool_* t940 = __last937;
+  void_std___Destroy_A_bool___(t939, t940);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZSt16__deque_buf_sizem
+unsigned long std____deque_buf_size(unsigned long v941) {
+bb942:
+  unsigned long __size943;
+  unsigned long __retval944;
+  __size943 = v941;
+  unsigned long t945 = __size943;
+  unsigned long c946 = 512;
+  _Bool c947 = ((t945 < c946)) ? 1 : 0;
+  unsigned long ternary948;
+  if (c947) {
+    unsigned long c949 = 512;
+    unsigned long t950 = __size943;
+    unsigned long b951 = c949 / t950;
+    ternary948 = (unsigned long)b951;
+  } else {
+    unsigned long c952 = 1;
+    ternary948 = (unsigned long)c952;
+  }
+  __retval944 = ternary948;
+  unsigned long t953 = __retval944;
+  return t953;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE14_S_buffer_sizeEv
+unsigned long std__deque_A_bool___std__allocator_A_bool________S_buffer_size() {
+bb954:
+  unsigned long __retval955;
+  unsigned long c956 = 1;
+  unsigned long r957 = std____deque_buf_size(c956);
+  if (__cir_exc_active) {
+    unsigned long __cir_eh_ret = (unsigned long)0;
+    return __cir_eh_ret;
+  }
+  __retval955 = r957;
+  unsigned long t958 = __retval955;
+  return t958;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE19_M_destroy_data_auxESt15_Deque_iteratorIS1_RS1_PS1_ES7_
+void std__deque_A_bool___std__allocator_A_bool________M_destroy_data_aux(struct std__deque_A_bool___std__allocator_A_bool___* v959, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ v960, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ v961) {
+bb962:
+  struct std__deque_A_bool___std__allocator_A_bool___* this963;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __first964;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __last965;
+  this963 = v959;
+  __first964 = v960;
+  __last965 = v961;
+  struct std__deque_A_bool___std__allocator_A_bool___* t966 = this963;
+    struct A_bool_** __node967;
+    struct A_bool_** t968 = __first964._M_node;
+    int c969 = 1;
+    struct A_bool_** ptr970 = &(t968)[c969];
+    __node967 = ptr970;
+    while (1) {
+      struct A_bool_** t972 = __node967;
+      struct A_bool_** t973 = __last965._M_node;
+      _Bool c974 = ((t972 < t973)) ? 1 : 0;
+      if (!c974) break;
+      struct A_bool_** t975 = __node967;
+      struct A_bool_* t976 = *t975;
+      struct A_bool_** t977 = __node967;
+      struct A_bool_* t978 = *t977;
+      unsigned long r979 = std__deque_A_bool___std__allocator_A_bool________S_buffer_size();
+      struct A_bool_* ptr980 = &(t978)[r979];
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base981 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t966 + 0);
+      struct std__allocator_A_bool__* r982 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(base981);
+      void_std___Destroy_A_bool____A_bool___(t976, ptr980, r982);
+      if (__cir_exc_active) {
+        return;
+      }
+    for_step971: ;
+      struct A_bool_** t983 = __node967;
+      int c984 = 1;
+      struct A_bool_** ptr985 = &(t983)[c984];
+      __node967 = ptr985;
+    }
+    struct A_bool_** t986 = __first964._M_node;
+    struct A_bool_** t987 = __last965._M_node;
+    _Bool c988 = ((t986 != t987)) ? 1 : 0;
+    if (c988) {
+      struct A_bool_* t989 = __first964._M_cur;
+      struct A_bool_* t990 = __first964._M_last;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base991 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t966 + 0);
+      struct std__allocator_A_bool__* r992 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(base991);
+      void_std___Destroy_A_bool____A_bool___(t989, t990, r992);
+      if (__cir_exc_active) {
+        return;
+      }
+      struct A_bool_* t993 = __last965._M_first;
+      struct A_bool_* t994 = __last965._M_cur;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base995 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t966 + 0);
+      struct std__allocator_A_bool__* r996 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(base995);
+      void_std___Destroy_A_bool____A_bool___(t993, t994, r996);
+      if (__cir_exc_active) {
+        return;
+      }
+    } else {
+      struct A_bool_* t997 = __first964._M_cur;
+      struct A_bool_* t998 = __last965._M_cur;
+      struct std___Deque_base_A_bool___std__allocator_A_bool___* base999 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t966 + 0);
+      struct std__allocator_A_bool__* r1000 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(base999);
+      void_std___Destroy_A_bool____A_bool___(t997, t998, r1000);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_EC2ERKS4_
+void std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v1001, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v1002) {
+bb1003:
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this1004;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __x1005;
+  this1004 = v1001;
+  __x1005 = v1002;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t1006 = this1004;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t1007 = __x1005;
+  struct A_bool_* t1008 = t1007->_M_cur;
+  t1006->_M_cur = t1008;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t1009 = __x1005;
+  struct A_bool_* t1010 = t1009->_M_first;
+  t1006->_M_first = t1010;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t1011 = __x1005;
+  struct A_bool_* t1012 = t1011->_M_last;
+  t1006->_M_last = t1012;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t1013 = __x1005;
+  struct A_bool_** t1014 = t1013->_M_node;
+  t1006->_M_node = t1014;
+  return;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE15_M_destroy_dataESt15_Deque_iteratorIS1_RS1_PS1_ES7_RKS2_
+void std__deque_A_bool___std__allocator_A_bool________M_destroy_data(struct std__deque_A_bool___std__allocator_A_bool___* v1015, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ v1016, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ v1017, struct std__allocator_A_bool__* v1018) {
+bb1019:
+  struct std__deque_A_bool___std__allocator_A_bool___* this1020;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __first1021;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __last1022;
+  struct std__allocator_A_bool__* unnamed1023;
+  this1020 = v1015;
+  __first1021 = v1016;
+  __last1022 = v1017;
+  unnamed1023 = v1018;
+  struct std__deque_A_bool___std__allocator_A_bool___* t1024 = this1020;
+    _Bool c1025 = 0;
+    if (c1025) {
+      struct std___Deque_iterator_A_bool___A_bool_____A_bool____ agg_tmp01026;
+      struct std___Deque_iterator_A_bool___A_bool_____A_bool____ agg_tmp11027;
+      std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator(&agg_tmp01026, &__first1021);
+      std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator(&agg_tmp11027, &__last1022);
+      struct std___Deque_iterator_A_bool___A_bool_____A_bool____ t1028 = agg_tmp01026;
+      struct std___Deque_iterator_A_bool___A_bool_____A_bool____ t1029 = agg_tmp11027;
+      std__deque_A_bool___std__allocator_A_bool________M_destroy_data_aux(t1024, t1028, t1029);
+      if (__cir_exc_active) {
+        return;
+      }
+    }
+  return;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE5beginEv
+struct std___Deque_iterator_A_bool___A_bool_____A_bool____ std__deque_A_bool___std__allocator_A_bool_______begin(struct std__deque_A_bool___std__allocator_A_bool___* v1030) {
+bb1031:
+  struct std__deque_A_bool___std__allocator_A_bool___* this1032;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __retval1033;
+  this1032 = v1030;
+  struct std__deque_A_bool___std__allocator_A_bool___* t1034 = this1032;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base1035 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t1034 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1036 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base1035->_M_impl) + 0);
+  std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator(&__retval1033, &base1036->_M_start);
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ t1037 = __retval1033;
+  return t1037;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EE3endEv
+struct std___Deque_iterator_A_bool___A_bool_____A_bool____ std__deque_A_bool___std__allocator_A_bool_______end(struct std__deque_A_bool___std__allocator_A_bool___* v1038) {
+bb1039:
+  struct std__deque_A_bool___std__allocator_A_bool___* this1040;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __retval1041;
+  this1040 = v1038;
+  struct std__deque_A_bool___std__allocator_A_bool___* t1042 = this1040;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base1043 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t1042 + 0);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1044 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(base1043->_M_impl) + 0);
+  std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator(&__retval1041, &base1044->_M_finish);
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____ t1045 = __retval1041;
+  return t1045;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE19_M_get_Tp_allocatorEv
+struct std__allocator_A_bool__* std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1046) {
+bb1047:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1048;
+  struct std__allocator_A_bool__* __retval1049;
+  this1048 = v1046;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1050 = this1048;
+  struct std__allocator_A_bool__* base1051 = (struct std__allocator_A_bool__*)((char *)&(t1050->_M_impl) + 0);
+  __retval1049 = base1051;
+  struct std__allocator_A_bool__* t1052 = __retval1049;
+  return t1052;
+}
+
+// function: _ZNSt15__new_allocatorI1AIbEE10deallocateEPS1_m
+void std____new_allocator_A_bool_____deallocate(struct std____new_allocator_A_bool__* v1053, struct A_bool_* v1054, unsigned long v1055) {
+bb1056:
+  struct std____new_allocator_A_bool__* this1057;
+  struct A_bool_* __p1058;
+  unsigned long __n1059;
+  this1057 = v1053;
+  __p1058 = v1054;
+  __n1059 = v1055;
+  struct std____new_allocator_A_bool__* t1060 = this1057;
+    unsigned long c1061 = 1;
+    unsigned long c1062 = 16;
+    _Bool c1063 = ((c1061 > c1062)) ? 1 : 0;
+    if (c1063) {
+      struct A_bool_* t1064 = __p1058;
+      void* cast1065 = (void*)t1064;
+      unsigned long t1066 = __n1059;
+      unsigned long c1067 = 1;
+      unsigned long b1068 = t1066 * c1067;
+      unsigned long c1069 = 1;
+      operator_delete_3(cast1065, b1068, c1069);
+      return;
+    }
+  struct A_bool_* t1070 = __p1058;
+  void* cast1071 = (void*)t1070;
+  unsigned long t1072 = __n1059;
+  unsigned long c1073 = 1;
+  unsigned long b1074 = t1072 * c1073;
+  operator_delete_2(cast1071, b1074);
+  return;
+}
+
+// function: _ZNSaI1AIbEE10deallocateEPS0_m
+void std__allocator_A_bool_____deallocate(struct std__allocator_A_bool__* v1075, struct A_bool_* v1076, unsigned long v1077) {
+bb1078:
+  struct std__allocator_A_bool__* this1079;
+  struct A_bool_* __p1080;
+  unsigned long __n1081;
+  this1079 = v1075;
+  __p1080 = v1076;
+  __n1081 = v1077;
+  struct std__allocator_A_bool__* t1082 = this1079;
+    _Bool r1083 = std____is_constant_evaluated();
+    if (r1083) {
+      struct A_bool_* t1084 = __p1080;
+      void* cast1085 = (void*)t1084;
+      operator_delete(cast1085);
+      return;
+    }
+  struct std____new_allocator_A_bool__* base1086 = (struct std____new_allocator_A_bool__*)((char *)t1082 + 0);
+  struct A_bool_* t1087 = __p1080;
+  unsigned long t1088 = __n1081;
+  std____new_allocator_A_bool_____deallocate(base1086, t1087, t1088);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaI1AIbEEE10deallocateERS2_PS1_m
+void std__allocator_traits_std__allocator_A_bool_______deallocate(struct std__allocator_A_bool__* v1089, struct A_bool_* v1090, unsigned long v1091) {
+bb1092:
+  struct std__allocator_A_bool__* __a1093;
+  struct A_bool_* __p1094;
+  unsigned long __n1095;
+  __a1093 = v1089;
+  __p1094 = v1090;
+  __n1095 = v1091;
+  struct std__allocator_A_bool__* t1096 = __a1093;
+  struct A_bool_* t1097 = __p1094;
+  unsigned long t1098 = __n1095;
+  std__allocator_A_bool_____deallocate(t1096, t1097, t1098);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE18_M_deallocate_nodeEPS1_
+void std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_node(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1099, struct A_bool_* v1100) {
+bb1101:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1102;
+  struct A_bool_* __p1103;
+  this1102 = v1099;
+  __p1103 = v1100;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1104 = this1102;
+  struct std__allocator_A_bool__* base1105 = (struct std__allocator_A_bool__*)((char *)&(t1104->_M_impl) + 0);
+  struct A_bool_* t1106 = __p1103;
+  unsigned long c1107 = 1;
+  unsigned long r1108 = std____deque_buf_size(c1107);
+  if (__cir_exc_active) {
+    return;
+  }
+  std__allocator_traits_std__allocator_A_bool_______deallocate(base1105, t1106, r1108);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE16_M_destroy_nodesEPPS1_S5_
+void std___Deque_base_A_bool___std__allocator_A_bool________M_destroy_nodes(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1109, struct A_bool_** v1110, struct A_bool_** v1111) {
+bb1112:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1113;
+  struct A_bool_** __nstart1114;
+  struct A_bool_** __nfinish1115;
+  this1113 = v1109;
+  __nstart1114 = v1110;
+  __nfinish1115 = v1111;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1116 = this1113;
+    struct A_bool_** __n1117;
+    struct A_bool_** t1118 = __nstart1114;
+    __n1117 = t1118;
+    while (1) {
+      struct A_bool_** t1120 = __n1117;
+      struct A_bool_** t1121 = __nfinish1115;
+      _Bool c1122 = ((t1120 < t1121)) ? 1 : 0;
+      if (!c1122) break;
+      struct A_bool_** t1123 = __n1117;
+      struct A_bool_* t1124 = *t1123;
+      std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_node(t1116, t1124);
+    for_step1119: ;
+      struct A_bool_** t1125 = __n1117;
+      int c1126 = 1;
+      struct A_bool_** ptr1127 = &(t1125)[c1126];
+      __n1117 = ptr1127;
+    }
+  return;
+}
+
+// function: _ZNKSt11_Deque_baseI1AIbESaIS1_EE19_M_get_Tp_allocatorEv
+struct std__allocator_A_bool__* std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator___const(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1128) {
+bb1129:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1130;
+  struct std__allocator_A_bool__* __retval1131;
+  this1130 = v1128;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1132 = this1130;
+  struct std__allocator_A_bool__* base1133 = (struct std__allocator_A_bool__*)((char *)&(t1132->_M_impl) + 0);
+  __retval1131 = base1133;
+  struct std__allocator_A_bool__* t1134 = __retval1131;
+  return t1134;
+}
+
+// function: _ZNSaIP1AIbEEC2IS0_EERKSaIT_E
+void std__allocator_A_bool_____allocator_A_bool___(struct std__allocator_A_bool____* v1135, struct std__allocator_A_bool__* v1136) {
+bb1137:
+  struct std__allocator_A_bool____* this1138;
+  struct std__allocator_A_bool__* unnamed1139;
+  this1138 = v1135;
+  unnamed1139 = v1136;
+  struct std__allocator_A_bool____* t1140 = this1138;
+  struct std____new_allocator_A_bool____* base1141 = (struct std____new_allocator_A_bool____*)((char *)t1140 + 0);
+  std____new_allocator_A_bool_______new_allocator_2(base1141);
+  return;
+}
+
+// function: _ZNKSt11_Deque_baseI1AIbESaIS1_EE20_M_get_map_allocatorEv
+struct std__allocator_A_bool____ std___Deque_base_A_bool___std__allocator_A_bool________M_get_map_allocator___const(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1142) {
+bb1143:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1144;
+  struct std__allocator_A_bool____ __retval1145;
+  this1144 = v1142;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1146 = this1144;
+  struct std__allocator_A_bool__* r1147 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator___const(t1146);
+  std__allocator_A_bool_____allocator_A_bool___(&__retval1145, r1147);
+  struct std__allocator_A_bool____ t1148 = __retval1145;
+  return t1148;
+}
+
+// function: _ZNSt15__new_allocatorIP1AIbEE10deallocateEPS2_m
+void std____new_allocator_A_bool_____deallocate_2(struct std____new_allocator_A_bool____* v1149, struct A_bool_** v1150, unsigned long v1151) {
+bb1152:
+  struct std____new_allocator_A_bool____* this1153;
+  struct A_bool_** __p1154;
+  unsigned long __n1155;
+  this1153 = v1149;
+  __p1154 = v1150;
+  __n1155 = v1151;
+  struct std____new_allocator_A_bool____* t1156 = this1153;
+    unsigned long c1157 = 8;
+    unsigned long c1158 = 16;
+    _Bool c1159 = ((c1157 > c1158)) ? 1 : 0;
+    if (c1159) {
+      struct A_bool_** t1160 = __p1154;
+      void* cast1161 = (void*)t1160;
+      unsigned long t1162 = __n1155;
+      unsigned long c1163 = 8;
+      unsigned long b1164 = t1162 * c1163;
+      unsigned long c1165 = 8;
+      operator_delete_3(cast1161, b1164, c1165);
+      return;
+    }
+  struct A_bool_** t1166 = __p1154;
+  void* cast1167 = (void*)t1166;
+  unsigned long t1168 = __n1155;
+  unsigned long c1169 = 8;
+  unsigned long b1170 = t1168 * c1169;
+  operator_delete_2(cast1167, b1170);
+  return;
+}
+
+// function: _ZNSaIP1AIbEE10deallocateEPS1_m
+void std__allocator_A_bool_____deallocate_2(struct std__allocator_A_bool____* v1171, struct A_bool_** v1172, unsigned long v1173) {
+bb1174:
+  struct std__allocator_A_bool____* this1175;
+  struct A_bool_** __p1176;
+  unsigned long __n1177;
+  this1175 = v1171;
+  __p1176 = v1172;
+  __n1177 = v1173;
+  struct std__allocator_A_bool____* t1178 = this1175;
+    _Bool r1179 = std____is_constant_evaluated();
+    if (r1179) {
+      struct A_bool_** t1180 = __p1176;
+      void* cast1181 = (void*)t1180;
+      operator_delete(cast1181);
+      return;
+    }
+  struct std____new_allocator_A_bool____* base1182 = (struct std____new_allocator_A_bool____*)((char *)t1178 + 0);
+  struct A_bool_** t1183 = __p1176;
+  unsigned long t1184 = __n1177;
+  std____new_allocator_A_bool_____deallocate_2(base1182, t1183, t1184);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt16allocator_traitsISaIP1AIbEEE10deallocateERS3_PS2_m
+void std__allocator_traits_std__allocator_A_bool_______deallocate_2(struct std__allocator_A_bool____* v1185, struct A_bool_** v1186, unsigned long v1187) {
+bb1188:
+  struct std__allocator_A_bool____* __a1189;
+  struct A_bool_** __p1190;
+  unsigned long __n1191;
+  __a1189 = v1185;
+  __p1190 = v1186;
+  __n1191 = v1187;
+  struct std__allocator_A_bool____* t1192 = __a1189;
+  struct A_bool_** t1193 = __p1190;
+  unsigned long t1194 = __n1191;
+  std__allocator_A_bool_____deallocate_2(t1192, t1193, t1194);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE17_M_deallocate_mapEPPS1_m
+void std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1195, struct A_bool_** v1196, unsigned long v1197) {
+bb1198:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1199;
+  struct A_bool_** __p1200;
+  unsigned long __n1201;
+  struct std__allocator_A_bool____ __map_alloc1202;
+  this1199 = v1195;
+  __p1200 = v1196;
+  __n1201 = v1197;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1203 = this1199;
+  struct std__allocator_A_bool____ r1204 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_map_allocator___const(t1203);
+  __map_alloc1202 = r1204;
+  struct A_bool_** t1205 = __p1200;
+  unsigned long t1206 = __n1201;
+  std__allocator_traits_std__allocator_A_bool_______deallocate_2(&__map_alloc1202, t1205, t1206);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE11_Deque_implD2Ev
+void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl____Deque_impl(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* v1207) {
+bb1208:
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* this1209;
+  this1209 = v1207;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* t1210 = this1209;
+  {
+    struct std__allocator_A_bool__* base1211 = (struct std__allocator_A_bool__*)((char *)t1210 + 0);
+    std__allocator_A_bool______allocator(base1211);
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EED2Ev
+void std___Deque_base_A_bool___std__allocator_A_bool_________Deque_base(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1212) {
+bb1213:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1214;
+  this1214 = v1212;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1215 = this1214;
+      struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1216 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1215->_M_impl) + 0);
+      struct A_bool_** t1217 = base1216->_M_map;
+      _Bool cast1218 = (_Bool)t1217;
+      if (cast1218) {
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1219 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1215->_M_impl) + 0);
+        struct A_bool_** t1220 = base1219->_M_start._M_node;
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1221 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1215->_M_impl) + 0);
+        struct A_bool_** t1222 = base1221->_M_finish._M_node;
+        int c1223 = 1;
+        struct A_bool_** ptr1224 = &(t1222)[c1223];
+        std___Deque_base_A_bool___std__allocator_A_bool________M_destroy_nodes(t1215, t1220, ptr1224);
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1225 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1215->_M_impl) + 0);
+        struct A_bool_** t1226 = base1225->_M_map;
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1227 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1215->_M_impl) + 0);
+        unsigned long t1228 = base1227->_M_map_size;
+        std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_map(t1215, t1226, t1228);
+      }
+  {
+    std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl____Deque_impl(&t1215->_M_impl);
+  }
+  return;
+}
+
+// function: _ZNSt15__new_allocatorIP1AIbEEC2Ev
+void std____new_allocator_A_bool_______new_allocator_2(struct std____new_allocator_A_bool____* v1229) {
+bb1230:
+  struct std____new_allocator_A_bool____* this1231;
+  this1231 = v1229;
+  struct std____new_allocator_A_bool____* t1232 = this1231;
+  return;
+}
+
+// function: _ZNSaI1AIbEED2Ev
+void std__allocator_A_bool______allocator(struct std__allocator_A_bool__* v1233) {
+bb1234:
+  struct std__allocator_A_bool__* this1235;
+  this1235 = v1233;
+  struct std__allocator_A_bool__* t1236 = this1235;
+  return;
+}
+
+// function: _ZNSt5dequeI1AIbESaIS1_EEC2Ev
+void std__deque_A_bool___std__allocator_A_bool_______deque(struct std__deque_A_bool___std__allocator_A_bool___* v1237) {
+bb1238:
+  struct std__deque_A_bool___std__allocator_A_bool___* this1239;
+  this1239 = v1237;
+  struct std__deque_A_bool___std__allocator_A_bool___* t1240 = this1239;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* base1241 = (struct std___Deque_base_A_bool___std__allocator_A_bool___*)((char *)t1240 + 0);
+  std___Deque_base_A_bool___std__allocator_A_bool________Deque_base(base1241);
+  if (__cir_exc_active) {
+    return;
+  }
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE11_Deque_implC2Ev
+void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl___Deque_impl(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* v1242) {
+bb1243:
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* this1244;
+  this1244 = v1242;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* t1245 = this1244;
+  struct std__allocator_A_bool__* base1246 = (struct std__allocator_A_bool__*)((char *)t1245 + 0);
+  std__allocator_A_bool_____allocator(base1246);
+    struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1247 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)t1245 + 0);
+    std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl_data___Deque_impl_data(base1247);
+  return;
+}
+
+// function: _ZSt3maxImERKT_S2_S2_
+unsigned long* unsigned_long_const__std__max_unsigned_long_(unsigned long* v1248, unsigned long* v1249) {
+bb1250:
+  unsigned long* __a1251;
+  unsigned long* __b1252;
+  unsigned long* __retval1253;
+  __a1251 = v1248;
+  __b1252 = v1249;
+    unsigned long* t1254 = __a1251;
+    unsigned long t1255 = *t1254;
+    unsigned long* t1256 = __b1252;
+    unsigned long t1257 = *t1256;
+    _Bool c1258 = ((t1255 < t1257)) ? 1 : 0;
+    if (c1258) {
+      unsigned long* t1259 = __b1252;
+      __retval1253 = t1259;
+      unsigned long* t1260 = __retval1253;
+      return t1260;
+    }
+  unsigned long* t1261 = __a1251;
+  __retval1253 = t1261;
+  unsigned long* t1262 = __retval1253;
+  return t1262;
+}
+
+// function: _ZNKSt15__new_allocatorIP1AIbEE11_M_max_sizeEv
+unsigned long std____new_allocator_A_bool______M_max_size___const_2(struct std____new_allocator_A_bool____* v1263) {
+bb1264:
+  struct std____new_allocator_A_bool____* this1265;
+  unsigned long __retval1266;
+  this1265 = v1263;
+  struct std____new_allocator_A_bool____* t1267 = this1265;
+  unsigned long c1268 = 9223372036854775807;
+  unsigned long c1269 = 8;
+  unsigned long b1270 = c1268 / c1269;
+  __retval1266 = b1270;
+  unsigned long t1271 = __retval1266;
+  return t1271;
+}
+
+// function: _ZNSt15__new_allocatorIP1AIbEE8allocateEmPKv
+struct A_bool_** std____new_allocator_A_bool_____allocate_2(struct std____new_allocator_A_bool____* v1272, unsigned long v1273, void* v1274) {
+bb1275:
+  struct std____new_allocator_A_bool____* this1276;
+  unsigned long __n1277;
+  void* unnamed1278;
+  struct A_bool_** __retval1279;
+  this1276 = v1272;
+  __n1277 = v1273;
+  unnamed1278 = v1274;
+  struct std____new_allocator_A_bool____* t1280 = this1276;
+    unsigned long t1281 = __n1277;
+    unsigned long r1282 = std____new_allocator_A_bool______M_max_size___const_2(t1280);
+    _Bool c1283 = ((t1281 > r1282)) ? 1 : 0;
+    if (c1283) {
+        unsigned long t1284 = __n1277;
+        unsigned long c1285 = -1;
+        unsigned long c1286 = 8;
+        unsigned long b1287 = c1285 / c1286;
+        _Bool c1288 = ((t1284 > b1287)) ? 1 : 0;
+        if (c1288) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+            return __cir_eh_ret;
+          }
+        }
+      std____throw_bad_alloc();
+      if (__cir_exc_active) {
+        struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+        return __cir_eh_ret;
+      }
+    }
+    unsigned long c1289 = 8;
+    unsigned long c1290 = 16;
+    _Bool c1291 = ((c1289 > c1290)) ? 1 : 0;
+    if (c1291) {
+      unsigned long __al1292;
+      unsigned long c1293 = 8;
+      __al1292 = c1293;
+      unsigned long t1294 = __n1277;
+      unsigned long c1295 = 8;
+      unsigned long b1296 = t1294 * c1295;
+      unsigned long t1297 = __al1292;
+      void* r1298 = operator_new_2(b1296, t1297);
+      if (__cir_exc_active) {
+        struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+        return __cir_eh_ret;
+      }
+      struct A_bool_** cast1299 = (struct A_bool_**)r1298;
+      __retval1279 = cast1299;
+      struct A_bool_** t1300 = __retval1279;
+      return t1300;
+    }
+  unsigned long t1301 = __n1277;
+  unsigned long c1302 = 8;
+  unsigned long b1303 = t1301 * c1302;
+  void* r1304 = operator_new(b1303);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_** cast1305 = (struct A_bool_**)r1304;
+  __retval1279 = cast1305;
+  struct A_bool_** t1306 = __retval1279;
+  return t1306;
+}
+
+// function: _ZNSaIP1AIbEE8allocateEm
+struct A_bool_** std__allocator_A_bool_____allocate_2(struct std__allocator_A_bool____* v1307, unsigned long v1308) {
+bb1309:
+  struct std__allocator_A_bool____* this1310;
+  unsigned long __n1311;
+  struct A_bool_** __retval1312;
+  this1310 = v1307;
+  __n1311 = v1308;
+  struct std__allocator_A_bool____* t1313 = this1310;
+    _Bool r1314 = std____is_constant_evaluated();
+    if (r1314) {
+        unsigned long t1315 = __n1311;
+        unsigned long c1316 = 8;
+        unsigned long ovr1317;
+        _Bool ovf1318 = __builtin_mul_overflow(t1315, c1316, &ovr1317);
+        __n1311 = ovr1317;
+        if (ovf1318) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+            return __cir_eh_ret;
+          }
+        }
+      unsigned long t1319 = __n1311;
+      void* r1320 = operator_new(t1319);
+      if (__cir_exc_active) {
+        struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+        return __cir_eh_ret;
+      }
+      struct A_bool_** cast1321 = (struct A_bool_**)r1320;
+      __retval1312 = cast1321;
+      struct A_bool_** t1322 = __retval1312;
+      return t1322;
+    }
+  struct std____new_allocator_A_bool____* base1323 = (struct std____new_allocator_A_bool____*)((char *)t1313 + 0);
+  unsigned long t1324 = __n1311;
+  void* c1325 = ((void*)0);
+  struct A_bool_** r1326 = std____new_allocator_A_bool_____allocate_2(base1323, t1324, c1325);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval1312 = r1326;
+  struct A_bool_** t1327 = __retval1312;
+  return t1327;
+}
+
+// function: _ZNSt16allocator_traitsISaIP1AIbEEE8allocateERS3_m
+struct A_bool_** std__allocator_traits_std__allocator_A_bool_______allocate_2(struct std__allocator_A_bool____* v1328, unsigned long v1329) {
+bb1330:
+  struct std__allocator_A_bool____* __a1331;
+  unsigned long __n1332;
+  struct A_bool_** __retval1333;
+  __a1331 = v1328;
+  __n1332 = v1329;
+  struct std__allocator_A_bool____* t1334 = __a1331;
+  unsigned long t1335 = __n1332;
+  struct A_bool_** r1336 = std__allocator_A_bool_____allocate_2(t1334, t1335);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval1333 = r1336;
+  struct A_bool_** t1337 = __retval1333;
+  return t1337;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE15_M_allocate_mapEm
+struct A_bool_** std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1338, unsigned long v1339) {
+bb1340:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1341;
+  unsigned long __n1342;
+  struct A_bool_** __retval1343;
+  struct std__allocator_A_bool____ __map_alloc1344;
+  this1341 = v1338;
+  __n1342 = v1339;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1345 = this1341;
+  struct std__allocator_A_bool____ r1346 = std___Deque_base_A_bool___std__allocator_A_bool________M_get_map_allocator___const(t1345);
+  __map_alloc1344 = r1346;
+  unsigned long t1347 = __n1342;
+  struct A_bool_** r1348 = std__allocator_traits_std__allocator_A_bool_______allocate_2(&__map_alloc1344, t1347);
+  if (__cir_exc_active) {
+    struct A_bool_** __cir_eh_ret = (struct A_bool_**)0;
+    return __cir_eh_ret;
+  }
+  __retval1343 = r1348;
+  struct A_bool_** t1349 = __retval1343;
+  return t1349;
+}
+
+// function: _ZNKSt15__new_allocatorI1AIbEE11_M_max_sizeEv
+unsigned long std____new_allocator_A_bool______M_max_size___const(struct std____new_allocator_A_bool__* v1350) {
+bb1351:
+  struct std____new_allocator_A_bool__* this1352;
+  unsigned long __retval1353;
+  this1352 = v1350;
+  struct std____new_allocator_A_bool__* t1354 = this1352;
+  unsigned long c1355 = 9223372036854775807;
+  unsigned long c1356 = 1;
+  unsigned long b1357 = c1355 / c1356;
+  __retval1353 = b1357;
+  unsigned long t1358 = __retval1353;
+  return t1358;
+}
+
+// function: _ZNSt15__new_allocatorI1AIbEE8allocateEmPKv
+struct A_bool_* std____new_allocator_A_bool_____allocate(struct std____new_allocator_A_bool__* v1359, unsigned long v1360, void* v1361) {
+bb1362:
+  struct std____new_allocator_A_bool__* this1363;
+  unsigned long __n1364;
+  void* unnamed1365;
+  struct A_bool_* __retval1366;
+  this1363 = v1359;
+  __n1364 = v1360;
+  unnamed1365 = v1361;
+  struct std____new_allocator_A_bool__* t1367 = this1363;
+    unsigned long t1368 = __n1364;
+    unsigned long r1369 = std____new_allocator_A_bool______M_max_size___const(t1367);
+    _Bool c1370 = ((t1368 > r1369)) ? 1 : 0;
+    if (c1370) {
+        unsigned long t1371 = __n1364;
+        unsigned long c1372 = -1;
+        unsigned long c1373 = 1;
+        unsigned long b1374 = c1372 / c1373;
+        _Bool c1375 = ((t1371 > b1374)) ? 1 : 0;
+        if (c1375) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+            return __cir_eh_ret;
+          }
+        }
+      std____throw_bad_alloc();
+      if (__cir_exc_active) {
+        struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+        return __cir_eh_ret;
+      }
+    }
+    unsigned long c1376 = 1;
+    unsigned long c1377 = 16;
+    _Bool c1378 = ((c1376 > c1377)) ? 1 : 0;
+    if (c1378) {
+      unsigned long __al1379;
+      unsigned long c1380 = 1;
+      __al1379 = c1380;
+      unsigned long t1381 = __n1364;
+      unsigned long c1382 = 1;
+      unsigned long b1383 = t1381 * c1382;
+      unsigned long t1384 = __al1379;
+      void* r1385 = operator_new_2(b1383, t1384);
+      if (__cir_exc_active) {
+        struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+        return __cir_eh_ret;
+      }
+      struct A_bool_* cast1386 = (struct A_bool_*)r1385;
+      __retval1366 = cast1386;
+      struct A_bool_* t1387 = __retval1366;
+      return t1387;
+    }
+  unsigned long t1388 = __n1364;
+  unsigned long c1389 = 1;
+  unsigned long b1390 = t1388 * c1389;
+  void* r1391 = operator_new(b1390);
+  if (__cir_exc_active) {
+    struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_* cast1392 = (struct A_bool_*)r1391;
+  __retval1366 = cast1392;
+  struct A_bool_* t1393 = __retval1366;
+  return t1393;
+}
+
+// function: _ZNSaI1AIbEE8allocateEm
+struct A_bool_* std__allocator_A_bool_____allocate(struct std__allocator_A_bool__* v1394, unsigned long v1395) {
+bb1396:
+  struct std__allocator_A_bool__* this1397;
+  unsigned long __n1398;
+  struct A_bool_* __retval1399;
+  this1397 = v1394;
+  __n1398 = v1395;
+  struct std__allocator_A_bool__* t1400 = this1397;
+    _Bool r1401 = std____is_constant_evaluated();
+    if (r1401) {
+        unsigned long t1402 = __n1398;
+        unsigned long c1403 = 1;
+        unsigned long ovr1404;
+        _Bool ovf1405 = __builtin_mul_overflow(t1402, c1403, &ovr1404);
+        __n1398 = ovr1404;
+        if (ovf1405) {
+          std____throw_bad_array_new_length();
+          if (__cir_exc_active) {
+            struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+            return __cir_eh_ret;
+          }
+        }
+      unsigned long t1406 = __n1398;
+      void* r1407 = operator_new(t1406);
+      if (__cir_exc_active) {
+        struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+        return __cir_eh_ret;
+      }
+      struct A_bool_* cast1408 = (struct A_bool_*)r1407;
+      __retval1399 = cast1408;
+      struct A_bool_* t1409 = __retval1399;
+      return t1409;
+    }
+  struct std____new_allocator_A_bool__* base1410 = (struct std____new_allocator_A_bool__*)((char *)t1400 + 0);
+  unsigned long t1411 = __n1398;
+  void* c1412 = ((void*)0);
+  struct A_bool_* r1413 = std____new_allocator_A_bool_____allocate(base1410, t1411, c1412);
+  if (__cir_exc_active) {
+    struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+    return __cir_eh_ret;
+  }
+  __retval1399 = r1413;
+  struct A_bool_* t1414 = __retval1399;
+  return t1414;
+}
+
+// function: _ZNSt16allocator_traitsISaI1AIbEEE8allocateERS2_m
+struct A_bool_* std__allocator_traits_std__allocator_A_bool_______allocate(struct std__allocator_A_bool__* v1415, unsigned long v1416) {
+bb1417:
+  struct std__allocator_A_bool__* __a1418;
+  unsigned long __n1419;
+  struct A_bool_* __retval1420;
+  __a1418 = v1415;
+  __n1419 = v1416;
+  struct std__allocator_A_bool__* t1421 = __a1418;
+  unsigned long t1422 = __n1419;
+  struct A_bool_* r1423 = std__allocator_A_bool_____allocate(t1421, t1422);
+  if (__cir_exc_active) {
+    struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+    return __cir_eh_ret;
+  }
+  __retval1420 = r1423;
+  struct A_bool_* t1424 = __retval1420;
+  return t1424;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE16_M_allocate_nodeEv
+struct A_bool_* std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_node(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1425) {
+bb1426:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1427;
+  struct A_bool_* __retval1428;
+  this1427 = v1425;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1429 = this1427;
+  struct std__allocator_A_bool__* base1430 = (struct std__allocator_A_bool__*)((char *)&(t1429->_M_impl) + 0);
+  unsigned long c1431 = 1;
+  unsigned long r1432 = std____deque_buf_size(c1431);
+  if (__cir_exc_active) {
+    struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+    return __cir_eh_ret;
+  }
+  struct A_bool_* r1433 = std__allocator_traits_std__allocator_A_bool_______allocate(base1430, r1432);
+  if (__cir_exc_active) {
+    struct A_bool_* __cir_eh_ret = (struct A_bool_*)0;
+    return __cir_eh_ret;
+  }
+  __retval1428 = r1433;
+  struct A_bool_* t1434 = __retval1428;
+  return t1434;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE15_M_create_nodesEPPS1_S5_
+void std___Deque_base_A_bool___std__allocator_A_bool________M_create_nodes(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1435, struct A_bool_** v1436, struct A_bool_** v1437) {
+bb1438:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1439;
+  struct A_bool_** __nstart1440;
+  struct A_bool_** __nfinish1441;
+  struct A_bool_** __cur1442;
+  this1439 = v1435;
+  __nstart1440 = v1436;
+  __nfinish1441 = v1437;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1443 = this1439;
+        struct A_bool_** t1445 = __nstart1440;
+        __cur1442 = t1445;
+        while (1) {
+          struct A_bool_** t1447 = __cur1442;
+          struct A_bool_** t1448 = __nfinish1441;
+          _Bool c1449 = ((t1447 < t1448)) ? 1 : 0;
+          if (!c1449) break;
+          struct A_bool_* r1450 = std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_node(t1443);
+          if (__cir_exc_active) {
+            goto cir_try_dispatch1444;
+          }
+          struct A_bool_** t1451 = __cur1442;
+          *t1451 = r1450;
+        for_step1446: ;
+          struct A_bool_** t1452 = __cur1442;
+          int c1453 = 1;
+          struct A_bool_** ptr1454 = &(t1452)[c1453];
+          __cur1442 = ptr1454;
+        }
+    cir_try_dispatch1444: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok1455 = 0;
+      void* ca_exn1456 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct A_bool_** t1457 = __nstart1440;
+        struct A_bool_** t1458 = __cur1442;
+        std___Deque_base_A_bool___std__allocator_A_bool________M_destroy_nodes(t1443, t1457, t1458);
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  return;
+}
+
+// function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_E14_S_buffer_sizeEv
+unsigned long std___Deque_iterator_A_bool___A_bool____A_bool______S_buffer_size() {
+bb1459:
+  unsigned long __retval1460;
+  unsigned long c1461 = 1;
+  unsigned long r1462 = std____deque_buf_size(c1461);
+  if (__cir_exc_active) {
+    unsigned long __cir_eh_ret = (unsigned long)0;
+    return __cir_eh_ret;
+  }
+  __retval1460 = r1462;
+  unsigned long t1463 = __retval1460;
+  return t1463;
+}
+
+// function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_E11_M_set_nodeEPS3_
+void std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v1464, struct A_bool_** v1465) {
+bb1466:
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this1467;
+  struct A_bool_** __new_node1468;
+  this1467 = v1464;
+  __new_node1468 = v1465;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t1469 = this1467;
+  struct A_bool_** t1470 = __new_node1468;
+  t1469->_M_node = t1470;
+  struct A_bool_** t1471 = __new_node1468;
+  struct A_bool_* t1472 = *t1471;
+  t1469->_M_first = t1472;
+  struct A_bool_* t1473 = t1469->_M_first;
+  unsigned long r1474 = std___Deque_iterator_A_bool___A_bool____A_bool______S_buffer_size();
+  long cast1475 = (long)r1474;
+  struct A_bool_* ptr1476 = &(t1473)[cast1475];
+  t1469->_M_last = ptr1476;
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE17_M_initialize_mapEm
+void std___Deque_base_A_bool___std__allocator_A_bool________M_initialize_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1477, unsigned long v1478) {
+bb1479:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1480;
+  unsigned long __num_elements1481;
+  unsigned long __num_nodes1482;
+  unsigned long ref_tmp01483;
+  unsigned long ref_tmp11484;
+  struct A_bool_** __nstart1485;
+  struct A_bool_** __nfinish1486;
+  this1480 = v1477;
+  __num_elements1481 = v1478;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1487 = this1480;
+  unsigned long t1488 = __num_elements1481;
+  unsigned long c1489 = 1;
+  unsigned long r1490 = std____deque_buf_size(c1489);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long b1491 = t1488 / r1490;
+  unsigned long c1492 = 1;
+  unsigned long b1493 = b1491 + c1492;
+  __num_nodes1482 = b1493;
+  unsigned long c1494 = 8;
+  ref_tmp01483 = c1494;
+  unsigned long t1495 = __num_nodes1482;
+  unsigned long c1496 = 2;
+  unsigned long b1497 = t1495 + c1496;
+  ref_tmp11484 = b1497;
+  unsigned long* r1498 = unsigned_long_const__std__max_unsigned_long_(&ref_tmp01483, &ref_tmp11484);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long t1499 = *r1498;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1500 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  base1500->_M_map_size = t1499;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1501 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  unsigned long t1502 = base1501->_M_map_size;
+  struct A_bool_** r1503 = std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_map(t1487, t1502);
+  if (__cir_exc_active) {
+    return;
+  }
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1504 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  base1504->_M_map = r1503;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1505 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  struct A_bool_** t1506 = base1505->_M_map;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1507 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  unsigned long t1508 = base1507->_M_map_size;
+  unsigned long t1509 = __num_nodes1482;
+  unsigned long b1510 = t1508 - t1509;
+  unsigned long c1511 = 2;
+  unsigned long b1512 = b1510 / c1511;
+  struct A_bool_** ptr1513 = &(t1506)[b1512];
+  __nstart1485 = ptr1513;
+  struct A_bool_** t1514 = __nstart1485;
+  unsigned long t1515 = __num_nodes1482;
+  struct A_bool_** ptr1516 = &(t1514)[t1515];
+  __nfinish1486 = ptr1516;
+      struct A_bool_** t1518 = __nstart1485;
+      struct A_bool_** t1519 = __nfinish1486;
+      std___Deque_base_A_bool___std__allocator_A_bool________M_create_nodes(t1487, t1518, t1519);
+      if (__cir_exc_active) {
+        goto cir_try_dispatch1517;
+      }
+    cir_try_dispatch1517: ;
+    if (__cir_exc_active) {
+    {
+      int ca_tok1520 = 0;
+      void* ca_exn1521 = (void*)__cir_exc_ptr;
+      __cir_exc_active = 0;
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1522 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+        struct A_bool_** t1523 = base1522->_M_map;
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1524 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+        unsigned long t1525 = base1524->_M_map_size;
+        std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_map(t1487, t1523, t1525);
+        struct A_bool_** c1526 = ((void*)0);
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1527 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+        base1527->_M_map = c1526;
+        unsigned long c1528 = 0;
+        struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1529 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+        base1529->_M_map_size = c1528;
+        __cir_exc_active = 1;
+        {
+          if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }
+        }
+        return;
+        __builtin_unreachable();
+    }
+    }
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1530 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  struct A_bool_** t1531 = __nstart1485;
+  std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(&base1530->_M_start, t1531);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1532 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  struct A_bool_** t1533 = __nfinish1486;
+  int c1534 = -1;
+  struct A_bool_** ptr1535 = &(t1533)[c1534];
+  std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(&base1532->_M_finish, ptr1535);
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1536 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  struct A_bool_* t1537 = base1536->_M_start._M_first;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1538 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  base1538->_M_start._M_cur = t1537;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1539 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  struct A_bool_* t1540 = base1539->_M_finish._M_first;
+  unsigned long t1541 = __num_elements1481;
+  unsigned long c1542 = 1;
+  unsigned long r1543 = std____deque_buf_size(c1542);
+  if (__cir_exc_active) {
+    return;
+  }
+  unsigned long b1544 = t1541 % r1543;
+  struct A_bool_* ptr1545 = &(t1540)[b1544];
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* base1546 = (struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data*)((char *)&(t1487->_M_impl) + 0);
+  base1546->_M_finish._M_cur = ptr1545;
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EEC2Ev
+void std___Deque_base_A_bool___std__allocator_A_bool________Deque_base(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1547) {
+bb1548:
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* this1549;
+  this1549 = v1547;
+  struct std___Deque_base_A_bool___std__allocator_A_bool___* t1550 = this1549;
+  std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl___Deque_impl(&t1550->_M_impl);
+    unsigned long c1551 = 0;
+    std___Deque_base_A_bool___std__allocator_A_bool________M_initialize_map(t1550, c1551);
+    if (__cir_exc_active) {
+      {
+        std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl____Deque_impl(&t1550->_M_impl);
+      }
+      return;
+    }
+  return;
+}
+
+// function: _ZNSt15__new_allocatorI1AIbEEC2Ev
+void std____new_allocator_A_bool_______new_allocator(struct std____new_allocator_A_bool__* v1552) {
+bb1553:
+  struct std____new_allocator_A_bool__* this1554;
+  this1554 = v1552;
+  struct std____new_allocator_A_bool__* t1555 = this1554;
+  return;
+}
+
+// function: _ZNSaI1AIbEEC2Ev
+void std__allocator_A_bool_____allocator(struct std__allocator_A_bool__* v1556) {
+bb1557:
+  struct std__allocator_A_bool__* this1558;
+  this1558 = v1556;
+  struct std__allocator_A_bool__* t1559 = this1558;
+  struct std____new_allocator_A_bool__* base1560 = (struct std____new_allocator_A_bool__*)((char *)t1559 + 0);
+  std____new_allocator_A_bool_______new_allocator(base1560);
+  return;
+}
+
+// function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_EC2Ev
+void std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator_2(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v1561) {
+bb1562:
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this1563;
+  this1563 = v1561;
+  struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t1564 = this1563;
+  struct A_bool_* c1565 = ((void*)0);
+  t1564->_M_cur = c1565;
+  struct A_bool_* c1566 = ((void*)0);
+  t1564->_M_first = c1566;
+  struct A_bool_* c1567 = ((void*)0);
+  t1564->_M_last = c1567;
+  struct A_bool_** c1568 = ((void*)0);
+  t1564->_M_node = c1568;
+  return;
+}
+
+// function: _ZNSt11_Deque_baseI1AIbESaIS1_EE16_Deque_impl_dataC2Ev
+void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl_data___Deque_impl_data(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* v1569) {
+bb1570:
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* this1571;
+  this1571 = v1569;
+  struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* t1572 = this1571;
+  struct A_bool_** c1573 = ((void*)0);
+  t1572->_M_map = c1573;
+  unsigned long c1574 = 0;
+  t1572->_M_map_size = c1574;
+  std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator_2(&t1572->_M_start);
+  std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator_2(&t1572->_M_finish);
+  return;
+}
+

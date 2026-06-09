@@ -1,0 +1,205 @@
+extern void abort(void);
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
+struct __gnu_cxx____normal_iterator_int____void_ { int* _M_current; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std___UninitDestroyGuard_int____void_ { int* _M_first; int** _M_cur; };
+struct std___Vector_base_int__std__allocator_int_____Vector_impl_data { int* _M_start; int* _M_finish; int* _M_end_of_storage; };
+struct std____new_allocator_int_;
+struct std__allocator_int_;
+struct std__random_access_iterator_tag { unsigned char __field0; };
+struct std__vector_int__std__allocator_int_____Guard_alloc { int* _M_storage; unsigned long _M_len; struct std___Vector_base_int__std__allocator_int__* _M_vect; };
+struct std___Vector_base_int__std__allocator_int_____Vector_impl { struct std___Vector_base_int__std__allocator_int_____Vector_impl_data __field0; };
+struct std__ctype_char_;
+struct std__ios_base;
+struct std___Vector_base_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int_____Vector_impl _M_impl; };
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+struct std__vector_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int__ __field0; };
+
+int __const_main_myints[7] = {10, 20, 30, 40, 50, 60, 70};
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+char _str[18] = "myvector[0] == 40";
+char _str_1[106] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/vector/algorithm36/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str_2[19] = "myvector contains:";
+char _str_3[2] = " ";
+char _str_4[26] = "vector::_M_default_append";
+char _str_5[91] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_vector.h";
+char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEEixEm[92] = "reference std::vector<int>::operator[](size_type) [_Tp = int, _Alloc = std::allocator<int>]";
+char _str_6[19] = "__n < this->size()";
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______copy_int____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(int* p0, int* p1, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p2);
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______rotate_copy_int____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(int* p0, int* p1, int* p2, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p3);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: _Z4copyIiN9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEEET0_PT_S9_S7_
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______copy_int____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(int* v0, int* v1, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ v2) {
+bb3:
+  int* first4;
+  int* last5;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ dest6;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __retval7;
+  first4 = v0;
+  last5 = v1;
+  dest6 = v2;
+    struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ ref_tmp08;
+    while (1) {
+      int* t9 = first4;
+      int* t10 = last5;
+      _Bool c11 = ((t9 != t10)) ? 1 : 0;
+      if (!c11) break;
+      int* t12 = first4;
+      int c13 = 1;
+      int* ptr14 = &(t12)[c13];
+      first4 = ptr14;
+      int t15 = *t12;
+      int c16 = 0;
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std17;
+      __VERIFIER_nondet_memory(&std17, sizeof(std17));
+      ref_tmp08 = std17;
+      int* std18;
+      __VERIFIER_nondet_memory(&std18, sizeof(std18));
+      *std18 = t15;
+    }
+  __retval7 = dest6; // copy
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ t19 = __retval7;
+  return t19;
+}
+
+// function: _Z11rotate_copyIiN9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEEET0_PT_S9_S9_S7_
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______rotate_copy_int____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(int* v20, int* v21, int* v22, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ v23) {
+bb24:
+  int* first25;
+  int* mid26;
+  int* last27;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ dest28;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __retval29;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ ref_tmp030;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ agg_tmp031;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ agg_tmp132;
+  first25 = v20;
+  mid26 = v21;
+  last27 = v22;
+  dest28 = v23;
+  int* t33 = mid26;
+  int* t34 = last27;
+  agg_tmp031 = dest28; // copy
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ t35 = agg_tmp031;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r36 = __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______copy_int____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(t33, t34, t35);
+  ref_tmp030 = r36;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* std37;
+  __VERIFIER_nondet_memory(&std37, sizeof(std37));
+  int* t38 = first25;
+  int* t39 = mid26;
+  agg_tmp132 = dest28; // copy
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ t40 = agg_tmp132;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r41 = __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______copy_int____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(t38, t39, t40);
+  __retval29 = r41;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ t42 = __retval29;
+  return t42;
+}
+
+// function: main
+int main() {
+bb43:
+  int __retval44;
+  int myints45[7];
+  struct std__vector_int__std__allocator_int__ myvector46;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ it47;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ agg_tmp048;
+  struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ agg_tmp149;
+  int c50 = 0;
+  __retval44 = c50;
+  // array copy
+  __builtin_memcpy(myints45, __const_main_myints, (unsigned long)7 * sizeof(__const_main_myints[0]));
+  // externalized std:: op: std::vector<int, std::allocator<int> >::vector()
+  __VERIFIER_nondet_memory(&myvector46, sizeof(myvector46));
+    // externalized std:: op: __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >::__normal_iterator()
+    __VERIFIER_nondet_memory(&it47, sizeof(it47));
+    unsigned long c51 = 7;
+    // externalized std:: op: std::vector<int, std::allocator<int> >::resize(unsigned long)
+    __VERIFIER_nondet_memory(&myvector46, sizeof(myvector46));
+    int* cast52 = (int*)&(myints45);
+    int* cast53 = (int*)&(myints45);
+    int c54 = 3;
+    int* ptr55 = &(cast53)[c54];
+    int* cast56 = (int*)&(myints45);
+    int c57 = 7;
+    int* ptr58 = &(cast56)[c57];
+    struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std59;
+    __VERIFIER_nondet_memory(&std59, sizeof(std59));
+    agg_tmp048 = std59;
+    struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ t60 = agg_tmp048;
+    struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r61 = __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______rotate_copy_int____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(cast52, ptr55, ptr58, t60);
+    agg_tmp149 = r61;
+    unsigned long c62 = 0;
+    int* std63;
+    __VERIFIER_nondet_memory(&std63, sizeof(std63));
+    int t64 = *std63;
+    int c65 = 40;
+    _Bool c66 = ((t64 == c65)) ? 1 : 0;
+    if (c66) {
+    } else {
+      char* cast67 = (char*)&(_str);
+      char* c68 = _str_1;
+      unsigned int c69 = 50;
+      char* cast70 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast67, c68, c69, cast70);
+    }
+    char* cast71 = (char*)&(_str_2);
+    struct std__basic_ostream_char__std__char_traits_char__* std72;
+    __VERIFIER_nondet_memory(&std72, sizeof(std72));
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ ref_tmp073;
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ ref_tmp174;
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std75;
+      __VERIFIER_nondet_memory(&std75, sizeof(std75));
+      ref_tmp073 = std75;
+      struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* std76;
+      __VERIFIER_nondet_memory(&std76, sizeof(std76));
+      while (1) {
+        struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std78;
+        __VERIFIER_nondet_memory(&std78, sizeof(std78));
+        ref_tmp174 = std78;
+        _Bool std79;
+        __VERIFIER_nondet_memory(&std79, sizeof(std79));
+        _Bool u80 = !std79;
+        if (!u80) break;
+        char* cast81 = (char*)&(_str_3);
+        struct std__basic_ostream_char__std__char_traits_char__* std82;
+        __VERIFIER_nondet_memory(&std82, sizeof(std82));
+        int* std83;
+        __VERIFIER_nondet_memory(&std83, sizeof(std83));
+        int t84 = *std83;
+        struct std__basic_ostream_char__std__char_traits_char__* std85;
+        __VERIFIER_nondet_memory(&std85, sizeof(std85));
+      for_step77: ;
+        struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* std86;
+        __VERIFIER_nondet_memory(&std86, sizeof(std86));
+      }
+    struct std__basic_ostream_char__std__char_traits_char__* std87;
+    __VERIFIER_nondet_memory(&std87, sizeof(std87));
+    int c88 = 0;
+    __retval44 = c88;
+    int t89 = __retval44;
+    int ret_val90 = t89;
+    {
+      // externalized std:: op: std::vector<int, std::allocator<int> >::~vector()
+      __VERIFIER_nondet_memory(&myvector46, sizeof(myvector46));
+    }
+    return ret_val90;
+  int t91 = __retval44;
+  return t91;
+}
+

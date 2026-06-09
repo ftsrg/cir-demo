@@ -1,0 +1,109 @@
+extern void abort(void);
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+
+// Struct definitions (auto-parsed)
+struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ { int* _M_current; };
+struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std___UninitDestroyGuard_int____void_ { int* _M_first; int** _M_cur; };
+struct std___Vector_base_int__std__allocator_int_____Vector_impl_data { int* _M_start; int* _M_finish; int* _M_end_of_storage; };
+struct std____new_allocator_int_;
+struct std__allocator_int_ { unsigned char __field0; };
+struct std___Vector_base_int__std__allocator_int_____Vector_impl { struct std___Vector_base_int__std__allocator_int_____Vector_impl_data __field0; };
+struct std__ctype_char_;
+struct std__ios_base;
+struct std___Vector_base_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int_____Vector_impl _M_impl; };
+struct std__basic_ios_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__;
+struct std__vector_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int__ __field0; };
+
+int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+char _str[23] = "vectorTwo.front() == 5";
+char _str_1[102] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/vector/vector4/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+char _str_2[20] = "vectorTwo.front(): ";
+char _str_3[49] = "cannot create std::vector larger than max_size()";
+char _str_4[98] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_uninitialized.h";
+char __PRETTY_FUNCTION____ZSt18__do_uninit_fill_nIPimiET_S1_T0_RKT1_[140] = "_ForwardIterator std::__do_uninit_fill_n(_ForwardIterator, _Size _Tp &) [_ForwardIterator = int *, _Size = unsigned long, _Tp = int]";
+char _str_5[9] = "__n >= 0";
+char _str_6[91] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_vector.h";
+char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEE5frontEv[78] = "reference std::vector<int>::front() [_Tp = int, _Alloc = std::allocator<int>]";
+char _str_7[15] = "!this->empty()";
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+extern void __VERIFIER_nondet_memory(void*, unsigned long);
+// function: main
+int main() {
+bb0:
+  int __retval1;
+  struct std__vector_int__std__allocator_int__ vectorOne2;
+  int ref_tmp03;
+  struct std__allocator_int_ ref_tmp14;
+  struct std__vector_int__std__allocator_int__ vectorTwo5;
+  int c6 = 0;
+  __retval1 = c6;
+  unsigned long c7 = 10;
+  int c8 = 5;
+  ref_tmp03 = c8;
+  // externalized std:: op: std::allocator<int>::allocator()
+  __VERIFIER_nondet_memory(&ref_tmp14, sizeof(ref_tmp14));
+    // externalized std:: op: std::vector<int, std::allocator<int> >::vector(unsigned long, int const&, std::allocator<int> const&)
+    __VERIFIER_nondet_memory(&vectorOne2, sizeof(vectorOne2));
+    __VERIFIER_nondet_memory(&ref_tmp03, sizeof(ref_tmp03));
+    __VERIFIER_nondet_memory(&ref_tmp14, sizeof(ref_tmp14));
+  {
+    // externalized std:: op: std::allocator<int>::~allocator()
+    __VERIFIER_nondet_memory(&ref_tmp14, sizeof(ref_tmp14));
+  }
+    // externalized std:: op: std::vector<int, std::allocator<int> >::vector(std::vector<int, std::allocator<int> > const&)
+    __VERIFIER_nondet_memory(&vectorTwo5, sizeof(vectorTwo5));
+    __VERIFIER_nondet_memory(&vectorOne2, sizeof(vectorOne2));
+      int* std9;
+      __VERIFIER_nondet_memory(&std9, sizeof(std9));
+      int t10 = *std9;
+      int c11 = 5;
+      _Bool c12 = ((t10 == c11)) ? 1 : 0;
+      if (c12) {
+      } else {
+        char* cast13 = (char*)&(_str);
+        char* c14 = _str_1;
+        unsigned int c15 = 16;
+        char* cast16 = (char*)&(__PRETTY_FUNCTION___main);
+        __assert_fail(cast13, c14, c15, cast16);
+      }
+      char* cast17 = (char*)&(_str_2);
+      struct std__basic_ostream_char__std__char_traits_char__* std18;
+      __VERIFIER_nondet_memory(&std18, sizeof(std18));
+      int* std19;
+      __VERIFIER_nondet_memory(&std19, sizeof(std19));
+      int t20 = *std19;
+      struct std__basic_ostream_char__std__char_traits_char__* std21;
+      __VERIFIER_nondet_memory(&std21, sizeof(std21));
+      struct std__basic_ostream_char__std__char_traits_char__* std22;
+      __VERIFIER_nondet_memory(&std22, sizeof(std22));
+      int c23 = 0;
+      __retval1 = c23;
+      int t24 = __retval1;
+      int ret_val25 = t24;
+      {
+        // externalized std:: op: std::vector<int, std::allocator<int> >::~vector()
+        __VERIFIER_nondet_memory(&vectorTwo5, sizeof(vectorTwo5));
+      }
+      {
+        // externalized std:: op: std::vector<int, std::allocator<int> >::~vector()
+        __VERIFIER_nondet_memory(&vectorOne2, sizeof(vectorOne2));
+      }
+      return ret_val25;
+  int t26 = __retval1;
+  return t26;
+}
+

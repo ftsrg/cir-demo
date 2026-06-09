@@ -18,5 +18,6 @@ build
 llvm-project
 CLAUDE.md
 .claude
-benchmarks/sources/
 benchmarks/benchexec/
+benchmarks/tools/bin/
+benchmarks/tools/fm-tools/

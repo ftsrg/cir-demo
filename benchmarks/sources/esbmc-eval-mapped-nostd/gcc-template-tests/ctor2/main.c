@@ -1,0 +1,73 @@
+// Struct definitions (auto-parsed)
+struct S_int_ { unsigned char __field0; };
+
+int i __attribute__((aligned(4))) = 0;
+struct S_int_ _ZL1s[1];
+char _str[10] = "0 == ( 1)";
+char _str_1[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/gcc-template-tests/ctor2/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+void S_int___S(struct S_int_* p0);
+void __cxx_global_var_init();
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+__attribute__((constructor)) void _GLOBAL__sub_I_main_cpp();
+
+// function: _ZN1SIiEC2Ev
+void S_int___S(struct S_int_* v0) {
+bb1:
+  struct S_int_* this2;
+  this2 = v0;
+  struct S_int_* t3 = this2;
+  int c4 = 1;
+  *&i = c4;
+  return;
+}
+
+// function: __cxx_global_var_init
+void __cxx_global_var_init() {
+bb5:
+  unsigned long c6 = 1;
+  struct S_int_* cast7 = (struct S_int_*)&(_ZL1s);
+  struct S_int_* ptr8 = &(cast7)[c6];
+  struct S_int_* __array_idx9;
+  __array_idx9 = cast7;
+  do {
+    struct S_int_* t10 = __array_idx9;
+    S_int___S(t10);
+    unsigned long c11 = 1;
+    struct S_int_* ptr12 = &(t10)[c11];
+    __array_idx9 = ptr12;
+    struct S_int_* t13 = __array_idx9;
+    _Bool c14 = ((t13 != ptr8)) ? 1 : 0;
+    if (!c14) break;
+  } while (1);
+  return;
+}
+
+// function: main
+int main() {
+bb15:
+  int __retval16;
+  int c17 = 0;
+  __retval16 = c17;
+    int t18 = i;
+    _Bool cast19 = (_Bool)t18;
+    _Bool u20 = !cast19;
+    if (u20) {
+      char* cast21 = (char*)&(_str);
+      char* c22 = _str_1;
+      unsigned int c23 = 24;
+      char* cast24 = (char*)&(__PRETTY_FUNCTION___main);
+      __assert_fail(cast21, c22, c23, cast24);
+    }
+  int t25 = __retval16;
+  return t25;
+}
+
+// function: _GLOBAL__sub_I_main.cpp
+__attribute__((constructor)) void _GLOBAL__sub_I_main_cpp() {
+bb26:
+  __cxx_global_var_init();
+  return;
+}
+

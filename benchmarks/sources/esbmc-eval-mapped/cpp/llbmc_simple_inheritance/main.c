@@ -1,0 +1,76 @@
+// Struct definitions (auto-parsed)
+struct Base { unsigned char __field0; };
+struct Derived { int __field0; };
+
+char _str[8] = "r == 21";
+char _str_1[116] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/llbmc_simple_inheritance/main.cpp";
+char __PRETTY_FUNCTION___main[11] = "int main()";
+extern void *malloc(unsigned long);
+extern void free(void*);
+void* operator_new(unsigned long p0) { return malloc(p0); }
+void operator_delete(void* p0, unsigned long p1) { free(p0); }
+int Base__f(struct Base* p0);
+extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
+int main();
+
+// function: _ZN4Base1fEv
+int Base__f(struct Base* v0) {
+bb1:
+  struct Base* this2;
+  int __retval3;
+  this2 = v0;
+  struct Base* t4 = this2;
+  int c5 = 21;
+  __retval3 = c5;
+  int t6 = __retval3;
+  return t6;
+}
+
+// function: main
+int main() {
+bb7:
+  int __retval8;
+  struct Base* o9;
+  struct Derived* __new_result10;
+  int r11;
+  int c12 = 0;
+  __retval8 = c12;
+  unsigned long c13 = 4;
+  void* r14 = operator_new(c13);
+    struct Derived* cast15 = (struct Derived*)r14;
+    __new_result10 = cast15;
+    struct Derived c16 = {0};
+    *cast15 = c16;
+  struct Derived* t17 = __new_result10;
+  struct Base* base18 = (struct Base*)((char *)t17 + 0);
+  o9 = base18;
+  struct Base* t19 = o9;
+  int r20 = Base__f(t19);
+  r11 = r20;
+  struct Base* t21 = o9;
+  struct Base* c22 = ((void*)0);
+  _Bool c23 = ((t21 != c22)) ? 1 : 0;
+  if (c23) {
+    {
+      void* cast24 = (void*)t21;
+      unsigned long c25 = 1;
+      operator_delete(cast24, c25);
+    }
+  }
+  int t26 = r11;
+  int c27 = 21;
+  _Bool c28 = ((t26 == c27)) ? 1 : 0;
+  if (c28) {
+  } else {
+    char* cast29 = (char*)&(_str);
+    char* c30 = _str_1;
+    unsigned int c31 = 28;
+    char* cast32 = (char*)&(__PRETTY_FUNCTION___main);
+    __assert_fail(cast29, c30, c31, cast32);
+  }
+  int t33 = r11;
+  __retval8 = t33;
+  int t34 = __retval8;
+  return t34;
+}
+
