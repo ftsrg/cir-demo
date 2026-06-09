@@ -162,6 +162,7 @@ jobs:
           mkdir -p cir2c/test/esbmc-eval/output
           JOBS=4 RUN_INTEGRATION=0 RUN_LLVM=0 RUN_ESBMC=1 \
             bash cir2c/test/run_tests.sh \
+              --externalize-std \
               --json-out /tmp/esbmc.json \
             || true
           cat /tmp/esbmc.json
@@ -199,11 +200,12 @@ jobs:
       - name: Install GNU parallel
         run: apt-get update -qq && apt-get install -y --no-install-recommends parallel
 
-      - name: Run esbmc-eval tests
+      - name: Run esbmc-eval tests (no-externalize-std)
         run: |
           mkdir -p cir2c/test/esbmc-eval/output
           JOBS=4 RUN_INTEGRATION=0 RUN_LLVM=0 RUN_ESBMC=1 \
             bash cir2c/test/run_tests.sh \
+              --no-externalize-std \
               --json-out /tmp/esbmc-std.json \
             || true
           cat /tmp/esbmc-std.json
