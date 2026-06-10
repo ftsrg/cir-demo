@@ -471,6 +471,24 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
   // Unresolved C++-stdlib references (libstdc++, which we do not link) are left
   // as-is on purpose: the test harness validates the C by COMPILING only, so a
   // link failure does not make the generated C invalid.
+  //
+  // KNOWN LIMITATION (soundness, --no-externalize-std): a handful of libstdc++
+  // functions are defined OUT OF LINE in compiled .cc units (not headers/inline
+  // /templates), so ClangIR only ever sees a declaration — there is no body in
+  // the CIR to emit.  Examples: std::__detail::_List_node_base::_M_hook /
+  // _M_unhook / _M_transfer / _M_reverse (list.cc), and various std::string /
+  // locale internals.  When std is KEPT (--no-externalize-std) these stay as
+  // bare externs, and a verifier that models an undefined call as a no-op
+  // SILENTLY DROPS their pointer side effects.  For _M_hook this means list
+  // nodes are never linked: begin() returns the sentinel header and front()/
+  // back() read the header's _M_size field as the element value, producing a
+  // WRONG (unsound) counterexample.  The bodies genuinely do not exist in the
+  // CIR, so there is no general mapper-side fix that recovers the real
+  // semantics; modelling them would require per-function knowledge of each
+  // libstdc++ internal (rejected as too specific).  Verifying STL container
+  // programs under --no-externalize-std is therefore out of scope here.  Under
+  // the default --externalize-std these calls are over-approximated (havoc /
+  // nondet) and the result stays sound.
   if (!hasBody)
     out << "extern ";
 
