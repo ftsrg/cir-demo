@@ -172,22 +172,25 @@ private:
       cir::CaseOpKind kind = caseOp.getKind();
       mlir::ArrayAttr values = caseOp.getValue();
 
-      // Emit the case label(s).
+      // Emit the case label(s). Append a null statement (": ;") because the case
+      // body may start with a declaration, and a label must prefix a statement
+      // (not a declaration) before C23 — strict frontends (DIVINE's clang) reject
+      // "case N: <decl>".
       switch (kind) {
       case cir::CaseOpKind::Default:
-        out << "  default:\n";
+        out << "  default: ;\n";
         break;
       case cir::CaseOpKind::Equal:
         for (auto attr : values) {
           auto intAttr = llvm::cast<cir::IntAttr>(attr);
-          out << "  case " << intAttr.getValue().getSExtValue() << ":\n";
+          out << "  case " << intAttr.getValue().getSExtValue() << ": ;\n";
         }
         break;
       case cir::CaseOpKind::Anyof:
         // Multiple discrete values that all map to the same body.
         for (auto attr : values) {
           auto intAttr = llvm::cast<cir::IntAttr>(attr);
-          out << "  case " << intAttr.getValue().getSExtValue() << ":\n";
+          out << "  case " << intAttr.getValue().getSExtValue() << ": ;\n";
         }
         break;
       case cir::CaseOpKind::Range:
@@ -195,7 +198,7 @@ private:
         if (values.size() == 2) {
           int64_t lo = llvm::cast<cir::IntAttr>(values[0]).getValue().getSExtValue();
           int64_t hi = llvm::cast<cir::IntAttr>(values[1]).getValue().getSExtValue();
-          out << "  case " << lo << " ... " << hi << ":\n";
+          out << "  case " << lo << " ... " << hi << ": ;\n";
         }
         break;
       }

@@ -645,7 +645,11 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
 
   for (Block &b : r.getBlocks()) getOrCreateLabel(&b);
   for (Block &b : r.getBlocks()) {
-    out << mangleLabel(getOrCreateLabel(&b)) << ":\n";
+    // Null statement after the label: a label must prefix a *statement*, and a
+    // declaration is not one before C23. Block bodies often start with a
+    // declaration, so emit "label: ;" to keep the output valid for strict C
+    // frontends (e.g. DIVINE's clang).
+    out << mangleLabel(getOrCreateLabel(&b)) << ": ;\n";
     for (Operation &bbop : b.getOperations()) {
       if (!mapOperation(&bbop, out)) return false;
     }

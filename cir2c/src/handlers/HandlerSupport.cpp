@@ -112,7 +112,9 @@ bool emitRegionBody(Region &region, Mapper &m, std::ostream &out,
     // Non-first blocks need a label so gotos from the first block can reach them.
     if (!isFirstBlock) {
       std::string lbl = Mapper::sanitizeIdentifier(m.getOrCreateLabel(&block));
-      regionOut << lbl << ":\n";
+      // Null statement after the label: a label must prefix a statement, and a
+      // declaration is not one before C23 (block bodies often start with one).
+      regionOut << lbl << ": ;\n";
     }
     isFirstBlock = false;
 
