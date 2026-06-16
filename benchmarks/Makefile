@@ -36,7 +36,12 @@ RUNNER ?= benchexec
 COMMON_FLAGS = --read-only-dir=/ --hidden-dir=/home --overlay-dir=$(WORKING_DIR) --timelimit $(TIMEOUT) -o $(UP)/$(RESULTS_DIR)/
 # VerifierCloud-only flags (priority/scheduling, client heap, ivy cache); plain
 # benchexec rejects these, so they are added only when RUNNER=vcloud.
-VCLOUD_FLAGS = --vcloudPriority HIGH --tryLessMemory --vcloudClientHeap 4000 --no-ivy-cache
+# --vcloudAdditionalFiles . ships each tool's whole directory to the worker, which
+# covers files a tool-info module's program_files() omits (e.g. divine4.py invokes
+# the divine-svc wrapper but never declares it, so without this it isn't shipped).
+# It takes nargs="*", so it must be followed by another flag (--no-ivy-cache here),
+# never by the trailing XML path, or it would swallow the benchmark definition.
+VCLOUD_FLAGS = --vcloudPriority HIGH --tryLessMemory --vcloudClientHeap 4000 --vcloudAdditionalFiles . --no-ivy-cache
 
 ifeq ($(RUNNER),vcloud)
   RUNNER_BIN = $(UP)/benchexec/contrib/vcloud-benchmark.py
