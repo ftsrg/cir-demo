@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -35,12 +19,13 @@ char _str_1[116] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 extern int __gxx_personality_v0();
 void X__X(struct X* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN1XC2Ev
 void X__X(struct X* v0) {
-bb1:
+bb1: ;
   struct X* this2;
   this2 = v0;
   struct X* t3 = this2;
@@ -59,7 +44,7 @@ bb1:
 
 // function: main
 int main() {
-bb7:
+bb7: ;
   int __retval8;
   int c9 = 0;
   __retval8 = c9;
@@ -82,9 +67,10 @@ bb7:
         if (c17) {
         } else {
           char* cast18 = (char*)&(_str);
-          char* c19 = _str_1;
+          char* c19 = (char*)_str_1;
           unsigned int c20 = 21;
           char* cast21 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast18, c19, c20, cast21);
         }
       {

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 union anon_0 { char c; int t_; };
 
@@ -21,6 +5,7 @@ char _str[2] = "0";
 char _str_1[113] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/gcc-template-tests/union1/main.cpp";
 char __PRETTY_FUNCTION____Z1gc[13] = "void g(char)";
 char __PRETTY_FUNCTION____Z1hi[12] = "void h(int)";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void g(char p0);
 void h(int p0);
@@ -29,7 +14,7 @@ int main();
 
 // function: _Z1gc
 void g(char v0) {
-bb1:
+bb1: ;
   char c2;
   c2 = v0;
     char t3 = c2;
@@ -38,9 +23,10 @@ bb1:
     _Bool c6 = ((cast4 != c5)) ? 1 : 0;
     if (c6) {
       char* cast7 = (char*)&(_str);
-      char* c8 = _str_1;
+      char* c8 = (char*)_str_1;
       unsigned int c9 = 15;
       char* cast10 = (char*)&(__PRETTY_FUNCTION____Z1gc);
+      reach_error();
       __assert_fail(cast7, c8, c9, cast10);
     }
   return;
@@ -48,7 +34,7 @@ bb1:
 
 // function: _Z1hi
 void h(int v11) {
-bb12:
+bb12: ;
   int i13;
   i13 = v11;
     int t14 = i13;
@@ -56,9 +42,10 @@ bb12:
     _Bool c16 = ((t14 != c15)) ? 1 : 0;
     if (c16) {
       char* cast17 = (char*)&(_str);
-      char* c18 = _str_1;
+      char* c18 = (char*)_str_1;
       unsigned int c19 = 21;
       char* cast20 = (char*)&(__PRETTY_FUNCTION____Z1hi);
+      reach_error();
       __assert_fail(cast17, c18, c19, cast20);
     }
   return;
@@ -66,7 +53,7 @@ bb12:
 
 // function: _Z1fIiEvRKT_
 void void_f_int_(int* v21) {
-bb22:
+bb22: ;
   int* t23;
   union anon_0 unnamed24;
   t23 = v21;
@@ -83,7 +70,7 @@ bb22:
 
 // function: main
 int main() {
-bb29:
+bb29: ;
   int __retval30;
   int ref_tmp031;
   int c32 = 0;

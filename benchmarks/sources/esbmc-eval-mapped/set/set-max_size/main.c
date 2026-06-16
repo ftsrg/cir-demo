@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -32,22 +16,24 @@ struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocat
 struct std___Rb_tree_iterator_int_ { struct std___Rb_tree_node_base* _M_node; };
 struct std___Rb_tree_key_compare_std__less_int__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_;
+struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____new_allocator_std___Rb_tree_node_int__;
 struct std____pair_base_std___Rb_tree_const_iterator_int___bool_;
 struct std____pair_base_std___Rb_tree_iterator_int___bool_;
 struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
 struct std__allocator_std___Rb_tree_node_int__;
+struct std__ios_base___Words { void* __field0; long __field1; };
 struct std__less_int_;
+struct std__locale { struct std__locale___Impl* __field0; };
 struct std__pair_std___Rb_tree_const_iterator_int___bool_ { struct std___Rb_tree_const_iterator_int_ first; _Bool second; unsigned char __field2[7]; } __attribute__((packed));
 struct std__pair_std___Rb_tree_iterator_int___bool_ { struct std___Rb_tree_iterator_int_ first; _Bool second; unsigned char __field2[7]; } __attribute__((packed));
 struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
 struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
 struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_ { struct std___Rb_tree_key_compare_std__less_int__ __field0; struct std___Rb_tree_header __field1; };
-struct std__ios_base;
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
 struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_ _M_impl; };
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* __field5; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 struct std__set_int__std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ _M_t; };
 
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
@@ -57,6 +43,7 @@ char _str_1[39] = "The set could not hold 1000 elements.\n";
 char _str_2[21] = "myset.size() == 1000";
 char _str_3[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/set/set-max_size/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -64,7 +51,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int i2;
   struct std__set_int__std__less_int___std__allocator_int__ myset3;
@@ -106,9 +93,10 @@ bb0:
     if (c23) {
     } else {
       char* cast24 = (char*)&(_str_2);
-      char* c25 = _str_3;
+      char* c25 = (char*)_str_3;
       unsigned int c26 = 23;
       char* cast27 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast24, c25, c26, cast27);
     }
     int c28 = 0;

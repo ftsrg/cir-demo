@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
@@ -42,6 +26,7 @@ char _str_2[19] = "second.size() != 4";
 char _str_3[18] = "third.size() != 4";
 struct std__ranges____distance_fn _ZNSt6ranges8distanceE;
 char _str_4[49] = "cannot create std::vector larger than max_size()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -49,7 +34,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int myints2[4];
   struct std__priority_queue_int__std__vector_int__std__allocator_int____std__less_int__ first3;
@@ -69,9 +54,10 @@ bb0:
     if (c11) {
     } else {
       char* cast12 = (char*)&(_str);
-      char* c13 = _str_1;
+      char* c13 = (char*)_str_1;
       unsigned int c14 = 32;
       char* cast15 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast12, c13, c14, cast15);
     }
     int* cast16 = (int*)&(myints2);
@@ -89,9 +75,10 @@ bb0:
       if (c22) {
       } else {
         char* cast23 = (char*)&(_str_2);
-        char* c24 = _str_1;
+        char* c24 = (char*)_str_1;
         unsigned int c25 = 34;
         char* cast26 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast23, c24, c25, cast26);
       }
       int* cast27 = (int*)&(myints2);
@@ -109,9 +96,10 @@ bb0:
         if (c33) {
         } else {
           char* cast34 = (char*)&(_str_3);
-          char* c35 = _str_1;
+          char* c35 = (char*)_str_1;
           unsigned int c36 = 36;
           char* cast37 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast34, c35, c36, cast37);
         }
         int c38 = 0;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct a { int b; };
 
@@ -22,12 +6,13 @@ char _str[10] = "a.b == 11";
 char _str_1[114] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/unnamed-parameter-fail/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void a__a(struct a* p0, int p1, int* p2);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN1aC2EiPi
 void a__a(struct a* v0, int v1, int* v2) {
-bb3:
+bb3: ;
   struct a* this4;
   int unnamed5;
   int* c6;
@@ -43,7 +28,7 @@ bb3:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   struct a a12;
   int c13 = 0;
@@ -56,9 +41,10 @@ bb10:
   if (c17) {
   } else {
     char* cast18 = (char*)&(_str);
-    char* c19 = _str_1;
+    char* c19 = (char*)_str_1;
     unsigned int c20 = 21;
     char* cast21 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast18, c19, c20, cast21);
   }
   int t22 = __retval11;

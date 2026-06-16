@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -21,14 +5,6 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
-
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
 
 // Struct definitions (auto-parsed)
 struct __locale_data { unsigned char __placeholder; };
@@ -55,6 +31,14 @@ struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __fie
 struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 struct std___Deque_base_int__std__allocator_int__ { struct std___Deque_base_int__std__allocator_int_____Deque_impl _M_impl; };
 struct std__deque_int__std__allocator_int__ { struct std___Deque_base_int__std__allocator_int__ __field0; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
 char _str[16] = "mydeque.empty()";
@@ -194,7 +178,7 @@ struct std__allocator_int_* std___Deque_base_int__std__allocator_int______M_get_
 
 // function: _ZNSt5dequeIiSaIiEEC2Ev
 void std__deque_int__std__allocator_int_____deque(struct std__deque_int__std__allocator_int__* v0) {
-bb1:
+bb1: ;
   struct std__deque_int__std__allocator_int__* this2;
   this2 = v0;
   struct std__deque_int__std__allocator_int__* t3 = this2;
@@ -208,7 +192,7 @@ bb1:
 
 // function: _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_
 int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* v5, int* v6) {
-bb7:
+bb7: ;
   int* __location8;
   int* __args9;
   int* __retval10;
@@ -231,7 +215,7 @@ bb7:
 
 // function: _ZNSt16allocator_traitsISaIiEE9constructIiJRKiEEEvRS0_PT_DpOT0_
 void void_std__allocator_traits_std__allocator_int_____construct_int__int_const__(struct std__allocator_int_* v19, int* v20, int* v21) {
-bb22:
+bb22: ;
   struct std__allocator_int_* __a23;
   int* __p24;
   int* __args25;
@@ -246,7 +230,7 @@ bb22:
 
 // function: _ZSt3minImERKT_S2_S2_
 unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* v29, unsigned long* v30) {
-bb31:
+bb31: ;
   unsigned long* __a32;
   unsigned long* __b33;
   unsigned long* __retval34;
@@ -271,7 +255,7 @@ bb31:
 
 // function: _ZNSt5dequeIiSaIiEE11_S_max_sizeERKS0_
 unsigned long std__deque_int__std__allocator_int______S_max_size(struct std__allocator_int_* v44) {
-bb45:
+bb45: ;
   struct std__allocator_int_* __a46;
   unsigned long __retval47;
   unsigned long __diffmax48;
@@ -294,7 +278,7 @@ bb45:
 
 // function: _ZNKSt5dequeIiSaIiEE8max_sizeEv
 unsigned long std__deque_int__std__allocator_int_____max_size___const(struct std__deque_int__std__allocator_int__* v55) {
-bb56:
+bb56: ;
   struct std__deque_int__std__allocator_int__* this57;
   unsigned long __retval58;
   this57 = v55;
@@ -309,7 +293,7 @@ bb56:
 
 // function: _ZSt12__niter_wrapIPPiET_RKS2_S2_
 int** int___std____niter_wrap_int___(int*** v64, int** v65) {
-bb66:
+bb66: ;
   int*** unnamed67;
   int** __res68;
   int** __retval69;
@@ -323,7 +307,7 @@ bb66:
 
 // function: _ZSt10__distanceIPPiENSt15iterator_traitsIT_E15difference_typeES3_S3_St26random_access_iterator_tag
 long std__iterator_traits_int_____difference_type_std____distance_int___(int** v72, int** v73, struct std__random_access_iterator_tag v74) {
-bb75:
+bb75: ;
   int** __first76;
   int** __last77;
   struct std__random_access_iterator_tag unnamed78;
@@ -341,7 +325,7 @@ bb75:
 
 // function: _ZSt19__iterator_categoryIPPiENSt15iterator_traitsIT_E17iterator_categoryERKS3_
 struct std__random_access_iterator_tag std__iterator_traits_int_____iterator_category_std____iterator_category_int___(int*** v84) {
-bb85:
+bb85: ;
   int*** unnamed86;
   struct std__random_access_iterator_tag __retval87;
   unnamed86 = v84;
@@ -351,7 +335,7 @@ bb85:
 
 // function: _ZSt8distanceIPPiENSt15iterator_traitsIT_E15difference_typeES3_S3_
 long std__iterator_traits_int_____difference_type_std__distance_int___(int** v89, int** v90) {
-bb91:
+bb91: ;
   int** __first92;
   int** __last93;
   long __retval94;
@@ -379,7 +363,7 @@ bb91:
 
 // function: _ZSt12__assign_oneILb0EPPiS1_EvRT0_RT1_
 void void_std____assign_one_false__int____int___(int*** v102, int*** v103) {
-bb104:
+bb104: ;
   int*** __out105;
   int*** __in106;
   __out105 = v102;
@@ -395,7 +379,7 @@ bb104:
 
 // function: _ZSt14__copy_move_a2ILb0EPPiS1_S1_ET2_T0_T1_S2_
 int** int___std____copy_move_a2_false__int____int____int___(int** v112, int** v113, int** v114) {
-bb115:
+bb115: ;
   int** __first116;
   int** __last117;
   int** __result118;
@@ -481,7 +465,7 @@ bb115:
 
 // function: _ZSt14__copy_move_a1ILb0EPPiS1_ET1_T0_S3_S2_
 int** int___std____copy_move_a1_false__int____int___(int** v160, int** v161, int** v162) {
-bb163:
+bb163: ;
   int** __first164;
   int** __last165;
   int** __result166;
@@ -504,7 +488,7 @@ bb163:
 
 // function: _ZSt12__niter_baseIPPiET_S2_
 int** int___std____niter_base_int___(int** v173) {
-bb174:
+bb174: ;
   int** __it175;
   int** __retval176;
   __it175 = v173;
@@ -516,7 +500,7 @@ bb174:
 
 // function: _ZSt13__copy_move_aILb0EPPiS1_ET1_T0_S3_S2_
 int** int___std____copy_move_a_false__int____int___(int** v179, int** v180, int** v181) {
-bb182:
+bb182: ;
   int** __first183;
   int** __last184;
   int** __result185;
@@ -547,7 +531,7 @@ bb182:
 
 // function: _ZSt12__miter_baseIPPiET_S2_
 int** int___std____miter_base_int___(int** v196) {
-bb197:
+bb197: ;
   int** __it198;
   int** __retval199;
   __it198 = v196;
@@ -559,7 +543,7 @@ bb197:
 
 // function: _ZSt4copyIPPiS1_ET0_T_S3_S2_
 int** int___std__copy_int____int___(int** v202, int** v203, int** v204) {
-bb205:
+bb205: ;
   int** __first206;
   int** __last207;
   int** __result208;
@@ -592,7 +576,7 @@ bb205:
 
 // function: _ZSt21is_constant_evaluatedv
 _Bool std__is_constant_evaluated() {
-bb217:
+bb217: ;
   _Bool __retval218;
     _Bool c219 = 0;
     __retval218 = c219;
@@ -603,7 +587,7 @@ bb217:
 
 // function: _ZSt9__advanceIPPilEvRT_T0_St26random_access_iterator_tag
 void void_std____advance_int____long_(int*** v221, long v222, struct std__random_access_iterator_tag v223) {
-bb224:
+bb224: ;
   int*** __i225;
   long __n226;
   struct std__random_access_iterator_tag unnamed227;
@@ -660,7 +644,7 @@ bb224:
 
 // function: _ZSt7advanceIPPilEvRT_T0_
 void void_std__advance_int____long_(int*** v254, long v255) {
-bb256:
+bb256: ;
   int*** __i257;
   long __n258;
   long __d259;
@@ -687,7 +671,7 @@ bb256:
 
 // function: _ZSt23__copy_move_backward_a2ILb0EPPiS1_ET1_T0_S3_S2_
 int** int___std____copy_move_backward_a2_false__int____int___(int** v267, int** v268, int** v269) {
-bb270:
+bb270: ;
   int** __first271;
   int** __last272;
   int** __result273;
@@ -771,7 +755,7 @@ bb270:
 
 // function: _ZSt23__copy_move_backward_a1ILb0EPPiS1_ET1_T0_S3_S2_
 int** int___std____copy_move_backward_a1_false__int____int___(int** v310, int** v311, int** v312) {
-bb313:
+bb313: ;
   int** __first314;
   int** __last315;
   int** __result316;
@@ -794,7 +778,7 @@ bb313:
 
 // function: _ZSt22__copy_move_backward_aILb0EPPiS1_ET1_T0_S3_S2_
 int** int___std____copy_move_backward_a_false__int____int___(int** v323, int** v324, int** v325) {
-bb326:
+bb326: ;
   int** __first327;
   int** __last328;
   int** __result329;
@@ -825,7 +809,7 @@ bb326:
 
 // function: _ZSt13copy_backwardIPPiS1_ET0_T_S3_S2_
 int** int___std__copy_backward_int____int___(int** v340, int** v341, int** v342) {
-bb343:
+bb343: ;
   int** __first344;
   int** __last345;
   int** __result346;
@@ -858,7 +842,7 @@ bb343:
 
 // function: _ZNSt5dequeIiSaIiEE17_M_reallocate_mapEmb
 void std__deque_int__std__allocator_int______M_reallocate_map(struct std__deque_int__std__allocator_int__* v355, unsigned long v356, _Bool v357) {
-bb358:
+bb358: ;
   struct std__deque_int__std__allocator_int__* this359;
   unsigned long __nodes_to_add360;
   _Bool __add_at_front361;
@@ -1056,7 +1040,7 @@ bb358:
 
 // function: _ZNSt5dequeIiSaIiEE22_M_reserve_map_at_backEm
 void std__deque_int__std__allocator_int______M_reserve_map_at_back(struct std__deque_int__std__allocator_int__* v502, unsigned long v503) {
-bb504:
+bb504: ;
   struct std__deque_int__std__allocator_int__* this505;
   unsigned long __nodes_to_add506;
   this505 = v502;
@@ -1091,7 +1075,7 @@ bb504:
 
 // function: _ZNSt5dequeIiSaIiEE16_M_push_back_auxIJRKiEEEvDpOT_
 void void_std__deque_int__std__allocator_int______M_push_back_aux_int_const__(struct std__deque_int__std__allocator_int__* v526, int* v527) {
-bb528:
+bb528: ;
   struct std__deque_int__std__allocator_int__* this529;
   int* __args530;
   this529 = v526;
@@ -1171,7 +1155,7 @@ bb528:
 
 // function: _ZNSt5dequeIiSaIiEE9push_backERKi
 void std__deque_int__std__allocator_int_____push_back(struct std__deque_int__std__allocator_int__* v572, int* v573) {
-bb574:
+bb574: ;
   struct std__deque_int__std__allocator_int__* this575;
   int* __x576;
   this575 = v572;
@@ -1212,7 +1196,7 @@ bb574:
 
 // function: _ZSteqRKSt15_Deque_iteratorIiRiPiES4_
 _Bool std__operator__(struct std___Deque_iterator_int__int____int___* v599, struct std___Deque_iterator_int__int____int___* v600) {
-bb601:
+bb601: ;
   struct std___Deque_iterator_int__int____int___* __x602;
   struct std___Deque_iterator_int__int____int___* __y603;
   _Bool __retval604;
@@ -1230,7 +1214,7 @@ bb601:
 
 // function: _ZNKSt5dequeIiSaIiEE5emptyEv
 _Bool std__deque_int__std__allocator_int_____empty___const(struct std__deque_int__std__allocator_int__* v611) {
-bb612:
+bb612: ;
   struct std__deque_int__std__allocator_int__* this613;
   _Bool __retval614;
   this613 = v611;
@@ -1247,7 +1231,7 @@ bb612:
 
 // function: _ZNKSt15_Deque_iteratorIiRiPiEdeEv
 int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* v622) {
-bb623:
+bb623: ;
   struct std___Deque_iterator_int__int____int___* this624;
   int* __retval625;
   this624 = v622;
@@ -1260,7 +1244,7 @@ bb623:
 
 // function: _ZNSt5dequeIiSaIiEE5frontEv
 int* std__deque_int__std__allocator_int_____front(struct std__deque_int__std__allocator_int__* v629) {
-bb630:
+bb630: ;
   struct std__deque_int__std__allocator_int__* this631;
   int* __retval632;
   struct std___Deque_iterator_int__int____int___ ref_tmp0633;
@@ -1288,7 +1272,7 @@ bb630:
 
 // function: _ZNSt16allocator_traitsISaIiEE7destroyIiEEvRS0_PT_
 void void_std__allocator_traits_std__allocator_int_____destroy_int_(struct std__allocator_int_* v644, int* v645) {
-bb646:
+bb646: ;
   struct std__allocator_int_* __a647;
   int* __p648;
   __a647 = v644;
@@ -1303,7 +1287,7 @@ bb646:
 
 // function: _ZNSt5dequeIiSaIiEE16_M_pop_front_auxEv
 void std__deque_int__std__allocator_int______M_pop_front_aux(struct std__deque_int__std__allocator_int__* v650) {
-bb651:
+bb651: ;
   struct std__deque_int__std__allocator_int__* this652;
   this652 = v650;
   struct std__deque_int__std__allocator_int__* t653 = this652;
@@ -1337,7 +1321,7 @@ bb651:
 
 // function: _ZNSt5dequeIiSaIiEE9pop_frontEv
 void std__deque_int__std__allocator_int_____pop_front(struct std__deque_int__std__allocator_int__* v675) {
-bb676:
+bb676: ;
   struct std__deque_int__std__allocator_int__* this677;
   this677 = v675;
   struct std__deque_int__std__allocator_int__* t678 = this677;
@@ -1386,7 +1370,7 @@ bb676:
 
 // function: _ZStmiRKSt15_Deque_iteratorIiRiPiES4_
 long std__operator_(struct std___Deque_iterator_int__int____int___* v704, struct std___Deque_iterator_int__int____int___* v705) {
-bb706:
+bb706: ;
   struct std___Deque_iterator_int__int____int___* __x707;
   struct std___Deque_iterator_int__int____int___* __y708;
   long __retval709;
@@ -1424,7 +1408,7 @@ bb706:
 
 // function: _ZNKSt5dequeIiSaIiEE4sizeEv
 unsigned long std__deque_int__std__allocator_int_____size___const(struct std__deque_int__std__allocator_int__* v736) {
-bb737:
+bb737: ;
   struct std__deque_int__std__allocator_int__* this738;
   unsigned long __retval739;
   unsigned long __sz740;
@@ -1451,7 +1435,7 @@ bb737:
 
 // function: _ZStorSt12_Ios_IostateS_
 int std__operator__2(int v753, int v754) {
-bb755:
+bb755: ;
   int __a756;
   int __b757;
   int __retval758;
@@ -1467,7 +1451,7 @@ bb755:
 
 // function: _ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
 int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* v763) {
-bb764:
+bb764: ;
   struct std__basic_ios_char__std__char_traits_char__* this765;
   int __retval766;
   this765 = v763;
@@ -1481,7 +1465,7 @@ bb764:
 
 // function: _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
 void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* v771, int v772) {
-bb773:
+bb773: ;
   struct std__basic_ios_char__std__char_traits_char__* this774;
   int __state775;
   this774 = v771;
@@ -1502,7 +1486,7 @@ bb773:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE2eqERKcS3_
 _Bool __gnu_cxx__char_traits_char___eq(char* v780, char* v781) {
-bb782:
+bb782: ;
   char* __c1783;
   char* __c2784;
   _Bool __retval785;
@@ -1522,7 +1506,7 @@ bb782:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE6lengthEPKc
 unsigned long __gnu_cxx__char_traits_char___length(char* v794) {
-bb795:
+bb795: ;
   char* __p796;
   unsigned long __retval797;
   unsigned long __i798;
@@ -1555,7 +1539,7 @@ bb795:
 
 // function: _ZNSt11char_traitsIcE6lengthEPKc
 unsigned long std__char_traits_char___length(char* v811) {
-bb812:
+bb812: ;
   char* __s813;
   unsigned long __retval814;
   __s813 = v811;
@@ -1580,7 +1564,7 @@ bb812:
 
 // function: _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v822, char* v823) {
-bb824:
+bb824: ;
   struct std__basic_ostream_char__std__char_traits_char__* __out825;
   char* __s826;
   struct std__basic_ostream_char__std__char_traits_char__* __retval827;
@@ -1632,7 +1616,7 @@ bb824:
 
 // function: _ZNSolsEPFRSoS_E
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* v852, void* v853) {
-bb854:
+bb854: ;
   struct std__basic_ostream_char__std__char_traits_char__* this855;
   void* __pf856;
   struct std__basic_ostream_char__std__char_traits_char__* __retval857;
@@ -1652,7 +1636,7 @@ bb854:
 
 // function: _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v862) {
-bb863:
+bb863: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os864;
   struct std__basic_ostream_char__std__char_traits_char__* __retval865;
   __os864 = v862;
@@ -1669,7 +1653,7 @@ bb863:
 
 // function: _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
 struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* v869) {
-bb870:
+bb870: ;
   struct std__ctype_char_* __f871;
   struct std__ctype_char_* __retval872;
   __f871 = v869;
@@ -1691,7 +1675,7 @@ bb870:
 
 // function: _ZNKSt5ctypeIcE5widenEc
 char std__ctype_char___widen_char__const(struct std__ctype_char_* v878, char v879) {
-bb880:
+bb880: ;
   struct std__ctype_char_* this881;
   char __c882;
   char __retval883;
@@ -1729,7 +1713,7 @@ bb880:
 
 // function: _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* v899, char v900) {
-bb901:
+bb901: ;
   struct std__basic_ios_char__std__char_traits_char__* this902;
   char __c903;
   char __retval904;
@@ -1755,7 +1739,7 @@ bb901:
 
 // function: _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v911) {
-bb912:
+bb912: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os913;
   struct std__basic_ostream_char__std__char_traits_char__* __retval914;
   __os913 = v911;
@@ -1795,7 +1779,7 @@ bb912:
 
 // function: _ZNSt5dequeIiSaIiEED2Ev
 void std__deque_int__std__allocator_int______deque(struct std__deque_int__std__allocator_int__* v933) {
-bb934:
+bb934: ;
   struct std__deque_int__std__allocator_int__* this935;
   struct std___Deque_iterator_int__int____int___ agg_tmp0936;
   struct std___Deque_iterator_int__int____int___ agg_tmp1937;
@@ -1826,7 +1810,7 @@ bb934:
 
 // function: main
 int main() {
-bb947:
+bb947: ;
   int __retval948;
   struct std__deque_int__std__allocator_int__ mydeque949;
   int sum950;
@@ -1875,7 +1859,7 @@ bb947:
     if (r967) {
     } else {
       char* cast968 = (char*)&(_str);
-      char* c969 = _str_1;
+      char* c969 = (char*)_str_1;
       unsigned int c970 = 26;
       char* cast971 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast968, c969, c970, cast971);
@@ -1886,7 +1870,7 @@ bb947:
     if (c974) {
     } else {
       char* cast975 = (char*)&(_str_2);
-      char* c976 = _str_1;
+      char* c976 = (char*)_str_1;
       unsigned int c977 = 27;
       char* cast978 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast975, c976, c977, cast978);
@@ -1931,7 +1915,7 @@ bb947:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE11_Deque_implC2Ev
 void std___Deque_base_int__std__allocator_int______Deque_impl___Deque_impl(struct std___Deque_base_int__std__allocator_int_____Deque_impl* v988) {
-bb989:
+bb989: ;
   struct std___Deque_base_int__std__allocator_int_____Deque_impl* this990;
   this990 = v988;
   struct std___Deque_base_int__std__allocator_int_____Deque_impl* t991 = this990;
@@ -1944,7 +1928,7 @@ bb989:
 
 // function: _ZSt16__deque_buf_sizem
 unsigned long std____deque_buf_size(unsigned long v994) {
-bb995:
+bb995: ;
   unsigned long __size996;
   unsigned long __retval997;
   __size996 = v994;
@@ -1968,7 +1952,7 @@ bb995:
 
 // function: _ZSt3maxImERKT_S2_S2_
 unsigned long* unsigned_long_const__std__max_unsigned_long_(unsigned long* v1007, unsigned long* v1008) {
-bb1009:
+bb1009: ;
   unsigned long* __a1010;
   unsigned long* __b1011;
   unsigned long* __retval1012;
@@ -1993,7 +1977,7 @@ bb1009:
 
 // function: _ZNKSt11_Deque_baseIiSaIiEE19_M_get_Tp_allocatorEv
 struct std__allocator_int_* std___Deque_base_int__std__allocator_int______M_get_Tp_allocator___const(struct std___Deque_base_int__std__allocator_int__* v1022) {
-bb1023:
+bb1023: ;
   struct std___Deque_base_int__std__allocator_int__* this1024;
   struct std__allocator_int_* __retval1025;
   this1024 = v1022;
@@ -2006,7 +1990,7 @@ bb1023:
 
 // function: _ZNSaIPiEC2IiEERKSaIT_E
 void std__allocator_int____allocator_int_(struct std__allocator_int___* v1029, struct std__allocator_int_* v1030) {
-bb1031:
+bb1031: ;
   struct std__allocator_int___* this1032;
   struct std__allocator_int_* unnamed1033;
   this1032 = v1029;
@@ -2019,7 +2003,7 @@ bb1031:
 
 // function: _ZNKSt11_Deque_baseIiSaIiEE20_M_get_map_allocatorEv
 struct std__allocator_int___ std___Deque_base_int__std__allocator_int______M_get_map_allocator___const(struct std___Deque_base_int__std__allocator_int__* v1036) {
-bb1037:
+bb1037: ;
   struct std___Deque_base_int__std__allocator_int__* this1038;
   struct std__allocator_int___ __retval1039;
   this1038 = v1036;
@@ -2032,7 +2016,7 @@ bb1037:
 
 // function: _ZSt23__is_constant_evaluatedv
 _Bool std____is_constant_evaluated() {
-bb1043:
+bb1043: ;
   _Bool __retval1044;
     _Bool c1045 = 0;
     __retval1044 = c1045;
@@ -2043,7 +2027,7 @@ bb1043:
 
 // function: _ZNKSt15__new_allocatorIPiE11_M_max_sizeEv
 unsigned long std____new_allocator_int_____M_max_size___const(struct std____new_allocator_int___* v1047) {
-bb1048:
+bb1048: ;
   struct std____new_allocator_int___* this1049;
   unsigned long __retval1050;
   this1049 = v1047;
@@ -2058,7 +2042,7 @@ bb1048:
 
 // function: _ZNSt15__new_allocatorIPiE8allocateEmPKv
 int** std____new_allocator_int____allocate(struct std____new_allocator_int___* v1056, unsigned long v1057, void* v1058) {
-bb1059:
+bb1059: ;
   struct std____new_allocator_int___* this1060;
   unsigned long __n1061;
   void* unnamed1062;
@@ -2126,7 +2110,7 @@ bb1059:
 
 // function: _ZNSaIPiE8allocateEm
 int** std__allocator_int____allocate(struct std__allocator_int___* v1091, unsigned long v1092) {
-bb1093:
+bb1093: ;
   struct std__allocator_int___* this1094;
   unsigned long __n1095;
   int** __retval1096;
@@ -2173,7 +2157,7 @@ bb1093:
 
 // function: _ZNSt16allocator_traitsISaIPiEE8allocateERS1_m
 int** std__allocator_traits_std__allocator_int______allocate(struct std__allocator_int___* v1112, unsigned long v1113) {
-bb1114:
+bb1114: ;
   struct std__allocator_int___* __a1115;
   unsigned long __n1116;
   int** __retval1117;
@@ -2193,7 +2177,7 @@ bb1114:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE15_M_allocate_mapEm
 int** std___Deque_base_int__std__allocator_int______M_allocate_map(struct std___Deque_base_int__std__allocator_int__* v1122, unsigned long v1123) {
-bb1124:
+bb1124: ;
   struct std___Deque_base_int__std__allocator_int__* this1125;
   unsigned long __n1126;
   int** __retval1127;
@@ -2216,7 +2200,7 @@ bb1124:
 
 // function: _ZNKSt15__new_allocatorIiE11_M_max_sizeEv
 unsigned long std____new_allocator_int____M_max_size___const(struct std____new_allocator_int_* v1134) {
-bb1135:
+bb1135: ;
   struct std____new_allocator_int_* this1136;
   unsigned long __retval1137;
   this1136 = v1134;
@@ -2231,7 +2215,7 @@ bb1135:
 
 // function: _ZNSt15__new_allocatorIiE8allocateEmPKv
 int* std____new_allocator_int___allocate(struct std____new_allocator_int_* v1143, unsigned long v1144, void* v1145) {
-bb1146:
+bb1146: ;
   struct std____new_allocator_int_* this1147;
   unsigned long __n1148;
   void* unnamed1149;
@@ -2299,7 +2283,7 @@ bb1146:
 
 // function: _ZNSaIiE8allocateEm
 int* std__allocator_int___allocate(struct std__allocator_int_* v1178, unsigned long v1179) {
-bb1180:
+bb1180: ;
   struct std__allocator_int_* this1181;
   unsigned long __n1182;
   int* __retval1183;
@@ -2346,7 +2330,7 @@ bb1180:
 
 // function: _ZNSt16allocator_traitsISaIiEE8allocateERS0_m
 int* std__allocator_traits_std__allocator_int_____allocate(struct std__allocator_int_* v1199, unsigned long v1200) {
-bb1201:
+bb1201: ;
   struct std__allocator_int_* __a1202;
   unsigned long __n1203;
   int* __retval1204;
@@ -2366,7 +2350,7 @@ bb1201:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE16_M_allocate_nodeEv
 int* std___Deque_base_int__std__allocator_int______M_allocate_node(struct std___Deque_base_int__std__allocator_int__* v1209) {
-bb1210:
+bb1210: ;
   struct std___Deque_base_int__std__allocator_int__* this1211;
   int* __retval1212;
   this1211 = v1209;
@@ -2390,7 +2374,7 @@ bb1210:
 
 // function: _ZNSt15__new_allocatorIiE10deallocateEPim
 void std____new_allocator_int___deallocate(struct std____new_allocator_int_* v1219, int* v1220, unsigned long v1221) {
-bb1222:
+bb1222: ;
   struct std____new_allocator_int_* this1223;
   int* __p1224;
   unsigned long __n1225;
@@ -2422,7 +2406,7 @@ bb1222:
 
 // function: _ZNSaIiE10deallocateEPim
 void std__allocator_int___deallocate(struct std__allocator_int_* v1241, int* v1242, unsigned long v1243) {
-bb1244:
+bb1244: ;
   struct std__allocator_int_* this1245;
   int* __p1246;
   unsigned long __n1247;
@@ -2449,7 +2433,7 @@ bb1244:
 
 // function: _ZNSt16allocator_traitsISaIiEE10deallocateERS0_Pim
 void std__allocator_traits_std__allocator_int_____deallocate(struct std__allocator_int_* v1255, int* v1256, unsigned long v1257) {
-bb1258:
+bb1258: ;
   struct std__allocator_int_* __a1259;
   int* __p1260;
   unsigned long __n1261;
@@ -2468,7 +2452,7 @@ bb1258:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE18_M_deallocate_nodeEPi
 void std___Deque_base_int__std__allocator_int______M_deallocate_node(struct std___Deque_base_int__std__allocator_int__* v1265, int* v1266) {
-bb1267:
+bb1267: ;
   struct std___Deque_base_int__std__allocator_int__* this1268;
   int* __p1269;
   this1268 = v1265;
@@ -2490,7 +2474,7 @@ bb1267:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE16_M_destroy_nodesEPPiS3_
 void std___Deque_base_int__std__allocator_int______M_destroy_nodes(struct std___Deque_base_int__std__allocator_int__* v1275, int** v1276, int** v1277) {
-bb1278:
+bb1278: ;
   struct std___Deque_base_int__std__allocator_int__* this1279;
   int** __nstart1280;
   int** __nfinish1281;
@@ -2520,7 +2504,7 @@ bb1278:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE15_M_create_nodesEPPiS3_
 void std___Deque_base_int__std__allocator_int______M_create_nodes(struct std___Deque_base_int__std__allocator_int__* v1294, int** v1295, int** v1296) {
-bb1297:
+bb1297: ;
   struct std___Deque_base_int__std__allocator_int__* this1298;
   int** __nstart1299;
   int** __nfinish1300;
@@ -2570,7 +2554,7 @@ bb1297:
 
 // function: _ZNSt15__new_allocatorIPiE10deallocateEPS0_m
 void std____new_allocator_int____deallocate(struct std____new_allocator_int___* v1318, int** v1319, unsigned long v1320) {
-bb1321:
+bb1321: ;
   struct std____new_allocator_int___* this1322;
   int** __p1323;
   unsigned long __n1324;
@@ -2602,7 +2586,7 @@ bb1321:
 
 // function: _ZNSaIPiE10deallocateEPS_m
 void std__allocator_int____deallocate(struct std__allocator_int___* v1340, int** v1341, unsigned long v1342) {
-bb1343:
+bb1343: ;
   struct std__allocator_int___* this1344;
   int** __p1345;
   unsigned long __n1346;
@@ -2629,7 +2613,7 @@ bb1343:
 
 // function: _ZNSt16allocator_traitsISaIPiEE10deallocateERS1_PS0_m
 void std__allocator_traits_std__allocator_int______deallocate(struct std__allocator_int___* v1354, int** v1355, unsigned long v1356) {
-bb1357:
+bb1357: ;
   struct std__allocator_int___* __a1358;
   int** __p1359;
   unsigned long __n1360;
@@ -2648,7 +2632,7 @@ bb1357:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE17_M_deallocate_mapEPPim
 void std___Deque_base_int__std__allocator_int______M_deallocate_map(struct std___Deque_base_int__std__allocator_int__* v1364, int** v1365, unsigned long v1366) {
-bb1367:
+bb1367: ;
   struct std___Deque_base_int__std__allocator_int__* this1368;
   int** __p1369;
   unsigned long __n1370;
@@ -2670,7 +2654,7 @@ bb1367:
 
 // function: _ZNSt15_Deque_iteratorIiRiPiE14_S_buffer_sizeEv
 unsigned long std___Deque_iterator_int__int___int_____S_buffer_size() {
-bb1376:
+bb1376: ;
   unsigned long __retval1377;
   unsigned long c1378 = 4;
   unsigned long r1379 = std____deque_buf_size(c1378);
@@ -2685,7 +2669,7 @@ bb1376:
 
 // function: _ZNSt15_Deque_iteratorIiRiPiE11_M_set_nodeEPS1_
 void std___Deque_iterator_int__int___int_____M_set_node(struct std___Deque_iterator_int__int____int___* v1381, int** v1382) {
-bb1383:
+bb1383: ;
   struct std___Deque_iterator_int__int____int___* this1384;
   int** __new_node1385;
   this1384 = v1381;
@@ -2706,7 +2690,7 @@ bb1383:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE17_M_initialize_mapEm
 void std___Deque_base_int__std__allocator_int______M_initialize_map(struct std___Deque_base_int__std__allocator_int__* v1394, unsigned long v1395) {
-bb1396:
+bb1396: ;
   struct std___Deque_base_int__std__allocator_int__* this1397;
   unsigned long __num_elements1398;
   unsigned long __num_nodes1399;
@@ -2822,7 +2806,7 @@ bb1396:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE11_Deque_implD2Ev
 void std___Deque_base_int__std__allocator_int______Deque_impl____Deque_impl(struct std___Deque_base_int__std__allocator_int_____Deque_impl* v1464) {
-bb1465:
+bb1465: ;
   struct std___Deque_base_int__std__allocator_int_____Deque_impl* this1466;
   this1466 = v1464;
   struct std___Deque_base_int__std__allocator_int_____Deque_impl* t1467 = this1466;
@@ -2835,7 +2819,7 @@ bb1465:
 
 // function: _ZNSt11_Deque_baseIiSaIiEEC2Ev
 void std___Deque_base_int__std__allocator_int______Deque_base(struct std___Deque_base_int__std__allocator_int__* v1469) {
-bb1470:
+bb1470: ;
   struct std___Deque_base_int__std__allocator_int__* this1471;
   this1471 = v1469;
   struct std___Deque_base_int__std__allocator_int__* t1472 = this1471;
@@ -2853,7 +2837,7 @@ bb1470:
 
 // function: _ZNSt11_Deque_baseIiSaIiEED2Ev
 void std___Deque_base_int__std__allocator_int_______Deque_base(struct std___Deque_base_int__std__allocator_int__* v1474) {
-bb1475:
+bb1475: ;
   struct std___Deque_base_int__std__allocator_int__* this1476;
   this1476 = v1474;
   struct std___Deque_base_int__std__allocator_int__* t1477 = this1476;
@@ -2882,7 +2866,7 @@ bb1475:
 
 // function: _ZNSt15__new_allocatorIiEC2Ev
 void std____new_allocator_int_____new_allocator(struct std____new_allocator_int_* v1491) {
-bb1492:
+bb1492: ;
   struct std____new_allocator_int_* this1493;
   this1493 = v1491;
   struct std____new_allocator_int_* t1494 = this1493;
@@ -2891,7 +2875,7 @@ bb1492:
 
 // function: _ZNSaIiEC2Ev
 void std__allocator_int___allocator(struct std__allocator_int_* v1495) {
-bb1496:
+bb1496: ;
   struct std__allocator_int_* this1497;
   this1497 = v1495;
   struct std__allocator_int_* t1498 = this1497;
@@ -2902,7 +2886,7 @@ bb1496:
 
 // function: _ZNSt15_Deque_iteratorIiRiPiEC2Ev
 void std___Deque_iterator_int__int___int_____Deque_iterator_2(struct std___Deque_iterator_int__int____int___* v1500) {
-bb1501:
+bb1501: ;
   struct std___Deque_iterator_int__int____int___* this1502;
   this1502 = v1500;
   struct std___Deque_iterator_int__int____int___* t1503 = this1502;
@@ -2919,7 +2903,7 @@ bb1501:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE16_Deque_impl_dataC2Ev
 void std___Deque_base_int__std__allocator_int______Deque_impl_data___Deque_impl_data(struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* v1508) {
-bb1509:
+bb1509: ;
   struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* this1510;
   this1510 = v1508;
   struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* t1511 = this1510;
@@ -2934,7 +2918,7 @@ bb1509:
 
 // function: _ZNSaIiED2Ev
 void std__allocator_int____allocator(struct std__allocator_int_* v1514) {
-bb1515:
+bb1515: ;
   struct std__allocator_int_* this1516;
   this1516 = v1514;
   struct std__allocator_int_* t1517 = this1516;
@@ -2943,7 +2927,7 @@ bb1515:
 
 // function: _ZNSt15__new_allocatorIPiEC2Ev
 void std____new_allocator_int______new_allocator(struct std____new_allocator_int___* v1518) {
-bb1519:
+bb1519: ;
   struct std____new_allocator_int___* this1520;
   this1520 = v1518;
   struct std____new_allocator_int___* t1521 = this1520;
@@ -2952,7 +2936,7 @@ bb1519:
 
 // function: _ZSt10destroy_atIiEvPT_
 void void_std__destroy_at_int_(int* v1522) {
-bb1523:
+bb1523: ;
   int* __location1524;
   __location1524 = v1522;
   return;
@@ -2960,7 +2944,7 @@ bb1523:
 
 // function: _ZSt8_DestroyIPiEvT_S1_
 void void_std___Destroy_int__(int* v1525, int* v1526) {
-bb1527:
+bb1527: ;
   int* __first1528;
   int* __last1529;
   __first1528 = v1525;
@@ -2989,7 +2973,7 @@ bb1527:
 
 // function: _ZSt8_DestroyIPiiEvT_S1_RSaIT0_E
 void void_std___Destroy_int___int_(int* v1539, int* v1540, struct std__allocator_int_* v1541) {
-bb1542:
+bb1542: ;
   int* __first1543;
   int* __last1544;
   struct std__allocator_int_* unnamed1545;
@@ -3007,7 +2991,7 @@ bb1542:
 
 // function: _ZNSt5dequeIiSaIiEE14_S_buffer_sizeEv
 unsigned long std__deque_int__std__allocator_int______S_buffer_size() {
-bb1548:
+bb1548: ;
   unsigned long __retval1549;
   unsigned long c1550 = 4;
   unsigned long r1551 = std____deque_buf_size(c1550);
@@ -3022,7 +3006,7 @@ bb1548:
 
 // function: _ZNSt5dequeIiSaIiEE19_M_destroy_data_auxESt15_Deque_iteratorIiRiPiES5_
 void std__deque_int__std__allocator_int______M_destroy_data_aux(struct std__deque_int__std__allocator_int__* v1553, struct std___Deque_iterator_int__int____int___ v1554, struct std___Deque_iterator_int__int____int___ v1555) {
-bb1556:
+bb1556: ;
   struct std__deque_int__std__allocator_int__* this1557;
   struct std___Deque_iterator_int__int____int___ __first1558;
   struct std___Deque_iterator_int__int____int___ __last1559;
@@ -3093,7 +3077,7 @@ bb1556:
 
 // function: _ZNSt15_Deque_iteratorIiRiPiEC2ERKS2_
 void std___Deque_iterator_int__int___int_____Deque_iterator(struct std___Deque_iterator_int__int____int___* v1595, struct std___Deque_iterator_int__int____int___* v1596) {
-bb1597:
+bb1597: ;
   struct std___Deque_iterator_int__int____int___* this1598;
   struct std___Deque_iterator_int__int____int___* __x1599;
   this1598 = v1595;
@@ -3116,7 +3100,7 @@ bb1597:
 
 // function: _ZNSt5dequeIiSaIiEE15_M_destroy_dataESt15_Deque_iteratorIiRiPiES5_RKS0_
 void std__deque_int__std__allocator_int______M_destroy_data(struct std__deque_int__std__allocator_int__* v1609, struct std___Deque_iterator_int__int____int___ v1610, struct std___Deque_iterator_int__int____int___ v1611, struct std__allocator_int_* v1612) {
-bb1613:
+bb1613: ;
   struct std__deque_int__std__allocator_int__* this1614;
   struct std___Deque_iterator_int__int____int___ __first1615;
   struct std___Deque_iterator_int__int____int___ __last1616;
@@ -3144,7 +3128,7 @@ bb1613:
 
 // function: _ZNSt5dequeIiSaIiEE5beginEv
 struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int_____begin(struct std__deque_int__std__allocator_int__* v1624) {
-bb1625:
+bb1625: ;
   struct std__deque_int__std__allocator_int__* this1626;
   struct std___Deque_iterator_int__int____int___ __retval1627;
   this1626 = v1624;
@@ -3158,7 +3142,7 @@ bb1625:
 
 // function: _ZNSt5dequeIiSaIiEE3endEv
 struct std___Deque_iterator_int__int____int___ std__deque_int__std__allocator_int_____end(struct std__deque_int__std__allocator_int__* v1632) {
-bb1633:
+bb1633: ;
   struct std__deque_int__std__allocator_int__* this1634;
   struct std___Deque_iterator_int__int____int___ __retval1635;
   this1634 = v1632;
@@ -3172,7 +3156,7 @@ bb1633:
 
 // function: _ZNSt11_Deque_baseIiSaIiEE19_M_get_Tp_allocatorEv
 struct std__allocator_int_* std___Deque_base_int__std__allocator_int______M_get_Tp_allocator(struct std___Deque_base_int__std__allocator_int__* v1640) {
-bb1641:
+bb1641: ;
   struct std___Deque_base_int__std__allocator_int__* this1642;
   struct std__allocator_int_* __retval1643;
   this1642 = v1640;

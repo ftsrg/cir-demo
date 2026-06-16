@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct mycontainer_char_ { char element; };
 struct mycontainer_float_ { float element; };
@@ -28,6 +12,7 @@ void mycontainer_int___mycontainer(struct mycontainer_int_* p0, int p1);
 void mycontainer_char___mycontainer(struct mycontainer_char_* p0, char p1);
 void mycontainer_float___mycontainer(struct mycontainer_float_* p0, float p1);
 int mycontainer_int___increase(struct mycontainer_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 char mycontainer_char___uppercase(struct mycontainer_char_* p0);
 float mycontainer_float___test(struct mycontainer_float_* p0);
@@ -35,7 +20,7 @@ int main();
 
 // function: _ZN11mycontainerIiEC2Ei
 void mycontainer_int___mycontainer(struct mycontainer_int_* v0, int v1) {
-bb2:
+bb2: ;
   struct mycontainer_int_* this3;
   int arg4;
   this3 = v0;
@@ -48,7 +33,7 @@ bb2:
 
 // function: _ZN11mycontainerIcEC2Ec
 void mycontainer_char___mycontainer(struct mycontainer_char_* v7, char v8) {
-bb9:
+bb9: ;
   struct mycontainer_char_* this10;
   char arg11;
   this10 = v7;
@@ -61,7 +46,7 @@ bb9:
 
 // function: _ZN11mycontainerIfEC2Ef
 void mycontainer_float___mycontainer(struct mycontainer_float_* v14, float v15) {
-bb16:
+bb16: ;
   struct mycontainer_float_* this17;
   float arg18;
   this17 = v14;
@@ -74,7 +59,7 @@ bb16:
 
 // function: _ZN11mycontainerIiE8increaseEv
 int mycontainer_int___increase(struct mycontainer_int_* v21) {
-bb22:
+bb22: ;
   struct mycontainer_int_* this23;
   int __retval24;
   this23 = v21;
@@ -89,7 +74,7 @@ bb22:
 
 // function: _ZN11mycontainerIcE9uppercaseEv
 char mycontainer_char___uppercase(struct mycontainer_char_* v29) {
-bb30:
+bb30: ;
   struct mycontainer_char_* this31;
   char __retval32;
   this31 = v29;
@@ -127,7 +112,7 @@ bb30:
 
 // function: _ZN11mycontainerIfE4testEv
 float mycontainer_float___test(struct mycontainer_float_* v53) {
-bb54:
+bb54: ;
   struct mycontainer_float_* this55;
   float __retval56;
   this55 = v53;
@@ -143,7 +128,7 @@ bb54:
 
 // function: main
 int main() {
-bb63:
+bb63: ;
   int __retval64;
   struct mycontainer_int_ myint65;
   struct mycontainer_char_ mychar66;
@@ -162,9 +147,10 @@ bb63:
   if (c74) {
   } else {
     char* cast75 = (char*)&(_str);
-    char* c76 = _str_1;
+    char* c76 = (char*)_str_1;
     unsigned int c77 = 49;
     char* cast78 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast75, c76, c77, cast78);
   }
   char r79 = mycontainer_char___uppercase(&mychar66);
@@ -174,9 +160,10 @@ bb63:
   if (c82) {
   } else {
     char* cast83 = (char*)&(_str_2);
-    char* c84 = _str_1;
+    char* c84 = (char*)_str_1;
     unsigned int c85 = 50;
     char* cast86 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast83, c84, c85, cast86);
   }
   float r87 = mycontainer_float___test(&myfloat67);
@@ -185,9 +172,10 @@ bb63:
   if (c89) {
   } else {
     char* cast90 = (char*)&(_str_3);
-    char* c91 = _str_1;
+    char* c91 = (char*)_str_1;
     unsigned int c92 = 51;
     char* cast93 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast90, c91, c92, cast93);
   }
   int c94 = 0;

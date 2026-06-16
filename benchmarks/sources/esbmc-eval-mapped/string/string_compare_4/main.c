@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
@@ -24,11 +8,13 @@ struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_c
 struct std____new_allocator_char_;
 struct std__allocator_char_ { unsigned char __field0; };
 struct std__forward_iterator_tag { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
 struct std__random_access_iterator_tag { unsigned char __field0; };
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
-struct std__ios_base;
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* __field5; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
 char _str[12] = "green apple";
@@ -54,6 +40,7 @@ int _ZN9__gnu_cxx24__numeric_traits_integerIiE5__maxE __attribute__((aligned(4))
 int _ZN9__gnu_cxx24__numeric_traits_integerIiE5__minE __attribute__((aligned(4))) = -2147483648;
 char _str_17[22] = "basic_string::compare";
 char _str_18[55] = "%s: __pos (which is %zu) > this->size() (which is %zu)";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -62,7 +49,7 @@ extern int __VERIFIER_nondet_int(void);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str12;
   struct std__allocator_char_ ref_tmp03;
@@ -98,9 +85,10 @@ bb0:
       if (c11) {
       } else {
         char* cast12 = (char*)&(_str_2);
-        char* c13 = _str_3;
+        char* c13 = (char*)_str_3;
         unsigned int c14 = 21;
         char* cast15 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast12, c13, c14, cast15);
       }
         int std16 = __VERIFIER_nondet_int();
@@ -127,9 +115,10 @@ bb0:
       if (c30) {
       } else {
         char* cast31 = (char*)&(_str_7);
-        char* c32 = _str_3;
+        char* c32 = (char*)_str_3;
         unsigned int c33 = 25;
         char* cast34 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast31, c32, c33, cast34);
       }
         unsigned long c35 = 6;
@@ -159,9 +148,10 @@ bb0:
       if (c53) {
       } else {
         char* cast54 = (char*)&(_str_10);
-        char* c55 = _str_3;
+        char* c55 = (char*)_str_3;
         unsigned int c56 = 29;
         char* cast57 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast54, c55, c56, cast57);
       }
         unsigned long std58 = __VERIFIER_nondet_unsigned_long();
@@ -192,9 +182,10 @@ bb0:
       if (c77) {
       } else {
         char* cast78 = (char*)&(_str_13);
-        char* c79 = _str_3;
+        char* c79 = (char*)_str_3;
         unsigned int c80 = 33;
         char* cast81 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast78, c79, c80, cast81);
       }
         unsigned long c82 = 6;

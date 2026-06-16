@@ -1,30 +1,15 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 char _str[12] = "func<int>()";
 char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates13/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 _Bool bool_func_bool_();
 _Bool bool_func_int_();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _Z4funcIbEbv
 _Bool bool_func_bool_() {
-bb0:
+bb0: ;
   _Bool __retval1;
   _Bool c2 = 1;
   __retval1 = c2;
@@ -34,7 +19,7 @@ bb0:
 
 // function: _Z4funcIiEbv
 _Bool bool_func_int_() {
-bb4:
+bb4: ;
   _Bool __retval5;
   _Bool r6 = bool_func_bool_();
   __retval5 = r6;
@@ -44,7 +29,7 @@ bb4:
 
 // function: main
 int main() {
-bb8:
+bb8: ;
   int __retval9;
   int c10 = 0;
   __retval9 = c10;
@@ -52,9 +37,10 @@ bb8:
   if (r11) {
   } else {
     char* cast12 = (char*)&(_str);
-    char* c13 = _str_1;
+    char* c13 = (char*)_str_1;
     unsigned int c14 = 24;
     char* cast15 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast12, c13, c14, cast15);
   }
   int t16 = __retval9;

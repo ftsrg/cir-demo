@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct C { unsigned char __field0; };
 
@@ -22,12 +6,13 @@ char _str_1[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[14] = "0 == ( r + 2)";
 int C__operator_int(struct C* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN1CcviEv
 int C__operator_int(struct C* v0) {
-bb1:
+bb1: ;
   struct C* this2;
   int __retval3;
   this2 = v0;
@@ -40,7 +25,7 @@ bb1:
 
 // function: main
 int main() {
-bb7:
+bb7: ;
   int __retval8;
   struct C p9;
   int r10;
@@ -57,9 +42,10 @@ bb7:
       if (c17) {
       } else {
         char* cast18 = (char*)&(_str);
-        char* c19 = _str_1;
+        char* c19 = (char*)_str_1;
         unsigned int c20 = 40;
         char* cast21 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast18, c19, c20, cast21);
       }
     }
@@ -76,9 +62,10 @@ bb7:
       if (c29) {
       } else {
         char* cast30 = (char*)&(_str_2);
-        char* c31 = _str_1;
+        char* c31 = (char*)_str_1;
         unsigned int c32 = 44;
         char* cast33 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast30, c31, c32, cast33);
       }
     }

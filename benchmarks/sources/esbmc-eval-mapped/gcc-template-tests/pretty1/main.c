@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct X_void_ { unsigned char __field0; };
 
@@ -29,6 +13,7 @@ char __PRETTY_FUNCTION____ZN1XIvED2Ev[25] = "X<void>::~X() [T = void]";
 extern int strcmp(char* p0, char* p1);
 void Verify(char* p0);
 void X_void___X(struct X_void_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void X_void____X(struct X_void_* p0);
 int main();
@@ -36,7 +21,7 @@ int main();
 char* _ZL5names[3] __attribute__((aligned(16))) = {(char*)(_str_2), (char*)(_str_3), 0};
 // function: _Z6VerifyPKc
 void Verify(char* v0) {
-bb1:
+bb1: ;
   char* ptr2;
   ptr2 = v0;
   char* t3 = ptr2;
@@ -52,7 +37,7 @@ bb1:
 
 // function: _ZN1XIvEC2Ev
 void X_void___X(struct X_void_* v9) {
-bb10:
+bb10: ;
   struct X_void_* this11;
   this11 = v9;
   struct X_void_* t12 = this11;
@@ -63,7 +48,7 @@ bb10:
 
 // function: _ZN1XIvED2Ev
 void X_void____X(struct X_void_* v14) {
-bb15:
+bb15: ;
   struct X_void_* this16;
   this16 = v14;
   struct X_void_* t17 = this16;
@@ -74,7 +59,7 @@ bb15:
 
 // function: main
 int main() {
-bb19:
+bb19: ;
   int __retval20;
   int c21 = 0;
   __retval20 = c21;
@@ -88,9 +73,10 @@ bb19:
           if (c26) {
           } else {
             char* cast27 = (char*)&(_str);
-            char* c28 = _str_1;
+            char* c28 = (char*)_str_1;
             unsigned int c29 = 46;
             char* cast30 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast27, c28, c29, cast30);
           }
         }
@@ -105,9 +91,10 @@ bb19:
       if (c34) {
       } else {
         char* cast35 = (char*)&(_str);
-        char* c36 = _str_1;
+        char* c36 = (char*)_str_1;
         unsigned int c37 = 49;
         char* cast38 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast35, c36, c37, cast38);
       }
     }

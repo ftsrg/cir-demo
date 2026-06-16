@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
@@ -25,7 +9,7 @@ struct std____detail___List_size { unsigned long _M_size; };
 struct std____new_allocator_std___List_node_int__;
 struct std__allocator_std___List_node_int__;
 struct std__bidirectional_iterator_tag { unsigned char __field0; };
-struct std___List_node_int_;
+struct std___List_node_int_ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____allocated_obj_std__allocator_std___List_node_int___ { struct std____allocated_ptr_std__allocator_std___List_node_int___ __field0; };
 struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
 struct std____cxx11___List_base_int__std__allocator_int_____List_impl { struct std____detail___List_node_header _M_node; };
@@ -41,6 +25,7 @@ char _str_3[9] = "*it == 2";
 char _str_4[10] = "*it == 30";
 char _str_5[20] = "mylist1.size() == 6";
 char _str_6[20] = "mylist2.size() != 1";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -48,7 +33,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__list_int__std__allocator_int__ mylist12;
   struct std____cxx11__list_int__std__allocator_int__ mylist23;
@@ -126,9 +111,10 @@ bb0:
       if (c40) {
       } else {
         char* cast41 = (char*)&(_str);
-        char* c42 = _str_1;
+        char* c42 = (char*)_str_1;
         unsigned int c43 = 32;
         char* cast44 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast41, c42, c43, cast44);
       }
       _Bool std45;
@@ -136,9 +122,10 @@ bb0:
       if (std45) {
       } else {
         char* cast46 = (char*)&(_str_2);
-        char* c47 = _str_1;
+        char* c47 = (char*)_str_1;
         unsigned int c48 = 33;
         char* cast49 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast46, c47, c48, cast49);
       }
       int* std50;
@@ -149,9 +136,10 @@ bb0:
       if (c53) {
       } else {
         char* cast54 = (char*)&(_str_3);
-        char* c55 = _str_1;
+        char* c55 = (char*)_str_1;
         unsigned int c56 = 34;
         char* cast57 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast54, c55, c56, cast57);
       }
       int c58 = 0;
@@ -166,9 +154,10 @@ bb0:
       if (c63) {
       } else {
         char* cast64 = (char*)&(_str_4);
-        char* c65 = _str_1;
+        char* c65 = (char*)_str_1;
         unsigned int c66 = 36;
         char* cast67 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast64, c65, c66, cast67);
       }
       int c68 = 0;
@@ -195,9 +184,10 @@ bb0:
       if (c75) {
       } else {
         char* cast76 = (char*)&(_str_5);
-        char* c77 = _str_1;
+        char* c77 = (char*)_str_1;
         unsigned int c78 = 43;
         char* cast79 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast76, c77, c78, cast79);
       }
       unsigned long std80 = __VERIFIER_nondet_unsigned_long();
@@ -206,9 +196,10 @@ bb0:
       if (c82) {
       } else {
         char* cast83 = (char*)&(_str_6);
-        char* c84 = _str_1;
+        char* c84 = (char*)_str_1;
         unsigned int c85 = 44;
         char* cast86 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast83, c84, c85, cast86);
       }
       struct std___List_iterator_int_ std87;

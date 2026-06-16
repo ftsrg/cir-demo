@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 char _str[8] = "a and b";
 char _str_1[99] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/ch22_12/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
@@ -36,12 +20,13 @@ char _str_17[10] = "a or_eq b";
 char _str_18[15] = "(a or_eq b)==0";
 char _str_19[11] = "a xor_eq b";
 char _str_20[16] = "(a xor_eq b)==0";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int a2;
   int b3;
@@ -65,9 +50,10 @@ bb0:
   if (ternary9) {
   } else {
     char* cast13 = (char*)&(_str);
-    char* c14 = _str_1;
+    char* c14 = (char*)_str_1;
     unsigned int c15 = 19;
     char* cast16 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast13, c14, c15, cast16);
   }
   int c17 = 2;
@@ -91,9 +77,10 @@ bb0:
   if (c27) {
   } else {
     char* cast28 = (char*)&(_str_2);
-    char* c29 = _str_1;
+    char* c29 = (char*)_str_1;
     unsigned int c30 = 21;
     char* cast31 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast28, c29, c30, cast31);
   }
   int c32 = 2;
@@ -114,9 +101,10 @@ bb0:
   if (ternary36) {
   } else {
     char* cast40 = (char*)&(_str_3);
-    char* c41 = _str_1;
+    char* c41 = (char*)_str_1;
     unsigned int c42 = 24;
     char* cast43 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast40, c41, c42, cast43);
   }
   int c44 = 0;
@@ -140,9 +128,10 @@ bb0:
   if (c54) {
   } else {
     char* cast55 = (char*)&(_str_4);
-    char* c56 = _str_1;
+    char* c56 = (char*)_str_1;
     unsigned int c57 = 26;
     char* cast58 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast55, c56, c57, cast58);
   }
   int c59 = 2;
@@ -155,9 +144,10 @@ bb0:
   if (c63) {
   } else {
     char* cast64 = (char*)&(_str_5);
-    char* c65 = _str_1;
+    char* c65 = (char*)_str_1;
     unsigned int c66 = 29;
     char* cast67 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast64, c65, c66, cast67);
   }
   int c68 = 3;
@@ -173,9 +163,10 @@ bb0:
   if (c75) {
   } else {
     char* cast76 = (char*)&(_str_6);
-    char* c77 = _str_1;
+    char* c77 = (char*)_str_1;
     unsigned int c78 = 31;
     char* cast79 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast76, c77, c78, cast79);
   }
   int c80 = 3;
@@ -189,9 +180,10 @@ bb0:
   if (cast85) {
   } else {
     char* cast86 = (char*)&(_str_7);
-    char* c87 = _str_1;
+    char* c87 = (char*)_str_1;
     unsigned int c88 = 34;
     char* cast89 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast86, c87, c88, cast89);
   }
   int c90 = 3;
@@ -206,9 +198,10 @@ bb0:
   if (c96) {
   } else {
     char* cast97 = (char*)&(_str_8);
-    char* c98 = _str_1;
+    char* c98 = (char*)_str_1;
     unsigned int c99 = 36;
     char* cast100 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast97, c98, c99, cast100);
   }
   int c101 = 2;
@@ -222,9 +215,10 @@ bb0:
   if (cast106) {
   } else {
     char* cast107 = (char*)&(_str_9);
-    char* c108 = _str_1;
+    char* c108 = (char*)_str_1;
     unsigned int c109 = 39;
     char* cast110 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast107, c108, c109, cast110);
   }
   int c111 = 0;
@@ -239,9 +233,10 @@ bb0:
   if (c117) {
   } else {
     char* cast118 = (char*)&(_str_10);
-    char* c119 = _str_1;
+    char* c119 = (char*)_str_1;
     unsigned int c120 = 41;
     char* cast121 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast118, c119, c120, cast121);
   }
   int c122 = 2;
@@ -254,9 +249,10 @@ bb0:
   if (cast126) {
   } else {
     char* cast127 = (char*)&(_str_11);
-    char* c128 = _str_1;
+    char* c128 = (char*)_str_1;
     unsigned int c129 = 44;
     char* cast130 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast127, c128, c129, cast130);
   }
   int c131 = 1;
@@ -268,9 +264,10 @@ bb0:
   if (c135) {
   } else {
     char* cast136 = (char*)&(_str_12);
-    char* c137 = _str_1;
+    char* c137 = (char*)_str_1;
     unsigned int c138 = 46;
     char* cast139 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast136, c137, c138, cast139);
   }
   int t140 = a2;
@@ -280,9 +277,10 @@ bb0:
   if (cast143) {
   } else {
     char* cast144 = (char*)&(_str_13);
-    char* c145 = _str_1;
+    char* c145 = (char*)_str_1;
     unsigned int c146 = 48;
     char* cast147 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast144, c145, c146, cast147);
   }
   int c148 = 1;
@@ -297,9 +295,10 @@ bb0:
   if (c154) {
   } else {
     char* cast155 = (char*)&(_str_14);
-    char* c156 = _str_1;
+    char* c156 = (char*)_str_1;
     unsigned int c157 = 50;
     char* cast158 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast155, c156, c157, cast158);
   }
   int c159 = 2;
@@ -314,9 +313,10 @@ bb0:
   if (cast164) {
   } else {
     char* cast165 = (char*)&(_str_15);
-    char* c166 = _str_1;
+    char* c166 = (char*)_str_1;
     unsigned int c167 = 53;
     char* cast168 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast165, c166, c167, cast168);
   }
   int c169 = 0;
@@ -332,9 +332,10 @@ bb0:
   if (c175) {
   } else {
     char* cast176 = (char*)&(_str_16);
-    char* c177 = _str_1;
+    char* c177 = (char*)_str_1;
     unsigned int c178 = 55;
     char* cast179 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast176, c177, c178, cast179);
   }
   int c180 = 2;
@@ -349,9 +350,10 @@ bb0:
   if (cast185) {
   } else {
     char* cast186 = (char*)&(_str_17);
-    char* c187 = _str_1;
+    char* c187 = (char*)_str_1;
     unsigned int c188 = 58;
     char* cast189 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast186, c187, c188, cast189);
   }
   int c190 = 0;
@@ -367,9 +369,10 @@ bb0:
   if (c196) {
   } else {
     char* cast197 = (char*)&(_str_18);
-    char* c198 = _str_1;
+    char* c198 = (char*)_str_1;
     unsigned int c199 = 60;
     char* cast200 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast197, c198, c199, cast200);
   }
   int c201 = 2;
@@ -384,9 +387,10 @@ bb0:
   if (cast206) {
   } else {
     char* cast207 = (char*)&(_str_19);
-    char* c208 = _str_1;
+    char* c208 = (char*)_str_1;
     unsigned int c209 = 63;
     char* cast210 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast207, c208, c209, cast210);
   }
   int c211 = 0;
@@ -402,9 +406,10 @@ bb0:
   if (c217) {
   } else {
     char* cast218 = (char*)&(_str_20);
-    char* c219 = _str_1;
+    char* c219 = (char*)_str_1;
     unsigned int c220 = 65;
     char* cast221 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast218, c219, c220, cast221);
   }
   int c222 = 0;

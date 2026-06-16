@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -50,18 +34,17 @@ extern void *_ZTVSt9exception[];
 extern int __gxx_personality_v0();
 void std__exception___exception(struct std__exception* p0) {}
 void throwException();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
-extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z14throwExceptionv
 void throwException() {
-bb0:
+bb0: ;
     void* unnamed1;
       static char exc_buf3[8] = {0};
       struct std__exception* exc4 = (struct std__exception*)exc_buf3;
       // externalized std:: op: std::exception::exception()
-      __VERIFIER_nondet_memory(exc4, sizeof(*exc4));
       __cir_exc_ptr = (void*)exc4;
       __cir_exc_dtor = (void*)&std__exception___exception;
       __cir_exc_type = (const void*)__cir_eh_type__ZTISt9exception;
@@ -178,7 +161,7 @@ bb0:
 
 // function: main
 int main() {
-bb23:
+bb23: ;
   int __retval24;
   int c25 = 0;
   __retval24 = c25;
@@ -195,9 +178,10 @@ bb23:
       __cir_exc_active = 0;
         caughtException26 = (struct std__exception*)__cir_exc_ptr;
         char* cast30 = (char*)&(_str);
-        char* c31 = _str_1;
+        char* c31 = (char*)_str_1;
         unsigned int c32 = 49;
         char* cast33 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast30, c31, c32, cast33);
       {
         if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }

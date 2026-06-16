@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct A { int m_x; };
 struct B { void* __field0; struct A __field1; };
@@ -49,6 +33,7 @@ void C__C(struct C* p0, void** p1, int p2);
 void D__D(struct D* p0, int p1);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
 int A__getX(struct A* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -59,7 +44,7 @@ unsigned char* _ZTT1D[4] __attribute__((aligned(8))) = {(unsigned char*)(&_ZTV1D
 
 // function: _ZN1AC2Ev
 void A__A(struct A* v0) {
-bb1:
+bb1: ;
   struct A* this2;
   this2 = v0;
   struct A* t3 = this2;
@@ -68,7 +53,7 @@ bb1:
 
 // function: _ZN1BC2Ei
 void B__B(struct B* v4, void** v5, int v6) {
-bb7:
+bb7: ;
   struct B* this8;
   void** vtt9;
   int x10;
@@ -88,7 +73,7 @@ bb7:
 
 // function: _ZN1CC2Ei
 void C__C(struct C* v18, void** v19, int v20) {
-bb21:
+bb21: ;
   struct C* this22;
   void** vtt23;
   int x24;
@@ -108,7 +93,7 @@ bb21:
 
 // function: _ZN1DC1Ei
 void D__D(struct D* v32, int v33) {
-bb34:
+bb34: ;
   struct D* this35;
   int x36;
   this35 = v32;
@@ -138,7 +123,7 @@ bb34:
 
 // function: _ZN1A4getXEv
 int A__getX(struct A* v52) {
-bb53:
+bb53: ;
   struct A* this54;
   int __retval55;
   this54 = v52;
@@ -151,7 +136,7 @@ bb53:
 
 // function: main
 int main() {
-bb59:
+bb59: ;
   int __retval60;
   struct A* a61;
   struct D* __new_result62;
@@ -183,9 +168,10 @@ bb59:
   if (c83) {
   } else {
     char* cast84 = (char*)&(_str);
-    char* c85 = _str_1;
+    char* c85 = (char*)_str_1;
     unsigned int c86 = 48;
     char* cast87 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast84, c85, c86, cast87);
   }
   int c88 = 0;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
@@ -45,13 +29,14 @@ char _str_2[9] = "*it == 4";
 struct std__ranges____distance_fn _ZNSt6ranges8distanceE;
 char _str_3[49] = "cannot create std::vector larger than max_size()";
 _Bool myfunction(int p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z10myfunctionii
 _Bool myfunction(int v0, int v1) {
-bb2:
+bb2: ;
   int i3;
   int j4;
   _Bool __retval5;
@@ -67,7 +52,7 @@ bb2:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   int myints12[10];
   struct std__vector_int__std__allocator_int__ myvector13;
@@ -129,9 +114,10 @@ bb10:
     if (c42) {
     } else {
       char* cast43 = (char*)&(_str);
-      char* c44 = _str_1;
+      char* c44 = (char*)_str_1;
       unsigned int c45 = 28;
       char* cast46 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast43, c44, c45, cast46);
     }
     // array copy
@@ -161,9 +147,10 @@ bb10:
     if (c60) {
     } else {
       char* cast61 = (char*)&(_str_2);
-      char* c62 = _str_1;
+      char* c62 = (char*)_str_1;
       unsigned int c63 = 34;
       char* cast64 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast61, c62, c63, cast64);
     }
     int c65 = 0;

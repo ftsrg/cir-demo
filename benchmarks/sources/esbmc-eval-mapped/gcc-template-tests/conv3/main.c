@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct C_int_ { unsigned char __field0; };
 
@@ -24,6 +8,7 @@ char _str_2[10] = "0 == ( 2)";
 char _str_3[9] = "0 == (3)";
 int C_int___operator_int(struct C_int_* p0);
 int C_int___Foo(struct C_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int int_C_int___Baz_int_(struct C_int_* p0);
 float C_int___operator_float_float_(struct C_int_* p0);
@@ -32,7 +17,7 @@ int main();
 
 // function: _ZN1CIiEcviEv
 int C_int___operator_int(struct C_int_* v0) {
-bb1:
+bb1: ;
   struct C_int_* this2;
   int __retval3;
   this2 = v0;
@@ -45,7 +30,7 @@ bb1:
 
 // function: _ZN1CIiE3FooEv
 int C_int___Foo(struct C_int_* v7) {
-bb8:
+bb8: ;
   struct C_int_* this9;
   int __retval10;
   this9 = v7;
@@ -58,7 +43,7 @@ bb8:
 
 // function: _ZN1CIiE3BazIiEEiv
 int int_C_int___Baz_int_(struct C_int_* v14) {
-bb15:
+bb15: ;
   struct C_int_* this16;
   int __retval17;
   this16 = v14;
@@ -71,7 +56,7 @@ bb15:
 
 // function: _ZN1CIiEcvT_IfEEv
 float C_int___operator_float_float_(struct C_int_* v21) {
-bb22:
+bb22: ;
   struct C_int_* this23;
   float __retval24;
   this23 = v21;
@@ -85,7 +70,7 @@ bb22:
 
 // function: _ZN1CIiE3BazIfEEiv
 int int_C_int___Baz_float_(struct C_int_* v29) {
-bb30:
+bb30: ;
   struct C_int_* this31;
   int __retval32;
   this31 = v29;
@@ -99,7 +84,7 @@ bb30:
 
 // function: main
 int main() {
-bb37:
+bb37: ;
   int __retval38;
   int r39;
   struct C_int_ c40;
@@ -111,9 +96,10 @@ bb37:
     _Bool cast44 = (_Bool)t43;
     if (cast44) {
       char* cast45 = (char*)&(_str);
-      char* c46 = _str_1;
+      char* c46 = (char*)_str_1;
       unsigned int c47 = 43;
       char* cast48 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast45, c46, c47, cast48);
     }
   int r49 = int_C_int___Baz_int_(&c40);
@@ -122,9 +108,10 @@ bb37:
     _Bool cast51 = (_Bool)t50;
     if (cast51) {
       char* cast52 = (char*)&(_str_2);
-      char* c53 = _str_1;
+      char* c53 = (char*)_str_1;
       unsigned int c54 = 46;
       char* cast55 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast52, c53, c54, cast55);
     }
   int r56 = int_C_int___Baz_float_(&c40);
@@ -134,9 +121,10 @@ bb37:
     _Bool u59 = !cast58;
     if (u59) {
       char* cast60 = (char*)&(_str_3);
-      char* c61 = _str_1;
+      char* c61 = (char*)_str_1;
       unsigned int c62 = 49;
       char* cast63 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast60, c61, c62, cast63);
     }
   int c64 = 0;

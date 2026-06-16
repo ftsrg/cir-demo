@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct A_TWO__argt_ { unsigned int v; };
 
@@ -21,12 +5,13 @@ char _str[11] = "a.v == TWO";
 char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates32/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void A__argt_1__argt___A(struct A_TWO__argt_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN1AIL4argt1ES0_EC2Ev
 void A__argt_1__argt___A(struct A_TWO__argt_* v0) {
-bb1:
+bb1: ;
   struct A_TWO__argt_* this2;
   this2 = v0;
   struct A_TWO__argt_* t3 = this2;
@@ -37,7 +22,7 @@ bb1:
 
 // function: main
 int main() {
-bb5:
+bb5: ;
   int __retval6;
   struct A_TWO__argt_ a7;
   int c8 = 0;
@@ -50,9 +35,10 @@ bb5:
   if (c12) {
   } else {
     char* cast13 = (char*)&(_str);
-    char* c14 = _str_1;
+    char* c14 = (char*)_str_1;
     unsigned int c15 = 23;
     char* cast16 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast13, c14, c15, cast16);
   }
   int c17 = 0;

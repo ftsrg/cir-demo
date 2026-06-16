@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct A_int_ { int t; };
 
@@ -22,12 +6,13 @@ char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[8] = "b.eq(a)";
 _Bool A_int___eq_A_int__const___const(struct A_int_* p0, struct A_int_* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZNK1AIiE2eqERKS0_
 _Bool A_int___eq_A_int__const___const(struct A_int_* v0, struct A_int_* v1) {
-bb2:
+bb2: ;
   struct A_int_* this3;
   struct A_int_* ref4;
   _Bool __retval5;
@@ -45,7 +30,7 @@ bb2:
 
 // function: main
 int main() {
-bb12:
+bb12: ;
   int __retval13;
   struct A_int_ a14;
   struct A_int_ b15;
@@ -59,18 +44,20 @@ bb12:
   if (r19) {
   } else {
     char* cast20 = (char*)&(_str);
-    char* c21 = _str_1;
+    char* c21 = (char*)_str_1;
     unsigned int c22 = 28;
     char* cast23 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast20, c21, c22, cast23);
   }
   _Bool r24 = A_int___eq_A_int__const___const(&b15, &a14);
   if (r24) {
   } else {
     char* cast25 = (char*)&(_str_2);
-    char* c26 = _str_1;
+    char* c26 = (char*)_str_1;
     unsigned int c27 = 29;
     char* cast28 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast25, c26, c27, cast28);
   }
   int t29 = __retval13;

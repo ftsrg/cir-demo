@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 char _str[18] = "func<bool>() == 0";
 char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates10/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
@@ -22,12 +6,13 @@ char _str_3[18] = "func<char>() == 2";
 int int_func_int_();
 int int_func_char_();
 int int_func_bool_();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _Z4funcIiEiv
 int int_func_int_() {
-bb0:
+bb0: ;
   int __retval1;
   int c2 = 1;
   __retval1 = c2;
@@ -37,7 +22,7 @@ bb0:
 
 // function: _Z4funcIcEiv
 int int_func_char_() {
-bb4:
+bb4: ;
   int __retval5;
   int c6 = 2;
   __retval5 = c6;
@@ -47,7 +32,7 @@ bb4:
 
 // function: _Z4funcIbEiv
 int int_func_bool_() {
-bb8:
+bb8: ;
   int __retval9;
   int c10 = 0;
   __retval9 = c10;
@@ -57,7 +42,7 @@ bb8:
 
 // function: main
 int main() {
-bb12:
+bb12: ;
   int __retval13;
   int c14 = 0;
   __retval13 = c14;
@@ -67,9 +52,10 @@ bb12:
   if (c17) {
   } else {
     char* cast18 = (char*)&(_str);
-    char* c19 = _str_1;
+    char* c19 = (char*)_str_1;
     unsigned int c20 = 30;
     char* cast21 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast18, c19, c20, cast21);
   }
   int r22 = int_func_int_();
@@ -78,9 +64,10 @@ bb12:
   if (c24) {
   } else {
     char* cast25 = (char*)&(_str_2);
-    char* c26 = _str_1;
+    char* c26 = (char*)_str_1;
     unsigned int c27 = 31;
     char* cast28 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast25, c26, c27, cast28);
   }
   int r29 = int_func_char_();
@@ -89,9 +76,10 @@ bb12:
   if (c31) {
   } else {
     char* cast32 = (char*)&(_str_3);
-    char* c33 = _str_1;
+    char* c33 = (char*)_str_1;
     unsigned int c34 = 32;
     char* cast35 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast32, c33, c34, cast35);
   }
   int t36 = __retval13;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct A { void* __field0; };
 struct B { struct A __field0; };
@@ -33,6 +17,7 @@ char _ZTS1B[3] = "1B";
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
 char _ZTS1A[3] = "1A";
 void B__B(struct B* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void B___B_2(struct B* p0);
 int main();
@@ -49,7 +34,7 @@ void *_ZTV1A[] = { (void*)0, (void*)0, (void*)&A___A_2, (void*)&A___A };
 
 // function: _ZN1BC2Ev
 void B__B(struct B* v0) {
-bb1:
+bb1: ;
   struct B* this2;
   this2 = v0;
   struct B* t3 = this2;
@@ -63,7 +48,7 @@ bb1:
 
 // function: _ZN1BD2Ev
 void B___B_2(struct B* v7) {
-bb8:
+bb8: ;
   struct B* this9;
   this9 = v7;
   struct B* t10 = this9;
@@ -76,7 +61,7 @@ bb8:
 
 // function: main
 int main() {
-bb12:
+bb12: ;
   int __retval13;
   struct B bobj14;
   struct A* ap15;
@@ -111,9 +96,10 @@ bb12:
     if (c34) {
     } else {
       char* cast35 = (char*)&(_str);
-      char* c36 = _str_1;
+      char* c36 = (char*)_str_1;
       unsigned int c37 = 25;
       char* cast38 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast35, c36, c37, cast38);
     }
   {
@@ -125,7 +111,7 @@ bb12:
 
 // function: _ZN1AC2Ev
 void A__A(struct A* v40) {
-bb41:
+bb41: ;
   struct A* this42;
   this42 = v40;
   struct A* t43 = this42;
@@ -137,7 +123,7 @@ bb41:
 
 // function: _ZN1BD0Ev
 void B___B(struct B* v46) {
-bb47:
+bb47: ;
   struct B* this48;
   this48 = v46;
   struct B* t49 = this48;
@@ -152,7 +138,7 @@ bb47:
 
 // function: _ZN1AD2Ev
 void A___A_2(struct A* v52) {
-bb53:
+bb53: ;
   struct A* this54;
   this54 = v52;
   struct A* t55 = this54;
@@ -161,7 +147,7 @@ bb53:
 
 // function: _ZN1AD0Ev
 void A___A(struct A* v56) {
-bb57:
+bb57: ;
   struct A* this58;
   this58 = v56;
   struct A* t59 = this58;

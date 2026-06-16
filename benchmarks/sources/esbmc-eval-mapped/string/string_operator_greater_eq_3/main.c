@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
@@ -42,13 +26,14 @@ unsigned long _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE4nposE __attr
 char _str_7[55] = "%s: __pos (which is %zu) > this->size() (which is %zu)";
 int _ZN9__gnu_cxx24__numeric_traits_integerIiE5__maxE __attribute__((aligned(4))) = 2147483647;
 int _ZN9__gnu_cxx24__numeric_traits_integerIiE5__minE __attribute__((aligned(4))) = -2147483648;
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ aux2;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str13;
@@ -138,9 +123,10 @@ bb0:
         if (ternary26) {
         } else {
           char* cast34 = (char*)&(_str_1);
-          char* c35 = _str_2;
+          char* c35 = (char*)_str_2;
           unsigned int c36 = 18;
           char* cast37 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast34, c35, c36, cast37);
         }
       {

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct Bar_int_ { unsigned char __field0; };
 struct Baz { unsigned char __field0; };
@@ -25,12 +9,13 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 int Foo_int___k(struct Foo_int_* p0, float p1);
 int Baz__k(struct Baz* p0, int p1);
 int Bar_int___foo(struct Bar_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN3FooIiE1kEf
 int Foo_int___k(struct Foo_int_* v0, float v1) {
-bb2:
+bb2: ;
   struct Foo_int_* this3;
   float unnamed4;
   int __retval5;
@@ -45,7 +30,7 @@ bb2:
 
 // function: _ZN3Baz1kEi
 int Baz__k(struct Baz* v9, int v10) {
-bb11:
+bb11: ;
   struct Baz* this12;
   int unnamed13;
   int __retval14;
@@ -60,7 +45,7 @@ bb11:
 
 // function: _ZN3BarIiE3fooEv
 int Bar_int___foo(struct Bar_int_* v18) {
-bb19:
+bb19: ;
   struct Bar_int_* this20;
   int __retval21;
   this20 = v18;
@@ -95,7 +80,7 @@ bb19:
 
 // function: main
 int main() {
-bb39:
+bb39: ;
   int __retval40;
   struct Bar_int_ bar41;
   int c42 = 0;
@@ -106,9 +91,10 @@ bb39:
   if (c45) {
   } else {
     char* cast46 = (char*)&(_str);
-    char* c47 = _str_1;
+    char* c47 = (char*)_str_1;
     unsigned int c48 = 46;
     char* cast49 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast46, c47, c48, cast49);
   }
   int t50 = __retval40;

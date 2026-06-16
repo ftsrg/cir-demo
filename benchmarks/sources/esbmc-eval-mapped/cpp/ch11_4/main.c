@@ -1,20 +1,15 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
+// Struct definitions (auto-parsed)
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long _M_width; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+
 // Virtual dispatch: default implementations (override as `weak`).
 // __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
 // pointer is at offset 0; the function is vtable[slot].
@@ -22,14 +17,6 @@ __attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __
   void* __fn = ((void**)*(void**)__obj)[__slot];
   return ((char(*)(void*, char))__fn)(__obj, __a0);
 }
-
-// Struct definitions (auto-parsed)
-struct __locale_data { unsigned char __placeholder; };
-struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
-struct std__ctype_char_;
-struct std__ios_base;
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
 
 char __const_main_c[6] = "HELLO";
 double __const_main_b[7] = {0x1.199999999999ap0, 0x1.199999999999ap1, 0x1.a666666666666p1, 0x1.199999999999ap2, 0x1.6p2, 0x1.a666666666666p2, 0x1.ecccccccccccdp2};
@@ -45,6 +32,7 @@ char __PRETTY_FUNCTION____Z10printArrayIiEvPKT_i[48] = "void printArray(const T 
 char _str_5[2] = " ";
 char __PRETTY_FUNCTION____Z10printArrayIdEvPKT_i[51] = "void printArray(const T * int) [T = double]";
 char __PRETTY_FUNCTION____Z10printArrayIcEvPKT_i[49] = "void printArray(const T * int) [T = char]";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void void_printArray_int_(int* p0, int p1);
 void void_printArray_double_(double* p0, int p1);
@@ -54,7 +42,7 @@ int main();
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z10printArrayIiEvPKT_i
 void void_printArray_int_(int* v0, int v1) {
-bb2:
+bb2: ;
   int* array3;
   int count4;
   array3 = v0;
@@ -68,9 +56,10 @@ bb2:
       _Bool c10 = ((t8 <= t9)) ? 1 : 0;
       if (!c10) break;
         char* cast11 = (char*)&(_str_3);
-        char* c12 = _str_4;
+        char* c12 = (char*)_str_4;
         unsigned int c13 = 20;
         char* cast14 = (char*)&(__PRETTY_FUNCTION____Z10printArrayIiEvPKT_i);
+        reach_error();
         __assert_fail(cast11, c12, c13, cast14);
         int t15 = i5;
         long cast16 = (long)t15;
@@ -94,7 +83,7 @@ bb2:
 
 // function: _Z10printArrayIdEvPKT_i
 void void_printArray_double_(double* v26, int v27) {
-bb28:
+bb28: ;
   double* array29;
   int count30;
   array29 = v26;
@@ -108,9 +97,10 @@ bb28:
       _Bool c36 = ((t34 <= t35)) ? 1 : 0;
       if (!c36) break;
         char* cast37 = (char*)&(_str_3);
-        char* c38 = _str_4;
+        char* c38 = (char*)_str_4;
         unsigned int c39 = 20;
         char* cast40 = (char*)&(__PRETTY_FUNCTION____Z10printArrayIdEvPKT_i);
+        reach_error();
         __assert_fail(cast37, c38, c39, cast40);
         int t41 = i31;
         long cast42 = (long)t41;
@@ -134,7 +124,7 @@ bb28:
 
 // function: _Z10printArrayIcEvPKT_i
 void void_printArray_char_(char* v52, int v53) {
-bb54:
+bb54: ;
   char* array55;
   int count56;
   array55 = v52;
@@ -148,9 +138,10 @@ bb54:
       _Bool c62 = ((t60 <= t61)) ? 1 : 0;
       if (!c62) break;
         char* cast63 = (char*)&(_str_3);
-        char* c64 = _str_4;
+        char* c64 = (char*)_str_4;
         unsigned int c65 = 20;
         char* cast66 = (char*)&(__PRETTY_FUNCTION____Z10printArrayIcEvPKT_i);
+        reach_error();
         __assert_fail(cast63, c64, c65, cast66);
         int t67 = i57;
         long cast68 = (long)t67;
@@ -174,7 +165,7 @@ bb54:
 
 // function: main
 int main() {
-bb78:
+bb78: ;
   int __retval79;
   int aCount80;
   int bCount81;

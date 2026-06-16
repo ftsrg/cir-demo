@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -21,14 +5,6 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
-
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
 
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
@@ -40,21 +16,32 @@ struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocat
 struct std___Rb_tree_iterator_int_ { struct std___Rb_tree_node_base* _M_node; };
 struct std___Rb_tree_key_compare_std__less_int__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_;
+struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____new_allocator_std___Rb_tree_node_int__;
 struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
 struct std__allocator_std___Rb_tree_node_int__;
 struct std__binary_function_int__int__bool_;
+struct std__ios_base___Words { void* __field0; long __field1; };
 struct std__less_int_ { unsigned char __field0; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
 struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
 struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
 struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_ { struct std___Rb_tree_key_compare_std__less_int__ __field0; struct std___Rb_tree_header __field1; };
-struct std__ctype_char_;
-struct std__ios_base;
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
 struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_ _M_impl; };
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 struct std__multiset_int__std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ _M_t; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 int __const_main_myints[6] = {12, 75, 10, 32, 20, 25};
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
@@ -72,6 +59,7 @@ extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attri
 char _str_9[16] = "first contains:";
 char _str_10[2] = " ";
 char _str_11[18] = "\nsecond contains:";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -79,7 +67,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int myints2[6];
   struct std__multiset_int__std__less_int___std__allocator_int__ first3;
@@ -131,9 +119,10 @@ bb0:
       if (c35) {
       } else {
         char* cast36 = (char*)&(_str);
-        char* c37 = _str_1;
+        char* c37 = (char*)_str_1;
         unsigned int c38 = 20;
         char* cast39 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast36, c37, c38, cast39);
       }
       struct std___Rb_tree_const_iterator_int_ std40;
@@ -149,9 +138,10 @@ bb0:
       if (c45) {
       } else {
         char* cast46 = (char*)&(_str_2);
-        char* c47 = _str_1;
+        char* c47 = (char*)_str_1;
         unsigned int c48 = 22;
         char* cast49 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast46, c47, c48, cast49);
       }
       int c50 = 0;
@@ -166,9 +156,10 @@ bb0:
       if (c55) {
       } else {
         char* cast56 = (char*)&(_str_3);
-        char* c57 = _str_1;
+        char* c57 = (char*)_str_1;
         unsigned int c58 = 24;
         char* cast59 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast56, c57, c58, cast59);
       }
       int c60 = 0;
@@ -183,9 +174,10 @@ bb0:
       if (c65) {
       } else {
         char* cast66 = (char*)&(_str_4);
-        char* c67 = _str_1;
+        char* c67 = (char*)_str_1;
         unsigned int c68 = 26;
         char* cast69 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast66, c67, c68, cast69);
       }
       int c70 = 0;
@@ -198,9 +190,10 @@ bb0:
       if (c74) {
       } else {
         char* cast75 = (char*)&(_str_5);
-        char* c76 = _str_1;
+        char* c76 = (char*)_str_1;
         unsigned int c77 = 28;
         char* cast78 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast75, c76, c77, cast78);
       }
       struct std___Rb_tree_const_iterator_int_ std79;
@@ -216,9 +209,10 @@ bb0:
       if (c84) {
       } else {
         char* cast85 = (char*)&(_str_6);
-        char* c86 = _str_1;
+        char* c86 = (char*)_str_1;
         unsigned int c87 = 30;
         char* cast88 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast85, c86, c87, cast88);
       }
       int c89 = 0;
@@ -233,9 +227,10 @@ bb0:
       if (c94) {
       } else {
         char* cast95 = (char*)&(_str_7);
-        char* c96 = _str_1;
+        char* c96 = (char*)_str_1;
         unsigned int c97 = 32;
         char* cast98 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast95, c96, c97, cast98);
       }
       int c99 = 0;
@@ -250,9 +245,10 @@ bb0:
       if (c104) {
       } else {
         char* cast105 = (char*)&(_str_8);
-        char* c106 = _str_1;
+        char* c106 = (char*)_str_1;
         unsigned int c107 = 34;
         char* cast108 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast105, c106, c107, cast108);
       }
       int c109 = 0;
@@ -268,9 +264,10 @@ bb0:
       if (c113) {
       } else {
         char* cast114 = (char*)&(_str);
-        char* c115 = _str_1;
+        char* c115 = (char*)_str_1;
         unsigned int c116 = 39;
         char* cast117 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast114, c115, c116, cast117);
       }
       struct std___Rb_tree_const_iterator_int_ std118;
@@ -286,9 +283,10 @@ bb0:
       if (c123) {
       } else {
         char* cast124 = (char*)&(_str_6);
-        char* c125 = _str_1;
+        char* c125 = (char*)_str_1;
         unsigned int c126 = 41;
         char* cast127 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast124, c125, c126, cast127);
       }
       int c128 = 0;
@@ -303,9 +301,10 @@ bb0:
       if (c133) {
       } else {
         char* cast134 = (char*)&(_str_7);
-        char* c135 = _str_1;
+        char* c135 = (char*)_str_1;
         unsigned int c136 = 43;
         char* cast137 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast134, c135, c136, cast137);
       }
       int c138 = 0;
@@ -320,9 +319,10 @@ bb0:
       if (c143) {
       } else {
         char* cast144 = (char*)&(_str_8);
-        char* c145 = _str_1;
+        char* c145 = (char*)_str_1;
         unsigned int c146 = 45;
         char* cast147 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast144, c145, c146, cast147);
       }
       int c148 = 0;
@@ -335,9 +335,10 @@ bb0:
       if (c152) {
       } else {
         char* cast153 = (char*)&(_str_5);
-        char* c154 = _str_1;
+        char* c154 = (char*)_str_1;
         unsigned int c155 = 47;
         char* cast156 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast153, c154, c155, cast156);
       }
       struct std___Rb_tree_const_iterator_int_ std157;
@@ -353,9 +354,10 @@ bb0:
       if (c162) {
       } else {
         char* cast163 = (char*)&(_str_2);
-        char* c164 = _str_1;
+        char* c164 = (char*)_str_1;
         unsigned int c165 = 49;
         char* cast166 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast163, c164, c165, cast166);
       }
       int c167 = 0;
@@ -370,9 +372,10 @@ bb0:
       if (c172) {
       } else {
         char* cast173 = (char*)&(_str_3);
-        char* c174 = _str_1;
+        char* c174 = (char*)_str_1;
         unsigned int c175 = 51;
         char* cast176 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast173, c174, c175, cast176);
       }
       int c177 = 0;
@@ -387,9 +390,10 @@ bb0:
       if (c182) {
       } else {
         char* cast183 = (char*)&(_str_4);
-        char* c184 = _str_1;
+        char* c184 = (char*)_str_1;
         unsigned int c185 = 53;
         char* cast186 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast183, c184, c185, cast186);
       }
       int c187 = 0;

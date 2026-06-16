@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ { int* _M_current; };
@@ -38,13 +22,14 @@ char _str_3[91] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include
 char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEE4backEv[77] = "reference std::vector<int>::back() [_Tp = int, _Alloc = std::allocator<int>]";
 char _str_4[15] = "!this->empty()";
 _Bool mypredicate(int p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z11mypredicateii
 _Bool mypredicate(int v0, int v1) {
-bb2:
+bb2: ;
   int i3;
   int j4;
   _Bool __retval5;
@@ -60,7 +45,7 @@ bb2:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   struct std__vector_int__std__allocator_int__ myvector12;
   struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ it13;
@@ -122,9 +107,10 @@ bb10:
     if (c44) {
     } else {
       char* cast45 = (char*)&(_str);
-      char* c46 = _str_1;
+      char* c46 = (char*)_str_1;
       unsigned int c47 = 31;
       char* cast48 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast45, c46, c47, cast48);
     }
     int c49 = 0;

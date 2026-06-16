@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct n1__A_bool_ { _Bool a; };
 struct B_bool_ { struct n1__A_bool_ b; };
@@ -21,12 +5,13 @@ struct B_bool_ { struct n1__A_bool_ b; };
 char _str[12] = "o.b.a==true";
 char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates14/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct B_bool_ o2;
   int c3 = 0;
@@ -41,9 +26,10 @@ bb0:
   if (c9) {
   } else {
     char* cast10 = (char*)&(_str);
-    char* c11 = _str_1;
+    char* c11 = (char*)_str_1;
     unsigned int c12 = 27;
     char* cast13 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast10, c11, c12, cast13);
   }
   int t14 = __retval1;

@@ -1,26 +1,10 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
 struct std___Rb_tree_const_iterator_int_ { struct std___Rb_tree_node_base* _M_node; };
 struct std___Rb_tree_key_compare_std__less_int__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_;
+struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____new_allocator_std___Rb_tree_node_int__;
 struct std__allocator_std___Rb_tree_node_int__;
 struct std__binary_function_int__int__bool_;
@@ -33,13 +17,14 @@ struct std__multiset_int__std__less_int___std__allocator_int__ { struct std___Rb
 char _str[17] = "mycomp(*it,*it2)";
 char _str_1[118] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/multiset/multiset-key_comp-bug/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__multiset_int__std__less_int___std__allocator_int__ myset2;
   struct std__less_int_ mycomp3;
@@ -82,9 +67,10 @@ bb0:
     if (std20) {
     } else {
       char* cast21 = (char*)&(_str);
-      char* c22 = _str_1;
+      char* c22 = (char*)_str_1;
       unsigned int c23 = 24;
       char* cast24 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast21, c22, c23, cast24);
     }
     int c25 = 0;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -42,13 +26,14 @@ char _str_3[90] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include
 char __PRETTY_FUNCTION____ZNSt5dequeIiSaIiEEixEm[91] = "reference std::deque<int>::operator[](size_type) [_Tp = int, _Alloc = std::allocator<int>]";
 char _str_4[19] = "__n < this->size()";
 int op_double(int p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z9op_doublei
 int op_double(int v0) {
-bb1:
+bb1: ;
   int i2;
   int __retval3;
   i2 = v0;
@@ -62,7 +47,7 @@ bb1:
 
 // function: main
 int main() {
-bb8:
+bb8: ;
   int __retval9;
   struct std__deque_int__std__allocator_int__ d10;
   struct std__deque_int__std__allocator_int__ d211;
@@ -129,9 +114,10 @@ bb8:
             if (c47) {
             } else {
               char* cast48 = (char*)&(_str);
-              char* c49 = _str_1;
+              char* c49 = (char*)_str_1;
               unsigned int c50 = 26;
               char* cast51 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast48, c49, c50, cast51);
             }
         for_step34: ;

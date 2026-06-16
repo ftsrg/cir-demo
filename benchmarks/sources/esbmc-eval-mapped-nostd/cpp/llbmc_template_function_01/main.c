@@ -1,31 +1,16 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 char _str[7] = "k == 6";
 char _str_1[118] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/llbmc_template_function_01/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[8] = "n == 10";
 int int_getMax_int_(int p0, int p1);
 long long_getMax_long_(long p0, long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _Z6getMaxIiET_S0_S0_
 int int_getMax_int_(int v0, int v1) {
-bb2:
+bb2: ;
   int a3;
   int b4;
   int __retval5;
@@ -52,7 +37,7 @@ bb2:
 
 // function: _Z6getMaxIlET_S0_S0_
 long long_getMax_long_(long v15, long v16) {
-bb17:
+bb17: ;
   long a18;
   long b19;
   long __retval20;
@@ -79,7 +64,7 @@ bb17:
 
 // function: main
 int main() {
-bb30:
+bb30: ;
   int __retval31;
   int i32;
   int j33;
@@ -111,9 +96,10 @@ bb30:
   if (c51) {
   } else {
     char* cast52 = (char*)&(_str);
-    char* c53 = _str_1;
+    char* c53 = (char*)_str_1;
     unsigned int c54 = 23;
     char* cast55 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast52, c53, c54, cast55);
   }
   long t56 = n37;
@@ -122,9 +108,10 @@ bb30:
   if (c58) {
   } else {
     char* cast59 = (char*)&(_str_2);
-    char* c60 = _str_1;
+    char* c60 = (char*)_str_1;
     unsigned int c61 = 24;
     char* cast62 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast59, c60, c61, cast62);
   }
   int c63 = 0;

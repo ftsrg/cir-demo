@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -32,7 +16,7 @@ struct std___Rb_tree_key_compare_bool_____int__int__ { void* _M_key_compare; };
 struct std___Rb_tree_key_compare_classcomp_ { unsigned char __field0; };
 struct std___Rb_tree_key_compare_std__less_int__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_;
+struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____new_allocator_int_;
 struct std____new_allocator_std___Rb_tree_node_int__;
 struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
@@ -63,6 +47,7 @@ char _str_6[18] = "third.size() == 5";
 char _str_7[19] = "fourth.size() == 5";
 char _str_8[18] = "fifth.size() == 0";
 _Bool fncomp(int p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -70,7 +55,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _Z6fncompii
 _Bool fncomp(int v0, int v1) {
-bb2:
+bb2: ;
   int lhs3;
   int rhs4;
   _Bool __retval5;
@@ -86,7 +71,7 @@ bb2:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   struct std__multiset_int__std__less_int___std__allocator_int__ first12;
   struct std___Rb_tree_const_iterator_int_ ref_tmp013;
@@ -120,9 +105,10 @@ bb10:
     if (c37) {
     } else {
       char* cast38 = (char*)&(_str);
-      char* c39 = _str_1;
+      char* c39 = (char*)_str_1;
       unsigned int c40 = 24;
       char* cast41 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast38, c39, c40, cast41);
     }
     struct std___Rb_tree_const_iterator_int_ std42;
@@ -136,9 +122,10 @@ bb10:
     if (std44) {
     } else {
       char* cast45 = (char*)&(_str_2);
-      char* c46 = _str_1;
+      char* c46 = (char*)_str_1;
       unsigned int c47 = 25;
       char* cast48 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast45, c46, c47, cast48);
     }
     // array copy
@@ -157,9 +144,10 @@ bb10:
       if (c55) {
       } else {
         char* cast56 = (char*)&(_str_3);
-        char* c57 = _str_1;
+        char* c57 = (char*)_str_1;
         unsigned int c58 = 28;
         char* cast59 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast56, c57, c58, cast59);
       }
       struct std___Rb_tree_const_iterator_int_ std60;
@@ -173,9 +161,10 @@ bb10:
       if (c64) {
       } else {
         char* cast65 = (char*)&(_str_4);
-        char* c66 = _str_1;
+        char* c66 = (char*)_str_1;
         unsigned int c67 = 30;
         char* cast68 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast65, c66, c67, cast68);
       }
       struct std___Rb_tree_const_iterator_int_ std69;
@@ -195,9 +184,10 @@ bb10:
       if (c76) {
       } else {
         char* cast77 = (char*)&(_str_5);
-        char* c78 = _str_1;
+        char* c78 = (char*)_str_1;
         unsigned int c79 = 33;
         char* cast80 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast77, c78, c79, cast80);
       }
       // externalized std:: op: std::multiset<int, std::less<int>, std::allocator<int> >::multiset(std::multiset<int, std::less<int>, std::allocator<int> > const&)
@@ -209,9 +199,10 @@ bb10:
         if (c83) {
         } else {
           char* cast84 = (char*)&(_str_6);
-          char* c85 = _str_1;
+          char* c85 = (char*)_str_1;
           unsigned int c86 = 35;
           char* cast87 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast84, c85, c86, cast87);
         }
         struct std___Rb_tree_const_iterator_int_ std88;
@@ -227,9 +218,10 @@ bb10:
         if (c93) {
         } else {
           char* cast94 = (char*)&(_str_4);
-          char* c95 = _str_1;
+          char* c95 = (char*)_str_1;
           unsigned int c96 = 37;
           char* cast97 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast94, c95, c96, cast97);
         }
         struct std___Rb_tree_const_iterator_int_ std98;
@@ -249,9 +241,10 @@ bb10:
         if (c105) {
         } else {
           char* cast106 = (char*)&(_str_5);
-          char* c107 = _str_1;
+          char* c107 = (char*)_str_1;
           unsigned int c108 = 40;
           char* cast109 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast106, c107, c108, cast109);
         }
         struct std___Rb_tree_const_iterator_int_ std110;
@@ -270,9 +263,10 @@ bb10:
           if (c116) {
           } else {
             char* cast117 = (char*)&(_str_7);
-            char* c118 = _str_1;
+            char* c118 = (char*)_str_1;
             unsigned int c119 = 42;
             char* cast120 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast117, c118, c119, cast120);
           }
           struct std___Rb_tree_const_iterator_int_ std121;
@@ -288,9 +282,10 @@ bb10:
           if (c126) {
           } else {
             char* cast127 = (char*)&(_str_4);
-            char* c128 = _str_1;
+            char* c128 = (char*)_str_1;
             unsigned int c129 = 44;
             char* cast130 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast127, c128, c129, cast130);
           }
           struct std___Rb_tree_const_iterator_int_ std131;
@@ -310,9 +305,10 @@ bb10:
           if (c138) {
           } else {
             char* cast139 = (char*)&(_str_5);
-            char* c140 = _str_1;
+            char* c140 = (char*)_str_1;
             unsigned int c141 = 47;
             char* cast142 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast139, c140, c141, cast142);
           }
           // externalized std:: op: std::multiset<int, classcomp, std::allocator<int> >::multiset()
@@ -323,9 +319,10 @@ bb10:
             if (c145) {
             } else {
               char* cast146 = (char*)&(_str_8);
-              char* c147 = _str_1;
+              char* c147 = (char*)_str_1;
               unsigned int c148 = 49;
               char* cast149 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast146, c147, c148, cast149);
             }
             fn_pt31 = &fncomp;

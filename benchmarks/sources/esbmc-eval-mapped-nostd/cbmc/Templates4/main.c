@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct T1 { _Bool t; };
 
@@ -29,6 +13,7 @@ char _str_6[13] = "3==f<int>(3)";
 char __PRETTY_FUNCTION____ZN2T11hEv[13] = "void T1::h()";
 void T1__T1(struct T1* p0);
 void T1__g(struct T1* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int int_T1__f_int_(struct T1* p0, int p1);
 _Bool bool_T1__f_bool_(struct T1* p0, _Bool p1);
@@ -37,7 +22,7 @@ int main();
 
 // function: _ZN2T1C2Ev
 void T1__T1(struct T1* v0) {
-bb1:
+bb1: ;
   struct T1* this2;
   this2 = v0;
   struct T1* t3 = this2;
@@ -48,7 +33,7 @@ bb1:
 
 // function: _ZN2T11gEv
 void T1__g(struct T1* v5) {
-bb6:
+bb6: ;
   struct T1* this7;
   this7 = v5;
   struct T1* t8 = this7;
@@ -59,9 +44,10 @@ bb6:
   if (c12) {
   } else {
     char* cast13 = (char*)&(_str_5);
-    char* c14 = _str_1;
+    char* c14 = (char*)_str_1;
     unsigned int c15 = 23;
     char* cast16 = (char*)&(__PRETTY_FUNCTION____ZN2T11gEv);
+    reach_error();
     __assert_fail(cast13, c14, c15, cast16);
   }
   return;
@@ -69,7 +55,7 @@ bb6:
 
 // function: _ZN2T11fIiEET_S1_
 int int_T1__f_int_(struct T1* v17, int v18) {
-bb19:
+bb19: ;
   struct T1* this20;
   int x21;
   int __retval22;
@@ -87,7 +73,7 @@ bb19:
 
 // function: _ZN2T11fIbEET_S1_
 _Bool bool_T1__f_bool_(struct T1* v28, _Bool v29) {
-bb30:
+bb30: ;
   struct T1* this31;
   _Bool x32;
   _Bool __retval33;
@@ -105,7 +91,7 @@ bb30:
 
 // function: _ZN2T11hEv
 void T1__h(struct T1* v39) {
-bb40:
+bb40: ;
   struct T1* this41;
   this41 = v39;
   struct T1* t42 = this41;
@@ -116,9 +102,10 @@ bb40:
   if (c46) {
   } else {
     char* cast47 = (char*)&(_str_6);
-    char* c48 = _str_1;
+    char* c48 = (char*)_str_1;
     unsigned int c49 = 28;
     char* cast50 = (char*)&(__PRETTY_FUNCTION____ZN2T11hEv);
+    reach_error();
     __assert_fail(cast47, c48, c49, cast50);
   }
   return;
@@ -126,7 +113,7 @@ bb40:
 
 // function: main
 int main() {
-bb51:
+bb51: ;
   int __retval52;
   struct T1 x53;
   int c54 = 0;
@@ -141,9 +128,10 @@ bb51:
   if (c59) {
   } else {
     char* cast60 = (char*)&(_str);
-    char* c61 = _str_1;
+    char* c61 = (char*)_str_1;
     unsigned int c62 = 39;
     char* cast63 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast60, c61, c62, cast63);
   }
   int c64 = 1;
@@ -153,9 +141,10 @@ bb51:
   if (c67) {
   } else {
     char* cast68 = (char*)&(_str_2);
-    char* c69 = _str_1;
+    char* c69 = (char*)_str_1;
     unsigned int c70 = 41;
     char* cast71 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast68, c69, c70, cast71);
   }
   _Bool c72 = 1;
@@ -167,9 +156,10 @@ bb51:
   if (c77) {
   } else {
     char* cast78 = (char*)&(_str_3);
-    char* c79 = _str_1;
+    char* c79 = (char*)_str_1;
     unsigned int c80 = 42;
     char* cast81 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast78, c79, c80, cast81);
   }
   T1__h(&x53);
@@ -181,9 +171,10 @@ bb51:
   if (c86) {
   } else {
     char* cast87 = (char*)&(_str_4);
-    char* c88 = _str_1;
+    char* c88 = (char*)_str_1;
     unsigned int c89 = 45;
     char* cast90 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast87, c88, c89, cast90);
   }
   int t91 = __retval52;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct Base { unsigned char __field0; };
 struct Derived { int __field0; };
@@ -26,12 +10,13 @@ extern void free(void*);
 void* operator_new(unsigned long p0) { return malloc(p0); }
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
 int Base__f(struct Base* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN4Base1fEv
 int Base__f(struct Base* v0) {
-bb1:
+bb1: ;
   struct Base* this2;
   int __retval3;
   this2 = v0;
@@ -44,7 +29,7 @@ bb1:
 
 // function: main
 int main() {
-bb7:
+bb7: ;
   int __retval8;
   struct Base* o9;
   struct Derived* __new_result10;
@@ -79,9 +64,10 @@ bb7:
   if (c28) {
   } else {
     char* cast29 = (char*)&(_str);
-    char* c30 = _str_1;
+    char* c30 = (char*)_str_1;
     unsigned int c31 = 28;
     char* cast32 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast29, c30, c31, cast32);
   }
   int t33 = r11;

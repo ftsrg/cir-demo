@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -29,7 +13,7 @@ struct std___Rb_tree_const_iterator_std__pair_const_char__int__ { struct std___R
 struct std___Rb_tree_iterator_std__pair_const_char__int__ { struct std___Rb_tree_node_base* _M_node; };
 struct std___Rb_tree_key_compare_std__less_char__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_std__pair_const_char__int__;
+struct std___Rb_tree_node_std__pair_const_char__int__ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_std__pair_const_char__int__ _M_storage; };
 struct std___Select1st_std__pair_const_char__int__ { unsigned char __field0; };
 struct std____new_allocator_std___Rb_tree_node_std__pair_const_char__int___;
 struct std____pair_base_char__int_;
@@ -41,7 +25,7 @@ struct std__bidirectional_iterator_tag { unsigned char __field0; };
 struct std__input_iterator_tag { unsigned char __field0; };
 struct std__less_char_;
 struct std__pair_char__int_ { char first; int second; };
-struct std__pair_const_char__int_;
+struct std__pair_const_char__int_ { char first; int second; };
 struct std__pair_std___Rb_tree_const_iterator_std__pair_const_char__int____std___Rb_tree_const_iterator_std__pair_const_char__int___ { struct std___Rb_tree_const_iterator_std__pair_const_char__int__ first; struct std___Rb_tree_const_iterator_std__pair_const_char__int__ second; };
 struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
 struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
@@ -54,6 +38,7 @@ char _str_1[111] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[21] = "mymm.count('y') == 3";
 char _str_3[21] = "mymm.count('z') == 2";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -61,7 +46,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___ mymm2;
   struct std__pair_char__int_ ref_tmp03;
@@ -163,9 +148,10 @@ bb0:
     if (c58) {
     } else {
       char* cast59 = (char*)&(_str);
-      char* c60 = _str_1;
+      char* c60 = (char*)_str_1;
       unsigned int c61 = 25;
       char* cast62 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast59, c60, c61, cast62);
     }
     char c63 = 121;
@@ -176,9 +162,10 @@ bb0:
     if (c66) {
     } else {
       char* cast67 = (char*)&(_str_2);
-      char* c68 = _str_1;
+      char* c68 = (char*)_str_1;
       unsigned int c69 = 26;
       char* cast70 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast67, c68, c69, cast70);
     }
     char c71 = 122;
@@ -189,9 +176,10 @@ bb0:
     if (c74) {
     } else {
       char* cast75 = (char*)&(_str_3);
-      char* c76 = _str_1;
+      char* c76 = (char*)_str_1;
       unsigned int c77 = 27;
       char* cast78 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast75, c76, c77, cast78);
     }
     int c79 = 0;

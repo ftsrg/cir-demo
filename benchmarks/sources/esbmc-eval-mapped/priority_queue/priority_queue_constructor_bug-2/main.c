@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
@@ -32,6 +16,7 @@ struct std__vector_int__std__allocator_int__ __const_main_ref_tmp2;
 char _str[19] = "fourth.size() != 0";
 char _str_1[135] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/priority_queue/priority_queue_constructor_bug-2/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void mycomparison__mycomparison(struct mycomparison* p0, _Bool* p1);
 int main();
@@ -40,7 +25,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _ZN12mycomparisonC2ERKb
 void mycomparison__mycomparison(struct mycomparison* v0, _Bool* v1) {
-bb2:
+bb2: ;
   struct mycomparison* this3;
   _Bool* revparam4;
   this3 = v0;
@@ -54,7 +39,7 @@ bb2:
 
 // function: main
 int main() {
-bb8:
+bb8: ;
   int __retval9;
   struct std__priority_queue_int__std__vector_int__std__allocator_int____mycomparison_ fourth10;
   struct std__priority_queue_int__std__vector_int__std__allocator_int____mycomparison_ sixth11;
@@ -71,9 +56,10 @@ bb8:
     if (c18) {
     } else {
       char* cast19 = (char*)&(_str);
-      char* c20 = _str_1;
+      char* c20 = (char*)_str_1;
       unsigned int c21 = 30;
       char* cast22 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast19, c20, c21, cast22);
     }
     _Bool c23 = 1;

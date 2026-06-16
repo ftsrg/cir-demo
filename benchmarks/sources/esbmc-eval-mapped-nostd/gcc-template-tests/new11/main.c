@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct Foo_float_ { int* x; };
 
@@ -27,11 +11,12 @@ int main();
 extern void *malloc(unsigned long);
 extern void free(void*);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 
 // function: _Znwm
 void* operator_new(unsigned long v0) {
-bb1:
+bb1: ;
   unsigned long unnamed2;
   void* __retval3;
   unnamed2 = v0;
@@ -45,7 +30,7 @@ bb1:
 
 // function: _ZN3FooIfEC2Ev
 void Foo_float___Foo(struct Foo_float_* v7) {
-bb8:
+bb8: ;
   struct Foo_float_* this9;
   int* __new_result10;
   this9 = v7;
@@ -62,9 +47,10 @@ bb8:
     _Bool c19 = ((t17 != c18)) ? 1 : 0;
     if (c19) {
       char* cast20 = (char*)&(_str);
-      char* c21 = _str_1;
+      char* c21 = (char*)_str_1;
       unsigned int c22 = 27;
       char* cast23 = (char*)&(__PRETTY_FUNCTION____ZN3FooIfEC2Ev);
+      reach_error();
       __assert_fail(cast20, c21, c22, cast23);
     }
   return;
@@ -72,7 +58,7 @@ bb8:
 
 // function: main
 int main() {
-bb24:
+bb24: ;
   int __retval25;
   struct Foo_float_ foo26;
   int c27 = 0;

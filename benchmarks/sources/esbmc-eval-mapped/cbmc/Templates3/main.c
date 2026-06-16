@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct int_array_3U_ { int array[3]; };
 
@@ -23,12 +7,13 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[7] = "x<size";
 char __PRETTY_FUNCTION____ZN9int_arrayILj3EE4readEj[48] = "int int_array<3>::read(unsigned int) [size = 3]";
 int int_array_3u___read(struct int_array_3U_* p0, unsigned int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN9int_arrayILj3EE4readEj
 int int_array_3u___read(struct int_array_3U_* v0, unsigned int v1) {
-bb2:
+bb2: ;
   struct int_array_3U_* this3;
   unsigned int x4;
   int __retval5;
@@ -41,9 +26,10 @@ bb2:
   if (c9) {
   } else {
     char* cast10 = (char*)&(_str_2);
-    char* c11 = _str_1;
+    char* c11 = (char*)_str_1;
     unsigned int c12 = 18;
     char* cast13 = (char*)&(__PRETTY_FUNCTION____ZN9int_arrayILj3EE4readEj);
+    reach_error();
     __assert_fail(cast10, c11, c12, cast13);
   }
   unsigned int t14 = x4;
@@ -56,7 +42,7 @@ bb2:
 
 // function: main
 int main() {
-bb18:
+bb18: ;
   int __retval19;
   struct int_array_3U_ a20;
   int c21 = 0;
@@ -71,9 +57,10 @@ bb18:
   if (c27) {
   } else {
     char* cast28 = (char*)&(_str);
-    char* c29 = _str_1;
+    char* c29 = (char*)_str_1;
     unsigned int c30 = 28;
     char* cast31 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast28, c29, c30, cast31);
   }
   int t32 = __retval19;

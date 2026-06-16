@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct mysequence_int__5_ { int memblock[5]; };
 
@@ -23,12 +7,13 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[29] = "myints.getmember(3) == 31416";
 void mysequence_int__5___setmember(struct mysequence_int__5_* p0, int p1, int p2);
 int mysequence_int__5___getmember(struct mysequence_int__5_* p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN10mysequenceIiLi5EE9setmemberEii
 void mysequence_int__5___setmember(struct mysequence_int__5_* v0, int v1, int v2) {
-bb3:
+bb3: ;
   struct mysequence_int__5_* this4;
   int x5;
   int value6;
@@ -45,7 +30,7 @@ bb3:
 
 // function: _ZN10mysequenceIiLi5EE9getmemberEi
 int mysequence_int__5___getmember(struct mysequence_int__5_* v11, int v12) {
-bb13:
+bb13: ;
   struct mysequence_int__5_* this14;
   int x15;
   int __retval16;
@@ -62,7 +47,7 @@ bb13:
 
 // function: main
 int main() {
-bb22:
+bb22: ;
   int __retval23;
   struct mysequence_int__5_ myints24;
   int c25 = 0;
@@ -80,9 +65,10 @@ bb22:
   if (c33) {
   } else {
     char* cast34 = (char*)&(_str);
-    char* c35 = _str_1;
+    char* c35 = (char*)_str_1;
     unsigned int c36 = 36;
     char* cast37 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast34, c35, c36, cast37);
   }
   int c38 = 3;
@@ -92,9 +78,10 @@ bb22:
   if (c41) {
   } else {
     char* cast42 = (char*)&(_str_2);
-    char* c43 = _str_1;
+    char* c43 = (char*)_str_1;
     unsigned int c44 = 37;
     char* cast45 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast42, c43, c44, cast45);
   }
   int c46 = 0;

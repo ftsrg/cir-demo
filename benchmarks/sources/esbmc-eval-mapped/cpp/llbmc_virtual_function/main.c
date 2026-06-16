@@ -1,18 +1,9 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Struct definitions (auto-parsed)
+struct Base { void* __field0; };
+struct Derived { struct Base __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct anon_struct_0 { unsigned char* __field0[3]; };
+struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
+struct anon_struct_2 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
 
 // Virtual dispatch: default implementations (override as `weak`).
 // __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
@@ -21,13 +12,6 @@ __attribute__((weak)) int __VERIFIER_virtual_call_int(void* __obj, int __slot) {
   void* __fn = ((void**)*(void**)__obj)[__slot];
   return ((int(*)(void*))__fn)(__obj);
 }
-
-// Struct definitions (auto-parsed)
-struct Base { void* __field0; };
-struct Derived { struct Base __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
-struct anon_struct_0 { unsigned char* __field0[3]; };
-struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
-struct anon_struct_2 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
 
 extern void *_ZTVN10__cxxabiv120__si_class_type_infoE[];
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
@@ -45,6 +29,7 @@ extern void free(void*);
 void* operator_new(unsigned long p0) { return malloc(p0); }
 void Derived__Derived(struct Derived* p0);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 void Base__Base(struct Base* p0);
@@ -56,7 +41,7 @@ void *_ZTV4Base[] = { (void*)0, (void*)0, (void*)&Base__f };
 
 // function: _ZN7DerivedC2Ev
 void Derived__Derived(struct Derived* v0) {
-bb1:
+bb1: ;
   struct Derived* this2;
   this2 = v0;
   struct Derived* t3 = this2;
@@ -70,7 +55,7 @@ bb1:
 
 // function: main
 int main() {
-bb7:
+bb7: ;
   int __retval8;
   struct Base* o9;
   struct Derived* __new_result10;
@@ -108,9 +93,10 @@ bb7:
   if (c32) {
   } else {
     char* cast33 = (char*)&(_str);
-    char* c34 = _str_1;
+    char* c34 = (char*)_str_1;
     unsigned int c35 = 28;
     char* cast36 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast33, c34, c35, cast36);
   }
   int t37 = r11;
@@ -121,7 +107,7 @@ bb7:
 
 // function: _ZN4BaseC2Ev
 void Base__Base(struct Base* v39) {
-bb40:
+bb40: ;
   struct Base* this41;
   this41 = v39;
   struct Base* t42 = this41;
@@ -133,7 +119,7 @@ bb40:
 
 // function: _ZN7Derived1fEv
 int Derived__f(struct Derived* v45) {
-bb46:
+bb46: ;
   struct Derived* this47;
   int __retval48;
   this47 = v45;
@@ -146,7 +132,7 @@ bb46:
 
 // function: _ZN4Base1fEv
 int Base__f(struct Base* v52) {
-bb53:
+bb53: ;
   struct Base* this54;
   int __retval55;
   this54 = v52;

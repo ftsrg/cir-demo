@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -32,7 +16,7 @@ struct std____list___Scratch_list_std____detail___List_node_base_ { struct std__
 struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_int___void_ { unsigned char __field0; };
 struct std____new_allocator_std___List_node_int__;
 struct std__allocator_std___List_node_int__;
-struct std___List_node_int_;
+struct std___List_node_int_ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____allocated_obj_std__allocator_std___List_node_int___ { struct std____allocated_ptr_std__allocator_std___List_node_int___ __field0; };
 struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
 struct std____cxx11___List_base_int__std__allocator_int_____List_impl { struct std____detail___List_node_header _M_node; };
@@ -49,6 +33,7 @@ char _str_4[89] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include
 char __PRETTY_FUNCTION____ZNSt7__cxx114listIiSaIiEE5frontEv[76] = "reference std::list<int>::front() [_Tp = int, _Alloc = std::allocator<int>]";
 char _str_5[15] = "!this->empty()";
 char __PRETTY_FUNCTION____ZNSt7__cxx114listIiSaIiEE4backEv[75] = "reference std::list<int>::back() [_Tp = int, _Alloc = std::allocator<int>]";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -56,7 +41,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__list_int__std__allocator_int__ mylist2;
   int ref_tmp03;
@@ -97,9 +82,10 @@ bb0:
     if (c15) {
     } else {
       char* cast16 = (char*)&(_str);
-      char* c17 = _str_1;
+      char* c17 = (char*)_str_1;
       unsigned int c18 = 24;
       char* cast19 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast16, c17, c18, cast19);
     }
     int* std20;
@@ -110,9 +96,10 @@ bb0:
     if (c23) {
     } else {
       char* cast24 = (char*)&(_str_2);
-      char* c25 = _str_1;
+      char* c25 = (char*)_str_1;
       unsigned int c26 = 25;
       char* cast27 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast24, c25, c26, cast27);
     }
     unsigned long std28 = __VERIFIER_nondet_unsigned_long();
@@ -121,9 +108,10 @@ bb0:
     if (c30) {
     } else {
       char* cast31 = (char*)&(_str_3);
-      char* c32 = _str_1;
+      char* c32 = (char*)_str_1;
       unsigned int c33 = 26;
       char* cast34 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast31, c32, c33, cast34);
     }
     int c35 = 0;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __locale_data { unsigned char __placeholder; };
@@ -22,11 +6,13 @@ union anon_0 { char _M_local_buf[16]; unsigned long _M_allocated_capacity; };
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider { char* _M_p; };
 struct std____new_allocator_char_;
 struct std__allocator_char_ { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
-struct std__ios_base;
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_istream_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* __field5; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_istream_char__std__char_traits_char__ { void* __field0; long _M_gcount; struct std__basic_ios_char__std__char_traits_char__ __field2; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
 extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
@@ -35,6 +21,7 @@ extern struct std__basic_istream_char__std__char_traits_char__ _ZSt3cin __attrib
 char _str_1[23] = "(int)cin.gcount() >= 0";
 char _str_2[116] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/stream/istream_operator_void/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -42,7 +29,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern long __VERIFIER_nondet_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   void* n2;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str3;
@@ -62,9 +49,10 @@ bb0:
     if (c11) {
     } else {
       char* cast12 = (char*)&(_str_1);
-      char* c13 = _str_2;
+      char* c13 = (char*)_str_2;
       unsigned int c14 = 19;
       char* cast15 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast12, c13, c14, cast15);
     }
     long std16 = __VERIFIER_nondet_long();
@@ -74,9 +62,10 @@ bb0:
     if (c19) {
     } else {
       char* cast20 = (char*)&(_str_1);
-      char* c21 = _str_2;
+      char* c21 = (char*)_str_2;
       unsigned int c22 = 23;
       char* cast23 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast20, c21, c22, cast23);
     }
     int c24 = 0;

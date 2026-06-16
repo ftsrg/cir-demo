@@ -1,27 +1,13 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __locale_data { unsigned char __placeholder; };
 struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
-struct std__ios_base;
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_istream_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* __field5; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_istream_char__std__char_traits_char__ { void* __field0; long _M_gcount; struct std__basic_ios_char__std__char_traits_char__ __field2; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
 extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
@@ -32,6 +18,7 @@ char _str_2[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_3[50] = "Enter your favourite movie (stop with percent) : ";
 char _str_4[23] = "'s favourite movie is ";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -39,7 +26,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern long __VERIFIER_nondet_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   char name2[256];
   char title3[256];
@@ -71,9 +58,10 @@ bb0:
   if (ternary15) {
   } else {
     char* cast21 = (char*)&(_str_1);
-    char* c22 = _str_2;
+    char* c22 = (char*)_str_2;
     unsigned int c23 = 18;
     char* cast24 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast21, c22, c23, cast24);
   }
   char* cast25 = (char*)&(_str_3);
@@ -102,9 +90,10 @@ bb0:
   if (ternary35) {
   } else {
     char* cast41 = (char*)&(_str_1);
-    char* c42 = _str_2;
+    char* c42 = (char*)_str_2;
     unsigned int c43 = 21;
     char* cast44 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast41, c42, c43, cast44);
   }
   char* cast45 = (char*)&(name2);

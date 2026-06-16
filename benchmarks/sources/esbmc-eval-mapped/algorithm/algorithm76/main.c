@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
@@ -36,13 +20,14 @@ char _str_2[26] = "vector::_M_default_append";
 char _str_3[91] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_vector.h";
 char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEEixEm[92] = "reference std::vector<int>::operator[](size_type) [_Tp = int, _Alloc = std::allocator<int>]";
 char _str_4[19] = "__n < this->size()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int myints2[5];
   struct std__vector_int__std__allocator_int__ myvector3;
@@ -80,9 +65,10 @@ bb0:
     if (c20) {
     } else {
       char* cast21 = (char*)&(_str);
-      char* c22 = _str_1;
+      char* c22 = (char*)_str_1;
       unsigned int c23 = 24;
       char* cast24 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast21, c22, c23, cast24);
     }
     int c25 = 0;

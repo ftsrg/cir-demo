@@ -1,18 +1,9 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Struct definitions (auto-parsed)
+struct A { void* __field0; };
+struct B { struct A __field0; };
+struct anon_struct_0 { unsigned char* __field0[3]; };
+struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
+struct anon_struct_2 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
 
 // Virtual dispatch: default implementations (override as `weak`).
 // __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
@@ -21,13 +12,6 @@ __attribute__((weak)) int __VERIFIER_virtual_call_int(void* __obj, int __slot) {
   void* __fn = ((void**)*(void**)__obj)[__slot];
   return ((int(*)(void*))__fn)(__obj);
 }
-
-// Struct definitions (auto-parsed)
-struct A { void* __field0; };
-struct B { struct A __field0; };
-struct anon_struct_0 { unsigned char* __field0[3]; };
-struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
-struct anon_struct_2 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
 
 extern void *_ZTVN10__cxxabiv120__si_class_type_infoE[];
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
@@ -46,6 +30,7 @@ extern void free(void*);
 void* operator_new(unsigned long p0) { return malloc(p0); }
 void B__B(struct B* p0);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 void A__A(struct A* p0);
@@ -57,7 +42,7 @@ void *_ZTV1A[] = { (void*)0, (void*)0, (void*)&A__Foo };
 
 // function: _Z3BarI1BEiPT_
 int int_Bar_B_(struct B* v0) {
-bb1:
+bb1: ;
   struct B* a2;
   int __retval3;
   a2 = v0;
@@ -93,7 +78,7 @@ bb1:
 
 // function: _ZN1BC2Ev
 void B__B(struct B* v24) {
-bb25:
+bb25: ;
   struct B* this26;
   this26 = v24;
   struct B* t27 = this26;
@@ -107,7 +92,7 @@ bb25:
 
 // function: main
 int main() {
-bb31:
+bb31: ;
   int __retval32;
   struct B* __new_result33;
   int c34 = 0;
@@ -124,9 +109,10 @@ bb31:
   if (c41) {
   } else {
     char* cast42 = (char*)&(_str);
-    char* c43 = _str_1;
+    char* c43 = (char*)_str_1;
     unsigned int c44 = 38;
     char* cast45 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast42, c43, c44, cast45);
   }
   int t46 = __retval32;
@@ -135,7 +121,7 @@ bb31:
 
 // function: _ZN1AC2Ev
 void A__A(struct A* v47) {
-bb48:
+bb48: ;
   struct A* this49;
   this49 = v47;
   struct A* t50 = this49;
@@ -147,7 +133,7 @@ bb48:
 
 // function: _ZN1B3FooEv
 int B__Foo(struct B* v53) {
-bb54:
+bb54: ;
   struct B* this55;
   int __retval56;
   this55 = v53;
@@ -160,7 +146,7 @@ bb54:
 
 // function: _ZN1A3FooEv
 int A__Foo(struct A* v60) {
-bb61:
+bb61: ;
   struct A* this62;
   int __retval63;
   this62 = v60;

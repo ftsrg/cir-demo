@@ -1,30 +1,15 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 char __const_main_src[3] = "ht";
 char _str[13] = "dest[1]=='t'";
 char _str_1[98] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cpp/memcpy/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void* memcpy(void* p0, void* p1, int p2);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _Z6memcpyPvPKvi
 void* memcpy(void* v0, void* v1, int v2) {
-bb3:
+bb3: ;
   void* dst4;
   void* src5;
   int n6;
@@ -71,7 +56,7 @@ bb3:
 
 // function: main
 int main() {
-bb33:
+bb33: ;
   int __retval34;
   char src35[3];
   char dest36[3];
@@ -93,9 +78,10 @@ bb33:
   if (c48) {
   } else {
     char* cast49 = (char*)&(_str);
-    char* c50 = _str_1;
+    char* c50 = (char*)_str_1;
     unsigned int c51 = 27;
     char* cast52 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast49, c50, c51, cast52);
   }
   int c53 = 0;

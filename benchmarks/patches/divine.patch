@@ -1,0 +1,24 @@
+--- divine/utils/config.py	2020-12-02 14:23:30.000000000 +0100
++++ divine-fixed/utils/config.py	2026-06-16 19:25:46.217896525 +0200
+@@ -70,9 +70,7 @@
+
+ class CompilationOptions:
+     def __init__(self):
+-        self.opts : List[str] = [
+-            "-fgnu89-inline",
+-        ]
++        self.opts : List[str] = []
+         self.libm = False
+
+     def get(self, optimize: bool) -> List[str]:
+--- divine/utils/runner.py	2020-12-02 14:23:30.000000000 +0100
++++ divine-fixed/utils/runner.py	2026-06-16 19:12:51.452911842 +0200
+@@ -83,7 +83,7 @@
+         self.config = config
+         # workdir paths
+         self.work_dir            = tempfile.mkdtemp()
+-        self.preprocesed   : str = self.work_dir + "/benchmark.c"
++        self.preprocesed   : str = self.work_dir + ("/benchmark.c" if ".cpp" not in self.config.benchmark else "/benchmark.cpp")
+         self.config              = config
+         if config.opts.report:
+             self.report    : str = config.opts.report

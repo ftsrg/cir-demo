@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct o_32_ { unsigned char __field0; };
 
@@ -21,12 +5,13 @@ char _str[22] = "0 == ( (a != 0x3000))";
 char _str_1[113] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/gcc-template-tests/spec10/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void void_o_32___do_add_int_(int* p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN1oILi32EE6do_addIiEEvPT_S2_
 void void_o_32___do_add_int_(int* v0, int v1) {
-bb2:
+bb2: ;
   int* p3;
   int v4;
   p3 = v0;
@@ -41,7 +26,7 @@ bb2:
 
 // function: main
 int main() {
-bb9:
+bb9: ;
   int __retval10;
   int a11;
   struct o_32_ agg_tmp_ensured12;
@@ -60,9 +45,10 @@ bb9:
   if (c21) {
   } else {
     char* cast22 = (char*)&(_str);
-    char* c23 = _str_1;
+    char* c23 = (char*)_str_1;
     unsigned int c24 = 34;
     char* cast25 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast22, c23, c24, cast25);
   }
   int t26 = __retval10;

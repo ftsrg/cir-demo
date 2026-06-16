@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -34,12 +18,13 @@ char _str[2] = "0";
 char _str_1[122] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/try_catch/try-catch_pointer_02_bug/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 extern int __gxx_personality_v0();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int c2 = 0;
   __retval1 = c2;
@@ -68,9 +53,10 @@ bb0:
       __cir_exc_active = 0;
         unnamed5 = *(void**)__cir_exc_ptr;
         char* cast13 = (char*)&(_str);
-        char* c14 = _str_1;
+        char* c14 = (char*)_str_1;
         unsigned int c15 = 18;
         char* cast16 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast13, c14, c15, cast16);
       {
         if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }

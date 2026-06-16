@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -54,6 +38,7 @@ _Bool operator___2(struct A_bool_ p0, struct A_bool_ p1);
 _Bool operator__(struct A_bool_ p0, struct A_bool_ p1);
 _Bool operator_(struct A_bool_ p0, struct A_bool_ p1);
 void A_bool___A(struct A_bool_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -61,7 +46,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _ZN1AIbE3getEv
 _Bool A_bool___get(struct A_bool_* v0) {
-bb1:
+bb1: ;
   struct A_bool_* this2;
   _Bool __retval3;
   this2 = v0;
@@ -74,7 +59,7 @@ bb1:
 
 // function: _Zne1AIbES0_
 _Bool operator___2(struct A_bool_ v7, struct A_bool_ v8) {
-bb9:
+bb9: ;
   struct A_bool_ x10;
   struct A_bool_ y11;
   _Bool __retval12;
@@ -107,7 +92,7 @@ bb9:
 
 // function: _Zeq1AIbES0_
 _Bool operator__(struct A_bool_ v22, struct A_bool_ v23) {
-bb24:
+bb24: ;
   struct A_bool_ x25;
   struct A_bool_ y26;
   _Bool __retval27;
@@ -140,7 +125,7 @@ bb24:
 
 // function: _Zlt1AIbES0_
 _Bool operator_(struct A_bool_ v37, struct A_bool_ v38) {
-bb39:
+bb39: ;
   struct A_bool_ x40;
   struct A_bool_ y41;
   _Bool __retval42;
@@ -154,7 +139,7 @@ bb39:
 
 // function: _ZN1AIbEC2Ev
 void A_bool___A(struct A_bool_* v45) {
-bb46:
+bb46: ;
   struct A_bool_* this47;
   this47 = v45;
   struct A_bool_* t48 = this47;
@@ -165,7 +150,7 @@ bb46:
 
 // function: main
 int main() {
-bb50:
+bb50: ;
   int __retval51;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____ first52;
   struct A_bool_ x53;
@@ -219,9 +204,10 @@ bb50:
     if (u58) {
     } else {
       char* cast59 = (char*)&(_str);
-      char* c60 = _str_1;
+      char* c60 = (char*)_str_1;
       unsigned int c61 = 56;
       char* cast62 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast59, c60, c61, cast62);
     }
     struct A_bool_* std63;
@@ -238,9 +224,10 @@ bb50:
     if (r64) {
     } else {
       char* cast65 = (char*)&(_str_2);
-      char* c66 = _str_1;
+      char* c66 = (char*)_str_1;
       unsigned int c67 = 57;
       char* cast68 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast65, c66, c67, cast68);
     }
     unsigned long std69 = __VERIFIER_nondet_unsigned_long();
@@ -249,9 +236,10 @@ bb50:
     if (c71) {
     } else {
       char* cast72 = (char*)&(_str_3);
-      char* c73 = _str_1;
+      char* c73 = (char*)_str_1;
       unsigned int c74 = 58;
       char* cast75 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast72, c73, c74, cast75);
     }
     int c76 = 0;

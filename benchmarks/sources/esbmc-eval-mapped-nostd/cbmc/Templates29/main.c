@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct N__A_int_ { int i; };
 struct B { struct N__A_int_ __field0; int __field1; };
@@ -22,13 +6,14 @@ char _str[10] = "b.i == 10";
 char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates29/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void B__B(struct B* p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 void N__A_int___A(struct N__A_int_* p0, int p1);
 
 // function: _ZN1BC2Ei
 void B__B(struct B* v0, int v1) {
-bb2:
+bb2: ;
   struct B* this3;
   int i4;
   this3 = v0;
@@ -42,7 +27,7 @@ bb2:
 
 // function: main
 int main() {
-bb8:
+bb8: ;
   int __retval9;
   struct B b10;
   int c11 = 0;
@@ -56,9 +41,10 @@ bb8:
   if (c16) {
   } else {
     char* cast17 = (char*)&(_str);
-    char* c18 = _str_1;
+    char* c18 = (char*)_str_1;
     unsigned int c19 = 29;
     char* cast20 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast17, c18, c19, cast20);
   }
   int t21 = __retval9;
@@ -67,7 +53,7 @@ bb8:
 
 // function: _ZN1N1AIiEC2Ei
 void N__A_int___A(struct N__A_int_* v22, int v23) {
-bb24:
+bb24: ;
   struct N__A_int_* this25;
   int i26;
   this25 = v22;

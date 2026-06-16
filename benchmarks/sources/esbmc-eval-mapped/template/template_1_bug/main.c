@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct FixedArray25_int_ { int anValue[25]; };
 
@@ -23,12 +7,13 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[27] = "sMyArray.anValue[15] == 10";
 char _str_3[26] = "sMyArray.anValue[10] != 5";
 int* int__Value_int_(struct FixedArray25_int_* p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _Z5ValueIiERT_R12FixedArray25IS0_Ei
 int* int__Value_int_(struct FixedArray25_int_* v0, int v1) {
-bb2:
+bb2: ;
   struct FixedArray25_int_* rArray3;
   int nIndex4;
   int* __retval5;
@@ -44,7 +29,7 @@ bb2:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   struct FixedArray25_int_ sMyArray12;
   int c13 = 0;
@@ -60,9 +45,10 @@ bb10:
   if (c20) {
   } else {
     char* cast21 = (char*)&(_str);
-    char* c22 = _str_1;
+    char* c22 = (char*)_str_1;
     unsigned int c23 = 31;
     char* cast24 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast21, c22, c23, cast24);
   }
   int c25 = 10;
@@ -76,9 +62,10 @@ bb10:
   if (c31) {
   } else {
     char* cast32 = (char*)&(_str_2);
-    char* c33 = _str_1;
+    char* c33 = (char*)_str_1;
     unsigned int c34 = 33;
     char* cast35 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast32, c33, c34, cast35);
   }
   long c36 = 10;
@@ -88,9 +75,10 @@ bb10:
   if (c39) {
   } else {
     char* cast40 = (char*)&(_str_3);
-    char* c41 = _str_1;
+    char* c41 = (char*)_str_1;
     unsigned int c42 = 34;
     char* cast43 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast40, c41, c42, cast43);
   }
   int c44 = 0;

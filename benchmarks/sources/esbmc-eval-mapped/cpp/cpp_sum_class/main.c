@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct Sum { int res; };
 
@@ -24,13 +8,14 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 extern int nondet_int();
 void __cxx_global_var_init();
 void Sum__Sum(struct Sum* p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 __attribute__((constructor)) void _GLOBAL__sub_I_main_cpp();
 
 // function: __cxx_global_var_init
 void __cxx_global_var_init() {
-bb0:
+bb0: ;
   int r1 = nondet_int();
   *&N = r1;
   return;
@@ -38,7 +23,7 @@ bb0:
 
 // function: _ZN3SumC2Ei
 void Sum__Sum(struct Sum* v2, int v3) {
-bb4:
+bb4: ;
   struct Sum* this5;
   int N6;
   int i7;
@@ -74,7 +59,7 @@ bb4:
 
 // function: main
 int main() {
-bb24:
+bb24: ;
   int __retval25;
   struct Sum s26;
   int c27 = 0;
@@ -99,9 +84,10 @@ bb24:
   if (ternary34) {
   } else {
     char* cast39 = (char*)&(_str);
-    char* c40 = _str_1;
+    char* c40 = (char*)_str_1;
     unsigned int c41 = 34;
     char* cast42 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast39, c40, c41, cast42);
   }
   int c43 = 0;
@@ -112,7 +98,7 @@ bb24:
 
 // function: _GLOBAL__sub_I_main.cpp
 __attribute__((constructor)) void _GLOBAL__sub_I_main_cpp() {
-bb45:
+bb45: ;
   __cxx_global_var_init();
   return;
 }

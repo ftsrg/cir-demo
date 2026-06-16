@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -37,7 +21,7 @@ struct std___Rb_tree_key_compare_bool_____char__char__ { void* _M_key_compare; }
 struct std___Rb_tree_key_compare_classcomp_ { unsigned char __field0; };
 struct std___Rb_tree_key_compare_std__less_char__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_std__pair_const_char__int__;
+struct std___Rb_tree_node_std__pair_const_char__int__ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_std__pair_const_char__int__ _M_storage; };
 struct std___Select1st_std__pair_const_char__int__ { unsigned char __field0; };
 struct std___Tuple_impl_0UL__char____ { struct std___Head_base_0UL__char_____false_ __field0; };
 struct std____new_allocator_std___Rb_tree_node_std__pair_const_char__int___;
@@ -47,7 +31,7 @@ struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
 struct std__allocator_std___Rb_tree_node_std__pair_const_char__int___ { unsigned char __field0; };
 struct std__allocator_std__pair_const_char__int__ { unsigned char __field0; };
 struct std__less_char_ { unsigned char __field0; };
-struct std__pair_const_char__int_;
+struct std__pair_const_char__int_ { char first; int second; };
 struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
 struct std__piecewise_construct_t { unsigned char __field0; };
 struct std__tuple__ { unsigned char __field0; };
@@ -79,13 +63,14 @@ char _str_11[15] = "fourth['c']==0";
 char _str_12[15] = "fourth['d']==0";
 struct std__piecewise_construct_t _ZSt19piecewise_construct;
 _Bool fncomp(char p0, char p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z6fncompcc
 _Bool fncomp(char v0, char v1) {
-bb2:
+bb2: ;
   char lhs3;
   char rhs4;
   _Bool __retval5;
@@ -103,7 +88,7 @@ bb2:
 
 // function: main
 int main() {
-bb12:
+bb12: ;
   int __retval13;
   struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___ first14;
   char ref_tmp015;
@@ -178,9 +163,10 @@ bb12:
       if (c60) {
       } else {
         char* cast61 = (char*)&(_str);
-        char* c62 = _str_1;
+        char* c62 = (char*)_str_1;
         unsigned int c63 = 31;
         char* cast64 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast61, c62, c63, cast64);
       }
       char c65 = 98;
@@ -193,9 +179,10 @@ bb12:
       if (c69) {
       } else {
         char* cast70 = (char*)&(_str_2);
-        char* c71 = _str_1;
+        char* c71 = (char*)_str_1;
         unsigned int c72 = 32;
         char* cast73 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast70, c71, c72, cast73);
       }
       char c74 = 99;
@@ -208,9 +195,10 @@ bb12:
       if (c78) {
       } else {
         char* cast79 = (char*)&(_str_3);
-        char* c80 = _str_1;
+        char* c80 = (char*)_str_1;
         unsigned int c81 = 33;
         char* cast82 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast79, c80, c81, cast82);
       }
       char c83 = 100;
@@ -223,9 +211,10 @@ bb12:
       if (c87) {
       } else {
         char* cast88 = (char*)&(_str_4);
-        char* c89 = _str_1;
+        char* c89 = (char*)_str_1;
         unsigned int c90 = 34;
         char* cast91 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast88, c89, c90, cast91);
       }
       // externalized std:: op: std::map<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >::map(std::map<char, int, std::less<char>, std::allocator<std::pair<char const, int> > > const&)
@@ -241,9 +230,10 @@ bb12:
         if (c96) {
         } else {
           char* cast97 = (char*)&(_str_5);
-          char* c98 = _str_1;
+          char* c98 = (char*)_str_1;
           unsigned int c99 = 38;
           char* cast100 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast97, c98, c99, cast100);
         }
         char c101 = 98;
@@ -256,9 +246,10 @@ bb12:
         if (c105) {
         } else {
           char* cast106 = (char*)&(_str_6);
-          char* c107 = _str_1;
+          char* c107 = (char*)_str_1;
           unsigned int c108 = 39;
           char* cast109 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast106, c107, c108, cast109);
         }
         char c110 = 99;
@@ -271,9 +262,10 @@ bb12:
         if (c114) {
         } else {
           char* cast115 = (char*)&(_str_7);
-          char* c116 = _str_1;
+          char* c116 = (char*)_str_1;
           unsigned int c117 = 40;
           char* cast118 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast115, c116, c117, cast118);
         }
         char c119 = 100;
@@ -286,9 +278,10 @@ bb12:
         if (c123) {
         } else {
           char* cast124 = (char*)&(_str_8);
-          char* c125 = _str_1;
+          char* c125 = (char*)_str_1;
           unsigned int c126 = 41;
           char* cast127 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast124, c125, c126, cast127);
         }
         // externalized std:: op: std::map<char, int, classcomp, std::allocator<std::pair<char const, int> > >::map()
@@ -303,9 +296,10 @@ bb12:
           if (c132) {
           } else {
             char* cast133 = (char*)&(_str_9);
-            char* c134 = _str_1;
+            char* c134 = (char*)_str_1;
             unsigned int c135 = 44;
             char* cast136 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast133, c134, c135, cast136);
           }
           char c137 = 98;
@@ -318,9 +312,10 @@ bb12:
           if (c141) {
           } else {
             char* cast142 = (char*)&(_str_10);
-            char* c143 = _str_1;
+            char* c143 = (char*)_str_1;
             unsigned int c144 = 45;
             char* cast145 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast142, c143, c144, cast145);
           }
           char c146 = 99;
@@ -333,9 +328,10 @@ bb12:
           if (c150) {
           } else {
             char* cast151 = (char*)&(_str_11);
-            char* c152 = _str_1;
+            char* c152 = (char*)_str_1;
             unsigned int c153 = 46;
             char* cast154 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast151, c152, c153, cast154);
           }
           char c155 = 100;
@@ -348,9 +344,10 @@ bb12:
           if (c159) {
           } else {
             char* cast160 = (char*)&(_str_12);
-            char* c161 = _str_1;
+            char* c161 = (char*)_str_1;
             unsigned int c162 = 47;
             char* cast163 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast160, c161, c162, cast163);
           }
           fn_pt36 = &fncomp;

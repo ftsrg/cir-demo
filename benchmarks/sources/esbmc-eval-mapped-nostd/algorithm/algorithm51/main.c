@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ { void* _M_comp; };
 struct __gnu_cxx____ops___Iter_less_iter { unsigned char __field0; };
@@ -29,6 +13,7 @@ _Bool bool___gnu_cxx____ops___Iter_less_iter__operator___int___int___int___int__
 _Bool bool_std____includes_int___int_____gnu_cxx____ops___Iter_less_iter_(int* p0, int* p1, int* p2, int* p3, struct __gnu_cxx____ops___Iter_less_iter p4);
 struct __gnu_cxx____ops___Iter_less_iter __gnu_cxx____ops____iter_less_iter();
 _Bool bool_std__includes_int___int__(int* p0, int* p1, int* p2, int* p3);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool bool___gnu_cxx____ops___Iter_comp_iter_bool_____int__int____operator___int___int__(struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__* p0, int* p1, int* p2);
 _Bool bool_std____includes_int___int_____gnu_cxx____ops___Iter_comp_iter_bool_____int__int_____int___int___int___int_____gnu_cxx____ops___Iter_comp_iter_bool____(int* p0, int* p1, int* p2, int* p3, struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ p4);
@@ -39,7 +24,7 @@ int main();
 
 // function: _Z10myfunctionii
 _Bool myfunction(int v0, int v1) {
-bb2:
+bb2: ;
   int i3;
   int j4;
   _Bool __retval5;
@@ -55,7 +40,7 @@ bb2:
 
 // function: _ZNK9__gnu_cxx5__ops15_Iter_less_iterclIPiS3_EEbT_T0_
 _Bool bool___gnu_cxx____ops___Iter_less_iter__operator___int___int___int___int___const(struct __gnu_cxx____ops___Iter_less_iter* v10, int* v11, int* v12) {
-bb13:
+bb13: ;
   struct __gnu_cxx____ops___Iter_less_iter* this14;
   int* __it115;
   int* __it216;
@@ -76,7 +61,7 @@ bb13:
 
 // function: _ZSt10__includesIPiS0_N9__gnu_cxx5__ops15_Iter_less_iterEEbT_S4_T0_S5_T1_
 _Bool bool_std____includes_int___int_____gnu_cxx____ops___Iter_less_iter_(int* v25, int* v26, int* v27, int* v28, struct __gnu_cxx____ops___Iter_less_iter v29) {
-bb30:
+bb30: ;
   int* __first131;
   int* __last132;
   int* __first233;
@@ -138,7 +123,7 @@ bb30:
 
 // function: _ZN9__gnu_cxx5__ops16__iter_less_iterEv
 struct __gnu_cxx____ops___Iter_less_iter __gnu_cxx____ops____iter_less_iter() {
-bb65:
+bb65: ;
   struct __gnu_cxx____ops___Iter_less_iter __retval66;
   struct __gnu_cxx____ops___Iter_less_iter t67 = __retval66;
   return t67;
@@ -146,7 +131,7 @@ bb65:
 
 // function: _ZSt8includesIPiS0_EbT_S1_T0_S2_
 _Bool bool_std__includes_int___int__(int* v68, int* v69, int* v70, int* v71) {
-bb72:
+bb72: ;
   int* __first173;
   int* __last174;
   int* __first275;
@@ -172,7 +157,7 @@ bb72:
 
 // function: _ZN9__gnu_cxx5__ops15_Iter_comp_iterIPFbiiEEclIPiS6_EEbT_T0_
 _Bool bool___gnu_cxx____ops___Iter_comp_iter_bool_____int__int____operator___int___int__(struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__* v87, int* v88, int* v89) {
-bb90:
+bb90: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__* this91;
   int* __it192;
   int* __it293;
@@ -194,7 +179,7 @@ bb90:
 
 // function: _ZSt10__includesIPiS0_N9__gnu_cxx5__ops15_Iter_comp_iterIPFbiiEEEEbT_S7_T0_S8_T1_
 _Bool bool_std____includes_int___int_____gnu_cxx____ops___Iter_comp_iter_bool_____int__int_____int___int___int___int_____gnu_cxx____ops___Iter_comp_iter_bool____(int* v103, int* v104, int* v105, int* v106, struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ v107) {
-bb108:
+bb108: ;
   int* __first1109;
   int* __last1110;
   int* __first2111;
@@ -256,7 +241,7 @@ bb108:
 
 // function: _ZN9__gnu_cxx5__ops15_Iter_comp_iterIPFbiiEEC2ES3_
 void __gnu_cxx____ops___Iter_comp_iter_bool_____int__int_____Iter_comp_iter_bool____(struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__* v143, void* v144) {
-bb145:
+bb145: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__* this146;
   void* __comp147;
   this146 = v143;
@@ -269,7 +254,7 @@ bb145:
 
 // function: _ZN9__gnu_cxx5__ops16__iter_comp_iterIPFbiiEEENS0_15_Iter_comp_iterIT_EES5_
 struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ __gnu_cxx____ops___Iter_comp_iter_bool_____int__int_____gnu_cxx____ops____iter_comp_iter_bool_____int__int___bool____(void* v150) {
-bb151:
+bb151: ;
   void* __comp152;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ __retval153;
   __comp152 = v150;
@@ -281,7 +266,7 @@ bb151:
 
 // function: _ZSt8includesIPiS0_PFbiiEEbT_S3_T0_S4_T1_
 _Bool bool_std__includes_int___int___bool_____int__int___int___int___int___int___bool____(int* v156, int* v157, int* v158, int* v159, void* v160) {
-bb161:
+bb161: ;
   int* __first1162;
   int* __last1163;
   int* __first2164;
@@ -310,7 +295,7 @@ bb161:
 
 // function: main
 int main() {
-bb178:
+bb178: ;
   int __retval179;
   int container180[10];
   int continent181[4];
@@ -332,9 +317,10 @@ bb178:
   if (r191) {
   } else {
     char* cast192 = (char*)&(_str);
-    char* c193 = _str_1;
+    char* c193 = (char*)_str_1;
     unsigned int c194 = 23;
     char* cast195 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast192, c193, c194, cast195);
   }
   int* cast196 = (int*)&(container180);
@@ -349,9 +335,10 @@ bb178:
   if (r204) {
   } else {
     char* cast205 = (char*)&(_str_2);
-    char* c206 = _str_1;
+    char* c206 = (char*)_str_1;
     unsigned int c207 = 24;
     char* cast208 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast205, c206, c207, cast208);
   }
   int c209 = 0;

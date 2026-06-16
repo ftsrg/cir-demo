@@ -1,28 +1,4 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
-
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
 struct __gnu_cxx____ops___Iter_less_iter { unsigned char __field0; };
@@ -36,17 +12,28 @@ struct std___Vector_base_int__std__allocator_int_____Vector_impl_data { int* _M_
 struct std____new_allocator_int_;
 struct std____pair_base_int____long_;
 struct std__allocator_int_ { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
 struct std__nothrow_t { unsigned char __field0; };
 struct std__pair_int____long_ { int* first; long second; };
 struct std__random_access_iterator_tag { unsigned char __field0; };
 struct std___Temporary_buffer___gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int_____int_ { long _M_original_len; struct std___Temporary_buffer___gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int_____int____Impl _M_impl; };
 struct std___Vector_base_int__std__allocator_int_____Vector_impl { struct std___Vector_base_int__std__allocator_int_____Vector_impl_data __field0; };
-struct std__ctype_char_;
-struct std__ios_base;
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
 struct std___Vector_base_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int_____Vector_impl _M_impl; };
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 struct std__vector_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int__ __field0; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 int __const_main_second[5] = {10, 20, 30, 40, 50};
 int __const_main_first[5] = {5, 10, 15, 20, 25};
@@ -70,13 +57,14 @@ char _str_13[49] = "cannot create std::vector larger than max_size()";
 char _str_14[91] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_vector.h";
 char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEEixEm[92] = "reference std::vector<int>::operator[](size_type) [_Tp = int, _Alloc = std::allocator<int>]";
 char _str_15[19] = "__n < this->size()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int first2[5];
   int second3[5];
@@ -162,9 +150,10 @@ bb0:
     if (c46) {
     } else {
       char* cast47 = (char*)&(_str);
-      char* c48 = _str_1;
+      char* c48 = (char*)_str_1;
       unsigned int c49 = 26;
       char* cast50 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast47, c48, c49, cast50);
     }
     unsigned long c51 = 1;
@@ -176,9 +165,10 @@ bb0:
     if (c55) {
     } else {
       char* cast56 = (char*)&(_str_2);
-      char* c57 = _str_1;
+      char* c57 = (char*)_str_1;
       unsigned int c58 = 27;
       char* cast59 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast56, c57, c58, cast59);
     }
     unsigned long c60 = 2;
@@ -190,9 +180,10 @@ bb0:
     if (c64) {
     } else {
       char* cast65 = (char*)&(_str_3);
-      char* c66 = _str_1;
+      char* c66 = (char*)_str_1;
       unsigned int c67 = 28;
       char* cast68 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast65, c66, c67, cast68);
     }
     unsigned long c69 = 3;
@@ -204,9 +195,10 @@ bb0:
     if (c73) {
     } else {
       char* cast74 = (char*)&(_str_4);
-      char* c75 = _str_1;
+      char* c75 = (char*)_str_1;
       unsigned int c76 = 29;
       char* cast77 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast74, c75, c76, cast77);
     }
     unsigned long c78 = 4;
@@ -218,9 +210,10 @@ bb0:
     if (c82) {
     } else {
       char* cast83 = (char*)&(_str_5);
-      char* c84 = _str_1;
+      char* c84 = (char*)_str_1;
       unsigned int c85 = 30;
       char* cast86 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast83, c84, c85, cast86);
     }
     unsigned long c87 = 5;
@@ -232,9 +225,10 @@ bb0:
     if (c91) {
     } else {
       char* cast92 = (char*)&(_str_6);
-      char* c93 = _str_1;
+      char* c93 = (char*)_str_1;
       unsigned int c94 = 31;
       char* cast95 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast92, c93, c94, cast95);
     }
     unsigned long c96 = 6;
@@ -246,9 +240,10 @@ bb0:
     if (c100) {
     } else {
       char* cast101 = (char*)&(_str_7);
-      char* c102 = _str_1;
+      char* c102 = (char*)_str_1;
       unsigned int c103 = 32;
       char* cast104 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast101, c102, c103, cast104);
     }
     unsigned long c105 = 7;
@@ -260,9 +255,10 @@ bb0:
     if (c109) {
     } else {
       char* cast110 = (char*)&(_str_8);
-      char* c111 = _str_1;
+      char* c111 = (char*)_str_1;
       unsigned int c112 = 33;
       char* cast113 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast110, c111, c112, cast113);
     }
     unsigned long c114 = 8;
@@ -274,9 +270,10 @@ bb0:
     if (c118) {
     } else {
       char* cast119 = (char*)&(_str_9);
-      char* c120 = _str_1;
+      char* c120 = (char*)_str_1;
       unsigned int c121 = 34;
       char* cast122 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast119, c120, c121, cast122);
     }
     unsigned long c123 = 9;
@@ -288,9 +285,10 @@ bb0:
     if (c127) {
     } else {
       char* cast128 = (char*)&(_str_10);
-      char* c129 = _str_1;
+      char* c129 = (char*)_str_1;
       unsigned int c130 = 35;
       char* cast131 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast128, c129, c130, cast131);
     }
     char* cast132 = (char*)&(_str_11);

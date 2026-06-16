@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -58,13 +42,14 @@ struct std__ranges____imove___IterMove _ZNSt6ranges4_Cpo9iter_moveE;
 char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEEixEm[92] = "reference std::vector<int>::operator[](size_type) [_Tp = int, _Alloc = std::allocator<int>]";
 char _str_7[19] = "__n < this->size()";
 struct std____detail___Synth3way _ZNSt8__detail11__synth3wayE;
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__vector_int__std__allocator_int__ myvector2;
   struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ it3;
@@ -162,9 +147,10 @@ bb0:
       if (c44) {
       } else {
         char* cast45 = (char*)&(_str);
-        char* c46 = _str_1;
+        char* c46 = (char*)_str_1;
         unsigned int c47 = 32;
         char* cast48 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast45, c46, c47, cast48);
       }
       // array copy
@@ -192,9 +178,10 @@ bb0:
       if (c60) {
       } else {
         char* cast61 = (char*)&(_str_2);
-        char* c62 = _str_1;
+        char* c62 = (char*)_str_1;
         unsigned int c63 = 36;
         char* cast64 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast61, c62, c63, cast64);
       }
         struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ ref_tmp1065;

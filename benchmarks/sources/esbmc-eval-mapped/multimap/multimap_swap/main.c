@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -28,7 +12,7 @@ struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair
 struct std___Rb_tree_iterator_std__pair_const_char__int__ { struct std___Rb_tree_node_base* _M_node; };
 struct std___Rb_tree_key_compare_std__less_char__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_std__pair_const_char__int__;
+struct std___Rb_tree_node_std__pair_const_char__int__ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_std__pair_const_char__int__ _M_storage; };
 struct std___Select1st_std__pair_const_char__int__ { unsigned char __field0; };
 struct std____new_allocator_std___Rb_tree_node_std__pair_const_char__int___;
 struct std____pair_base_char__int_;
@@ -38,7 +22,7 @@ struct std__allocator_std___Rb_tree_node_std__pair_const_char__int___;
 struct std__binary_function_char__char__bool_;
 struct std__less_char_ { unsigned char __field0; };
 struct std__pair_char__int_ { char first; int second; };
-struct std__pair_const_char__int_;
+struct std__pair_const_char__int_ { char first; int second; };
 struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
 struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
 struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Rb_tree_impl_std__less_char___true_ { struct std___Rb_tree_key_compare_std__less_char__ __field0; struct std___Rb_tree_header __field1; };
@@ -56,13 +40,14 @@ char _str_6[17] = "it->second == 11";
 char _str_7[17] = "it->second == 55";
 char _str_8[17] = "it->first == 'b'";
 char _str_9[17] = "it->second == 22";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___ foo2;
   struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___ bar3;
@@ -164,9 +149,10 @@ bb0:
       if (c60) {
       } else {
         char* cast61 = (char*)&(_str);
-        char* c62 = _str_1;
+        char* c62 = (char*)_str_1;
         unsigned int c63 = 26;
         char* cast64 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast61, c62, c63, cast64);
       }
       struct std__pair_const_char__int_* std65;
@@ -177,9 +163,10 @@ bb0:
       if (c68) {
       } else {
         char* cast69 = (char*)&(_str_2);
-        char* c70 = _str_1;
+        char* c70 = (char*)_str_1;
         unsigned int c71 = 27;
         char* cast72 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast69, c70, c71, cast72);
       }
       int c73 = 0;
@@ -195,9 +182,10 @@ bb0:
       if (c79) {
       } else {
         char* cast80 = (char*)&(_str_3);
-        char* c81 = _str_1;
+        char* c81 = (char*)_str_1;
         unsigned int c82 = 29;
         char* cast83 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast80, c81, c82, cast83);
       }
       struct std__pair_const_char__int_* std84;
@@ -208,9 +196,10 @@ bb0:
       if (c87) {
       } else {
         char* cast88 = (char*)&(_str_4);
-        char* c89 = _str_1;
+        char* c89 = (char*)_str_1;
         unsigned int c90 = 30;
         char* cast91 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast88, c89, c90, cast91);
       }
       struct std___Rb_tree_iterator_std__pair_const_char__int__ std92;
@@ -227,9 +216,10 @@ bb0:
       if (c98) {
       } else {
         char* cast99 = (char*)&(_str_5);
-        char* c100 = _str_1;
+        char* c100 = (char*)_str_1;
         unsigned int c101 = 33;
         char* cast102 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast99, c100, c101, cast102);
       }
       struct std__pair_const_char__int_* std103;
@@ -240,9 +230,10 @@ bb0:
       if (c106) {
       } else {
         char* cast107 = (char*)&(_str_6);
-        char* c108 = _str_1;
+        char* c108 = (char*)_str_1;
         unsigned int c109 = 34;
         char* cast110 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast107, c108, c109, cast110);
       }
       int c111 = 0;
@@ -258,9 +249,10 @@ bb0:
       if (c117) {
       } else {
         char* cast118 = (char*)&(_str_5);
-        char* c119 = _str_1;
+        char* c119 = (char*)_str_1;
         unsigned int c120 = 36;
         char* cast121 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast118, c119, c120, cast121);
       }
       struct std__pair_const_char__int_* std122;
@@ -271,9 +263,10 @@ bb0:
       if (c125) {
       } else {
         char* cast126 = (char*)&(_str_7);
-        char* c127 = _str_1;
+        char* c127 = (char*)_str_1;
         unsigned int c128 = 37;
         char* cast129 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast126, c127, c128, cast129);
       }
       int c130 = 0;
@@ -289,9 +282,10 @@ bb0:
       if (c136) {
       } else {
         char* cast137 = (char*)&(_str_8);
-        char* c138 = _str_1;
+        char* c138 = (char*)_str_1;
         unsigned int c139 = 39;
         char* cast140 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast137, c138, c139, cast140);
       }
       struct std__pair_const_char__int_* std141;
@@ -302,9 +296,10 @@ bb0:
       if (c144) {
       } else {
         char* cast145 = (char*)&(_str_9);
-        char* c146 = _str_1;
+        char* c146 = (char*)_str_1;
         unsigned int c147 = 40;
         char* cast148 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast145, c146, c147, cast148);
       }
       // externalized std:: op: std::multimap<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >::swap(std::multimap<char, int, std::less<char>, std::allocator<std::pair<char const, int> > >&)
@@ -324,9 +319,10 @@ bb0:
       if (c155) {
       } else {
         char* cast156 = (char*)&(_str);
-        char* c157 = _str_1;
+        char* c157 = (char*)_str_1;
         unsigned int c158 = 44;
         char* cast159 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast156, c157, c158, cast159);
       }
       struct std__pair_const_char__int_* std160;
@@ -337,9 +333,10 @@ bb0:
       if (c163) {
       } else {
         char* cast164 = (char*)&(_str_2);
-        char* c165 = _str_1;
+        char* c165 = (char*)_str_1;
         unsigned int c166 = 45;
         char* cast167 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast164, c165, c166, cast167);
       }
       int c168 = 0;
@@ -355,9 +352,10 @@ bb0:
       if (c174) {
       } else {
         char* cast175 = (char*)&(_str_3);
-        char* c176 = _str_1;
+        char* c176 = (char*)_str_1;
         unsigned int c177 = 47;
         char* cast178 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast175, c176, c177, cast178);
       }
       struct std__pair_const_char__int_* std179;
@@ -368,9 +366,10 @@ bb0:
       if (c182) {
       } else {
         char* cast183 = (char*)&(_str_4);
-        char* c184 = _str_1;
+        char* c184 = (char*)_str_1;
         unsigned int c185 = 48;
         char* cast186 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast183, c184, c185, cast186);
       }
       struct std___Rb_tree_iterator_std__pair_const_char__int__ std187;
@@ -387,9 +386,10 @@ bb0:
       if (c193) {
       } else {
         char* cast194 = (char*)&(_str_5);
-        char* c195 = _str_1;
+        char* c195 = (char*)_str_1;
         unsigned int c196 = 51;
         char* cast197 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast194, c195, c196, cast197);
       }
       struct std__pair_const_char__int_* std198;
@@ -400,9 +400,10 @@ bb0:
       if (c201) {
       } else {
         char* cast202 = (char*)&(_str_6);
-        char* c203 = _str_1;
+        char* c203 = (char*)_str_1;
         unsigned int c204 = 52;
         char* cast205 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast202, c203, c204, cast205);
       }
       int c206 = 0;
@@ -418,9 +419,10 @@ bb0:
       if (c212) {
       } else {
         char* cast213 = (char*)&(_str_5);
-        char* c214 = _str_1;
+        char* c214 = (char*)_str_1;
         unsigned int c215 = 54;
         char* cast216 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast213, c214, c215, cast216);
       }
       struct std__pair_const_char__int_* std217;
@@ -431,9 +433,10 @@ bb0:
       if (c220) {
       } else {
         char* cast221 = (char*)&(_str_7);
-        char* c222 = _str_1;
+        char* c222 = (char*)_str_1;
         unsigned int c223 = 55;
         char* cast224 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast221, c222, c223, cast224);
       }
       int c225 = 0;
@@ -449,9 +452,10 @@ bb0:
       if (c231) {
       } else {
         char* cast232 = (char*)&(_str_8);
-        char* c233 = _str_1;
+        char* c233 = (char*)_str_1;
         unsigned int c234 = 57;
         char* cast235 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast232, c233, c234, cast235);
       }
       struct std__pair_const_char__int_* std236;
@@ -462,9 +466,10 @@ bb0:
       if (c239) {
       } else {
         char* cast240 = (char*)&(_str_9);
-        char* c241 = _str_1;
+        char* c241 = (char*)_str_1;
         unsigned int c242 = 58;
         char* cast243 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast240, c241, c242, cast243);
       }
       int c244 = 0;

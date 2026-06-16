@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct PaintCost { unsigned char __field0; };
 struct Shape { int width; int height; int number; };
@@ -28,6 +12,7 @@ void Shape__setWidth(struct Shape* p0, int p1);
 void Shape__setHeight(struct Shape* p0, int p1);
 void Shape__setNumber(struct Shape* p0);
 int Shape__getNumber(struct Shape* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int Rectangle__getArea(struct Rectangle* p0);
 int PaintCost__getCost(struct PaintCost* p0, int p1);
@@ -35,7 +20,7 @@ int main();
 
 // function: _ZN5Shape8setWidthEi
 void Shape__setWidth(struct Shape* v0, int v1) {
-bb2:
+bb2: ;
   struct Shape* this3;
   int w4;
   this3 = v0;
@@ -48,7 +33,7 @@ bb2:
 
 // function: _ZN5Shape9setHeightEi
 void Shape__setHeight(struct Shape* v7, int v8) {
-bb9:
+bb9: ;
   struct Shape* this10;
   int h11;
   this10 = v7;
@@ -61,7 +46,7 @@ bb9:
 
 // function: _ZN5Shape9setNumberEv
 void Shape__setNumber(struct Shape* v14) {
-bb15:
+bb15: ;
   struct Shape* this16;
   this16 = v14;
   struct Shape* t17 = this16;
@@ -72,7 +57,7 @@ bb15:
 
 // function: _ZN5Shape9getNumberEv
 int Shape__getNumber(struct Shape* v19) {
-bb20:
+bb20: ;
   struct Shape* this21;
   int __retval22;
   this21 = v19;
@@ -85,7 +70,7 @@ bb20:
 
 // function: _ZN9Rectangle7getAreaEv
 int Rectangle__getArea(struct Rectangle* v26) {
-bb27:
+bb27: ;
   struct Rectangle* this28;
   int __retval29;
   this28 = v26;
@@ -102,7 +87,7 @@ bb27:
 
 // function: _ZN9PaintCost7getCostEi
 int PaintCost__getCost(struct PaintCost* v37, int v38) {
-bb39:
+bb39: ;
   struct PaintCost* this40;
   int area41;
   int __retval42;
@@ -119,7 +104,7 @@ bb39:
 
 // function: main
 int main() {
-bb48:
+bb48: ;
   int __retval49;
   struct Rectangle Rect50;
   int area51;
@@ -141,9 +126,10 @@ bb48:
   if (c62) {
   } else {
     char* cast63 = (char*)&(_str);
-    char* c64 = _str_1;
+    char* c64 = (char*)_str_1;
     unsigned int c65 = 67;
     char* cast66 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast63, c64, c65, cast66);
   }
   int r67 = Rectangle__getArea(&Rect50);
@@ -154,9 +140,10 @@ bb48:
   if (c70) {
   } else {
     char* cast71 = (char*)&(_str_2);
-    char* c72 = _str_1;
+    char* c72 = (char*)_str_1;
     unsigned int c73 = 70;
     char* cast74 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast71, c72, c73, cast74);
   }
   struct PaintCost* base75 = (struct PaintCost*)((char *)&(Rect50) + 0);
@@ -172,9 +159,10 @@ bb48:
   if (c83) {
   } else {
     char* cast84 = (char*)&(_str_3);
-    char* c85 = _str_1;
+    char* c85 = (char*)_str_1;
     unsigned int c86 = 72;
     char* cast87 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast84, c85, c86, cast87);
   }
   int c88 = 0;

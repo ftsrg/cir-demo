@@ -1,27 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) int __VERIFIER_virtual_call_int(void* __obj, int __slot) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((int(*)(void*))__fn)(__obj);
-}
-
 // Struct definitions (auto-parsed)
 struct File { void* __field0; };
 struct InputFile { struct File __field0; };
@@ -34,6 +10,14 @@ struct anon_struct_4 { unsigned char* __field0[5]; unsigned char* __field1[4]; }
 struct anon_struct_5 { unsigned char* __field0; unsigned char* __field1; unsigned int __field2; unsigned int __field3; unsigned char* __field4; long __field5; unsigned char* __field6; long __field7; };
 struct anon_struct_6 { unsigned char* __field0[3]; };
 struct IOFile { struct InputFile __field0; struct OutputFile __field1; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) int __VERIFIER_virtual_call_int(void* __obj, int __slot) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((int(*)(void*))__fn)(__obj);
+}
 
 extern void *_ZTVN10__cxxabiv121__vmi_class_type_infoE[];
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
@@ -62,6 +46,7 @@ void OutputFile__OutputFile(struct OutputFile* p0, void** p1);
 void IOFile__IOFile(struct IOFile* p0);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
 int File__f(struct File* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int InputFile__f(struct InputFile* p0);
 int OutputFile__f(struct OutputFile* p0);
@@ -78,7 +63,7 @@ unsigned char* _ZTT6IOFile[7] __attribute__((aligned(8))) = {(unsigned char*)(&_
 
 // function: _ZN4FileC2Ev
 void File__File(struct File* v0) {
-bb1:
+bb1: ;
   struct File* this2;
   this2 = v0;
   struct File* t3 = this2;
@@ -90,7 +75,7 @@ bb1:
 
 // function: _ZN9InputFileC2Ev
 void InputFile__InputFile(struct InputFile* v6, void** v7) {
-bb8:
+bb8: ;
   struct InputFile* this9;
   void** vtt10;
   this9 = v6;
@@ -124,7 +109,7 @@ bb8:
 
 // function: _ZN10OutputFileC2Ev
 void OutputFile__OutputFile(struct OutputFile* v33, void** v34) {
-bb35:
+bb35: ;
   struct OutputFile* this36;
   void** vtt37;
   this36 = v33;
@@ -158,7 +143,7 @@ bb35:
 
 // function: _ZN6IOFileC1Ev
 void IOFile__IOFile(struct IOFile* v60) {
-bb61:
+bb61: ;
   struct IOFile* this62;
   this62 = v60;
   struct IOFile* t63 = this62;
@@ -187,7 +172,7 @@ bb61:
 
 // function: _ZN4File1fEv
 int File__f(struct File* v78) {
-bb79:
+bb79: ;
   struct File* this80;
   int __retval81;
   this80 = v78;
@@ -200,7 +185,7 @@ bb79:
 
 // function: _ZN9InputFile1fEv
 int InputFile__f(struct InputFile* v85) {
-bb86:
+bb86: ;
   struct InputFile* this87;
   int __retval88;
   this87 = v85;
@@ -213,7 +198,7 @@ bb86:
 
 // function: _ZN10OutputFile1fEv
 int OutputFile__f(struct OutputFile* v92) {
-bb93:
+bb93: ;
   struct OutputFile* this94;
   int __retval95;
   this94 = v92;
@@ -226,7 +211,7 @@ bb93:
 
 // function: main
 int main() {
-bb99:
+bb99: ;
   int __retval100;
   struct IOFile* iofile101;
   struct IOFile* __new_result102;
@@ -259,9 +244,10 @@ bb99:
   if (c123) {
   } else {
     char* cast124 = (char*)&(_str);
-    char* c125 = _str_1;
+    char* c125 = (char*)_str_1;
     unsigned int c126 = 36;
     char* cast127 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast124, c125, c126, cast127);
   }
   struct IOFile* t128 = iofile101;
@@ -272,9 +258,10 @@ bb99:
   if (c132) {
   } else {
     char* cast133 = (char*)&(_str_2);
-    char* c134 = _str_1;
+    char* c134 = (char*)_str_1;
     unsigned int c135 = 37;
     char* cast136 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast133, c134, c135, cast136);
   }
   struct IOFile* t137 = iofile101;
@@ -285,9 +272,10 @@ bb99:
   if (c141) {
   } else {
     char* cast142 = (char*)&(_str_3);
-    char* c143 = _str_1;
+    char* c143 = (char*)_str_1;
     unsigned int c144 = 38;
     char* cast145 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast142, c143, c144, cast145);
   }
   struct IOFile* t146 = iofile101;
@@ -299,9 +287,10 @@ bb99:
   if (c153) {
   } else {
     char* cast154 = (char*)&(_str_4);
-    char* c155 = _str_1;
+    char* c155 = (char*)_str_1;
     unsigned int c156 = 39;
     char* cast157 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast154, c155, c156, cast157);
   }
   struct IOFile* t158 = iofile101;
@@ -322,7 +311,7 @@ bb99:
 
 // function: _ZTv0_n24_N10OutputFile1fEv
 int virtual_thunk_to_OutputFile__f(struct OutputFile* v165) {
-bb166:
+bb166: ;
   struct OutputFile* this167;
   int __retval168;
   this167 = v165;
@@ -345,7 +334,7 @@ bb166:
 
 // function: _ZN6IOFile1fEv
 int IOFile__f(struct IOFile* v182) {
-bb183:
+bb183: ;
   struct IOFile* this184;
   int __retval185;
   this184 = v182;
@@ -358,7 +347,7 @@ bb183:
 
 // function: _ZThn8_N6IOFile1fEv
 int non_virtual_thunk_to_IOFile__f(struct IOFile* v189) {
-bb190:
+bb190: ;
   struct IOFile* this191;
   int __retval192;
   this191 = v189;

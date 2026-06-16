@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -30,7 +14,7 @@ struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___
 struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ { struct std___Rb_tree_node_base* _M_node; };
 struct std___Rb_tree_key_compare_std__less_StringClass__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_std__pair_const_StringClass__opposite__;
+struct std___Rb_tree_node_std__pair_const_StringClass__opposite__ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__ _M_storage; };
 struct std___Select1st_std__pair_const_StringClass__opposite__ { unsigned char __field0; };
 struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___;
 struct std____pair_base_const_StringClass__opposite_;
@@ -68,6 +52,7 @@ _Bool operator___2(struct opposite p0, struct opposite p1);
 _Bool operator___4(struct opposite p0, struct opposite p1);
 void StringClass__StringClass(struct StringClass* p0, char* p1);
 void opposite__opposite(struct opposite* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 extern char* strcpy(char* p0, char* p1);
@@ -76,7 +61,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _ZN11StringClass3getEv
 char* StringClass__get(struct StringClass* v0) {
-bb1:
+bb1: ;
   struct StringClass* this2;
   char* __retval3;
   this2 = v0;
@@ -89,7 +74,7 @@ bb1:
 
 // function: _Zlt11StringClassS_
 _Bool operator_(struct StringClass v7, struct StringClass v8) {
-bb9:
+bb9: ;
   struct StringClass a10;
   struct StringClass b11;
   _Bool __retval12;
@@ -115,7 +100,7 @@ bb9:
 
 // function: _Zeq11StringClassS_
 _Bool operator__(struct StringClass v19, struct StringClass v20) {
-bb21:
+bb21: ;
   struct StringClass a22;
   struct StringClass b23;
   _Bool __retval24;
@@ -141,7 +126,7 @@ bb21:
 
 // function: _Zne11StringClassS_
 _Bool operator___3(struct StringClass v31, struct StringClass v32) {
-bb33:
+bb33: ;
   struct StringClass a34;
   struct StringClass b35;
   _Bool __retval36;
@@ -167,7 +152,7 @@ bb33:
 
 // function: _ZN8opposite3getEv
 char* opposite__get(struct opposite* v43) {
-bb44:
+bb44: ;
   struct opposite* this45;
   char* __retval46;
   this45 = v43;
@@ -180,7 +165,7 @@ bb44:
 
 // function: _Zlt8oppositeS_
 _Bool operator__2(struct opposite v50, struct opposite v51) {
-bb52:
+bb52: ;
   struct opposite a53;
   struct opposite b54;
   _Bool __retval55;
@@ -206,7 +191,7 @@ bb52:
 
 // function: _Zeq8oppositeS_
 _Bool operator___2(struct opposite v62, struct opposite v63) {
-bb64:
+bb64: ;
   struct opposite a65;
   struct opposite b66;
   _Bool __retval67;
@@ -232,7 +217,7 @@ bb64:
 
 // function: _Zne8oppositeS_
 _Bool operator___4(struct opposite v74, struct opposite v75) {
-bb76:
+bb76: ;
   struct opposite a77;
   struct opposite b78;
   _Bool __retval79;
@@ -258,7 +243,7 @@ bb76:
 
 // function: _ZN11StringClassC2EPc
 void StringClass__StringClass(struct StringClass* v86, char* v87) {
-bb88:
+bb88: ;
   struct StringClass* this89;
   char* s90;
   this89 = v86;
@@ -272,7 +257,7 @@ bb88:
 
 // function: _ZN8oppositeC2EPc
 void opposite__opposite(struct opposite* v95, char* v96) {
-bb97:
+bb97: ;
   struct opposite* this98;
   char* s99;
   this98 = v95;
@@ -286,7 +271,7 @@ bb97:
 
 // function: main
 int main() {
-bb104:
+bb104: ;
   int __retval105;
   struct std__map_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ mapObject106;
   struct std__pair_const_StringClass__opposite_ ref_tmp0107;
@@ -421,9 +406,10 @@ bb104:
     if (r139) {
     } else {
       char* cast140 = (char*)&(_str_6);
-      char* c141 = _str_7;
+      char* c141 = (char*)_str_7;
       unsigned int c142 = 78;
       char* cast143 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast140, c141, c142, cast143);
     }
     struct std__pair_const_StringClass__opposite_* std144;
@@ -453,9 +439,10 @@ bb104:
     if (r148) {
     } else {
       char* cast149 = (char*)&(_str_8);
-      char* c150 = _str_7;
+      char* c150 = (char*)_str_7;
       unsigned int c151 = 79;
       char* cast152 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast149, c150, c151, cast152);
     }
     unsigned long std153 = __VERIFIER_nondet_unsigned_long();
@@ -464,9 +451,10 @@ bb104:
     if (c155) {
     } else {
       char* cast156 = (char*)&(_str_9);
-      char* c157 = _str_7;
+      char* c157 = (char*)_str_7;
       unsigned int c158 = 80;
       char* cast159 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast156, c157, c158, cast159);
     }
     int c160 = 0;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -45,13 +29,14 @@ char _str_5[15] = "!this->empty()";
 char __PRETTY_FUNCTION____ZNSt5dequeIiSaIiEE8pop_backEv[75] = "void std::deque<int>::pop_back() [_Tp = int, _Alloc = std::allocator<int>]";
 char __PRETTY_FUNCTION____ZNSt5dequeIiSaIiEE5frontEv[77] = "reference std::deque<int>::front() [_Tp = int, _Alloc = std::allocator<int>]";
 char __PRETTY_FUNCTION____ZNSt5dequeIiSaIiEE9pop_frontEv[76] = "void std::deque<int>::pop_front() [_Tp = int, _Alloc = std::allocator<int>]";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__deque_int__std__allocator_int__ d2;
   int c3 = 0;
@@ -107,9 +92,10 @@ bb0:
               if (c31) {
               } else {
                 char* cast32 = (char*)&(_str);
-                char* c33 = _str_1;
+                char* c33 = (char*)_str_1;
                 unsigned int c34 = 24;
                 char* cast35 = (char*)&(__PRETTY_FUNCTION___main);
+                reach_error();
                 __assert_fail(cast32, c33, c34, cast35);
               }
               // externalized std:: op: std::deque<int, std::allocator<int> >::pop_back()
@@ -125,9 +111,10 @@ bb0:
               if (c41) {
               } else {
                 char* cast42 = (char*)&(_str_2);
-                char* c43 = _str_1;
+                char* c43 = (char*)_str_1;
                 unsigned int c44 = 27;
                 char* cast45 = (char*)&(__PRETTY_FUNCTION___main);
+                reach_error();
                 __assert_fail(cast42, c43, c44, cast45);
               }
               // externalized std:: op: std::deque<int, std::allocator<int> >::pop_front()

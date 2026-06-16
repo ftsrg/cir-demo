@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct Add_HoldInt_1___HoldInt__1__ { unsigned char __field0; };
 struct Add_HoldInt_1___HoldInt__2__ { unsigned char __field0; };
@@ -23,12 +7,13 @@ char _str_1[115] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 int Add_HoldInt_1___HoldInt__1_____f(struct Add_HoldInt_1___HoldInt__1__* p0);
 int Add_HoldInt_1___HoldInt__2_____f(struct Add_HoldInt_1___HoldInt__2__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN3AddI7HoldIntILi1EES0_ILin1EEE1fEv
 int Add_HoldInt_1___HoldInt__1_____f(struct Add_HoldInt_1___HoldInt__1__* v0) {
-bb1:
+bb1: ;
   struct Add_HoldInt_1___HoldInt__1__* this2;
   int __retval3;
   this2 = v0;
@@ -41,7 +26,7 @@ bb1:
 
 // function: _ZN3AddI7HoldIntILi1EES0_ILin2EEE1fEv
 int Add_HoldInt_1___HoldInt__2_____f(struct Add_HoldInt_1___HoldInt__2__* v7) {
-bb8:
+bb8: ;
   struct Add_HoldInt_1___HoldInt__2__* this9;
   int __retval10;
   this9 = v7;
@@ -54,7 +39,7 @@ bb8:
 
 // function: main
 int main() {
-bb14:
+bb14: ;
   int __retval15;
   struct Add_HoldInt_1___HoldInt__1__ a16;
   struct Add_HoldInt_1___HoldInt__2__ b17;
@@ -75,9 +60,10 @@ bb14:
     }
     if (ternary22) {
       char* cast27 = (char*)&(_str);
-      char* c28 = _str_1;
+      char* c28 = (char*)_str_1;
       unsigned int c29 = 44;
       char* cast30 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast27, c28, c29, cast30);
     }
   int t31 = __retval15;

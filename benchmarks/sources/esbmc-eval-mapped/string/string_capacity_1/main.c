@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __locale_data { unsigned char __placeholder; };
@@ -22,8 +6,12 @@ union anon_0 { char _M_local_buf[16]; unsigned long _M_allocated_capacity; };
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider { char* _M_p; };
 struct std____new_allocator_char_;
 struct std__allocator_char_ { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int __field5; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* __field5; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 
 char _str[21] = "str.capacity() >= 12";
 char _str_1[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/string/string_capacity_1/main.cpp";
@@ -31,6 +19,7 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
 char _str_2[24] = "basic_string::_M_create";
 _Bool _ZNSt17integral_constantIbLb1EE5valueE;
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -38,7 +27,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str2;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ ref_tmp03;
@@ -73,9 +62,10 @@ bb0:
     if (c13) {
     } else {
       char* cast14 = (char*)&(_str);
-      char* c15 = _str_1;
+      char* c15 = (char*)_str_1;
       unsigned int c16 = 15;
       char* cast17 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast14, c15, c16, cast17);
     }
     unsigned long std18 = __VERIFIER_nondet_unsigned_long();

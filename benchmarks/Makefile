@@ -33,7 +33,7 @@ WORKING_DIR ?= $(shell pwd)
 RUNNER ?= benchexec
 
 # Flags accepted by both runners.
-COMMON_FLAGS = --read-only-dir=/ --hidden-dir=/home --overlay-dir=$(WORKING_DIR) --timelimit $(TIMEOUT) -o $(UP)/$(RESULTS_DIR)/
+COMMON_FLAGS = --read-only-dir=/ --hidden-dir=/home --overlay-dir=$(WORKING_DIR) --timelimit $(TIMEOUT) -o $(UP)/$(RESULTS_DIR)/ --limitCores 2
 # VerifierCloud-only flags (priority/scheduling, client heap, ivy cache); plain
 # benchexec rejects these, so they are added only when RUNNER=vcloud.
 # --vcloudAdditionalFiles . ships each tool's whole directory to the worker, which
@@ -55,6 +55,10 @@ endif
 
 CURL      = curl -L --fail --retry 5 --retry-all-errors
 TOOLS_BIN = tools/bin
+
+# BenchExec itself is gitignored (vendored upstream, not ours to version), so
+# clone it on demand exactly like fm-tools below.
+BENCHEXEC_URL = https://github.com/sosy-lab/benchexec.git
 
 # ── Auto-detected tool set ───────────────────────────────────────────────────
 # Every tool with an XML.
@@ -103,6 +107,13 @@ download-all: $(addprefix $(TOOLS_BIN)/,$(ALL_TOOLS))
 tools/fm-tools:
 	python3 -c "import _fmtools; _fmtools.ensure_fm_tools()"
 
+# Same on-demand-clone treatment for BenchExec. A shallow clone of the default
+# branch is enough; once benchexec/ exists, make considers this up to date and
+# won't re-clone.
+benchexec:
+	@echo ">> benchexec not present; cloning $(BENCHEXEC_URL) -> benchexec"; \
+	git clone --depth 1 $(BENCHEXEC_URL) benchexec
+
 $(TOOLS_BIN)/%: | tools/fm-tools
 	@set -e; echo ">> downloading $* ..."; \
 	url=$$(python3 fmtools-url.py $*); \
@@ -117,13 +128,17 @@ $(TOOLS_BIN)/%: | tools/fm-tools
 	else \
 	  mkdir -p "$(TOOLS_BIN)/$*"; mv "$$tmp/unz"/* "$(TOOLS_BIN)/$*/"; \
 	fi; \
-	echo ">> installed $(TOOLS_BIN)/$*"
+	echo ">> installed $(TOOLS_BIN)/$*"; \
+	if [ -f patches/$*.patch ]; then \
+	  echo ">> patching $*"; \
+	  patch -p0 -d $(TOOLS_BIN) < patches/$*.patch; \
+	fi
 
 # ── Tool runs ────────────────────────────────────────────────────────────────
 # `make <tool>` downloads if needed, links sets/, then runs from inside the tool
 # directory so the binary and arguments are found relative to it. The XML's own
 # includes/properties stay anchored to xml/, so they still resolve to ../sets etc.
-$(ALL_TOOLS): %: | $(TOOLS_BIN)/% link-sets
+$(ALL_TOOLS): %: | $(TOOLS_BIN)/% link-sets benchexec
 	cd $(TOOLS_BIN)/$* && $(RUNNER_BIN) $(FLAGS) $(UP)/xml/$*.xml
 
 # ── Post-processing ──────────────────────────────────────────────────────────
@@ -138,7 +153,7 @@ normalize:
 #   <tool>-all      for each three-config tool: its three configs side by side.
 #   esbmc-vs-<tool> for each two-config tool: ESBMC baseline (original) vs the
 #                   tool on the mapped and mapped-nostd variants.
-tables: normalize
+tables: normalize | benchexec
 	@mkdir -p $(TABLES_DIR)
 	@for t in $(CXX_TOOLS); do \
 	  echo ">> table $$t-all"; \

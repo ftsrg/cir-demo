@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -21,14 +5,6 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
-
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
 
 // Struct definitions (auto-parsed)
 struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
@@ -50,19 +26,30 @@ struct std____new_allocator_std___List_node_std____cxx11__basic_string_char__std
 struct std__allocator_char_ { unsigned char __field0; };
 struct std__allocator_std___List_node_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____;
 struct std__forward_iterator_tag { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
 struct std__random_access_iterator_tag { unsigned char __field0; };
 struct std__strong_ordering { char _M_value; };
-struct std___List_node_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___;
+struct std___List_node_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ _M_storage; };
 struct std____allocated_obj_std__allocator_std___List_node_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____ { struct std____allocated_ptr_std__allocator_std___List_node_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____ __field0; };
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
 struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
-struct std__ctype_char_;
-struct std__ios_base;
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
 struct std____cxx11___List_base_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____std__allocator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_______List_impl { struct std____detail___List_node_header _M_node; };
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 struct std____cxx11___List_base_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____std__allocator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____ { struct std____cxx11___List_base_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____std__allocator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_______List_impl _M_impl; };
 struct std____cxx11__list_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____std__allocator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____ { struct std____cxx11___List_base_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____std__allocator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____ __field0; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 struct std____detail___List_size __const__ZNSt8__detail17_List_node_header7_M_initEv_ref_tmp0;
 struct std____cmp_cat____unspec __const__ZNKSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE8_Ptr_cmpISt14_List_iteratorINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEEvEclEPS2_SE__agg_tmp1;
@@ -90,6 +77,7 @@ int _ZN9__gnu_cxx24__numeric_traits_integerIiE5__maxE __attribute__((aligned(4))
 int _ZN9__gnu_cxx24__numeric_traits_integerIiE5__minE __attribute__((aligned(4))) = -2147483648;
 extern int tolower(int p0);
 _Bool compare_nocase(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ p0, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -97,7 +85,7 @@ extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z14compare_nocaseNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES4_
 _Bool compare_nocase(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ v0, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ v1) {
-bb2:
+bb2: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ first3;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ second4;
   _Bool __retval5;
@@ -191,7 +179,7 @@ bb2:
 
 // function: main
 int main() {
-bb59:
+bb59: ;
   int __retval60;
   struct std____cxx11__list_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____std__allocator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____ mylist61;
   struct std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ it62;
@@ -282,9 +270,10 @@ bb59:
     if (std83) {
     } else {
       char* cast84 = (char*)&(_str_3);
-      char* c85 = _str_4;
+      char* c85 = (char*)_str_4;
       unsigned int c86 = 40;
       char* cast87 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast84, c85, c86, cast87);
     }
     int c88 = 0;
@@ -299,9 +288,10 @@ bb59:
     if (std92) {
     } else {
       char* cast93 = (char*)&(_str_5);
-      char* c94 = _str_4;
+      char* c94 = (char*)_str_4;
       unsigned int c95 = 41;
       char* cast96 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast93, c94, c95, cast96);
     }
     int c97 = 0;
@@ -316,9 +306,10 @@ bb59:
     if (std101) {
     } else {
       char* cast102 = (char*)&(_str_6);
-      char* c103 = _str_4;
+      char* c103 = (char*)_str_4;
       unsigned int c104 = 42;
       char* cast105 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast102, c103, c104, cast105);
     }
     char* cast106 = (char*)&(_str_7);
@@ -368,9 +359,10 @@ bb59:
     if (u127) {
     } else {
       char* cast128 = (char*)&(_str_9);
-      char* c129 = _str_4;
+      char* c129 = (char*)_str_4;
       unsigned int c130 = 51;
       char* cast131 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast128, c129, c130, cast131);
     }
     int c132 = 0;
@@ -386,9 +378,10 @@ bb59:
     if (u137) {
     } else {
       char* cast138 = (char*)&(_str_10);
-      char* c139 = _str_4;
+      char* c139 = (char*)_str_4;
       unsigned int c140 = 52;
       char* cast141 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast138, c139, c140, cast141);
     }
     int c142 = 0;
@@ -404,9 +397,10 @@ bb59:
     if (u147) {
     } else {
       char* cast148 = (char*)&(_str_11);
-      char* c149 = _str_4;
+      char* c149 = (char*)_str_4;
       unsigned int c150 = 53;
       char* cast151 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast148, c149, c150, cast151);
     }
     char* cast152 = (char*)&(_str_7);

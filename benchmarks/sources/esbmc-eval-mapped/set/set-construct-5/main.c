@@ -1,26 +1,10 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
 struct std___Rb_tree_key_compare_bool_____int__int__ { void* _M_key_compare; };
 struct std___Rb_tree_key_compare_classcomp_ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_;
+struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____new_allocator_int_;
 struct std____new_allocator_std___Rb_tree_node_int__;
 struct std__allocator_int_ { unsigned char __field0; };
@@ -37,6 +21,7 @@ char _str[18] = "fifth.size() == 0";
 char _str_1[107] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/set/set-construct-5/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 _Bool fncomp(int p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -44,7 +29,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _Z6fncompii
 _Bool fncomp(int v0, int v1) {
-bb2:
+bb2: ;
   int lhs3;
   int rhs4;
   _Bool __retval5;
@@ -60,7 +45,7 @@ bb2:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   struct std__set_int__classcomp__std__allocator_int__ fifth12;
   void* fn_pt13;
@@ -76,9 +61,10 @@ bb10:
     if (c19) {
     } else {
       char* cast20 = (char*)&(_str);
-      char* c21 = _str_1;
+      char* c21 = (char*)_str_1;
       unsigned int c22 = 25;
       char* cast23 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast20, c21, c22, cast23);
     }
     fn_pt13 = &fncomp;

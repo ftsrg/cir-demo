@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -27,7 +11,7 @@ static const char __cir_eh_type__ZTISt10bad_typeid[] = "_ZTISt10bad_typeid";
 
 // Struct definitions (auto-parsed)
 struct Polymorphic { void* __field0; };
-struct std__type_info;
+struct std__type_info { void* __field0; char* __name; };
 struct std__bad_typeid;
 
 static const char _ZTISt10bad_typeid__n_[] = "_ZTISt10bad_typeid";
@@ -37,13 +21,14 @@ char _str_1[121] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 extern int __gxx_personality_v0();
 extern void __cxa_bad_typeid();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int c2 = 0;
   __retval1 = c2;
@@ -79,9 +64,10 @@ bb0:
       __cir_exc_active = 0;
         bt5 = (struct std__bad_typeid*)__cir_exc_ptr;
         char* cast20 = (char*)&(_str);
-        char* c21 = _str_1;
+        char* c21 = (char*)_str_1;
         unsigned int c22 = 23;
         char* cast23 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast20, c21, c22, cast23);
       {
         if (__cir_exc_dtor) { ((void(*)(void*))__cir_exc_dtor)(__cir_exc_ptr); __cir_exc_dtor = (void*)0; }

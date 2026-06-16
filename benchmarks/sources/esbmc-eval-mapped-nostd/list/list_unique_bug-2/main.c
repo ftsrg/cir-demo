@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -178,7 +162,7 @@ struct std____detail___List_node_base* std____detail___List_node_base___M_base(s
 
 // function: _Z18same_integral_partdd
 _Bool same_integral_part(double v0, double v1) {
-bb2:
+bb2: ;
   double first3;
   double second4;
   _Bool __retval5;
@@ -196,7 +180,7 @@ bb2:
 
 // function: _ZNSaIdEC2Ev
 void std__allocator_double___allocator(struct std__allocator_double_* v12) {
-bb13:
+bb13: ;
   struct std__allocator_double_* this14;
   this14 = v12;
   struct std__allocator_double_* t15 = this14;
@@ -207,7 +191,7 @@ bb13:
 
 // function: _ZNSt7__cxx114listIdSaIdEEC2IPdvEET_S5_RKS1_
 void std____cxx11__list_double__std__allocator_double_____list_double___void_(struct std____cxx11__list_double__std__allocator_double__* v17, double* v18, double* v19, struct std__allocator_double_* v20) {
-bb21:
+bb21: ;
   struct std____cxx11__list_double__std__allocator_double__* this22;
   double* __first23;
   double* __last24;
@@ -248,7 +232,7 @@ bb21:
 
 // function: _ZNSaIdED2Ev
 void std__allocator_double____allocator(struct std__allocator_double_* v35) {
-bb36:
+bb36: ;
   struct std__allocator_double_* this37;
   this37 = v35;
   struct std__allocator_double_* t38 = this37;
@@ -257,7 +241,7 @@ bb36:
 
 // function: _ZNSt14_List_iteratorIdEppEv
 struct std___List_iterator_double_* std___List_iterator_double___operator___3(struct std___List_iterator_double_* v39) {
-bb40:
+bb40: ;
   struct std___List_iterator_double_* this41;
   struct std___List_iterator_double_* __retval42;
   this41 = v39;
@@ -272,7 +256,7 @@ bb40:
 
 // function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEEC2Ev
 void std____list___Scratch_list_std____detail___List_node_base____Scratch_list(struct std____list___Scratch_list_std____detail___List_node_base_* v47) {
-bb48:
+bb48: ;
   struct std____list___Scratch_list_std____detail___List_node_base_* this49;
   this49 = v47;
   struct std____list___Scratch_list_std____detail___List_node_base_* t50 = this49;
@@ -291,7 +275,7 @@ bb48:
 
 // function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE11_M_take_oneEPS2_
 void std____list___Scratch_list_std____detail___List_node_base____M_take_one(struct std____list___Scratch_list_std____detail___List_node_base_* v56, struct std____detail___List_node_base* v57) {
-bb58:
+bb58: ;
   struct std____list___Scratch_list_std____detail___List_node_base_* this59;
   struct std____detail___List_node_base* __i60;
   this59 = v56;
@@ -307,7 +291,7 @@ bb58:
 
 // function: _ZNKSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE5emptyEv
 _Bool std____list___Scratch_list_std____detail___List_node_base___empty___const(struct std____list___Scratch_list_std____detail___List_node_base_* v66) {
-bb67:
+bb67: ;
   struct std____list___Scratch_list_std____detail___List_node_base_* this68;
   _Bool __retval69;
   this68 = v66;
@@ -328,7 +312,7 @@ bb67:
 
 // function: _ZNKSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE8_Ptr_cmpISt14_List_iteratorIdEvEclEPS2_S8_
 _Bool std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___operator___std____detail___List_node_base___std____detail___List_node_base___const(struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_* v77, struct std____detail___List_node_base* v78, struct std____detail___List_node_base* v79) {
-bb80:
+bb80: ;
   struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_* this81;
   struct std____detail___List_node_base* __lhs82;
   struct std____detail___List_node_base* __rhs83;
@@ -355,7 +339,7 @@ bb80:
 
 // function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE5mergeINS3_8_Ptr_cmpISt14_List_iteratorIdEvEEEEvRS2_T_
 void void_std____list___Scratch_list_std____detail___List_node_base___merge_std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void___(struct std____list___Scratch_list_std____detail___List_node_base_* v96, struct std____detail___List_node_base* v97, struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ v98) {
-bb99:
+bb99: ;
   struct std____list___Scratch_list_std____detail___List_node_base_* this100;
   struct std____detail___List_node_base* __x101;
   struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ __comp102;
@@ -437,7 +421,7 @@ bb99:
 
 // function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE4swapERS2_
 void std____list___Scratch_list_std____detail___List_node_base___swap(struct std____list___Scratch_list_std____detail___List_node_base_* v142, struct std____detail___List_node_base* v143) {
-bb144:
+bb144: ;
   struct std____list___Scratch_list_std____detail___List_node_base_* this145;
   struct std____detail___List_node_base* __l146;
   this145 = v142;
@@ -451,7 +435,7 @@ bb144:
 
 // function: _ZNSt6__list13_Scratch_listINSt8__detail15_List_node_baseEE10_M_put_allEPS2_
 void std____list___Scratch_list_std____detail___List_node_base____M_put_all(struct std____list___Scratch_list_std____detail___List_node_base_* v150, struct std____detail___List_node_base* v151) {
-bb152:
+bb152: ;
   struct std____list___Scratch_list_std____detail___List_node_base_* this153;
   struct std____detail___List_node_base* __i154;
   this153 = v150;
@@ -478,7 +462,7 @@ bb152:
 
 // function: _ZNSt7__cxx114listIdSaIdEE4sortEv
 void std____cxx11__list_double__std__allocator_double_____sort(struct std____cxx11__list_double__std__allocator_double__* v163) {
-bb164:
+bb164: ;
   struct std____cxx11__list_double__std__allocator_double__* this165;
   this165 = v163;
   struct std____cxx11__list_double__std__allocator_double__* t166 = this165;
@@ -692,7 +676,7 @@ bb164:
 
 // function: _ZNKSt7__cxx1110_List_baseIdSaIdEE21_M_get_Node_allocatorEv
 struct std__allocator_std___List_node_double__* std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator___const(struct std____cxx11___List_base_double__std__allocator_double__* v267) {
-bb268:
+bb268: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this269;
   struct std__allocator_std___List_node_double__* __retval270;
   this269 = v267;
@@ -705,7 +689,7 @@ bb268:
 
 // function: _ZNSaIdEC2ISt10_List_nodeIdEEERKSaIT_E
 void std__allocator_double___allocator_std___List_node_double___(struct std__allocator_double_* v274, struct std__allocator_std___List_node_double__* v275) {
-bb276:
+bb276: ;
   struct std__allocator_double_* this277;
   struct std__allocator_std___List_node_double__* unnamed278;
   this277 = v274;
@@ -718,7 +702,7 @@ bb276:
 
 // function: _ZNKSt7__cxx114listIdSaIdEE13get_allocatorEv
 struct std__allocator_double_ std____cxx11__list_double__std__allocator_double_____get_allocator___const(struct std____cxx11__list_double__std__allocator_double__* v281) {
-bb282:
+bb282: ;
   struct std____cxx11__list_double__std__allocator_double__* this283;
   struct std__allocator_double_ __retval284;
   this283 = v281;
@@ -732,7 +716,7 @@ bb282:
 
 // function: _ZNSt7__cxx114listIdSaIdEEC2ERKS1_
 void std____cxx11__list_double__std__allocator_double_____list(struct std____cxx11__list_double__std__allocator_double__* v289, struct std__allocator_double_* v290) {
-bb291:
+bb291: ;
   struct std____cxx11__list_double__std__allocator_double__* this292;
   struct std__allocator_double_* __a293;
   struct std__allocator_std___List_node_double__ ref_tmp0294;
@@ -757,7 +741,7 @@ bb291:
 
 // function: _ZNKSt20_List_const_iteratorIdE13_M_const_castEv
 struct std___List_iterator_double_ std___List_const_iterator_double____M_const_cast___const(struct std___List_const_iterator_double_* v298) {
-bb299:
+bb299: ;
   struct std___List_const_iterator_double_* this300;
   struct std___List_iterator_double_ __retval301;
   this300 = v298;
@@ -770,7 +754,7 @@ bb299:
 
 // function: _ZSteqRKSt20_List_const_iteratorIdES2_
 _Bool std__operator___3(struct std___List_const_iterator_double_* v305, struct std___List_const_iterator_double_* v306) {
-bb307:
+bb307: ;
   struct std___List_const_iterator_double_* __x308;
   struct std___List_const_iterator_double_* __y309;
   _Bool __retval310;
@@ -788,7 +772,7 @@ bb307:
 
 // function: _ZSteqRKSaISt10_List_nodeIdEES3_
 _Bool std__operator__(struct std__allocator_std___List_node_double__* v317, struct std__allocator_std___List_node_double__* v318) {
-bb319:
+bb319: ;
   struct std__allocator_std___List_node_double__* unnamed320;
   struct std__allocator_std___List_node_double__* unnamed321;
   _Bool __retval322;
@@ -802,7 +786,7 @@ bb319:
 
 // function: _ZNSt7__cxx114listIdSaIdEE25_M_check_equal_allocatorsERKS2_
 void std____cxx11__list_double__std__allocator_double______M_check_equal_allocators(struct std____cxx11__list_double__std__allocator_double__* v325, struct std____cxx11__list_double__std__allocator_double__* v326) {
-bb327:
+bb327: ;
   struct std____cxx11__list_double__std__allocator_double__* this328;
   struct std____cxx11__list_double__std__allocator_double__* __x329;
   this328 = v325;
@@ -823,7 +807,7 @@ bb327:
 
 // function: _ZNSt7__cxx114listIdSaIdEE11_M_transferESt14_List_iteratorIdES4_S4_
 void std____cxx11__list_double__std__allocator_double______M_transfer(struct std____cxx11__list_double__std__allocator_double__* v338, struct std___List_iterator_double_ v339, struct std___List_iterator_double_ v340, struct std___List_iterator_double_ v341) {
-bb342:
+bb342: ;
   struct std____cxx11__list_double__std__allocator_double__* this343;
   struct std___List_iterator_double_ __position344;
   struct std___List_iterator_double_ __first345;
@@ -842,7 +826,7 @@ bb342:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEE11_M_dec_sizeEm
 void std____cxx11___List_base_double__std__allocator_double______M_dec_size(struct std____cxx11___List_base_double__std__allocator_double__* v351, unsigned long v352) {
-bb353:
+bb353: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this354;
   unsigned long __n355;
   this354 = v351;
@@ -858,7 +842,7 @@ bb353:
 
 // function: _ZNSt7__cxx114listIdSaIdEE6spliceESt20_List_const_iteratorIdEOS2_S4_
 void std____cxx11__list_double__std__allocator_double_____splice(struct std____cxx11__list_double__std__allocator_double__* v361, struct std___List_const_iterator_double_ v362, struct std____cxx11__list_double__std__allocator_double__* v363, struct std___List_const_iterator_double_ v364) {
-bb365:
+bb365: ;
   struct std____cxx11__list_double__std__allocator_double__* this366;
   struct std___List_const_iterator_double_ __position367;
   struct std____cxx11__list_double__std__allocator_double__* __x368;
@@ -925,7 +909,7 @@ bb365:
 
 // function: _ZNSt7__cxx114listIdSaIdEE6spliceESt20_List_const_iteratorIdERS2_S4_
 void std____cxx11__list_double__std__allocator_double_____splice_2(struct std____cxx11__list_double__std__allocator_double__* v395, struct std___List_const_iterator_double_ v396, struct std____cxx11__list_double__std__allocator_double__* v397, struct std___List_const_iterator_double_ v398) {
-bb399:
+bb399: ;
   struct std____cxx11__list_double__std__allocator_double__* this400;
   struct std___List_const_iterator_double_ __position401;
   struct std____cxx11__list_double__std__allocator_double__* __x402;
@@ -948,7 +932,7 @@ bb399:
 
 // function: _ZNSt20_List_const_iteratorIdEC2ERKSt14_List_iteratorIdE
 void std___List_const_iterator_double____List_const_iterator(struct std___List_const_iterator_double_* v410, struct std___List_iterator_double_* v411) {
-bb412:
+bb412: ;
   struct std___List_const_iterator_double_* this413;
   struct std___List_iterator_double_* __x414;
   this413 = v410;
@@ -962,7 +946,7 @@ bb412:
 
 // function: _ZNSt14_List_iteratorIdEaSERKS0_
 struct std___List_iterator_double_* std___List_iterator_double___operator__2(struct std___List_iterator_double_* v418, struct std___List_iterator_double_* v419) {
-bb420:
+bb420: ;
   struct std___List_iterator_double_* this421;
   struct std___List_iterator_double_* unnamed422;
   struct std___List_iterator_double_* __retval423;
@@ -979,7 +963,7 @@ bb420:
 
 // function: _ZNSt7__cxx114listIdSaIdEE6uniqueEv
 unsigned long std____cxx11__list_double__std__allocator_double_____unique(struct std____cxx11__list_double__std__allocator_double__* v428) {
-bb429:
+bb429: ;
   struct std____cxx11__list_double__std__allocator_double__* this430;
   unsigned long __retval431;
   struct std___List_iterator_double_ __first432;
@@ -1046,7 +1030,7 @@ bb429:
 
 // function: _ZNKSt7__cxx1110_List_baseIdSaIdEE11_M_get_sizeEv
 unsigned long std____cxx11___List_base_double__std__allocator_double______M_get_size___const(struct std____cxx11___List_base_double__std__allocator_double__* v463) {
-bb464:
+bb464: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this465;
   unsigned long __retval466;
   this465 = v463;
@@ -1060,7 +1044,7 @@ bb464:
 
 // function: _ZNKSt7__cxx114listIdSaIdEE4sizeEv
 unsigned long std____cxx11__list_double__std__allocator_double_____size___const(struct std____cxx11__list_double__std__allocator_double__* v471) {
-bb472:
+bb472: ;
   struct std____cxx11__list_double__std__allocator_double__* this473;
   unsigned long __retval474;
   this473 = v471;
@@ -1078,7 +1062,7 @@ bb472:
 
 // function: _ZNSt7__cxx114listIdSaIdEE5beginEv
 struct std___List_iterator_double_ std____cxx11__list_double__std__allocator_double_____begin(struct std____cxx11__list_double__std__allocator_double__* v479) {
-bb480:
+bb480: ;
   struct std____cxx11__list_double__std__allocator_double__* this481;
   struct std___List_iterator_double_ __retval482;
   this481 = v479;
@@ -1093,7 +1077,7 @@ bb480:
 
 // function: _ZNKSt14_List_iteratorIdEdeEv
 double* std___List_iterator_double___operator____const(struct std___List_iterator_double_* v488) {
-bb489:
+bb489: ;
   struct std___List_iterator_double_* this490;
   double* __retval491;
   this490 = v488;
@@ -1112,7 +1096,7 @@ bb489:
 
 // function: _ZNSt14_List_iteratorIdEppEi
 struct std___List_iterator_double_ std___List_iterator_double___operator___2(struct std___List_iterator_double_* v497, int v498) {
-bb499:
+bb499: ;
   struct std___List_iterator_double_* this500;
   int unnamed501;
   struct std___List_iterator_double_ __retval502;
@@ -1129,7 +1113,7 @@ bb499:
 
 // function: _ZNSt7__cxx114listIdSaIdEE6uniqueIPFbddEEEmT_
 unsigned long unsigned_long_std____cxx11__list_double__std__allocator_double_____unique_bool_____double__double___bool____(struct std____cxx11__list_double__std__allocator_double__* v507, void* v508) {
-bb509:
+bb509: ;
   struct std____cxx11__list_double__std__allocator_double__* this510;
   void* __binary_pred511;
   unsigned long __retval512;
@@ -1206,7 +1190,7 @@ bb509:
 
 // function: _ZNSt14_List_iteratorIdEaSEOS0_
 struct std___List_iterator_double_* std___List_iterator_double___operator_(struct std___List_iterator_double_* v545, struct std___List_iterator_double_* v546) {
-bb547:
+bb547: ;
   struct std___List_iterator_double_* this548;
   struct std___List_iterator_double_* unnamed549;
   struct std___List_iterator_double_* __retval550;
@@ -1223,7 +1207,7 @@ bb547:
 
 // function: _ZNSt7__cxx114listIdSaIdEED2Ev
 void std____cxx11__list_double__std__allocator_double______list(struct std____cxx11__list_double__std__allocator_double__* v555) {
-bb556:
+bb556: ;
   struct std____cxx11__list_double__std__allocator_double__* this557;
   this557 = v555;
   struct std____cxx11__list_double__std__allocator_double__* t558 = this557;
@@ -1236,7 +1220,7 @@ bb556:
 
 // function: main
 int main() {
-bb560:
+bb560: ;
   int __retval561;
   double mydoubles562[10];
   struct std____cxx11__list_double__std__allocator_double__ mylist563;
@@ -1298,7 +1282,7 @@ bb560:
     if (c588) {
     } else {
       char* cast589 = (char*)&(_str);
-      char* c590 = _str_1;
+      char* c590 = (char*)_str_1;
       unsigned int c591 = 38;
       char* cast592 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast589, c590, c591, cast592);
@@ -1312,7 +1296,7 @@ bb560:
     if (c597) {
     } else {
       char* cast598 = (char*)&(_str_2);
-      char* c599 = _str_1;
+      char* c599 = (char*)_str_1;
       unsigned int c600 = 40;
       char* cast601 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast598, c599, c600, cast601);
@@ -1327,7 +1311,7 @@ bb560:
     if (c607) {
     } else {
       char* cast608 = (char*)&(_str_3);
-      char* c609 = _str_1;
+      char* c609 = (char*)_str_1;
       unsigned int c610 = 41;
       char* cast611 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast608, c609, c610, cast611);
@@ -1342,7 +1326,7 @@ bb560:
     if (c617) {
     } else {
       char* cast618 = (char*)&(_str_4);
-      char* c619 = _str_1;
+      char* c619 = (char*)_str_1;
       unsigned int c620 = 42;
       char* cast621 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast618, c619, c620, cast621);
@@ -1357,7 +1341,7 @@ bb560:
     if (c627) {
     } else {
       char* cast628 = (char*)&(_str_5);
-      char* c629 = _str_1;
+      char* c629 = (char*)_str_1;
       unsigned int c630 = 43;
       char* cast631 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast628, c629, c630, cast631);
@@ -1372,7 +1356,7 @@ bb560:
     if (c637) {
     } else {
       char* cast638 = (char*)&(_str_6);
-      char* c639 = _str_1;
+      char* c639 = (char*)_str_1;
       unsigned int c640 = 44;
       char* cast641 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast638, c639, c640, cast641);
@@ -1387,7 +1371,7 @@ bb560:
     if (c647) {
     } else {
       char* cast648 = (char*)&(_str_7);
-      char* c649 = _str_1;
+      char* c649 = (char*)_str_1;
       unsigned int c650 = 45;
       char* cast651 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast648, c649, c650, cast651);
@@ -1402,7 +1386,7 @@ bb560:
     if (c657) {
     } else {
       char* cast658 = (char*)&(_str_8);
-      char* c659 = _str_1;
+      char* c659 = (char*)_str_1;
       unsigned int c660 = 46;
       char* cast661 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast658, c659, c660, cast661);
@@ -1417,7 +1401,7 @@ bb560:
     if (c667) {
     } else {
       char* cast668 = (char*)&(_str_9);
-      char* c669 = _str_1;
+      char* c669 = (char*)_str_1;
       unsigned int c670 = 47;
       char* cast671 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast668, c669, c670, cast671);
@@ -1440,7 +1424,7 @@ bb560:
     if (c678) {
     } else {
       char* cast679 = (char*)&(_str_2);
-      char* c680 = _str_1;
+      char* c680 = (char*)_str_1;
       unsigned int c681 = 52;
       char* cast682 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast679, c680, c681, cast682);
@@ -1455,7 +1439,7 @@ bb560:
     if (c688) {
     } else {
       char* cast689 = (char*)&(_str_10);
-      char* c690 = _str_1;
+      char* c690 = (char*)_str_1;
       unsigned int c691 = 53;
       char* cast692 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast689, c690, c691, cast692);
@@ -1470,7 +1454,7 @@ bb560:
     if (c698) {
     } else {
       char* cast699 = (char*)&(_str_4);
-      char* c700 = _str_1;
+      char* c700 = (char*)_str_1;
       unsigned int c701 = 54;
       char* cast702 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast699, c700, c701, cast702);
@@ -1485,7 +1469,7 @@ bb560:
     if (c708) {
     } else {
       char* cast709 = (char*)&(_str_6);
-      char* c710 = _str_1;
+      char* c710 = (char*)_str_1;
       unsigned int c711 = 55;
       char* cast712 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast709, c710, c711, cast712);
@@ -1500,7 +1484,7 @@ bb560:
     if (c718) {
     } else {
       char* cast719 = (char*)&(_str_11);
-      char* c720 = _str_1;
+      char* c720 = (char*)_str_1;
       unsigned int c721 = 56;
       char* cast722 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast719, c720, c721, cast722);
@@ -1515,7 +1499,7 @@ bb560:
     if (c728) {
     } else {
       char* cast729 = (char*)&(_str_8);
-      char* c730 = _str_1;
+      char* c730 = (char*)_str_1;
       unsigned int c731 = 57;
       char* cast732 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast729, c730, c731, cast732);
@@ -1537,7 +1521,7 @@ bb560:
 
 // function: _ZNSt15__new_allocatorIdEC2Ev
 void std____new_allocator_double_____new_allocator(struct std____new_allocator_double_* v739) {
-bb740:
+bb740: ;
   struct std____new_allocator_double_* this741;
   this741 = v739;
   struct std____new_allocator_double_* t742 = this741;
@@ -1546,7 +1530,7 @@ bb740:
 
 // function: _ZNSt8__detail17_List_node_header7_M_baseEv
 struct std____detail___List_node_base* std____detail___List_node_header___M_base(struct std____detail___List_node_header* v743) {
-bb744:
+bb744: ;
   struct std____detail___List_node_header* this745;
   struct std____detail___List_node_base* __retval746;
   this745 = v743;
@@ -1559,7 +1543,7 @@ bb744:
 
 // function: _ZSt10destroy_atIdEvPT_
 void void_std__destroy_at_double_(double* v750) {
-bb751:
+bb751: ;
   double* __location752;
   __location752 = v750;
   return;
@@ -1567,7 +1551,7 @@ bb751:
 
 // function: _ZNSt16allocator_traitsISaISt10_List_nodeIdEEE7destroyIdEEvRS2_PT_
 void void_std__allocator_traits_std__allocator_std___List_node_double_______destroy_double_(struct std__allocator_std___List_node_double__* v753, double* v754) {
-bb755:
+bb755: ;
   struct std__allocator_std___List_node_double__* __a756;
   double* __p757;
   __a756 = v753;
@@ -1582,7 +1566,7 @@ bb755:
 
 // function: _ZN9__gnu_cxx16__aligned_membufIdE7_M_addrEv
 void* __gnu_cxx____aligned_membuf_double____M_addr(struct __gnu_cxx____aligned_membuf_double_* v759) {
-bb760:
+bb760: ;
   struct __gnu_cxx____aligned_membuf_double_* this761;
   void* __retval762;
   this761 = v759;
@@ -1595,7 +1579,7 @@ bb760:
 
 // function: _ZN9__gnu_cxx16__aligned_membufIdE6_M_ptrEv
 double* __gnu_cxx____aligned_membuf_double____M_ptr(struct __gnu_cxx____aligned_membuf_double_* v766) {
-bb767:
+bb767: ;
   struct __gnu_cxx____aligned_membuf_double_* this768;
   double* __retval769;
   this768 = v766;
@@ -1609,7 +1593,7 @@ bb767:
 
 // function: _ZNSt10_List_nodeIdE9_M_valptrEv
 double* std___List_node_double____M_valptr(struct std___List_node_double_* v774) {
-bb775:
+bb775: ;
   struct std___List_node_double_* this776;
   double* __retval777;
   this776 = v774;
@@ -1622,7 +1606,7 @@ bb775:
 
 // function: _ZSt23__is_constant_evaluatedv
 _Bool std____is_constant_evaluated() {
-bb781:
+bb781: ;
   _Bool __retval782;
     _Bool c783 = 0;
     __retval782 = c783;
@@ -1633,7 +1617,7 @@ bb781:
 
 // function: _ZNSt15__new_allocatorISt10_List_nodeIdEE10deallocateEPS1_m
 void std____new_allocator_std___List_node_double_____deallocate(struct std____new_allocator_std___List_node_double__* v785, struct std___List_node_double_* v786, unsigned long v787) {
-bb788:
+bb788: ;
   struct std____new_allocator_std___List_node_double__* this789;
   struct std___List_node_double_* __p790;
   unsigned long __n791;
@@ -1665,7 +1649,7 @@ bb788:
 
 // function: _ZNSaISt10_List_nodeIdEE10deallocateEPS0_m
 void std__allocator_std___List_node_double_____deallocate(struct std__allocator_std___List_node_double__* v807, struct std___List_node_double_* v808, unsigned long v809) {
-bb810:
+bb810: ;
   struct std__allocator_std___List_node_double__* this811;
   struct std___List_node_double_* __p812;
   unsigned long __n813;
@@ -1692,7 +1676,7 @@ bb810:
 
 // function: _ZNSt16allocator_traitsISaISt10_List_nodeIdEEE10deallocateERS2_PS1_m
 void std__allocator_traits_std__allocator_std___List_node_double_______deallocate(struct std__allocator_std___List_node_double__* v821, struct std___List_node_double_* v822, unsigned long v823) {
-bb824:
+bb824: ;
   struct std__allocator_std___List_node_double__* __a825;
   struct std___List_node_double_* __p826;
   unsigned long __n827;
@@ -1711,7 +1695,7 @@ bb824:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEE11_M_put_nodeEPSt10_List_nodeIdE
 void std____cxx11___List_base_double__std__allocator_double______M_put_node(struct std____cxx11___List_base_double__std__allocator_double__* v831, struct std___List_node_double_* v832) {
-bb833:
+bb833: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this834;
   struct std___List_node_double_* __p835;
   this834 = v831;
@@ -1729,7 +1713,7 @@ bb833:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEE15_M_destroy_nodeEPSt10_List_nodeIdE
 void std____cxx11___List_base_double__std__allocator_double______M_destroy_node(struct std____cxx11___List_base_double__std__allocator_double__* v840, struct std___List_node_double_* v841) {
-bb842:
+bb842: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this843;
   struct std___List_node_double_* __p844;
   this843 = v840;
@@ -1749,7 +1733,7 @@ bb842:
 
 // function: _ZNSt10_List_nodeIdE11_M_node_ptrEv
 struct std___List_node_double_* std___List_node_double____M_node_ptr(struct std___List_node_double_* v850) {
-bb851:
+bb851: ;
   struct std___List_node_double_* this852;
   struct std___List_node_double_* __retval853;
   this852 = v850;
@@ -1761,7 +1745,7 @@ bb851:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEE8_M_clearEv
 void std____cxx11___List_base_double__std__allocator_double______M_clear(struct std____cxx11___List_base_double__std__allocator_double__* v856) {
-bb857:
+bb857: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this858;
   struct std____detail___List_node_base* __cur859;
   this858 = v856;
@@ -1800,7 +1784,7 @@ bb857:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEE10_List_implD2Ev
 void std____cxx11___List_base_double__std__allocator_double______List_impl____List_impl(struct std____cxx11___List_base_double__std__allocator_double_____List_impl* v874) {
-bb875:
+bb875: ;
   struct std____cxx11___List_base_double__std__allocator_double_____List_impl* this876;
   this876 = v874;
   struct std____cxx11___List_base_double__std__allocator_double_____List_impl* t877 = this876;
@@ -1813,7 +1797,7 @@ bb875:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEED2Ev
 void std____cxx11___List_base_double__std__allocator_double_______List_base(struct std____cxx11___List_base_double__std__allocator_double__* v879) {
-bb880:
+bb880: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this881;
   this881 = v879;
   struct std____cxx11___List_base_double__std__allocator_double__* t882 = this881;
@@ -1826,7 +1810,7 @@ bb880:
 
 // function: _ZNSaISt10_List_nodeIdEEC2IdEERKSaIT_E
 void std__allocator_std___List_node_double_____allocator_double_(struct std__allocator_std___List_node_double__* v883, struct std__allocator_double_* v884) {
-bb885:
+bb885: ;
   struct std__allocator_std___List_node_double__* this886;
   struct std__allocator_double_* unnamed887;
   this886 = v883;
@@ -1839,7 +1823,7 @@ bb885:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEE10_List_implC2EOSaISt10_List_nodeIdEE
 void std____cxx11___List_base_double__std__allocator_double______List_impl___List_impl(struct std____cxx11___List_base_double__std__allocator_double_____List_impl* v890, struct std__allocator_std___List_node_double__* v891) {
-bb892:
+bb892: ;
   struct std____cxx11___List_base_double__std__allocator_double_____List_impl* this893;
   struct std__allocator_std___List_node_double__* __a894;
   this893 = v890;
@@ -1854,7 +1838,7 @@ bb892:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEEC2EOSaISt10_List_nodeIdEE
 void std____cxx11___List_base_double__std__allocator_double______List_base(struct std____cxx11___List_base_double__std__allocator_double__* v898, struct std__allocator_std___List_node_double__* v899) {
-bb900:
+bb900: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this901;
   struct std__allocator_std___List_node_double__* __a902;
   this901 = v898;
@@ -1867,7 +1851,7 @@ bb900:
 
 // function: _ZNSaISt10_List_nodeIdEED2Ev
 void std__allocator_std___List_node_double______allocator(struct std__allocator_std___List_node_double__* v905) {
-bb906:
+bb906: ;
   struct std__allocator_std___List_node_double__* this907;
   this907 = v905;
   struct std__allocator_std___List_node_double__* t908 = this907;
@@ -1876,7 +1860,7 @@ bb906:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEE21_M_get_Node_allocatorEv
 struct std__allocator_std___List_node_double__* std____cxx11___List_base_double__std__allocator_double______M_get_Node_allocator(struct std____cxx11___List_base_double__std__allocator_double__* v909) {
-bb910:
+bb910: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this911;
   struct std__allocator_std___List_node_double__* __retval912;
   this911 = v909;
@@ -1889,7 +1873,7 @@ bb910:
 
 // function: _ZNKSt15__new_allocatorISt10_List_nodeIdEE11_M_max_sizeEv
 unsigned long std____new_allocator_std___List_node_double______M_max_size___const(struct std____new_allocator_std___List_node_double__* v916) {
-bb917:
+bb917: ;
   struct std____new_allocator_std___List_node_double__* this918;
   unsigned long __retval919;
   this918 = v916;
@@ -1904,7 +1888,7 @@ bb917:
 
 // function: _ZNSt15__new_allocatorISt10_List_nodeIdEE8allocateEmPKv
 struct std___List_node_double_* std____new_allocator_std___List_node_double_____allocate(struct std____new_allocator_std___List_node_double__* v925, unsigned long v926, void* v927) {
-bb928:
+bb928: ;
   struct std____new_allocator_std___List_node_double__* this929;
   unsigned long __n930;
   void* unnamed931;
@@ -1972,7 +1956,7 @@ bb928:
 
 // function: _ZNSaISt10_List_nodeIdEE8allocateEm
 struct std___List_node_double_* std__allocator_std___List_node_double_____allocate(struct std__allocator_std___List_node_double__* v960, unsigned long v961) {
-bb962:
+bb962: ;
   struct std__allocator_std___List_node_double__* this963;
   unsigned long __n964;
   struct std___List_node_double_* __retval965;
@@ -2019,7 +2003,7 @@ bb962:
 
 // function: _ZNSt16allocator_traitsISaISt10_List_nodeIdEEE8allocateERS2_m
 struct std___List_node_double_* std__allocator_traits_std__allocator_std___List_node_double_______allocate(struct std__allocator_std___List_node_double__* v981, unsigned long v982) {
-bb983:
+bb983: ;
   struct std__allocator_std___List_node_double__* __a984;
   unsigned long __n985;
   struct std___List_node_double_* __retval986;
@@ -2039,7 +2023,7 @@ bb983:
 
 // function: _ZNSt15__allocated_ptrISaISt10_List_nodeIdEEEC2ERS2_PS1_
 void std____allocated_ptr_std__allocator_std___List_node_double_________allocated_ptr_2(struct std____allocated_ptr_std__allocator_std___List_node_double___* v991, struct std__allocator_std___List_node_double__* v992, struct std___List_node_double_* v993) {
-bb994:
+bb994: ;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* this995;
   struct std__allocator_std___List_node_double__* __a996;
   struct std___List_node_double_* __ptr997;
@@ -2056,7 +2040,7 @@ bb994:
 
 // function: _ZSt18__allocate_guardedISaISt10_List_nodeIdEEESt15__allocated_ptrIT_ERS4_
 struct std____allocated_ptr_std__allocator_std___List_node_double___ std____allocated_ptr_std__allocator_std___List_node_double______std____allocate_guarded_std__allocator_std___List_node_double_____(struct std__allocator_std___List_node_double__* v1001) {
-bb1002:
+bb1002: ;
   struct std__allocator_std___List_node_double__* __a1003;
   struct std____allocated_ptr_std__allocator_std___List_node_double___ __retval1004;
   __a1003 = v1001;
@@ -2075,7 +2059,7 @@ bb1002:
 
 // function: _ZNSt15__allocated_objISaISt10_List_nodeIdEEEC2EOSt15__allocated_ptrIS2_E
 void std____allocated_obj_std__allocator_std___List_node_double_________allocated_obj(struct std____allocated_obj_std__allocator_std___List_node_double___* v1010, struct std____allocated_ptr_std__allocator_std___List_node_double___* v1011) {
-bb1012:
+bb1012: ;
   struct std____allocated_obj_std__allocator_std___List_node_double___* this1013;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* __ptr1014;
   this1013 = v1010;
@@ -2098,7 +2082,7 @@ bb1012:
 
 // function: _ZNSt15__allocated_ptrISaISt10_List_nodeIdEEED2Ev
 void std____allocated_ptr_std__allocator_std___List_node_double__________allocated_ptr(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1021) {
-bb1022:
+bb1022: ;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* this1023;
   this1023 = v1021;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* t1024 = this1023;
@@ -2119,7 +2103,7 @@ bb1022:
 
 // function: _ZSt22__allocate_guarded_objISaISt10_List_nodeIdEEESt15__allocated_objIT_ERS4_
 struct std____allocated_obj_std__allocator_std___List_node_double___ std____allocated_obj_std__allocator_std___List_node_double______std____allocate_guarded_obj_std__allocator_std___List_node_double_____(struct std__allocator_std___List_node_double__* v1031) {
-bb1032:
+bb1032: ;
   struct std__allocator_std___List_node_double__* __a1033;
   struct std____allocated_obj_std__allocator_std___List_node_double___ __retval1034;
   struct std____allocated_ptr_std__allocator_std___List_node_double___ ref_tmp01035;
@@ -2148,7 +2132,7 @@ bb1032:
 
 // function: _ZSt12construct_atIdJRdEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_
 double* _ZSt12construct_atIdJRdEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(double* v1039, double* v1040) {
-bb1041:
+bb1041: ;
   double* __location1042;
   double* __args1043;
   double* __retval1044;
@@ -2171,7 +2155,7 @@ bb1041:
 
 // function: _ZNSt16allocator_traitsISaISt10_List_nodeIdEEE9constructIdJRdEEEvRS2_PT_DpOT0_
 void void_std__allocator_traits_std__allocator_std___List_node_double_______construct_double__double__(struct std__allocator_std___List_node_double__* v1053, double* v1054, double* v1055) {
-bb1056:
+bb1056: ;
   struct std__allocator_std___List_node_double__* __a1057;
   double* __p1058;
   double* __args1059;
@@ -2186,7 +2170,7 @@ bb1056:
 
 // function: _ZNKSt15__allocated_objISaISt10_List_nodeIdEEEptEv
 struct std___List_node_double_* std____allocated_obj_std__allocator_std___List_node_double_______operator_____const(struct std____allocated_obj_std__allocator_std___List_node_double___* v1063) {
-bb1064:
+bb1064: ;
   struct std____allocated_obj_std__allocator_std___List_node_double___* this1065;
   struct std___List_node_double_* __retval1066;
   this1065 = v1063;
@@ -2204,7 +2188,7 @@ bb1064:
 
 // function: _ZSt10__exchangeIPSt10_List_nodeIdEDnET_RS3_OT0_
 struct std___List_node_double_* std___List_node_double___std____exchange_std___List_node_double____decltype_nullptr___std___List_node_double_____decltype(struct std___List_node_double_** v1071, void** v1072) {
-bb1073:
+bb1073: ;
   struct std___List_node_double_** __obj1074;
   void** __new_val1075;
   struct std___List_node_double_* __retval1076;
@@ -2226,7 +2210,7 @@ bb1073:
 
 // function: _ZNSt15__allocated_ptrISaISt10_List_nodeIdEEE7releaseEv
 struct std___List_node_double_* std____allocated_ptr_std__allocator_std___List_node_double_______release(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1085) {
-bb1086:
+bb1086: ;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* this1087;
   struct std___List_node_double_* __retval1088;
   void* ref_tmp01089;
@@ -2246,7 +2230,7 @@ bb1086:
 
 // function: _ZNSt15__allocated_objISaISt10_List_nodeIdEEED2Ev
 void std____allocated_obj_std__allocator_std___List_node_double__________allocated_obj(struct std____allocated_obj_std__allocator_std___List_node_double___* v1094) {
-bb1095:
+bb1095: ;
   struct std____allocated_obj_std__allocator_std___List_node_double___* this1096;
   this1096 = v1094;
   struct std____allocated_obj_std__allocator_std___List_node_double___* t1097 = this1096;
@@ -2272,7 +2256,7 @@ bb1095:
 
 // function: _ZNSt7__cxx114listIdSaIdEE14_M_create_nodeIJRdEEEPSt10_List_nodeIdEDpOT_
 struct std___List_node_double_* std___List_node_double___std____cxx11__list_double__std__allocator_double______M_create_node_double__(struct std____cxx11__list_double__std__allocator_double__* v1104, double* v1105) {
-bb1106:
+bb1106: ;
   struct std____cxx11__list_double__std__allocator_double__* this1107;
   double* __args1108;
   struct std___List_node_double_* __retval1109;
@@ -2331,7 +2315,7 @@ bb1106:
 
 // function: _ZNSt7__cxx1110_List_baseIdSaIdEE11_M_inc_sizeEm
 void std____cxx11___List_base_double__std__allocator_double______M_inc_size(struct std____cxx11___List_base_double__std__allocator_double__* v1125, unsigned long v1126) {
-bb1127:
+bb1127: ;
   struct std____cxx11___List_base_double__std__allocator_double__* this1128;
   unsigned long __n1129;
   this1128 = v1125;
@@ -2347,7 +2331,7 @@ bb1127:
 
 // function: _ZNSt7__cxx114listIdSaIdEE9_M_insertIJRdEEEvSt14_List_iteratorIdEDpOT_
 void void_std____cxx11__list_double__std__allocator_double______M_insert_double__(struct std____cxx11__list_double__std__allocator_double__* v1135, struct std___List_iterator_double_ v1136, double* v1137) {
-bb1138:
+bb1138: ;
   struct std____cxx11__list_double__std__allocator_double__* this1139;
   struct std___List_iterator_double_ __position1140;
   double* __args1141;
@@ -2377,7 +2361,7 @@ bb1138:
 
 // function: _ZNKSt8__detail15_List_node_base7_M_baseEv
 struct std____detail___List_node_base* std____detail___List_node_base___M_base___const(struct std____detail___List_node_base* v1151) {
-bb1152:
+bb1152: ;
   struct std____detail___List_node_base* this1153;
   struct std____detail___List_node_base* __retval1154;
   this1153 = v1151;
@@ -2389,7 +2373,7 @@ bb1152:
 
 // function: _ZNKSt7__cxx114listIdSaIdEE5emptyEv
 _Bool std____cxx11__list_double__std__allocator_double_____empty___const(struct std____cxx11__list_double__std__allocator_double__* v1157) {
-bb1158:
+bb1158: ;
   struct std____cxx11__list_double__std__allocator_double__* this1159;
   _Bool __retval1160;
   this1159 = v1157;
@@ -2412,7 +2396,7 @@ bb1158:
 
 // function: _ZNSt14_List_iteratorIdEmmEv
 struct std___List_iterator_double_* std___List_iterator_double___operator__(struct std___List_iterator_double_* v1170) {
-bb1171:
+bb1171: ;
   struct std___List_iterator_double_* this1172;
   struct std___List_iterator_double_* __retval1173;
   this1172 = v1170;
@@ -2427,7 +2411,7 @@ bb1171:
 
 // function: _ZNSt7__cxx114listIdSaIdEE4backEv
 double* std____cxx11__list_double__std__allocator_double_____back(struct std____cxx11__list_double__std__allocator_double__* v1178) {
-bb1179:
+bb1179: ;
   struct std____cxx11__list_double__std__allocator_double__* this1180;
   double* __retval1181;
   struct std___List_iterator_double_ __tmp1182;
@@ -2456,7 +2440,7 @@ bb1179:
 
 // function: _ZNSt7__cxx114listIdSaIdEE12emplace_backIJRdEEES4_DpOT_
 double* double__std____cxx11__list_double__std__allocator_double_____emplace_back_double__(struct std____cxx11__list_double__std__allocator_double__* v1194, double* v1195) {
-bb1196:
+bb1196: ;
   struct std____cxx11__list_double__std__allocator_double__* this1197;
   double* __args1198;
   double* __retval1199;
@@ -2481,7 +2465,7 @@ bb1196:
 
 // function: _ZSteqRKSt14_List_iteratorIdES2_
 _Bool std__operator___2(struct std___List_iterator_double_* v1207, struct std___List_iterator_double_* v1208) {
-bb1209:
+bb1209: ;
   struct std___List_iterator_double_* __x1210;
   struct std___List_iterator_double_* __y1211;
   _Bool __retval1212;
@@ -2499,7 +2483,7 @@ bb1209:
 
 // function: _ZNSt14_List_iteratorIdEC2EPNSt8__detail15_List_node_baseE
 void std___List_iterator_double____List_iterator(struct std___List_iterator_double_* v1219, struct std____detail___List_node_base* v1220) {
-bb1221:
+bb1221: ;
   struct std___List_iterator_double_* this1222;
   struct std____detail___List_node_base* __x1223;
   this1222 = v1219;
@@ -2512,7 +2496,7 @@ bb1221:
 
 // function: _ZNSt7__cxx114listIdSaIdEE3endEv
 struct std___List_iterator_double_ std____cxx11__list_double__std__allocator_double_____end(struct std____cxx11__list_double__std__allocator_double__* v1226) {
-bb1227:
+bb1227: ;
   struct std____cxx11__list_double__std__allocator_double__* this1228;
   struct std___List_iterator_double_ __retval1229;
   this1228 = v1226;
@@ -2530,7 +2514,7 @@ bb1227:
 
 // function: _ZNSt7__cxx114listIdSaIdEE22_M_initialize_dispatchIPdEEvT_S5_St12__false_type
 void void_std____cxx11__list_double__std__allocator_double______M_initialize_dispatch_double__(struct std____cxx11__list_double__std__allocator_double__* v1234, double* v1235, double* v1236, struct std____false_type v1237) {
-bb1238:
+bb1238: ;
   struct std____cxx11__list_double__std__allocator_double__* this1239;
   double* __first1240;
   double* __last1241;
@@ -2579,7 +2563,7 @@ bb1238:
 
 // function: _ZNSt15__new_allocatorISt10_List_nodeIdEEC2Ev
 void std____new_allocator_std___List_node_double_______new_allocator_2(struct std____new_allocator_std___List_node_double__* v1263) {
-bb1264:
+bb1264: ;
   struct std____new_allocator_std___List_node_double__* this1265;
   this1265 = v1263;
   struct std____new_allocator_std___List_node_double__* t1266 = this1265;
@@ -2588,7 +2572,7 @@ bb1264:
 
 // function: _ZNSt15__new_allocatorISt10_List_nodeIdEEC2ERKS2_
 void std____new_allocator_std___List_node_double_______new_allocator(struct std____new_allocator_std___List_node_double__* v1267, struct std____new_allocator_std___List_node_double__* v1268) {
-bb1269:
+bb1269: ;
   struct std____new_allocator_std___List_node_double__* this1270;
   struct std____new_allocator_std___List_node_double__* unnamed1271;
   this1270 = v1267;
@@ -2599,7 +2583,7 @@ bb1269:
 
 // function: _ZNSaISt10_List_nodeIdEEC2ERKS1_
 void std__allocator_std___List_node_double_____allocator(struct std__allocator_std___List_node_double__* v1273, struct std__allocator_std___List_node_double__* v1274) {
-bb1275:
+bb1275: ;
   struct std__allocator_std___List_node_double__* this1276;
   struct std__allocator_std___List_node_double__* __a1277;
   this1276 = v1273;
@@ -2614,7 +2598,7 @@ bb1275:
 
 // function: _ZNSt8__detail17_List_node_headerC2Ev
 void std____detail___List_node_header___List_node_header(struct std____detail___List_node_header* v1282) {
-bb1283:
+bb1283: ;
   struct std____detail___List_node_header* this1284;
   this1284 = v1282;
   struct std____detail___List_node_header* t1285 = this1284;
@@ -2626,7 +2610,7 @@ bb1283:
 
 // function: _ZNSt8__detail10_List_sizeaSEOS0_
 struct std____detail___List_size* std____detail___List_size__operator_(struct std____detail___List_size* v1288, struct std____detail___List_size* v1289) {
-bb1290:
+bb1290: ;
   struct std____detail___List_size* this1291;
   struct std____detail___List_size* unnamed1292;
   struct std____detail___List_size* __retval1293;
@@ -2643,7 +2627,7 @@ bb1290:
 
 // function: _ZNSt8__detail17_List_node_header7_M_initEv
 void std____detail___List_node_header___M_init(struct std____detail___List_node_header* v1298) {
-bb1299:
+bb1299: ;
   struct std____detail___List_node_header* this1300;
   struct std____detail___List_size ref_tmp01301;
   this1300 = v1298;
@@ -2661,7 +2645,7 @@ bb1299:
 
 // function: _ZNSt15__allocated_ptrISaISt10_List_nodeIdEEEC2EOS3_
 void std____allocated_ptr_std__allocator_std___List_node_double_________allocated_ptr(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1308, struct std____allocated_ptr_std__allocator_std___List_node_double___* v1309) {
-bb1310:
+bb1310: ;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* this1311;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* __gd1312;
   this1311 = v1308;
@@ -2681,7 +2665,7 @@ bb1310:
 
 // function: _ZSt10to_addressISt10_List_nodeIdEEPT_S3_
 struct std___List_node_double_* std___List_node_double___std__to_address_std___List_node_double___(struct std___List_node_double_* v1320) {
-bb1321:
+bb1321: ;
   struct std___List_node_double_* __ptr1322;
   struct std___List_node_double_* __retval1323;
   __ptr1322 = v1320;
@@ -2693,7 +2677,7 @@ bb1321:
 
 // function: _ZSt12__to_addressIPSt10_List_nodeIdEEDaRKT_
 struct std___List_node_double_* auto_std____to_address_std___List_node_double___(struct std___List_node_double_** v1326) {
-bb1327:
+bb1327: ;
   struct std___List_node_double_** __ptr1328;
   struct std___List_node_double_* __retval1329;
   __ptr1328 = v1326;
@@ -2707,7 +2691,7 @@ bb1327:
 
 // function: _ZNKSt15__allocated_ptrISaISt10_List_nodeIdEEE3getEv
 struct std___List_node_double_* std____allocated_ptr_std__allocator_std___List_node_double_______get___const(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1334) {
-bb1335:
+bb1335: ;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* this1336;
   struct std___List_node_double_* __retval1337;
   this1336 = v1334;
@@ -2720,7 +2704,7 @@ bb1335:
 
 // function: _ZNKSt15__allocated_ptrISaISt10_List_nodeIdEEEcvbEv
 _Bool std____allocated_ptr_std__allocator_std___List_node_double_______operator_bool___const(struct std____allocated_ptr_std__allocator_std___List_node_double___* v1341) {
-bb1342:
+bb1342: ;
   struct std____allocated_ptr_std__allocator_std___List_node_double___* this1343;
   _Bool __retval1344;
   this1343 = v1341;
@@ -2734,7 +2718,7 @@ bb1342:
 
 // function: _ZNSt8__detail15_List_node_base7_M_baseEv
 struct std____detail___List_node_base* std____detail___List_node_base___M_base(struct std____detail___List_node_base* v1349) {
-bb1350:
+bb1350: ;
   struct std____detail___List_node_base* this1351;
   struct std____detail___List_node_base* __retval1352;
   this1351 = v1349;

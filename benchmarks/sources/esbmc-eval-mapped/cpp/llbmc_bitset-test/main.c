@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct std___Base_bitset_2UL_ { unsigned long _M_w[2]; };
 struct std__bitset_100UL_ { struct std___Base_bitset_2UL_ __field0; };
@@ -28,6 +12,7 @@ char _str_4[11] = "bs.test(i)";
 char _str_5[13] = "!bsf.test(i)";
 char _str_6[13] = "bitset::test";
 char _str_7[52] = "%s: __position (which is %zu) >= _Nb (which is %zu)";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -35,7 +20,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__bitset_100UL_ bs2;
   struct std__bitset_100UL_ bsf3;
@@ -87,9 +72,10 @@ bb0:
   if (c28) {
   } else {
     char* cast29 = (char*)&(_str);
-    char* c30 = _str_1;
+    char* c30 = (char*)_str_1;
     unsigned int c31 = 25;
     char* cast32 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast29, c30, c31, cast32);
   }
     int i33;
@@ -114,9 +100,10 @@ bb0:
             if (u47) {
             } else {
               char* cast48 = (char*)&(_str_2);
-              char* c49 = _str_1;
+              char* c49 = (char*)_str_1;
               unsigned int c50 = 29;
               char* cast51 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast48, c49, c50, cast51);
             }
             int t52 = i33;
@@ -126,9 +113,10 @@ bb0:
             if (std54) {
             } else {
               char* cast55 = (char*)&(_str_3);
-              char* c56 = _str_1;
+              char* c56 = (char*)_str_1;
               unsigned int c57 = 30;
               char* cast58 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast55, c56, c57, cast58);
             }
           } else {
@@ -139,9 +127,10 @@ bb0:
             if (std61) {
             } else {
               char* cast62 = (char*)&(_str_4);
-              char* c63 = _str_1;
+              char* c63 = (char*)_str_1;
               unsigned int c64 = 32;
               char* cast65 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast62, c63, c64, cast65);
             }
             int t66 = i33;
@@ -152,9 +141,10 @@ bb0:
             if (u69) {
             } else {
               char* cast70 = (char*)&(_str_5);
-              char* c71 = _str_1;
+              char* c71 = (char*)_str_1;
               unsigned int c72 = 33;
               char* cast73 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast70, c71, c72, cast73);
             }
           }

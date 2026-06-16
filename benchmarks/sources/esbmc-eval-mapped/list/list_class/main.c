@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct A_bool_ { _Bool a; };
@@ -24,7 +8,7 @@ struct std____detail___List_node_base { struct std____detail___List_node_base* _
 struct std____detail___List_size { unsigned long _M_size; };
 struct std____new_allocator_std___List_node_A_bool___;
 struct std__allocator_std___List_node_A_bool___;
-struct std___List_node_A_bool__;
+struct std___List_node_A_bool__ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_A_bool__ _M_storage; unsigned char __field2[7]; } __attribute__((packed));
 struct std____allocated_obj_std__allocator_std___List_node_A_bool____ { struct std____allocated_ptr_std__allocator_std___List_node_A_bool____ __field0; };
 struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
 struct std____cxx11___List_base_A_bool___std__allocator_A_bool______List_impl { struct std____detail___List_node_header _M_node; };
@@ -44,13 +28,14 @@ _Bool operator__(struct A_bool_ p0, struct A_bool_ p1);
 _Bool operator_(struct A_bool_ p0, struct A_bool_ p1);
 void A_bool___A(struct A_bool_* p0);
 void A_bool___set(struct A_bool_* p0, _Bool p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _ZN1AIbE3getEv
 _Bool A_bool___get(struct A_bool_* v0) {
-bb1:
+bb1: ;
   struct A_bool_* this2;
   _Bool __retval3;
   this2 = v0;
@@ -63,7 +48,7 @@ bb1:
 
 // function: _Zne1AIbES0_
 _Bool operator___2(struct A_bool_ v7, struct A_bool_ v8) {
-bb9:
+bb9: ;
   struct A_bool_ x10;
   struct A_bool_ y11;
   _Bool __retval12;
@@ -88,7 +73,7 @@ bb9:
 
 // function: _Zeq1AIbES0_
 _Bool operator__(struct A_bool_ v22, struct A_bool_ v23) {
-bb24:
+bb24: ;
   struct A_bool_ x25;
   struct A_bool_ y26;
   _Bool __retval27;
@@ -113,7 +98,7 @@ bb24:
 
 // function: _Zlt1AIbES0_
 _Bool operator_(struct A_bool_ v37, struct A_bool_ v38) {
-bb39:
+bb39: ;
   struct A_bool_ x40;
   struct A_bool_ y41;
   _Bool __retval42;
@@ -127,7 +112,7 @@ bb39:
 
 // function: _ZN1AIbEC2Ev
 void A_bool___A(struct A_bool_* v45) {
-bb46:
+bb46: ;
   struct A_bool_* this47;
   this47 = v45;
   struct A_bool_* t48 = this47;
@@ -138,7 +123,7 @@ bb46:
 
 // function: _ZN1AIbE3setEb
 void A_bool___set(struct A_bool_* v50, _Bool v51) {
-bb52:
+bb52: ;
   struct A_bool_* this53;
   _Bool x54;
   this53 = v50;
@@ -151,7 +136,7 @@ bb52:
 
 // function: main
 int main() {
-bb57:
+bb57: ;
   int __retval58;
   struct std____cxx11__list_A_bool___std__allocator_A_bool___ x59;
   struct A_bool_ a160;
@@ -178,9 +163,10 @@ bb57:
     if (r66) {
     } else {
       char* cast67 = (char*)&(_str);
-      char* c68 = _str_1;
+      char* c68 = (char*)_str_1;
       unsigned int c69 = 55;
       char* cast70 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast67, c68, c69, cast70);
     }
     int c71 = 0;

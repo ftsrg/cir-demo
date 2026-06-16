@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -64,6 +48,7 @@ char _str_4[21] = "outfile.tellp() != 9";
 char _str_5[5] = " sam";
 extern void *_ZTVSt14basic_ofstreamIcSt11char_traitsIcEE[];
 extern void *_ZTVSt9basic_iosIcSt11char_traitsIcEE[];
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -73,7 +58,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern long __VERIFIER_nondet_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   long pos2;
   struct std__basic_ofstream_char__std__char_traits_char__ outfile3;
@@ -105,9 +90,10 @@ bb0:
     if (c19) {
     } else {
       char* cast20 = (char*)&(_str_2);
-      char* c21 = _str_3;
+      char* c21 = (char*)_str_3;
       unsigned int c22 = 23;
       char* cast23 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast20, c21, c22, cast23);
     }
     struct std__basic_ostream_char__std__char_traits_char__* base24 = (struct std__basic_ostream_char__std__char_traits_char__*)((char *)&(outfile3) + 0);
@@ -135,9 +121,10 @@ bb0:
     if (c37) {
     } else {
       char* cast38 = (char*)&(_str_4);
-      char* c39 = _str_3;
+      char* c39 = (char*)_str_3;
       unsigned int c40 = 27;
       char* cast41 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast38, c39, c40, cast41);
     }
     struct std__basic_ostream_char__std__char_traits_char__* base42 = (struct std__basic_ostream_char__std__char_traits_char__*)((char *)&(outfile3) + 0);

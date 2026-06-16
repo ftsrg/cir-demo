@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ { int* _M_current; };
@@ -46,13 +30,14 @@ char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEE4backEv[77] = "reference std::vecto
 char _str_7[15] = "!this->empty()";
 struct std____detail___Synth3way _ZNSt8__detail11__synth3wayE;
 struct std__strong_ordering _ZNSt15strong_ordering7greaterE = {1};
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__vector_int__std__allocator_int__ v12;
   struct std__allocator_int_ ref_tmp03;
@@ -100,9 +85,10 @@ bb0:
       if (std16) {
       } else {
         char* cast17 = (char*)&(_str);
-        char* c18 = _str_1;
+        char* c18 = (char*)_str_1;
         unsigned int c19 = 17;
         char* cast20 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast17, c18, c19, cast20);
       }
       int c21 = 2;
@@ -116,9 +102,10 @@ bb0:
       if (u23) {
       } else {
         char* cast24 = (char*)&(_str_2);
-        char* c25 = _str_1;
+        char* c25 = (char*)_str_1;
         unsigned int c26 = 19;
         char* cast27 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast24, c25, c26, cast27);
       }
       struct std__strong_ordering std28;
@@ -132,9 +119,10 @@ bb0:
       if (std31) {
       } else {
         char* cast32 = (char*)&(_str_3);
-        char* c33 = _str_1;
+        char* c33 = (char*)_str_1;
         unsigned int c34 = 20;
         char* cast35 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast32, c33, c34, cast35);
       }
       int c36 = 0;

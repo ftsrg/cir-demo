@@ -1,0 +1,14 @@
+#
+# Source: https://doi.org/10.5281/zenodo.14824495
+#
+# This work is licensed under Creative Commons Attribution 4.0 International.
+# To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+
+format_version: '2.0'
+input_files: main.cpp
+options:
+  data_model: ILP32
+  language: CPP
+properties:
+- expected_verdict: false
+  property_file: ../../unreach-call.prp

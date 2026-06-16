@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct S { void* __field0; int c; unsigned char __field2[4]; } __attribute__((packed));
 struct T { struct S s; };
@@ -30,6 +14,7 @@ extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
 char _ZTS1S[3] = "1S";
 void T__T(struct T* p0);
 void void_test1__S__f1_(struct T* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void void_test1__S__f2_(struct T* p0);
 void void_test2__S__f1_(struct T* p0);
@@ -43,7 +28,7 @@ void *_ZTV1S[] = { (void*)0, (void*)0, (void*)&S__f1, (void*)&S__f2 };
 
 // function: _ZN1TC2Ev
 __attribute__((aligned(2))) void T__T(struct T* v0) {
-bb1:
+bb1: ;
   struct T* this2;
   this2 = v0;
   struct T* t3 = this2;
@@ -53,7 +38,7 @@ bb1:
 
 // function: _Z5test1IXadL_ZN1S2f1EvEEEvP1T
 __attribute__((aligned(2))) void void_test1__S__f1_(struct T* v4) {
-bb5:
+bb5: ;
   struct T* t6;
   t6 = v4;
   struct T* t7 = t6;
@@ -84,7 +69,7 @@ bb5:
 
 // function: _Z5test1IXadL_ZN1S2f2EvEEEvP1T
 __attribute__((aligned(2))) void void_test1__S__f2_(struct T* v24) {
-bb25:
+bb25: ;
   struct T* t26;
   t26 = v24;
   struct T* t27 = t26;
@@ -115,7 +100,7 @@ bb25:
 
 // function: _Z5test2IXadL_ZN1S2f1EvEEEvP1T
 __attribute__((aligned(2))) void void_test2__S__f1_(struct T* v44) {
-bb45:
+bb45: ;
   struct T* t46;
   struct S* s47;
   t46 = v44;
@@ -149,7 +134,7 @@ bb45:
 
 // function: _Z5test2IXadL_ZN1S2f2EvEEEvP1T
 __attribute__((aligned(2))) void void_test2__S__f2_(struct T* v66) {
-bb67:
+bb67: ;
   struct T* t68;
   struct S* s69;
   t68 = v66;
@@ -183,7 +168,7 @@ bb67:
 
 // function: main
 __attribute__((aligned(2))) int main() {
-bb88:
+bb88: ;
   int __retval89;
   struct T t90;
   int c91 = 0;
@@ -195,9 +180,10 @@ bb88:
     _Bool c94 = ((t92 != c93)) ? 1 : 0;
     if (c94) {
       char* cast95 = (char*)&(_str);
-      char* c96 = _str_1;
+      char* c96 = (char*)_str_1;
       unsigned int c97 = 45;
       char* cast98 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast95, c96, c97, cast98);
     }
   void_test1__S__f2_(&t90);
@@ -206,9 +192,10 @@ bb88:
     _Bool c101 = ((t99 != c100)) ? 1 : 0;
     if (c101) {
       char* cast102 = (char*)&(_str);
-      char* c103 = _str_1;
+      char* c103 = (char*)_str_1;
       unsigned int c104 = 48;
       char* cast105 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast102, c103, c104, cast105);
     }
   void_test2__S__f1_(&t90);
@@ -217,9 +204,10 @@ bb88:
     _Bool c108 = ((t106 != c107)) ? 1 : 0;
     if (c108) {
       char* cast109 = (char*)&(_str);
-      char* c110 = _str_1;
+      char* c110 = (char*)_str_1;
       unsigned int c111 = 51;
       char* cast112 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast109, c110, c111, cast112);
     }
   void_test2__S__f2_(&t90);
@@ -228,9 +216,10 @@ bb88:
     _Bool c115 = ((t113 != c114)) ? 1 : 0;
     if (c115) {
       char* cast116 = (char*)&(_str);
-      char* c117 = _str_1;
+      char* c117 = (char*)_str_1;
       unsigned int c118 = 54;
       char* cast119 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast116, c117, c118, cast119);
     }
   int t120 = __retval89;
@@ -239,7 +228,7 @@ bb88:
 
 // function: _ZN1SC2Ev
 __attribute__((aligned(2))) void S__S(struct S* v121) {
-bb122:
+bb122: ;
   struct S* this123;
   this123 = v121;
   struct S* t124 = this123;
@@ -253,7 +242,7 @@ bb122:
 
 // function: _ZN1S2f1Ev
 __attribute__((aligned(2))) void S__f1(struct S* v128) {
-bb129:
+bb129: ;
   struct S* this130;
   this130 = v128;
   struct S* t131 = this130;
@@ -266,7 +255,7 @@ bb129:
 
 // function: _ZN1S2f2Ev
 __attribute__((aligned(2))) void S__f2(struct S* v135) {
-bb136:
+bb136: ;
   struct S* this137;
   this137 = v135;
   struct S* t138 = this137;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -36,7 +20,7 @@ struct std____new_allocator_double_;
 struct std____new_allocator_std___List_node_double__;
 struct std__allocator_double_ { unsigned char __field0; };
 struct std__allocator_std___List_node_double__ { unsigned char __field0; };
-struct std___List_node_double_;
+struct std___List_node_double_ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_double_ _M_storage; };
 struct std____allocated_obj_std__allocator_std___List_node_double___ { struct std____allocated_ptr_std__allocator_std___List_node_double___ __field0; };
 struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
 struct std____cxx11___List_base_double__std__allocator_double_____List_impl { struct std____detail___List_node_header _M_node; };
@@ -62,6 +46,7 @@ char _str_12[89] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../includ
 char __PRETTY_FUNCTION____ZNSt7__cxx114listIdSaIdEE4backEv[84] = "reference std::list<double>::back() [_Tp = double, _Alloc = std::allocator<double>]";
 char _str_13[15] = "!this->empty()";
 _Bool same_integral_part(double p0, double p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -69,7 +54,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _Z18same_integral_partdd
 _Bool same_integral_part(double v0, double v1) {
-bb2:
+bb2: ;
   double first3;
   double second4;
   _Bool __retval5;
@@ -87,7 +72,7 @@ bb2:
 
 // function: main
 int main() {
-bb12:
+bb12: ;
   int __retval13;
   double mydoubles14[10];
   struct std____cxx11__list_double__std__allocator_double__ mylist15;
@@ -135,9 +120,10 @@ bb12:
     if (c40) {
     } else {
       char* cast41 = (char*)&(_str);
-      char* c42 = _str_1;
+      char* c42 = (char*)_str_1;
       unsigned int c43 = 38;
       char* cast44 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast41, c42, c43, cast44);
     }
     struct std___List_iterator_double_ std45;
@@ -151,9 +137,10 @@ bb12:
     if (c49) {
     } else {
       char* cast50 = (char*)&(_str_2);
-      char* c51 = _str_1;
+      char* c51 = (char*)_str_1;
       unsigned int c52 = 40;
       char* cast53 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast50, c51, c52, cast53);
     }
     int c54 = 0;
@@ -168,9 +155,10 @@ bb12:
     if (c59) {
     } else {
       char* cast60 = (char*)&(_str_3);
-      char* c61 = _str_1;
+      char* c61 = (char*)_str_1;
       unsigned int c62 = 41;
       char* cast63 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast60, c61, c62, cast63);
     }
     int c64 = 0;
@@ -185,9 +173,10 @@ bb12:
     if (c69) {
     } else {
       char* cast70 = (char*)&(_str_4);
-      char* c71 = _str_1;
+      char* c71 = (char*)_str_1;
       unsigned int c72 = 42;
       char* cast73 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast70, c71, c72, cast73);
     }
     int c74 = 0;
@@ -202,9 +191,10 @@ bb12:
     if (c79) {
     } else {
       char* cast80 = (char*)&(_str_5);
-      char* c81 = _str_1;
+      char* c81 = (char*)_str_1;
       unsigned int c82 = 43;
       char* cast83 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast80, c81, c82, cast83);
     }
     int c84 = 0;
@@ -219,9 +209,10 @@ bb12:
     if (c89) {
     } else {
       char* cast90 = (char*)&(_str_6);
-      char* c91 = _str_1;
+      char* c91 = (char*)_str_1;
       unsigned int c92 = 44;
       char* cast93 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast90, c91, c92, cast93);
     }
     int c94 = 0;
@@ -236,9 +227,10 @@ bb12:
     if (c99) {
     } else {
       char* cast100 = (char*)&(_str_7);
-      char* c101 = _str_1;
+      char* c101 = (char*)_str_1;
       unsigned int c102 = 45;
       char* cast103 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast100, c101, c102, cast103);
     }
     int c104 = 0;
@@ -253,9 +245,10 @@ bb12:
     if (c109) {
     } else {
       char* cast110 = (char*)&(_str_8);
-      char* c111 = _str_1;
+      char* c111 = (char*)_str_1;
       unsigned int c112 = 46;
       char* cast113 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast110, c111, c112, cast113);
     }
     int c114 = 0;
@@ -270,9 +263,10 @@ bb12:
     if (c119) {
     } else {
       char* cast120 = (char*)&(_str_9);
-      char* c121 = _str_1;
+      char* c121 = (char*)_str_1;
       unsigned int c122 = 47;
       char* cast123 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast120, c121, c122, cast123);
     }
     unsigned long std124 = __VERIFIER_nondet_unsigned_long();
@@ -289,9 +283,10 @@ bb12:
     if (c130) {
     } else {
       char* cast131 = (char*)&(_str_2);
-      char* c132 = _str_1;
+      char* c132 = (char*)_str_1;
       unsigned int c133 = 52;
       char* cast134 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast131, c132, c133, cast134);
     }
     int c135 = 0;
@@ -306,9 +301,10 @@ bb12:
     if (c140) {
     } else {
       char* cast141 = (char*)&(_str_10);
-      char* c142 = _str_1;
+      char* c142 = (char*)_str_1;
       unsigned int c143 = 53;
       char* cast144 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast141, c142, c143, cast144);
     }
     int c145 = 0;
@@ -323,9 +319,10 @@ bb12:
     if (c150) {
     } else {
       char* cast151 = (char*)&(_str_4);
-      char* c152 = _str_1;
+      char* c152 = (char*)_str_1;
       unsigned int c153 = 54;
       char* cast154 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast151, c152, c153, cast154);
     }
     int c155 = 0;
@@ -340,9 +337,10 @@ bb12:
     if (c160) {
     } else {
       char* cast161 = (char*)&(_str_6);
-      char* c162 = _str_1;
+      char* c162 = (char*)_str_1;
       unsigned int c163 = 55;
       char* cast164 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast161, c162, c163, cast164);
     }
     int c165 = 0;
@@ -357,9 +355,10 @@ bb12:
     if (c170) {
     } else {
       char* cast171 = (char*)&(_str_11);
-      char* c172 = _str_1;
+      char* c172 = (char*)_str_1;
       unsigned int c173 = 56;
       char* cast174 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast171, c172, c173, cast174);
     }
     int c175 = 0;
@@ -374,9 +373,10 @@ bb12:
     if (c180) {
     } else {
       char* cast181 = (char*)&(_str_8);
-      char* c182 = _str_1;
+      char* c182 = (char*)_str_1;
       unsigned int c183 = 57;
       char* cast184 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast181, c182, c183, cast184);
     }
     int c185 = 0;

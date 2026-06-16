@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct CPolygon { int width; int height; };
 
@@ -27,12 +11,13 @@ void CPolygon__CPolygon(struct CPolygon* p0, int p1, int p2);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
 void CPolygon__set_values(struct CPolygon* p0, int p1, int p2);
 int CPolygon__area(struct CPolygon* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN8CPolygonC2Eii
 void CPolygon__CPolygon(struct CPolygon* v0, int v1, int v2) {
-bb3:
+bb3: ;
   struct CPolygon* this4;
   int w5;
   int h6;
@@ -49,7 +34,7 @@ bb3:
 
 // function: _ZN8CPolygon10set_valuesEii
 void CPolygon__set_values(struct CPolygon* v10, int v11, int v12) {
-bb13:
+bb13: ;
   struct CPolygon* this14;
   int a15;
   int b16;
@@ -66,7 +51,7 @@ bb13:
 
 // function: _ZN8CPolygon4areaEv
 int CPolygon__area(struct CPolygon* v20) {
-bb21:
+bb21: ;
   struct CPolygon* this22;
   int __retval23;
   this22 = v20;
@@ -81,7 +66,7 @@ bb21:
 
 // function: main
 int main() {
-bb29:
+bb29: ;
   int __retval30;
   struct CPolygon* polygons31;
   struct CPolygon* __new_result32;
@@ -114,9 +99,10 @@ bb29:
       if (c51) {
       } else {
         char* cast52 = (char*)&(_str);
-        char* c53 = _str_1;
+        char* c53 = (char*)_str_1;
         unsigned int c54 = 37;
         char* cast55 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast52, c53, c54, cast55);
       }
     }

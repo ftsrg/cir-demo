@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct A_true_ { _Bool b; };
 
@@ -31,13 +15,14 @@ void __cxx_global_var_init_1();
 void __cxx_global_var_init_2();
 void __cxx_global_var_init_3();
 void __cxx_global_var_init_4();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 __attribute__((constructor)) void _GLOBAL__sub_I_main_cpp();
 
 // function: _ZN1AILb1EEC2Ev
 void A_true___A(struct A_true_* v0) {
-bb1:
+bb1: ;
   struct A_true_* this2;
   this2 = v0;
   struct A_true_* t3 = this2;
@@ -48,42 +33,42 @@ bb1:
 
 // function: __cxx_global_var_init
 void __cxx_global_var_init() {
-bb5:
+bb5: ;
   A_true___A(&a);
   return;
 }
 
 // function: __cxx_global_var_init.1
 void __cxx_global_var_init_1() {
-bb6:
+bb6: ;
   A_true___A(&b);
   return;
 }
 
 // function: __cxx_global_var_init.2
 void __cxx_global_var_init_2() {
-bb7:
+bb7: ;
   A_true___A(&c);
   return;
 }
 
 // function: __cxx_global_var_init.3
 void __cxx_global_var_init_3() {
-bb8:
+bb8: ;
   A_true___A(&d);
   return;
 }
 
 // function: __cxx_global_var_init.4
 void __cxx_global_var_init_4() {
-bb9:
+bb9: ;
   A_true___A(&e);
   return;
 }
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   int c12 = 0;
   __retval11 = c12;
@@ -128,9 +113,10 @@ bb10:
   if (c30) {
   } else {
     char* cast31 = (char*)&(_str);
-    char* c32 = _str_1;
+    char* c32 = (char*)_str_1;
     unsigned int c33 = 22;
     char* cast34 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast31, c32, c33, cast34);
   }
   int t35 = __retval11;
@@ -139,7 +125,7 @@ bb10:
 
 // function: _GLOBAL__sub_I_main.cpp
 __attribute__((constructor)) void _GLOBAL__sub_I_main_cpp() {
-bb36:
+bb36: ;
   __cxx_global_var_init();
   __cxx_global_var_init_1();
   __cxx_global_var_init_2();

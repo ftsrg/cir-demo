@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -167,7 +151,7 @@ void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl_data___De
 
 // function: _ZN1AIbE3getEv
 _Bool A_bool___get(struct A_bool_* v0) {
-bb1:
+bb1: ;
   struct A_bool_* this2;
   _Bool __retval3;
   this2 = v0;
@@ -180,7 +164,7 @@ bb1:
 
 // function: _Zne1AIbES0_
 _Bool operator___2(struct A_bool_ v7, struct A_bool_ v8) {
-bb9:
+bb9: ;
   struct A_bool_ x10;
   struct A_bool_ y11;
   _Bool __retval12;
@@ -213,7 +197,7 @@ bb9:
 
 // function: _Zeq1AIbES0_
 _Bool operator__(struct A_bool_ v22, struct A_bool_ v23) {
-bb24:
+bb24: ;
   struct A_bool_ x25;
   struct A_bool_ y26;
   _Bool __retval27;
@@ -246,7 +230,7 @@ bb24:
 
 // function: _Zlt1AIbES0_
 _Bool operator_(struct A_bool_ v37, struct A_bool_ v38) {
-bb39:
+bb39: ;
   struct A_bool_ x40;
   struct A_bool_ y41;
   _Bool __retval42;
@@ -260,7 +244,7 @@ bb39:
 
 // function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEEC2IS4_vEEv
 void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________stack_std__deque_A_bool___std__allocator_A_bool_______void_(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v45) {
-bb46:
+bb46: ;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this47;
   this47 = v45;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t48 = this47;
@@ -275,7 +259,7 @@ bb46:
 
 // function: _ZN1AIbEC2Ev
 void A_bool___A(struct A_bool_* v50) {
-bb51:
+bb51: ;
   struct A_bool_* this52;
   this52 = v50;
   struct A_bool_* t53 = this52;
@@ -286,7 +270,7 @@ bb51:
 
 // function: _ZSt12construct_atI1AIbEJRKS1_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S4_pispclsr3stdE7declvalIT0_EEEEEPS4_S7_DpOS6_
 struct A_bool_* _ZSt12construct_atI1AIbEJRKS1_EQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S4_pispclsr3stdE7declvalIT0_EEEEEPS4_S7_DpOS6_(struct A_bool_* v55, struct A_bool_* v56) {
-bb57:
+bb57: ;
   struct A_bool_* __location58;
   struct A_bool_* __args59;
   struct A_bool_* __retval60;
@@ -308,7 +292,7 @@ bb57:
 
 // function: _ZNSt16allocator_traitsISaI1AIbEEE9constructIS1_JRKS1_EEEvRS2_PT_DpOT0_
 void void_std__allocator_traits_std__allocator_A_bool_______construct_A_bool___A_bool__const__(struct std__allocator_A_bool__* v68, struct A_bool_* v69, struct A_bool_* v70) {
-bb71:
+bb71: ;
   struct std__allocator_A_bool__* __a72;
   struct A_bool_* __p73;
   struct A_bool_* __args74;
@@ -323,7 +307,7 @@ bb71:
 
 // function: _ZStmiRKSt15_Deque_iteratorI1AIbERS1_PS1_ES6_
 long std__operator_(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v78, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v79) {
-bb80:
+bb80: ;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __x81;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __y82;
   long __retval83;
@@ -361,7 +345,7 @@ bb80:
 
 // function: _ZNKSt5dequeI1AIbESaIS1_EE4sizeEv
 unsigned long std__deque_A_bool___std__allocator_A_bool_______size___const(struct std__deque_A_bool___std__allocator_A_bool___* v110) {
-bb111:
+bb111: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this112;
   unsigned long __retval113;
   unsigned long __sz114;
@@ -388,7 +372,7 @@ bb111:
 
 // function: _ZSt3minImERKT_S2_S2_
 unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* v127, unsigned long* v128) {
-bb129:
+bb129: ;
   unsigned long* __a130;
   unsigned long* __b131;
   unsigned long* __retval132;
@@ -413,7 +397,7 @@ bb129:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE11_S_max_sizeERKS2_
 unsigned long std__deque_A_bool___std__allocator_A_bool________S_max_size(struct std__allocator_A_bool__* v142) {
-bb143:
+bb143: ;
   struct std__allocator_A_bool__* __a144;
   unsigned long __retval145;
   unsigned long __diffmax146;
@@ -436,7 +420,7 @@ bb143:
 
 // function: _ZNKSt5dequeI1AIbESaIS1_EE8max_sizeEv
 unsigned long std__deque_A_bool___std__allocator_A_bool_______max_size___const(struct std__deque_A_bool___std__allocator_A_bool___* v153) {
-bb154:
+bb154: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this155;
   unsigned long __retval156;
   this155 = v153;
@@ -451,7 +435,7 @@ bb154:
 
 // function: _ZSt12__niter_wrapIPP1AIbEET_RKS4_S4_
 struct A_bool_** A_bool____std____niter_wrap_A_bool____(struct A_bool_*** v162, struct A_bool_** v163) {
-bb164:
+bb164: ;
   struct A_bool_*** unnamed165;
   struct A_bool_** __res166;
   struct A_bool_** __retval167;
@@ -465,7 +449,7 @@ bb164:
 
 // function: _ZSt10__distanceIPP1AIbEENSt15iterator_traitsIT_E15difference_typeES5_S5_St26random_access_iterator_tag
 long std__iterator_traits_A_bool______difference_type_std____distance_A_bool____(struct A_bool_** v170, struct A_bool_** v171, struct std__random_access_iterator_tag v172) {
-bb173:
+bb173: ;
   struct A_bool_** __first174;
   struct A_bool_** __last175;
   struct std__random_access_iterator_tag unnamed176;
@@ -483,7 +467,7 @@ bb173:
 
 // function: _ZSt19__iterator_categoryIPP1AIbEENSt15iterator_traitsIT_E17iterator_categoryERKS5_
 struct std__random_access_iterator_tag std__iterator_traits_A_bool______iterator_category_std____iterator_category_A_bool____(struct A_bool_*** v182) {
-bb183:
+bb183: ;
   struct A_bool_*** unnamed184;
   struct std__random_access_iterator_tag __retval185;
   unnamed184 = v182;
@@ -493,7 +477,7 @@ bb183:
 
 // function: _ZSt8distanceIPP1AIbEENSt15iterator_traitsIT_E15difference_typeES5_S5_
 long std__iterator_traits_A_bool______difference_type_std__distance_A_bool____(struct A_bool_** v187, struct A_bool_** v188) {
-bb189:
+bb189: ;
   struct A_bool_** __first190;
   struct A_bool_** __last191;
   long __retval192;
@@ -521,7 +505,7 @@ bb189:
 
 // function: _ZSt12__assign_oneILb0EPP1AIbES3_EvRT0_RT1_
 void void_std____assign_one_false__A_bool_____A_bool____(struct A_bool_*** v200, struct A_bool_*** v201) {
-bb202:
+bb202: ;
   struct A_bool_*** __out203;
   struct A_bool_*** __in204;
   __out203 = v200;
@@ -537,7 +521,7 @@ bb202:
 
 // function: _ZSt14__copy_move_a2ILb0EPP1AIbES3_S3_ET2_T0_T1_S4_
 struct A_bool_** A_bool____std____copy_move_a2_false__A_bool_____A_bool_____A_bool____(struct A_bool_** v210, struct A_bool_** v211, struct A_bool_** v212) {
-bb213:
+bb213: ;
   struct A_bool_** __first214;
   struct A_bool_** __last215;
   struct A_bool_** __result216;
@@ -623,7 +607,7 @@ bb213:
 
 // function: _ZSt14__copy_move_a1ILb0EPP1AIbES3_ET1_T0_S5_S4_
 struct A_bool_** A_bool____std____copy_move_a1_false__A_bool_____A_bool____(struct A_bool_** v258, struct A_bool_** v259, struct A_bool_** v260) {
-bb261:
+bb261: ;
   struct A_bool_** __first262;
   struct A_bool_** __last263;
   struct A_bool_** __result264;
@@ -646,7 +630,7 @@ bb261:
 
 // function: _ZSt12__niter_baseIPP1AIbEET_S4_
 struct A_bool_** A_bool____std____niter_base_A_bool____(struct A_bool_** v271) {
-bb272:
+bb272: ;
   struct A_bool_** __it273;
   struct A_bool_** __retval274;
   __it273 = v271;
@@ -658,7 +642,7 @@ bb272:
 
 // function: _ZSt13__copy_move_aILb0EPP1AIbES3_ET1_T0_S5_S4_
 struct A_bool_** A_bool____std____copy_move_a_false__A_bool_____A_bool____(struct A_bool_** v277, struct A_bool_** v278, struct A_bool_** v279) {
-bb280:
+bb280: ;
   struct A_bool_** __first281;
   struct A_bool_** __last282;
   struct A_bool_** __result283;
@@ -689,7 +673,7 @@ bb280:
 
 // function: _ZSt12__miter_baseIPP1AIbEET_S4_
 struct A_bool_** A_bool____std____miter_base_A_bool____(struct A_bool_** v294) {
-bb295:
+bb295: ;
   struct A_bool_** __it296;
   struct A_bool_** __retval297;
   __it296 = v294;
@@ -701,7 +685,7 @@ bb295:
 
 // function: _ZSt4copyIPP1AIbES3_ET0_T_S5_S4_
 struct A_bool_** A_bool____std__copy_A_bool_____A_bool____(struct A_bool_** v300, struct A_bool_** v301, struct A_bool_** v302) {
-bb303:
+bb303: ;
   struct A_bool_** __first304;
   struct A_bool_** __last305;
   struct A_bool_** __result306;
@@ -734,7 +718,7 @@ bb303:
 
 // function: _ZSt21is_constant_evaluatedv
 _Bool std__is_constant_evaluated() {
-bb315:
+bb315: ;
   _Bool __retval316;
     _Bool c317 = 0;
     __retval316 = c317;
@@ -745,7 +729,7 @@ bb315:
 
 // function: _ZSt9__advanceIPP1AIbElEvRT_T0_St26random_access_iterator_tag
 void void_std____advance_A_bool_____long_(struct A_bool_*** v319, long v320, struct std__random_access_iterator_tag v321) {
-bb322:
+bb322: ;
   struct A_bool_*** __i323;
   long __n324;
   struct std__random_access_iterator_tag unnamed325;
@@ -802,7 +786,7 @@ bb322:
 
 // function: _ZSt7advanceIPP1AIbElEvRT_T0_
 void void_std__advance_A_bool_____long_(struct A_bool_*** v352, long v353) {
-bb354:
+bb354: ;
   struct A_bool_*** __i355;
   long __n356;
   long __d357;
@@ -829,7 +813,7 @@ bb354:
 
 // function: _ZSt23__copy_move_backward_a2ILb0EPP1AIbES3_ET1_T0_S5_S4_
 struct A_bool_** A_bool____std____copy_move_backward_a2_false__A_bool_____A_bool____(struct A_bool_** v365, struct A_bool_** v366, struct A_bool_** v367) {
-bb368:
+bb368: ;
   struct A_bool_** __first369;
   struct A_bool_** __last370;
   struct A_bool_** __result371;
@@ -913,7 +897,7 @@ bb368:
 
 // function: _ZSt23__copy_move_backward_a1ILb0EPP1AIbES3_ET1_T0_S5_S4_
 struct A_bool_** A_bool____std____copy_move_backward_a1_false__A_bool_____A_bool____(struct A_bool_** v408, struct A_bool_** v409, struct A_bool_** v410) {
-bb411:
+bb411: ;
   struct A_bool_** __first412;
   struct A_bool_** __last413;
   struct A_bool_** __result414;
@@ -936,7 +920,7 @@ bb411:
 
 // function: _ZSt22__copy_move_backward_aILb0EPP1AIbES3_ET1_T0_S5_S4_
 struct A_bool_** A_bool____std____copy_move_backward_a_false__A_bool_____A_bool____(struct A_bool_** v421, struct A_bool_** v422, struct A_bool_** v423) {
-bb424:
+bb424: ;
   struct A_bool_** __first425;
   struct A_bool_** __last426;
   struct A_bool_** __result427;
@@ -967,7 +951,7 @@ bb424:
 
 // function: _ZSt13copy_backwardIPP1AIbES3_ET0_T_S5_S4_
 struct A_bool_** A_bool____std__copy_backward_A_bool_____A_bool____(struct A_bool_** v438, struct A_bool_** v439, struct A_bool_** v440) {
-bb441:
+bb441: ;
   struct A_bool_** __first442;
   struct A_bool_** __last443;
   struct A_bool_** __result444;
@@ -1000,7 +984,7 @@ bb441:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE17_M_reallocate_mapEmb
 void std__deque_A_bool___std__allocator_A_bool________M_reallocate_map(struct std__deque_A_bool___std__allocator_A_bool___* v453, unsigned long v454, _Bool v455) {
-bb456:
+bb456: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this457;
   unsigned long __nodes_to_add458;
   _Bool __add_at_front459;
@@ -1198,7 +1182,7 @@ bb456:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE22_M_reserve_map_at_backEm
 void std__deque_A_bool___std__allocator_A_bool________M_reserve_map_at_back(struct std__deque_A_bool___std__allocator_A_bool___* v600, unsigned long v601) {
-bb602:
+bb602: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this603;
   unsigned long __nodes_to_add604;
   this603 = v600;
@@ -1233,7 +1217,7 @@ bb602:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE16_M_push_back_auxIJRKS1_EEEvDpOT_
 void void_std__deque_A_bool___std__allocator_A_bool________M_push_back_aux_A_bool__const__(struct std__deque_A_bool___std__allocator_A_bool___* v624, struct A_bool_* v625) {
-bb626:
+bb626: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this627;
   struct A_bool_* __args628;
   this627 = v624;
@@ -1313,7 +1297,7 @@ bb626:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE9push_backERKS1_
 void std__deque_A_bool___std__allocator_A_bool_______push_back(struct std__deque_A_bool___std__allocator_A_bool___* v670, struct A_bool_* v671) {
-bb672:
+bb672: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this673;
   struct A_bool_* __x674;
   this673 = v670;
@@ -1354,7 +1338,7 @@ bb672:
 
 // function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE4pushERKS1_
 void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________push(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v697, struct A_bool_* v698) {
-bb699:
+bb699: ;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this700;
   struct A_bool_* __x701;
   this700 = v697;
@@ -1370,7 +1354,7 @@ bb699:
 
 // function: _ZSteqRKSt15_Deque_iteratorI1AIbERS1_PS1_ES6_
 _Bool std__operator__(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v704, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v705) {
-bb706:
+bb706: ;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __x707;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __y708;
   _Bool __retval709;
@@ -1388,7 +1372,7 @@ bb706:
 
 // function: _ZNKSt5dequeI1AIbESaIS1_EE5emptyEv
 _Bool std__deque_A_bool___std__allocator_A_bool_______empty___const(struct std__deque_A_bool___std__allocator_A_bool___* v716) {
-bb717:
+bb717: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this718;
   _Bool __retval719;
   this718 = v716;
@@ -1405,7 +1389,7 @@ bb717:
 
 // function: _ZNSt16allocator_traitsISaI1AIbEEE7destroyIS1_EEvRS2_PT_
 void void_std__allocator_traits_std__allocator_A_bool_______destroy_A_bool___(struct std__allocator_A_bool__* v727, struct A_bool_* v728) {
-bb729:
+bb729: ;
   struct std__allocator_A_bool__* __a730;
   struct A_bool_* __p731;
   __a730 = v727;
@@ -1420,7 +1404,7 @@ bb729:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE15_M_pop_back_auxEv
 void std__deque_A_bool___std__allocator_A_bool________M_pop_back_aux(struct std__deque_A_bool___std__allocator_A_bool___* v733) {
-bb734:
+bb734: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this735;
   this735 = v733;
   struct std__deque_A_bool___std__allocator_A_bool___* t736 = this735;
@@ -1456,7 +1440,7 @@ bb734:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE8pop_backEv
 void std__deque_A_bool___std__allocator_A_bool_______pop_back(struct std__deque_A_bool___std__allocator_A_bool___* v760) {
-bb761:
+bb761: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this762;
   this762 = v760;
   struct std__deque_A_bool___std__allocator_A_bool___* t763 = this762;
@@ -1503,7 +1487,7 @@ bb761:
 
 // function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3popEv
 void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________pop(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v787) {
-bb788:
+bb788: ;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this789;
   this789 = v787;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t790 = this789;
@@ -1528,7 +1512,7 @@ bb788:
 
 // function: _ZNKSt5stackI1AIbESt5dequeIS1_SaIS1_EEE5emptyEv
 _Bool std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________empty___const(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v797) {
-bb798:
+bb798: ;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this799;
   _Bool __retval800;
   this799 = v797;
@@ -1541,7 +1525,7 @@ bb798:
 
 // function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_EmmEv
 struct std___Deque_iterator_A_bool___A_bool_____A_bool____* std___Deque_iterator_A_bool___A_bool____A_bool_____operator__(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v804) {
-bb805:
+bb805: ;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this806;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __retval807;
   this806 = v804;
@@ -1568,7 +1552,7 @@ bb805:
 
 // function: _ZNKSt15_Deque_iteratorI1AIbERS1_PS1_EdeEv
 struct A_bool_* std___Deque_iterator_A_bool___A_bool____A_bool_____operator____const(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v820) {
-bb821:
+bb821: ;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this822;
   struct A_bool_* __retval823;
   this822 = v820;
@@ -1581,7 +1565,7 @@ bb821:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE4backEv
 struct A_bool_* std__deque_A_bool___std__allocator_A_bool_______back(struct std__deque_A_bool___std__allocator_A_bool___* v827) {
-bb828:
+bb828: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this829;
   struct A_bool_* __retval830;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __tmp831;
@@ -1610,7 +1594,7 @@ bb828:
 
 // function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3topEv
 struct A_bool_* std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________top(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v843) {
-bb844:
+bb844: ;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this845;
   struct A_bool_* __retval846;
   this845 = v843;
@@ -1639,7 +1623,7 @@ bb844:
 
 // function: _ZNKSt5stackI1AIbESt5dequeIS1_SaIS1_EEE4sizeEv
 unsigned long std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________size___const(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v856) {
-bb857:
+bb857: ;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this858;
   unsigned long __retval859;
   this858 = v856;
@@ -1652,7 +1636,7 @@ bb857:
 
 // function: _ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEED2Ev
 void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool__________stack(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* v863) {
-bb864:
+bb864: ;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* this865;
   this865 = v863;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* t866 = this865;
@@ -1664,7 +1648,7 @@ bb864:
 
 // function: main
 int main() {
-bb867:
+bb867: ;
   int __retval868;
   struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____ first869;
   struct A_bool_ x870;
@@ -1745,7 +1729,7 @@ bb867:
     if (u875) {
     } else {
       char* cast876 = (char*)&(_str);
-      char* c877 = _str_1;
+      char* c877 = (char*)_str_1;
       unsigned int c878 = 56;
       char* cast879 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast876, c877, c878, cast879);
@@ -1769,7 +1753,7 @@ bb867:
     if (r881) {
     } else {
       char* cast882 = (char*)&(_str_2);
-      char* c883 = _str_1;
+      char* c883 = (char*)_str_1;
       unsigned int c884 = 57;
       char* cast885 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast882, c883, c884, cast885);
@@ -1787,7 +1771,7 @@ bb867:
     if (c888) {
     } else {
       char* cast889 = (char*)&(_str_3);
-      char* c890 = _str_1;
+      char* c890 = (char*)_str_1;
       unsigned int c891 = 58;
       char* cast892 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast889, c890, c891, cast892);
@@ -1806,7 +1790,7 @@ bb867:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EED2Ev
 void std__deque_A_bool___std__allocator_A_bool________deque(struct std__deque_A_bool___std__allocator_A_bool___* v897) {
-bb898:
+bb898: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this899;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ agg_tmp0900;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ agg_tmp1901;
@@ -1837,7 +1821,7 @@ bb898:
 
 // function: _ZSt23__is_constant_evaluatedv
 _Bool std____is_constant_evaluated() {
-bb911:
+bb911: ;
   _Bool __retval912;
     _Bool c913 = 0;
     __retval912 = c913;
@@ -1848,7 +1832,7 @@ bb911:
 
 // function: _ZSt10destroy_atI1AIbEEvPT_
 void void_std__destroy_at_A_bool___(struct A_bool_* v915) {
-bb916:
+bb916: ;
   struct A_bool_* __location917;
   __location917 = v915;
   return;
@@ -1856,7 +1840,7 @@ bb916:
 
 // function: _ZSt8_DestroyIP1AIbEEvT_S3_
 void void_std___Destroy_A_bool___(struct A_bool_* v918, struct A_bool_* v919) {
-bb920:
+bb920: ;
   struct A_bool_* __first921;
   struct A_bool_* __last922;
   __first921 = v918;
@@ -1885,7 +1869,7 @@ bb920:
 
 // function: _ZSt8_DestroyIP1AIbES1_EvT_S3_RSaIT0_E
 void void_std___Destroy_A_bool____A_bool___(struct A_bool_* v932, struct A_bool_* v933, struct std__allocator_A_bool__* v934) {
-bb935:
+bb935: ;
   struct A_bool_* __first936;
   struct A_bool_* __last937;
   struct std__allocator_A_bool__* unnamed938;
@@ -1903,7 +1887,7 @@ bb935:
 
 // function: _ZSt16__deque_buf_sizem
 unsigned long std____deque_buf_size(unsigned long v941) {
-bb942:
+bb942: ;
   unsigned long __size943;
   unsigned long __retval944;
   __size943 = v941;
@@ -1927,7 +1911,7 @@ bb942:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE14_S_buffer_sizeEv
 unsigned long std__deque_A_bool___std__allocator_A_bool________S_buffer_size() {
-bb954:
+bb954: ;
   unsigned long __retval955;
   unsigned long c956 = 1;
   unsigned long r957 = std____deque_buf_size(c956);
@@ -1942,7 +1926,7 @@ bb954:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE19_M_destroy_data_auxESt15_Deque_iteratorIS1_RS1_PS1_ES7_
 void std__deque_A_bool___std__allocator_A_bool________M_destroy_data_aux(struct std__deque_A_bool___std__allocator_A_bool___* v959, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ v960, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ v961) {
-bb962:
+bb962: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this963;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __first964;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __last965;
@@ -2013,7 +1997,7 @@ bb962:
 
 // function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_EC2ERKS4_
 void std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v1001, struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v1002) {
-bb1003:
+bb1003: ;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this1004;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* __x1005;
   this1004 = v1001;
@@ -2036,7 +2020,7 @@ bb1003:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE15_M_destroy_dataESt15_Deque_iteratorIS1_RS1_PS1_ES7_RKS2_
 void std__deque_A_bool___std__allocator_A_bool________M_destroy_data(struct std__deque_A_bool___std__allocator_A_bool___* v1015, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ v1016, struct std___Deque_iterator_A_bool___A_bool_____A_bool____ v1017, struct std__allocator_A_bool__* v1018) {
-bb1019:
+bb1019: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this1020;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __first1021;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __last1022;
@@ -2064,7 +2048,7 @@ bb1019:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE5beginEv
 struct std___Deque_iterator_A_bool___A_bool_____A_bool____ std__deque_A_bool___std__allocator_A_bool_______begin(struct std__deque_A_bool___std__allocator_A_bool___* v1030) {
-bb1031:
+bb1031: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this1032;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __retval1033;
   this1032 = v1030;
@@ -2078,7 +2062,7 @@ bb1031:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EE3endEv
 struct std___Deque_iterator_A_bool___A_bool_____A_bool____ std__deque_A_bool___std__allocator_A_bool_______end(struct std__deque_A_bool___std__allocator_A_bool___* v1038) {
-bb1039:
+bb1039: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this1040;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____ __retval1041;
   this1040 = v1038;
@@ -2092,7 +2076,7 @@ bb1039:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE19_M_get_Tp_allocatorEv
 struct std__allocator_A_bool__* std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1046) {
-bb1047:
+bb1047: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1048;
   struct std__allocator_A_bool__* __retval1049;
   this1048 = v1046;
@@ -2105,7 +2089,7 @@ bb1047:
 
 // function: _ZNSt15__new_allocatorI1AIbEE10deallocateEPS1_m
 void std____new_allocator_A_bool_____deallocate(struct std____new_allocator_A_bool__* v1053, struct A_bool_* v1054, unsigned long v1055) {
-bb1056:
+bb1056: ;
   struct std____new_allocator_A_bool__* this1057;
   struct A_bool_* __p1058;
   unsigned long __n1059;
@@ -2137,7 +2121,7 @@ bb1056:
 
 // function: _ZNSaI1AIbEE10deallocateEPS0_m
 void std__allocator_A_bool_____deallocate(struct std__allocator_A_bool__* v1075, struct A_bool_* v1076, unsigned long v1077) {
-bb1078:
+bb1078: ;
   struct std__allocator_A_bool__* this1079;
   struct A_bool_* __p1080;
   unsigned long __n1081;
@@ -2164,7 +2148,7 @@ bb1078:
 
 // function: _ZNSt16allocator_traitsISaI1AIbEEE10deallocateERS2_PS1_m
 void std__allocator_traits_std__allocator_A_bool_______deallocate(struct std__allocator_A_bool__* v1089, struct A_bool_* v1090, unsigned long v1091) {
-bb1092:
+bb1092: ;
   struct std__allocator_A_bool__* __a1093;
   struct A_bool_* __p1094;
   unsigned long __n1095;
@@ -2183,7 +2167,7 @@ bb1092:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE18_M_deallocate_nodeEPS1_
 void std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_node(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1099, struct A_bool_* v1100) {
-bb1101:
+bb1101: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1102;
   struct A_bool_* __p1103;
   this1102 = v1099;
@@ -2205,7 +2189,7 @@ bb1101:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE16_M_destroy_nodesEPPS1_S5_
 void std___Deque_base_A_bool___std__allocator_A_bool________M_destroy_nodes(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1109, struct A_bool_** v1110, struct A_bool_** v1111) {
-bb1112:
+bb1112: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1113;
   struct A_bool_** __nstart1114;
   struct A_bool_** __nfinish1115;
@@ -2235,7 +2219,7 @@ bb1112:
 
 // function: _ZNKSt11_Deque_baseI1AIbESaIS1_EE19_M_get_Tp_allocatorEv
 struct std__allocator_A_bool__* std___Deque_base_A_bool___std__allocator_A_bool________M_get_Tp_allocator___const(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1128) {
-bb1129:
+bb1129: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1130;
   struct std__allocator_A_bool__* __retval1131;
   this1130 = v1128;
@@ -2248,7 +2232,7 @@ bb1129:
 
 // function: _ZNSaIP1AIbEEC2IS0_EERKSaIT_E
 void std__allocator_A_bool_____allocator_A_bool___(struct std__allocator_A_bool____* v1135, struct std__allocator_A_bool__* v1136) {
-bb1137:
+bb1137: ;
   struct std__allocator_A_bool____* this1138;
   struct std__allocator_A_bool__* unnamed1139;
   this1138 = v1135;
@@ -2261,7 +2245,7 @@ bb1137:
 
 // function: _ZNKSt11_Deque_baseI1AIbESaIS1_EE20_M_get_map_allocatorEv
 struct std__allocator_A_bool____ std___Deque_base_A_bool___std__allocator_A_bool________M_get_map_allocator___const(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1142) {
-bb1143:
+bb1143: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1144;
   struct std__allocator_A_bool____ __retval1145;
   this1144 = v1142;
@@ -2274,7 +2258,7 @@ bb1143:
 
 // function: _ZNSt15__new_allocatorIP1AIbEE10deallocateEPS2_m
 void std____new_allocator_A_bool_____deallocate_2(struct std____new_allocator_A_bool____* v1149, struct A_bool_** v1150, unsigned long v1151) {
-bb1152:
+bb1152: ;
   struct std____new_allocator_A_bool____* this1153;
   struct A_bool_** __p1154;
   unsigned long __n1155;
@@ -2306,7 +2290,7 @@ bb1152:
 
 // function: _ZNSaIP1AIbEE10deallocateEPS1_m
 void std__allocator_A_bool_____deallocate_2(struct std__allocator_A_bool____* v1171, struct A_bool_** v1172, unsigned long v1173) {
-bb1174:
+bb1174: ;
   struct std__allocator_A_bool____* this1175;
   struct A_bool_** __p1176;
   unsigned long __n1177;
@@ -2333,7 +2317,7 @@ bb1174:
 
 // function: _ZNSt16allocator_traitsISaIP1AIbEEE10deallocateERS3_PS2_m
 void std__allocator_traits_std__allocator_A_bool_______deallocate_2(struct std__allocator_A_bool____* v1185, struct A_bool_** v1186, unsigned long v1187) {
-bb1188:
+bb1188: ;
   struct std__allocator_A_bool____* __a1189;
   struct A_bool_** __p1190;
   unsigned long __n1191;
@@ -2352,7 +2336,7 @@ bb1188:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE17_M_deallocate_mapEPPS1_m
 void std___Deque_base_A_bool___std__allocator_A_bool________M_deallocate_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1195, struct A_bool_** v1196, unsigned long v1197) {
-bb1198:
+bb1198: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1199;
   struct A_bool_** __p1200;
   unsigned long __n1201;
@@ -2374,7 +2358,7 @@ bb1198:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE11_Deque_implD2Ev
 void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl____Deque_impl(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* v1207) {
-bb1208:
+bb1208: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* this1209;
   this1209 = v1207;
   struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* t1210 = this1209;
@@ -2387,7 +2371,7 @@ bb1208:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EED2Ev
 void std___Deque_base_A_bool___std__allocator_A_bool_________Deque_base(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1212) {
-bb1213:
+bb1213: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1214;
   this1214 = v1212;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* t1215 = this1214;
@@ -2416,7 +2400,7 @@ bb1213:
 
 // function: _ZNSt15__new_allocatorIP1AIbEEC2Ev
 void std____new_allocator_A_bool_______new_allocator_2(struct std____new_allocator_A_bool____* v1229) {
-bb1230:
+bb1230: ;
   struct std____new_allocator_A_bool____* this1231;
   this1231 = v1229;
   struct std____new_allocator_A_bool____* t1232 = this1231;
@@ -2425,7 +2409,7 @@ bb1230:
 
 // function: _ZNSaI1AIbEED2Ev
 void std__allocator_A_bool______allocator(struct std__allocator_A_bool__* v1233) {
-bb1234:
+bb1234: ;
   struct std__allocator_A_bool__* this1235;
   this1235 = v1233;
   struct std__allocator_A_bool__* t1236 = this1235;
@@ -2434,7 +2418,7 @@ bb1234:
 
 // function: _ZNSt5dequeI1AIbESaIS1_EEC2Ev
 void std__deque_A_bool___std__allocator_A_bool_______deque(struct std__deque_A_bool___std__allocator_A_bool___* v1237) {
-bb1238:
+bb1238: ;
   struct std__deque_A_bool___std__allocator_A_bool___* this1239;
   this1239 = v1237;
   struct std__deque_A_bool___std__allocator_A_bool___* t1240 = this1239;
@@ -2448,7 +2432,7 @@ bb1238:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE11_Deque_implC2Ev
 void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl___Deque_impl(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* v1242) {
-bb1243:
+bb1243: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* this1244;
   this1244 = v1242;
   struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl* t1245 = this1244;
@@ -2461,7 +2445,7 @@ bb1243:
 
 // function: _ZSt3maxImERKT_S2_S2_
 unsigned long* unsigned_long_const__std__max_unsigned_long_(unsigned long* v1248, unsigned long* v1249) {
-bb1250:
+bb1250: ;
   unsigned long* __a1251;
   unsigned long* __b1252;
   unsigned long* __retval1253;
@@ -2486,7 +2470,7 @@ bb1250:
 
 // function: _ZNKSt15__new_allocatorIP1AIbEE11_M_max_sizeEv
 unsigned long std____new_allocator_A_bool______M_max_size___const_2(struct std____new_allocator_A_bool____* v1263) {
-bb1264:
+bb1264: ;
   struct std____new_allocator_A_bool____* this1265;
   unsigned long __retval1266;
   this1265 = v1263;
@@ -2501,7 +2485,7 @@ bb1264:
 
 // function: _ZNSt15__new_allocatorIP1AIbEE8allocateEmPKv
 struct A_bool_** std____new_allocator_A_bool_____allocate_2(struct std____new_allocator_A_bool____* v1272, unsigned long v1273, void* v1274) {
-bb1275:
+bb1275: ;
   struct std____new_allocator_A_bool____* this1276;
   unsigned long __n1277;
   void* unnamed1278;
@@ -2569,7 +2553,7 @@ bb1275:
 
 // function: _ZNSaIP1AIbEE8allocateEm
 struct A_bool_** std__allocator_A_bool_____allocate_2(struct std__allocator_A_bool____* v1307, unsigned long v1308) {
-bb1309:
+bb1309: ;
   struct std__allocator_A_bool____* this1310;
   unsigned long __n1311;
   struct A_bool_** __retval1312;
@@ -2616,7 +2600,7 @@ bb1309:
 
 // function: _ZNSt16allocator_traitsISaIP1AIbEEE8allocateERS3_m
 struct A_bool_** std__allocator_traits_std__allocator_A_bool_______allocate_2(struct std__allocator_A_bool____* v1328, unsigned long v1329) {
-bb1330:
+bb1330: ;
   struct std__allocator_A_bool____* __a1331;
   unsigned long __n1332;
   struct A_bool_** __retval1333;
@@ -2636,7 +2620,7 @@ bb1330:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE15_M_allocate_mapEm
 struct A_bool_** std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1338, unsigned long v1339) {
-bb1340:
+bb1340: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1341;
   unsigned long __n1342;
   struct A_bool_** __retval1343;
@@ -2659,7 +2643,7 @@ bb1340:
 
 // function: _ZNKSt15__new_allocatorI1AIbEE11_M_max_sizeEv
 unsigned long std____new_allocator_A_bool______M_max_size___const(struct std____new_allocator_A_bool__* v1350) {
-bb1351:
+bb1351: ;
   struct std____new_allocator_A_bool__* this1352;
   unsigned long __retval1353;
   this1352 = v1350;
@@ -2674,7 +2658,7 @@ bb1351:
 
 // function: _ZNSt15__new_allocatorI1AIbEE8allocateEmPKv
 struct A_bool_* std____new_allocator_A_bool_____allocate(struct std____new_allocator_A_bool__* v1359, unsigned long v1360, void* v1361) {
-bb1362:
+bb1362: ;
   struct std____new_allocator_A_bool__* this1363;
   unsigned long __n1364;
   void* unnamed1365;
@@ -2742,7 +2726,7 @@ bb1362:
 
 // function: _ZNSaI1AIbEE8allocateEm
 struct A_bool_* std__allocator_A_bool_____allocate(struct std__allocator_A_bool__* v1394, unsigned long v1395) {
-bb1396:
+bb1396: ;
   struct std__allocator_A_bool__* this1397;
   unsigned long __n1398;
   struct A_bool_* __retval1399;
@@ -2789,7 +2773,7 @@ bb1396:
 
 // function: _ZNSt16allocator_traitsISaI1AIbEEE8allocateERS2_m
 struct A_bool_* std__allocator_traits_std__allocator_A_bool_______allocate(struct std__allocator_A_bool__* v1415, unsigned long v1416) {
-bb1417:
+bb1417: ;
   struct std__allocator_A_bool__* __a1418;
   unsigned long __n1419;
   struct A_bool_* __retval1420;
@@ -2809,7 +2793,7 @@ bb1417:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE16_M_allocate_nodeEv
 struct A_bool_* std___Deque_base_A_bool___std__allocator_A_bool________M_allocate_node(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1425) {
-bb1426:
+bb1426: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1427;
   struct A_bool_* __retval1428;
   this1427 = v1425;
@@ -2833,7 +2817,7 @@ bb1426:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE15_M_create_nodesEPPS1_S5_
 void std___Deque_base_A_bool___std__allocator_A_bool________M_create_nodes(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1435, struct A_bool_** v1436, struct A_bool_** v1437) {
-bb1438:
+bb1438: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1439;
   struct A_bool_** __nstart1440;
   struct A_bool_** __nfinish1441;
@@ -2883,7 +2867,7 @@ bb1438:
 
 // function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_E14_S_buffer_sizeEv
 unsigned long std___Deque_iterator_A_bool___A_bool____A_bool______S_buffer_size() {
-bb1459:
+bb1459: ;
   unsigned long __retval1460;
   unsigned long c1461 = 1;
   unsigned long r1462 = std____deque_buf_size(c1461);
@@ -2898,7 +2882,7 @@ bb1459:
 
 // function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_E11_M_set_nodeEPS3_
 void std___Deque_iterator_A_bool___A_bool____A_bool______M_set_node(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v1464, struct A_bool_** v1465) {
-bb1466:
+bb1466: ;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this1467;
   struct A_bool_** __new_node1468;
   this1467 = v1464;
@@ -2919,7 +2903,7 @@ bb1466:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE17_M_initialize_mapEm
 void std___Deque_base_A_bool___std__allocator_A_bool________M_initialize_map(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1477, unsigned long v1478) {
-bb1479:
+bb1479: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1480;
   unsigned long __num_elements1481;
   unsigned long __num_nodes1482;
@@ -3035,7 +3019,7 @@ bb1479:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EEC2Ev
 void std___Deque_base_A_bool___std__allocator_A_bool________Deque_base(struct std___Deque_base_A_bool___std__allocator_A_bool___* v1547) {
-bb1548:
+bb1548: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* this1549;
   this1549 = v1547;
   struct std___Deque_base_A_bool___std__allocator_A_bool___* t1550 = this1549;
@@ -3053,7 +3037,7 @@ bb1548:
 
 // function: _ZNSt15__new_allocatorI1AIbEEC2Ev
 void std____new_allocator_A_bool_______new_allocator(struct std____new_allocator_A_bool__* v1552) {
-bb1553:
+bb1553: ;
   struct std____new_allocator_A_bool__* this1554;
   this1554 = v1552;
   struct std____new_allocator_A_bool__* t1555 = this1554;
@@ -3062,7 +3046,7 @@ bb1553:
 
 // function: _ZNSaI1AIbEEC2Ev
 void std__allocator_A_bool_____allocator(struct std__allocator_A_bool__* v1556) {
-bb1557:
+bb1557: ;
   struct std__allocator_A_bool__* this1558;
   this1558 = v1556;
   struct std__allocator_A_bool__* t1559 = this1558;
@@ -3073,7 +3057,7 @@ bb1557:
 
 // function: _ZNSt15_Deque_iteratorI1AIbERS1_PS1_EC2Ev
 void std___Deque_iterator_A_bool___A_bool____A_bool______Deque_iterator_2(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* v1561) {
-bb1562:
+bb1562: ;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* this1563;
   this1563 = v1561;
   struct std___Deque_iterator_A_bool___A_bool_____A_bool____* t1564 = this1563;
@@ -3090,7 +3074,7 @@ bb1562:
 
 // function: _ZNSt11_Deque_baseI1AIbESaIS1_EE16_Deque_impl_dataC2Ev
 void std___Deque_base_A_bool___std__allocator_A_bool________Deque_impl_data___Deque_impl_data(struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* v1569) {
-bb1570:
+bb1570: ;
   struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* this1571;
   this1571 = v1569;
   struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data* t1572 = this1571;

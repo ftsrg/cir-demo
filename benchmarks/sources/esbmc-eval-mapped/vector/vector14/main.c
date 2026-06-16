@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_char____std__vector_char__std__allocator_char___ { char* _M_current; };
@@ -39,13 +23,14 @@ char __PRETTY_FUNCTION____ZNSt6vectorIcSaIcEE5frontEv[37] = "reference std::vect
 _Bool _ZNSt17integral_constantIbLb0EE5valueE;
 char __PRETTY_FUNCTION____ZNSt6vectorIcSaIcEE4swapERS1_[52] = "void std::vector<char>::swap(vector<_Tp, _Alloc> &)";
 char _str_6[104] = "_Alloc_traits::propagate_on_container_swap::value || _M_get_Tp_allocator() == __x._M_get_Tp_allocator()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int i2;
   struct std__vector_char__std__allocator_char__ c3;
@@ -155,9 +140,10 @@ bb0:
       if (c40) {
       } else {
         char* cast41 = (char*)&(_str);
-        char* c42 = _str_1;
+        char* c42 = (char*)_str_1;
         unsigned int c43 = 33;
         char* cast44 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast41, c42, c43, cast44);
       }
       // externalized std:: op: std::vector<char, std::allocator<char> >::swap(std::vector<char, std::allocator<char> >&)
@@ -172,9 +158,10 @@ bb0:
       if (c49) {
       } else {
         char* cast50 = (char*)&(_str_2);
-        char* c51 = _str_1;
+        char* c51 = (char*)_str_1;
         unsigned int c52 = 35;
         char* cast53 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast50, c51, c52, cast53);
       }
       int c54 = 0;

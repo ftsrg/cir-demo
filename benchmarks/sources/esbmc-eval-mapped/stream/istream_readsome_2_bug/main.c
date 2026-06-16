@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -48,7 +32,7 @@ struct std__ios_base { void* __field0; long __field1; long __field2; int __field
 struct std__basic_filebuf_char__std__char_traits_char__ { struct std__basic_streambuf_char__std__char_traits_char__ __field0; union pthread_mutex_t __field1; struct std____basic_file_char_ _M_file; int __field3; struct __mbstate_t __field4; struct __mbstate_t __field5; struct __mbstate_t __field6; char* __field7; unsigned long __field8; _Bool __field9; _Bool __field10; _Bool __field11; char __field12; char* __field13; char* __field14; _Bool __field15; struct std__codecvt_char__char____mbstate_t_* __field16; char* __field17; long __field18; char* __field19; char* __field20; };
 struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* _M_tie; char _M_fill; _Bool _M_fill_init; struct std__basic_streambuf_char__std__char_traits_char__* _M_streambuf; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* _M_num_put; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* _M_num_get; };
 struct std__basic_istream_char__std__char_traits_char__ { void* __field0; long _M_gcount; struct std__basic_ios_char__std__char_traits_char__ __field2; };
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 struct std__basic_ifstream_char__std__char_traits_char__ { struct std__basic_istream_char__std__char_traits_char__ __field0; struct std__basic_filebuf_char__std__char_traits_char__ _M_filebuf; struct std__basic_ios_char__std__char_traits_char__ __field2; };
 
 extern void *_ZTVSt14basic_ifstreamIcSt11char_traitsIcEE[];
@@ -70,6 +54,7 @@ extern void *malloc(unsigned long);
 extern void free(void*);
 void* operator_new__(unsigned long p0) { return malloc(p0); }
 void operator_delete___2(void* p0, unsigned long p1) { free(p0); }
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void operator_delete__(void* p0) { free(p0); }
 int main();
@@ -80,7 +65,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern long __VERIFIER_nondet_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int length2;
   char* buffer3;
@@ -146,9 +131,10 @@ bb0:
     if (u41) {
     } else {
       char* cast42 = (char*)&(_str_1);
-      char* c43 = _str_2;
+      char* c43 = (char*)_str_2;
       unsigned int c44 = 32;
       char* cast45 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast42, c43, c44, cast45);
     }
     // externalized std:: op: std::basic_ifstream<char, std::char_traits<char> >::close()

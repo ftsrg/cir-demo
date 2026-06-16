@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct A_bool_ { _Bool t; };
 
@@ -21,12 +5,13 @@ char _str[13] = "a.t == false";
 char _str_1[104] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/cbmc/Templates30/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void void_A_bool___set_int_(struct A_bool_* p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN1AIbE3setIiEEvT_
 void void_A_bool___set_int_(struct A_bool_* v0, int v1) {
-bb2:
+bb2: ;
   struct A_bool_* this3;
   int t4;
   this3 = v0;
@@ -40,7 +25,7 @@ bb2:
 
 // function: main
 int main() {
-bb8:
+bb8: ;
   int __retval9;
   struct A_bool_ a10;
   int c11 = 0;
@@ -55,9 +40,10 @@ bb8:
   if (c17) {
   } else {
     char* cast18 = (char*)&(_str);
-    char* c19 = _str_1;
+    char* c19 = (char*)_str_1;
     unsigned int c20 = 24;
     char* cast21 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast18, c19, c20, cast21);
   }
   int t22 = __retval9;

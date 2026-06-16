@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
@@ -42,13 +26,14 @@ char _str_7[91] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include
 char __PRETTY_FUNCTION____ZNSt6vectorIiSaIiEEixEm[92] = "reference std::vector<int>::operator[](size_type) [_Tp = int, _Alloc = std::allocator<int>]";
 char _str_8[19] = "__n < this->size()";
 _Bool myfunction(int p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z10myfunctionii
 _Bool myfunction(int v0, int v1) {
-bb2:
+bb2: ;
   int i3;
   int j4;
   _Bool __retval5;
@@ -64,7 +49,7 @@ bb2:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   int myints12[8];
   struct std__vector_int__std__allocator_int__ myvector13;
@@ -113,9 +98,10 @@ bb10:
     if (c34) {
     } else {
       char* cast35 = (char*)&(_str);
-      char* c36 = _str_1;
+      char* c36 = (char*)_str_1;
       unsigned int c37 = 29;
       char* cast38 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast35, c36, c37, cast38);
     }
     unsigned long c39 = 1;
@@ -127,9 +113,10 @@ bb10:
     if (c43) {
     } else {
       char* cast44 = (char*)&(_str_2);
-      char* c45 = _str_1;
+      char* c45 = (char*)_str_1;
       unsigned int c46 = 30;
       char* cast47 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast44, c45, c46, cast47);
     }
     unsigned long c48 = 2;
@@ -141,9 +128,10 @@ bb10:
     if (c52) {
     } else {
       char* cast53 = (char*)&(_str_3);
-      char* c54 = _str_1;
+      char* c54 = (char*)_str_1;
       unsigned int c55 = 31;
       char* cast56 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast53, c54, c55, cast56);
     }
     unsigned long c57 = 3;
@@ -155,9 +143,10 @@ bb10:
     if (c61) {
     } else {
       char* cast62 = (char*)&(_str_4);
-      char* c63 = _str_1;
+      char* c63 = (char*)_str_1;
       unsigned int c64 = 32;
       char* cast65 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast62, c63, c64, cast65);
     }
     unsigned long c66 = 4;
@@ -169,9 +158,10 @@ bb10:
     if (c70) {
     } else {
       char* cast71 = (char*)&(_str_5);
-      char* c72 = _str_1;
+      char* c72 = (char*)_str_1;
       unsigned int c73 = 33;
       char* cast74 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast71, c72, c73, cast74);
     }
     int c75 = 0;

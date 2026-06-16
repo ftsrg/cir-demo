@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
@@ -27,7 +11,7 @@ struct std____new_allocator_int_;
 struct std____new_allocator_std___List_node_int__;
 struct std__allocator_int_ { unsigned char __field0; };
 struct std__allocator_std___List_node_int__ { unsigned char __field0; };
-struct std___List_node_int_;
+struct std___List_node_int_ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____allocated_obj_std__allocator_std___List_node_int___ { struct std____allocated_ptr_std__allocator_std___List_node_int___ __field0; };
 struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
 struct std____cxx11___List_base_int__std__allocator_int_____List_impl { struct std____detail___List_node_header _M_node; };
@@ -46,6 +30,7 @@ char _str_5[89] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include
 char __PRETTY_FUNCTION____ZNSt7__cxx114listIiSaIiEE4backEv[75] = "reference std::list<int>::back() [_Tp = int, _Alloc = std::allocator<int>]";
 char _str_6[15] = "!this->empty()";
 _Bool single_digit(int* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -53,7 +38,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _Z12single_digitRKi
 _Bool single_digit(int* v0) {
-bb1:
+bb1: ;
   int* value2;
   _Bool __retval3;
   value2 = v0;
@@ -68,7 +53,7 @@ bb1:
 
 // function: main
 int main() {
-bb9:
+bb9: ;
   int __retval10;
   int myints11[4];
   struct std____cxx11__list_int__std__allocator_int__ mylist12;
@@ -105,9 +90,10 @@ bb9:
     if (c26) {
     } else {
       char* cast27 = (char*)&(_str);
-      char* c28 = _str_1;
+      char* c28 = (char*)_str_1;
       unsigned int c29 = 23;
       char* cast30 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast27, c28, c29, cast30);
     }
     struct std___List_iterator_int_ std31;
@@ -123,9 +109,10 @@ bb9:
     if (c36) {
     } else {
       char* cast37 = (char*)&(_str_2);
-      char* c38 = _str_1;
+      char* c38 = (char*)_str_1;
       unsigned int c39 = 25;
       char* cast40 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast37, c38, c39, cast40);
     }
     int c41 = 0;
@@ -140,9 +127,10 @@ bb9:
     if (c46) {
     } else {
       char* cast47 = (char*)&(_str_3);
-      char* c48 = _str_1;
+      char* c48 = (char*)_str_1;
       unsigned int c49 = 27;
       char* cast50 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast47, c48, c49, cast50);
     }
     int c51 = 0;
@@ -157,9 +145,10 @@ bb9:
     if (c56) {
     } else {
       char* cast57 = (char*)&(_str_4);
-      char* c58 = _str_1;
+      char* c58 = (char*)_str_1;
       unsigned int c59 = 29;
       char* cast60 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast57, c58, c59, cast60);
     }
     int c61 = 0;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -60,6 +44,7 @@ char _str_2[110] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 extern void *_ZTVSt14basic_ofstreamIcSt11char_traitsIcEE[];
 extern void *_ZTVSt9basic_iosIcSt11char_traitsIcEE[];
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -68,7 +53,7 @@ extern unsigned char* _ZTTSt14basic_ofstreamIcSt11char_traitsIcEE[4] __attribute
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__basic_ofstream_char__std__char_traits_char__ outfile2;
   int c3 = 0;
@@ -83,9 +68,10 @@ bb0:
     if (std6) {
     } else {
       char* cast7 = (char*)&(_str_1);
-      char* c8 = _str_2;
+      char* c8 = (char*)_str_2;
       unsigned int c9 = 16;
       char* cast10 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast7, c8, c9, cast10);
     }
       int n11;

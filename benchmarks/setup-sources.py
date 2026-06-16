@@ -133,6 +133,76 @@ def make_mapped_yml(data_model: str, expected_verdict: str) -> str:
         """)
 
 
+def postprocess_output(out_c: Path, externalize_std: bool) -> str:
+    """Post-process a freshly mapped main.c in place (idempotent).
+
+    Three transformations:
+      * Before every call to __assert_fail, insert a call to an externally
+        declared reach_error() (and emit that declaration). Lets a reachability
+        verifier flag the assertion site without touching cir2c.
+      * For the --no-externalize-std variant, a top-level `extern ... std_ ...`
+        declaration means a libstdc++ symbol was left unmapped, so the case is
+        unsound; delete the file to exclude it from consideration.
+      * If the mapped output has no __assert_fail call at all, there is no
+        assertion site for unreach-call to find, so the case is useless as a
+        benchmark; delete the file to exclude it.
+
+    Returns "ok" if the file was processed in place, or "excluded:std" /
+    "excluded:noassert" if it was deleted for one of the reasons above. Callers
+    are responsible for removing the sibling .yml (mapped) and the original
+    esbmc-eval case (source + .yml) when a non-"ok" status comes back.
+    """
+    text = out_c.read_text(encoding="utf-8")
+    lines = text.splitlines(keepends=True)
+
+    if not externalize_std:
+        for line in lines:
+            if line.startswith("extern") and "std_" in line:
+                out_c.unlink()
+                return "excluded:std"
+
+    if "__assert_fail" not in text:
+        out_c.unlink()
+        return "excluded:noassert"
+
+    declared = "extern void reach_error();" in text
+    out_lines: list[str] = []
+    for line in lines:
+        stripped = line.lstrip()
+        indent = line[: len(line) - len(stripped)]
+        # Declare reach_error right before the __assert_fail prototype.
+        if not declared and stripped.startswith("extern void __assert_fail"):
+            out_lines.append(f"{indent}extern void reach_error();\n")
+            declared = True
+        # Call reach_error right before a call to __assert_fail (skip the prototype,
+        # which starts with `extern`). Guard against double-insertion on re-runs.
+        if stripped.startswith("__assert_fail") and not (
+            out_lines and out_lines[-1].lstrip().startswith("reach_error")
+        ):
+            out_lines.append(f"{indent}reach_error();\n")
+        out_lines.append(line)
+
+    # Fallback: prototype absent but the call is present — declare at file top.
+    if not declared:
+        out_lines.insert(0, "extern void reach_error();\n")
+
+    out_c.write_text("".join(out_lines), encoding="utf-8")
+    return "ok"
+
+
+def exclude_original(yml_path: Path, src_file: Path) -> None:
+    """Remove the original esbmc-eval case (source + .yml).
+
+    Called once a case has been excluded from a mapped variant, so re-runs and
+    the sibling variant's pass over the same yml_files list skip it too, and it
+    drops out of sets-full/esbmc-eval.set.
+    """
+    if src_file.exists():
+        src_file.unlink()
+    if yml_path.exists():
+        yml_path.unlink()
+
+
 def map_one(
     yml_path: Path,
     src_root: Path,
@@ -146,16 +216,32 @@ def map_one(
     category = parts[0]
     case_name = parts[1]  # e.g. "algorithm0"
     case_dir = dest_root / rel.parent
+    out_c = case_dir / "main.c"
+    out_yml = case_dir / f"{category}_{case_name}.yml"
+
+    if not yml_path.exists():
+        # Excluded by an earlier pass over this same case (original already removed).
+        if not dry_run:
+            if out_c.exists():
+                out_c.unlink()
+            if out_yml.exists():
+                out_yml.unlink()
+        return {"case": str(rel), "status": "excluded"}
+
     src_file = yml_path.parent / parse_input_file(yml_path)
     data_model = parse_data_model(yml_path)
     expected_verdict = parse_expected_verdict(yml_path)
-    out_c = case_dir / "main.c"
-    out_yml = case_dir / f"{category}_{case_name}.yml"
 
     if yaml_only:
         if not out_c.exists():
             return {"case": str(rel), "status": "skipped"}
         if not dry_run:
+            status = postprocess_output(out_c, externalize_std)
+            if status != "ok":
+                if out_yml.exists():
+                    out_yml.unlink()
+                exclude_original(yml_path, src_file)
+                return {"case": str(rel), "status": status}
             out_yml.write_text(make_mapped_yml(data_model, expected_verdict), encoding="utf-8")
         return {"case": str(rel), "status": "dry-run" if dry_run else "ok"}
 
@@ -179,6 +265,11 @@ def map_one(
     if result.returncode != 0:
         stage = {2: "clang", 3: "cir-opt", 4: "cir2c"}.get(result.returncode, "pipeline")
         return {"case": str(rel), "status": f"failed:{stage}"}
+
+    status = postprocess_output(out_c, externalize_std)
+    if status != "ok":
+        exclude_original(yml_path, src_file)
+        return {"case": str(rel), "status": status}
 
     out_yml.write_text(make_mapped_yml(data_model, expected_verdict), encoding="utf-8")
     return {"case": str(rel), "status": "ok"}

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
@@ -45,6 +29,7 @@ char _str_3[18] = "third.size() == 4";
 char _str_4[19] = "fourth.size() == 0";
 struct std__ranges____distance_fn _ZNSt6ranges8distanceE;
 char _str_5[49] = "cannot create std::vector larger than max_size()";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -52,7 +37,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   int myints2[4];
   struct std__priority_queue_int__std__vector_int__std__allocator_int____std__less_int__ first3;
@@ -73,9 +58,10 @@ bb0:
     if (c12) {
     } else {
       char* cast13 = (char*)&(_str);
-      char* c14 = _str_1;
+      char* c14 = (char*)_str_1;
       unsigned int c15 = 32;
       char* cast16 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast13, c14, c15, cast16);
     }
     int* cast17 = (int*)&(myints2);
@@ -93,9 +79,10 @@ bb0:
       if (c23) {
       } else {
         char* cast24 = (char*)&(_str_2);
-        char* c25 = _str_1;
+        char* c25 = (char*)_str_1;
         unsigned int c26 = 34;
         char* cast27 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast24, c25, c26, cast27);
       }
       int* cast28 = (int*)&(myints2);
@@ -113,9 +100,10 @@ bb0:
         if (c34) {
         } else {
           char* cast35 = (char*)&(_str_3);
-          char* c36 = _str_1;
+          char* c36 = (char*)_str_1;
           unsigned int c37 = 36;
           char* cast38 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast35, c36, c37, cast38);
         }
         // externalized std:: op: std::priority_queue<int, std::vector<int, std::allocator<int> >, mycomparison>::priority_queue<std::vector<int, std::allocator<int> >, void>()
@@ -126,9 +114,10 @@ bb0:
           if (c41) {
           } else {
             char* cast42 = (char*)&(_str_4);
-            char* c43 = _str_1;
+            char* c43 = (char*)_str_1;
             unsigned int c44 = 40;
             char* cast45 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast42, c43, c44, cast45);
           }
           int c46 = 0;

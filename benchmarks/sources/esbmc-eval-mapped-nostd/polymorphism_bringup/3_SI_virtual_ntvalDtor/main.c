@@ -1,18 +1,9 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Struct definitions (auto-parsed)
+struct Bird { void* __field0; };
+struct Penguin { struct Bird __field0; };
+struct anon_struct_0 { unsigned char* __field0[5]; };
+struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
+struct anon_struct_2 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
 
 // Virtual dispatch: default implementations (override as `weak`).
 // __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
@@ -25,13 +16,6 @@ __attribute__((weak)) void __VERIFIER_virtual_call_void(void* __obj, int __slot)
   void* __fn = ((void**)*(void**)__obj)[__slot];
   ((void(*)(void*))__fn)(__obj);
 }
-
-// Struct definitions (auto-parsed)
-struct Bird { void* __field0; };
-struct Penguin { struct Bird __field0; };
-struct anon_struct_0 { unsigned char* __field0[5]; };
-struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
-struct anon_struct_2 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
 
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
 extern void *_ZTVN10__cxxabiv120__si_class_type_infoE[];
@@ -55,6 +39,7 @@ extern void free(void*);
 void* operator_new(unsigned long p0) { return malloc(p0); }
 void Bird__Bird(struct Bird* p0);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void Penguin__Penguin(struct Penguin* p0);
 int main();
@@ -70,7 +55,7 @@ void *_ZTV7Penguin[] = { (void*)0, (void*)0, (void*)&Penguin__do_something, (voi
 
 // function: _ZN4BirdC2Ev
 void Bird__Bird(struct Bird* v0) {
-bb1:
+bb1: ;
   struct Bird* this2;
   this2 = v0;
   struct Bird* t3 = this2;
@@ -82,7 +67,7 @@ bb1:
 
 // function: _ZN7PenguinC2Ev
 void Penguin__Penguin(struct Penguin* v6) {
-bb7:
+bb7: ;
   struct Penguin* this8;
   this8 = v6;
   struct Penguin* t9 = this8;
@@ -96,7 +81,7 @@ bb7:
 
 // function: main
 int main() {
-bb13:
+bb13: ;
   int __retval14;
   struct Bird* b15;
   struct Bird* __new_result16;
@@ -122,9 +107,10 @@ bb13:
   if (c32) {
   } else {
     char* cast33 = (char*)&(_str);
-    char* c34 = _str_1;
+    char* c34 = (char*)_str_1;
     unsigned int c35 = 40;
     char* cast36 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast33, c34, c35, cast36);
   }
   struct Bird* t37 = b15;
@@ -141,9 +127,10 @@ bb13:
   if (c46) {
   } else {
     char* cast47 = (char*)&(_str_2);
-    char* c48 = _str_1;
+    char* c48 = (char*)_str_1;
     unsigned int c49 = 42;
     char* cast50 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast47, c48, c49, cast50);
   }
   unsigned long c51 = 8;
@@ -165,9 +152,10 @@ bb13:
   if (c64) {
   } else {
     char* cast65 = (char*)&(_str_3);
-    char* c66 = _str_1;
+    char* c66 = (char*)_str_1;
     unsigned int c67 = 45;
     char* cast68 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast65, c66, c67, cast68);
   }
   struct Bird* t69 = p17;
@@ -184,9 +172,10 @@ bb13:
   if (c78) {
   } else {
     char* cast79 = (char*)&(_str_2);
-    char* c80 = _str_1;
+    char* c80 = (char*)_str_1;
     unsigned int c81 = 47;
     char* cast82 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast79, c80, c81, cast82);
   }
   int c83 = 0;
@@ -197,7 +186,7 @@ bb13:
 
 // function: _ZN4Bird12do_somethingEv
 int Bird__do_something(struct Bird* v85) {
-bb86:
+bb86: ;
   struct Bird* this87;
   int __retval88;
   this87 = v85;
@@ -210,7 +199,7 @@ bb86:
 
 // function: _ZN4BirdD2Ev
 void Bird___Bird_2(struct Bird* v92) {
-bb93:
+bb93: ;
   struct Bird* this94;
   this94 = v92;
   struct Bird* t95 = this94;
@@ -224,9 +213,10 @@ bb93:
   if (c103) {
   } else {
     char* cast104 = (char*)&(_str_2);
-    char* c105 = _str_1;
+    char* c105 = (char*)_str_1;
     unsigned int c106 = 24;
     char* cast107 = (char*)&(__PRETTY_FUNCTION____ZN4BirdD2Ev);
+    reach_error();
     __assert_fail(cast104, c105, c106, cast107);
   }
   return;
@@ -234,7 +224,7 @@ bb93:
 
 // function: _ZN4BirdD0Ev
 void Bird___Bird(struct Bird* v108) {
-bb109:
+bb109: ;
   struct Bird* this110;
   this110 = v108;
   struct Bird* t111 = this110;
@@ -249,7 +239,7 @@ bb109:
 
 // function: _ZN7Penguin12do_somethingEv
 int Penguin__do_something(struct Penguin* v114) {
-bb115:
+bb115: ;
   struct Penguin* this116;
   int __retval117;
   this116 = v114;
@@ -262,7 +252,7 @@ bb115:
 
 // function: _ZN7PenguinD2Ev
 void Penguin___Penguin_2(struct Penguin* v121) {
-bb122:
+bb122: ;
   struct Penguin* this123;
   this123 = v121;
   struct Penguin* t124 = this123;
@@ -276,9 +266,10 @@ bb122:
     if (c132) {
     } else {
       char* cast133 = (char*)&(_str_4);
-      char* c134 = _str_1;
+      char* c134 = (char*)_str_1;
       unsigned int c135 = 34;
       char* cast136 = (char*)&(__PRETTY_FUNCTION____ZN7PenguinD2Ev);
+      reach_error();
       __assert_fail(cast133, c134, c135, cast136);
     }
   {
@@ -290,7 +281,7 @@ bb122:
 
 // function: _ZN7PenguinD0Ev
 void Penguin___Penguin(struct Penguin* v138) {
-bb139:
+bb139: ;
   struct Penguin* this140;
   this140 = v138;
   struct Penguin* t141 = this140;

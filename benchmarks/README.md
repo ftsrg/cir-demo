@@ -39,11 +39,12 @@ per-tool details from fm-tools, and the Makefile auto-detects whatever is in
 ## Prerequisites
 
 - `python3` with `PyYAML`; `git`, `curl`, `unzip` on `PATH`.
-- BenchExec is bundled under `benchexec/`. Runs use **local BenchExec** by default;
-  set `RUNNER=vcloud` to dispatch to the **VerifierCloud**
-  (`benchexec/contrib/vcloud-benchmark.py`) instead, which needs VerifierCloud access.
-- fm-tools is **not** required up front: it is cloned automatically the first
-  time a download or `gen-xml.py` needs it.
+- Neither BenchExec nor fm-tools is required up front: both are gitignored and
+  cloned automatically the first time something needs them (a tool run, `tables`,
+  a download, or `gen-xml.py`).
+- Runs use **local BenchExec** (`benchexec/`) by default; set `RUNNER=vcloud` to
+  dispatch to the **VerifierCloud** (`benchexec/contrib/vcloud-benchmark.py`)
+  instead, which needs VerifierCloud access.
 
 ## Workflow
 

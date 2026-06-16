@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct C_A_ { unsigned char __field0[2]; };
 struct X_A__B__A_ { unsigned char __field0[2]; };
@@ -23,13 +7,14 @@ char _str[2] = "0";
 char _str_1[116] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/gcc-template-tests/qualttp16/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 int X_A__B__A___f(struct X_A__B__A_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int X_A__B__int___f(struct X_A__B__int_* p0);
 int main();
 
 // function: _ZN1XIN1A1BES0_E1fEv
 int X_A__B__A___f(struct X_A__B__A_* v0) {
-bb1:
+bb1: ;
   struct X_A__B__A_* this2;
   int __retval3;
   this2 = v0;
@@ -42,7 +27,7 @@ bb1:
 
 // function: _ZN1XIN1A1BEiE1fEv
 int X_A__B__int___f(struct X_A__B__int_* v7) {
-bb8:
+bb8: ;
   struct X_A__B__int_* this9;
   int __retval10;
   this9 = v7;
@@ -55,7 +40,7 @@ bb8:
 
 // function: main
 int main() {
-bb14:
+bb14: ;
   int __retval15;
   struct C_A_ c16;
   struct X_A__B__A_ x117;
@@ -67,9 +52,10 @@ bb14:
     _Bool c22 = ((r20 != c21)) ? 1 : 0;
     if (c22) {
       char* cast23 = (char*)&(_str);
-      char* c24 = _str_1;
+      char* c24 = (char*)_str_1;
       unsigned int c25 = 44;
       char* cast26 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast23, c24, c25, cast26);
     }
     int r27 = X_A__B__int___f(&x218);
@@ -77,9 +63,10 @@ bb14:
     _Bool c29 = ((r27 != c28)) ? 1 : 0;
     if (c29) {
       char* cast30 = (char*)&(_str);
-      char* c31 = _str_1;
+      char* c31 = (char*)_str_1;
       unsigned int c32 = 46;
       char* cast33 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast30, c31, c32, cast33);
     }
   int t34 = __retval15;

@@ -1,18 +1,10 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Struct definitions (auto-parsed)
+struct A { void* __field0; };
+struct B { struct A __field0; };
+struct C { struct A __field0; };
+struct anon_struct_0 { unsigned char* __field0; unsigned char* __field1; };
+struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
+struct anon_struct_2 { unsigned char* __field0[3]; };
 
 // Virtual dispatch: default implementations (override as `weak`).
 // __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
@@ -21,14 +13,6 @@ __attribute__((weak)) void __VERIFIER_virtual_call_void(void* __obj, int __slot)
   void* __fn = ((void**)*(void**)__obj)[__slot];
   ((void(*)(void*))__fn)(__obj);
 }
-
-// Struct definitions (auto-parsed)
-struct A { void* __field0; };
-struct B { struct A __field0; };
-struct C { struct A __field0; };
-struct anon_struct_0 { unsigned char* __field0; unsigned char* __field1; };
-struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
-struct anon_struct_2 { unsigned char* __field0[3]; };
 
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
 extern void *_ZTVN10__cxxabiv120__si_class_type_infoE[];
@@ -48,6 +32,7 @@ extern void* __dynamic_cast(void* p0, unsigned char* p1, unsigned char* p2, long
 void f(struct A* p0);
 void A__A(struct A* p0);
 void C__C(struct C* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 void A__f(struct A* p0);
@@ -58,7 +43,7 @@ void *_ZTV1C[] = { (void*)0, (void*)0, (void*)&C__f };
 
 // function: _Z1fP1A
 void f(struct A* v0) {
-bb1:
+bb1: ;
   struct A* arg2;
   struct B* bp3;
   struct C* cp4;
@@ -68,8 +53,8 @@ bb1:
   struct B* ternary7;
   if (cast6) {
     void* cast8 = (void*)t5;
-    unsigned char* c9 = _ZTI1A;
-    unsigned char* c10 = _ZTI1B;
+    unsigned char* c9 = (unsigned char*)_ZTI1A;
+    unsigned char* c10 = (unsigned char*)_ZTI1B;
     long c11 = 0;
     void* r12 = __dynamic_cast(cast8, c9, c10, c11);
     struct B* cast13 = (struct B*)r12;
@@ -84,8 +69,8 @@ bb1:
   struct C* ternary17;
   if (cast16) {
     void* cast18 = (void*)t15;
-    unsigned char* c19 = _ZTI1A;
-    unsigned char* c20 = _ZTI1C;
+    unsigned char* c19 = (unsigned char*)_ZTI1A;
+    unsigned char* c20 = (unsigned char*)_ZTI1C;
     long c21 = 0;
     void* r22 = __dynamic_cast(cast18, c19, c20, c21);
     struct C* cast23 = (struct C*)r22;
@@ -122,7 +107,7 @@ bb1:
 
 // function: _ZN1AC2Ev
 void A__A(struct A* v44) {
-bb45:
+bb45: ;
   struct A* this46;
   this46 = v44;
   struct A* t47 = this46;
@@ -134,7 +119,7 @@ bb45:
 
 // function: _ZN1CC2Ev
 void C__C(struct C* v50) {
-bb51:
+bb51: ;
   struct C* this52;
   this52 = v50;
   struct C* t53 = this52;
@@ -148,7 +133,7 @@ bb51:
 
 // function: main
 int main() {
-bb57:
+bb57: ;
   int __retval58;
   struct A aobj59;
   struct C cobj60;
@@ -171,9 +156,10 @@ bb57:
   if (c69) {
   } else {
     char* cast70 = (char*)&(_str);
-    char* c71 = _str_1;
+    char* c71 = (char*)_str_1;
     unsigned int c72 = 46;
     char* cast73 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast70, c71, c72, cast73);
   }
   int t74 = __retval58;
@@ -182,7 +168,7 @@ bb57:
 
 // function: _ZN1A1fEv
 void A__f(struct A* v75) {
-bb76:
+bb76: ;
   struct A* this77;
   this77 = v75;
   struct A* t78 = this77;
@@ -195,7 +181,7 @@ bb76:
 
 // function: _ZN1C1fEv
 void C__f(struct C* v82) {
-bb83:
+bb83: ;
   struct C* this84;
   this84 = v82;
   struct C* t85 = this84;

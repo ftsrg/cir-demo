@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct mypair_int_ { int a; int b; };
 
@@ -22,12 +6,13 @@ char _str_1[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void mypair_int___mypair(struct mypair_int_* p0, int p1, int p2);
 int mypair_int___getmax(struct mypair_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN6mypairIiEC2Eii
 void mypair_int___mypair(struct mypair_int_* v0, int v1, int v2) {
-bb3:
+bb3: ;
   struct mypair_int_* this4;
   int first5;
   int second6;
@@ -44,7 +29,7 @@ bb3:
 
 // function: _ZN6mypairIiE6getmaxEv
 int mypair_int___getmax(struct mypair_int_* v10) {
-bb11:
+bb11: ;
   struct mypair_int_* this12;
   int __retval13;
   int retval14;
@@ -70,7 +55,7 @@ bb11:
 
 // function: main
 int main() {
-bb24:
+bb24: ;
   int __retval25;
   struct mypair_int_ myobject26;
   int c27 = 0;
@@ -84,9 +69,10 @@ bb24:
   if (c32) {
   } else {
     char* cast33 = (char*)&(_str);
-    char* c34 = _str_1;
+    char* c34 = (char*)_str_1;
     unsigned int c35 = 29;
     char* cast36 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast33, c34, c35, cast36);
   }
   int c37 = 0;

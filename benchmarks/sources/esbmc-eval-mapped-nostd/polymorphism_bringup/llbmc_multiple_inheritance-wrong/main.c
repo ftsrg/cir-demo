@@ -1,27 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) int __VERIFIER_virtual_call_int(void* __obj, int __slot) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((int(*)(void*))__fn)(__obj);
-}
-
 // Struct definitions (auto-parsed)
 struct Base1 { void* __field0; };
 struct Base2 { void* __field0; };
@@ -30,6 +6,14 @@ struct anon_struct_0 { unsigned char* __field0[4]; unsigned char* __field1[3]; }
 struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
 struct anon_struct_2 { unsigned char* __field0; unsigned char* __field1; unsigned int __field2; unsigned int __field3; unsigned char* __field4; long __field5; unsigned char* __field6; long __field7; };
 struct anon_struct_3 { unsigned char* __field0[3]; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) int __VERIFIER_virtual_call_int(void* __obj, int __slot) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((int(*)(void*))__fn)(__obj);
+}
 
 extern void *_ZTVN10__cxxabiv121__vmi_class_type_infoE[];
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
@@ -49,6 +33,7 @@ extern void free(void*);
 void* operator_new(unsigned long p0) { return malloc(p0); }
 void Derived__Derived(struct Derived* p0);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 void Base1__Base1(struct Base1* p0);
@@ -65,7 +50,7 @@ void *_ZTV5Base2[] = { (void*)0, (void*)0, (void*)&Base2__g };
 
 // function: _ZN7DerivedC2Ev
 void Derived__Derived(struct Derived* v0) {
-bb1:
+bb1: ;
   struct Derived* this2;
   this2 = v0;
   struct Derived* t3 = this2;
@@ -85,7 +70,7 @@ bb1:
 
 // function: main
 int main() {
-bb11:
+bb11: ;
   int __retval12;
   struct Base2* o13;
   struct Derived* __new_result14;
@@ -123,9 +108,10 @@ bb11:
   if (c36) {
   } else {
     char* cast37 = (char*)&(_str);
-    char* c38 = _str_1;
+    char* c38 = (char*)_str_1;
     unsigned int c39 = 38;
     char* cast40 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast37, c38, c39, cast40);
   }
   int t41 = r15;
@@ -136,7 +122,7 @@ bb11:
 
 // function: _ZN5Base1C2Ev
 void Base1__Base1(struct Base1* v43) {
-bb44:
+bb44: ;
   struct Base1* this45;
   this45 = v43;
   struct Base1* t46 = this45;
@@ -148,7 +134,7 @@ bb44:
 
 // function: _ZN5Base2C2Ev
 void Base2__Base2(struct Base2* v49) {
-bb50:
+bb50: ;
   struct Base2* this51;
   this51 = v49;
   struct Base2* t52 = this51;
@@ -160,7 +146,7 @@ bb50:
 
 // function: _ZN7Derived1fEv
 int Derived__f(struct Derived* v55) {
-bb56:
+bb56: ;
   struct Derived* this57;
   int __retval58;
   this57 = v55;
@@ -173,7 +159,7 @@ bb56:
 
 // function: _ZN7Derived1gEv
 int Derived__g(struct Derived* v62) {
-bb63:
+bb63: ;
   struct Derived* this64;
   int __retval65;
   this64 = v62;
@@ -186,7 +172,7 @@ bb63:
 
 // function: _ZThn8_N7Derived1gEv
 int non_virtual_thunk_to_Derived__g(struct Derived* v69) {
-bb70:
+bb70: ;
   struct Derived* this71;
   int __retval72;
   this71 = v69;
@@ -203,7 +189,7 @@ bb70:
 
 // function: _ZN5Base11fEv
 int Base1__f(struct Base1* v80) {
-bb81:
+bb81: ;
   struct Base1* this82;
   int __retval83;
   this82 = v80;
@@ -216,7 +202,7 @@ bb81:
 
 // function: _ZN5Base21gEv
 int Base2__g(struct Base2* v87) {
-bb88:
+bb88: ;
   struct Base2* this89;
   int __retval90;
   this89 = v87;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -21,14 +5,6 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
-
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
 
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
@@ -66,6 +42,14 @@ struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocat
 struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
 struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 struct std__set_int__std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ _M_t; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
 char _str[18] = "myset.size() == 9";
@@ -210,7 +194,7 @@ void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_2(struct std___R
 
 // function: _ZNSt3setIiSt4lessIiESaIiEEC2Ev
 void std__set_int__std__less_int___std__allocator_int_____set(struct std__set_int__std__less_int___std__allocator_int__* v0) {
-bb1:
+bb1: ;
   struct std__set_int__std__less_int___std__allocator_int__* this2;
   this2 = v0;
   struct std__set_int__std__less_int___std__allocator_int__* t3 = this2;
@@ -220,7 +204,7 @@ bb1:
 
 // function: _ZNSt23_Rb_tree_const_iteratorIiEC2Ev
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(struct std___Rb_tree_const_iterator_int_* v4) {
-bb5:
+bb5: ;
   struct std___Rb_tree_const_iterator_int_* this6;
   this6 = v4;
   struct std___Rb_tree_const_iterator_int_* t7 = this6;
@@ -231,7 +215,7 @@ bb5:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE8_M_beginEv
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_begin___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v9) {
-bb10:
+bb10: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this11;
   struct std___Rb_tree_node_base* __retval12;
   this11 = v9;
@@ -245,7 +229,7 @@ bb10:
 
 // function: _ZNKSt18_Rb_tree_node_base11_M_base_ptrEv
 struct std___Rb_tree_node_base* std___Rb_tree_node_base___M_base_ptr___const(struct std___Rb_tree_node_base* v17) {
-bb18:
+bb18: ;
   struct std___Rb_tree_node_base* this19;
   struct std___Rb_tree_node_base* __retval20;
   this19 = v17;
@@ -257,7 +241,7 @@ bb18:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE6_M_endEv
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_end___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v23) {
-bb24:
+bb24: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this25;
   struct std___Rb_tree_node_base* __retval26;
   this25 = v23;
@@ -271,7 +255,7 @@ bb24:
 
 // function: _ZNKSt4lessIiEclERKiS2_
 _Bool std__less_int___operator___int_const___int_const___const(struct std__less_int_* v31, int* v32, int* v33) {
-bb34:
+bb34: ;
   struct std__less_int_* this35;
   int* __x36;
   int* __y37;
@@ -292,7 +276,7 @@ bb34:
 
 // function: _ZNKSt9_IdentityIiEclERKi
 int* std___Identity_int___operator___int_const___const(struct std___Identity_int_* v46, int* v47) {
-bb48:
+bb48: ;
   struct std___Identity_int_* this49;
   int* __x50;
   int* __retval51;
@@ -307,7 +291,7 @@ bb48:
 
 // function: _ZNK9__gnu_cxx16__aligned_membufIiE7_M_addrEv
 void* __gnu_cxx____aligned_membuf_int____M_addr___const(struct __gnu_cxx____aligned_membuf_int_* v55) {
-bb56:
+bb56: ;
   struct __gnu_cxx____aligned_membuf_int_* this57;
   void* __retval58;
   this57 = v55;
@@ -320,7 +304,7 @@ bb56:
 
 // function: _ZNK9__gnu_cxx16__aligned_membufIiE6_M_ptrEv
 int* __gnu_cxx____aligned_membuf_int____M_ptr___const(struct __gnu_cxx____aligned_membuf_int_* v62) {
-bb63:
+bb63: ;
   struct __gnu_cxx____aligned_membuf_int_* this64;
   int* __retval65;
   this64 = v62;
@@ -334,7 +318,7 @@ bb63:
 
 // function: _ZNKSt13_Rb_tree_nodeIiE9_M_valptrEv
 int* std___Rb_tree_node_int____M_valptr___const(struct std___Rb_tree_node_int_* v70) {
-bb71:
+bb71: ;
   struct std___Rb_tree_node_int_* this72;
   int* __retval73;
   this72 = v70;
@@ -347,7 +331,7 @@ bb71:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE6_S_keyERKSt13_Rb_tree_nodeIiE
 int* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______S_key_2(struct std___Rb_tree_node_int_* v77) {
-bb78:
+bb78: ;
   struct std___Rb_tree_node_int_* __node79;
   int* __retval80;
   struct std___Identity_int_ ref_tmp081;
@@ -370,7 +354,7 @@ bb78:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE6_S_keyEPSt18_Rb_tree_node_base
 int* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______S_key(struct std___Rb_tree_node_base* v86) {
-bb87:
+bb87: ;
   struct std___Rb_tree_node_base* __x88;
   int* __retval89;
   __x88 = v86;
@@ -388,7 +372,7 @@ bb87:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE7_S_leftEPSt18_Rb_tree_node_base
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______S_left_2(struct std___Rb_tree_node_base* v94) {
-bb95:
+bb95: ;
   struct std___Rb_tree_node_base* __x96;
   struct std___Rb_tree_node_base* __retval97;
   __x96 = v94;
@@ -401,7 +385,7 @@ bb95:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE8_S_rightEPSt18_Rb_tree_node_base
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______S_right_2(struct std___Rb_tree_node_base* v101) {
-bb102:
+bb102: ;
   struct std___Rb_tree_node_base* __x103;
   struct std___Rb_tree_node_base* __retval104;
   __x103 = v101;
@@ -414,7 +398,7 @@ bb102:
 
 // function: _ZSteqRKSt17_Rb_tree_iteratorIiES2_
 _Bool std__operator__(struct std___Rb_tree_iterator_int_* v108, struct std___Rb_tree_iterator_int_* v109) {
-bb110:
+bb110: ;
   struct std___Rb_tree_iterator_int_* __x111;
   struct std___Rb_tree_iterator_int_* __y112;
   _Bool __retval113;
@@ -432,7 +416,7 @@ bb110:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE5beginEv
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____begin(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v120) {
-bb121:
+bb121: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this122;
   struct std___Rb_tree_iterator_int_ __retval123;
   this122 = v120;
@@ -446,7 +430,7 @@ bb121:
 
 // function: _ZNSt4pairIPSt18_Rb_tree_node_baseS1_EC2IRS1_S4_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_
 void _ZNSt4pairIPSt18_Rb_tree_node_baseS1_EC2IRS1_S4_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___* v128, struct std___Rb_tree_node_base** v129, struct std___Rb_tree_node_base** v130) {
-bb131:
+bb131: ;
   struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___* this132;
   struct std___Rb_tree_node_base** __x133;
   struct std___Rb_tree_node_base** __y134;
@@ -466,7 +450,7 @@ bb131:
 
 // function: _ZNSt17_Rb_tree_iteratorIiEmmEv
 struct std___Rb_tree_iterator_int_* std___Rb_tree_iterator_int___operator__(struct std___Rb_tree_iterator_int_* v141) {
-bb142:
+bb142: ;
   struct std___Rb_tree_iterator_int_* this143;
   struct std___Rb_tree_iterator_int_* __retval144;
   this143 = v141;
@@ -481,7 +465,7 @@ bb142:
 
 // function: _ZNSt4pairIPSt18_Rb_tree_node_baseS1_EC2IRS1_S1_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_
 void _ZNSt4pairIPSt18_Rb_tree_node_baseS1_EC2IRS1_S1_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___* v149, struct std___Rb_tree_node_base** v150, struct std___Rb_tree_node_base** v151) {
-bb152:
+bb152: ;
   struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___* this153;
   struct std___Rb_tree_node_base** __x154;
   struct std___Rb_tree_node_base** __y155;
@@ -501,7 +485,7 @@ bb152:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE24_M_get_insert_unique_posERKi
 struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_get_insert_unique_pos(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v162, int* v163) {
-bb164:
+bb164: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this165;
   int* __k166;
   struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ __retval167;
@@ -597,7 +581,7 @@ bb164:
 
 // function: _ZNKSt9_IdentityIiEclERi
 int* std___Identity_int___operator___int___const(struct std___Identity_int_* v208, int* v209) {
-bb210:
+bb210: ;
   struct std___Identity_int_* this211;
   int* __x212;
   int* __retval213;
@@ -612,7 +596,7 @@ bb210:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE11_Alloc_nodeC2ERS5_
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______Alloc_node___Alloc_node(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Alloc_node* v217, struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v218) {
-bb219:
+bb219: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Alloc_node* this220;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* __t221;
   this220 = v217;
@@ -625,7 +609,7 @@ bb219:
 
 // function: _ZNKSt15__new_allocatorISt13_Rb_tree_nodeIiEE11_M_max_sizeEv
 unsigned long std____new_allocator_std___Rb_tree_node_int______M_max_size___const(struct std____new_allocator_std___Rb_tree_node_int__* v224) {
-bb225:
+bb225: ;
   struct std____new_allocator_std___Rb_tree_node_int__* this226;
   unsigned long __retval227;
   this226 = v224;
@@ -640,7 +624,7 @@ bb225:
 
 // function: _ZNSt15__new_allocatorISt13_Rb_tree_nodeIiEE8allocateEmPKv
 struct std___Rb_tree_node_int_* std____new_allocator_std___Rb_tree_node_int_____allocate(struct std____new_allocator_std___Rb_tree_node_int__* v233, unsigned long v234, void* v235) {
-bb236:
+bb236: ;
   struct std____new_allocator_std___Rb_tree_node_int__* this237;
   unsigned long __n238;
   void* unnamed239;
@@ -708,7 +692,7 @@ bb236:
 
 // function: _ZNSaISt13_Rb_tree_nodeIiEE8allocateEm
 struct std___Rb_tree_node_int_* std__allocator_std___Rb_tree_node_int_____allocate(struct std__allocator_std___Rb_tree_node_int__* v268, unsigned long v269) {
-bb270:
+bb270: ;
   struct std__allocator_std___Rb_tree_node_int__* this271;
   unsigned long __n272;
   struct std___Rb_tree_node_int_* __retval273;
@@ -755,7 +739,7 @@ bb270:
 
 // function: _ZNSt16allocator_traitsISaISt13_Rb_tree_nodeIiEEE8allocateERS2_m
 struct std___Rb_tree_node_int_* std__allocator_traits_std__allocator_std___Rb_tree_node_int_______allocate(struct std__allocator_std___Rb_tree_node_int__* v289, unsigned long v290) {
-bb291:
+bb291: ;
   struct std__allocator_std___Rb_tree_node_int__* __a292;
   unsigned long __n293;
   struct std___Rb_tree_node_int_* __retval294;
@@ -775,7 +759,7 @@ bb291:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE11_M_get_nodeEv
 struct std___Rb_tree_node_int_* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_get_node(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v299) {
-bb300:
+bb300: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this301;
   struct std___Rb_tree_node_int_* __retval302;
   this301 = v299;
@@ -794,7 +778,7 @@ bb300:
 
 // function: _ZSt12construct_atIiJiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S0_pispclsr3stdE7declvalIT0_EEEEEPS0_S3_DpOS2_
 int* _ZSt12construct_atIiJiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S0_pispclsr3stdE7declvalIT0_EEEEEPS0_S3_DpOS2_(int* v308, int* v309) {
-bb310:
+bb310: ;
   int* __location311;
   int* __args312;
   int* __retval313;
@@ -817,7 +801,7 @@ bb310:
 
 // function: _ZNSt16allocator_traitsISaISt13_Rb_tree_nodeIiEEE9constructIiJiEEEvRS2_PT_DpOT0_
 void void_std__allocator_traits_std__allocator_std___Rb_tree_node_int_______construct_int__int_(struct std__allocator_std___Rb_tree_node_int__* v322, int* v323, int* v324) {
-bb325:
+bb325: ;
   struct std__allocator_std___Rb_tree_node_int__* __a326;
   int* __p327;
   int* __args328;
@@ -832,7 +816,7 @@ bb325:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE17_M_construct_nodeIJiEEEvPSt13_Rb_tree_nodeIiEDpOT_
 void void_std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_construct_node_int_(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v332, struct std___Rb_tree_node_int_* v333, int* v334) {
-bb335:
+bb335: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this336;
   struct std___Rb_tree_node_int_* __node337;
   int* __args338;
@@ -870,7 +854,7 @@ bb335:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE14_M_create_nodeIJiEEEPSt13_Rb_tree_nodeIiEDpOT_
 struct std___Rb_tree_node_int_* std___Rb_tree_node_int___std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_create_node_int_(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v349, int* v350) {
-bb351:
+bb351: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this352;
   int* __args353;
   struct std___Rb_tree_node_int_* __retval354;
@@ -899,7 +883,7 @@ bb351:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE11_Alloc_nodeclIiEEPSt13_Rb_tree_nodeIiEOT_
 struct std___Rb_tree_node_int_* std___Rb_tree_node_int___std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______Alloc_node__operator___int__int____const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Alloc_node* v362, int* v363) {
-bb364:
+bb364: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Alloc_node* this365;
   int* __arg366;
   struct std___Rb_tree_node_int_* __retval367;
@@ -920,7 +904,7 @@ bb364:
 
 // function: _ZNSt9__rb_tree12_Node_traitsIiPiE23_S_insert_and_rebalanceEbPSt18_Rb_tree_node_baseS4_RS3_
 void std____rb_tree___Node_traits_int__int_____S_insert_and_rebalance(_Bool v373, struct std___Rb_tree_node_base* v374, struct std___Rb_tree_node_base* v375, struct std___Rb_tree_node_base* v376) {
-bb377:
+bb377: ;
   _Bool __insert_left378;
   struct std___Rb_tree_node_base* __x379;
   struct std___Rb_tree_node_base* __p380;
@@ -939,7 +923,7 @@ bb377:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE10_M_insert_IiNS5_11_Alloc_nodeEEESt17_Rb_tree_iteratorIiEPSt18_Rb_tree_node_baseSB_OT_RT0_
 struct std___Rb_tree_iterator_int_ std___Rb_tree_iterator_int__std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_insert__int__std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______Alloc_node_(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v386, struct std___Rb_tree_node_base* v387, struct std___Rb_tree_node_base* v388, int* v389, struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Alloc_node* v390) {
-bb391:
+bb391: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this392;
   struct std___Rb_tree_node_base* __x393;
   struct std___Rb_tree_node_base* __p394;
@@ -1021,7 +1005,7 @@ bb391:
 
 // function: _ZNSt4pairISt17_Rb_tree_iteratorIiEbEC2IS1_bQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS4_S5_EEEEOT_OT0_
 void _ZNSt4pairISt17_Rb_tree_iteratorIiEbEC2IS1_bQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS4_S5_EEEEOT_OT0_(struct std__pair_std___Rb_tree_iterator_int___bool_* v432, struct std___Rb_tree_iterator_int_* v433, _Bool* v434) {
-bb435:
+bb435: ;
   struct std__pair_std___Rb_tree_iterator_int___bool_* this436;
   struct std___Rb_tree_iterator_int_* __x437;
   _Bool* __y438;
@@ -1040,7 +1024,7 @@ bb435:
 
 // function: _ZNSt17_Rb_tree_iteratorIiEC2EPSt18_Rb_tree_node_base
 void std___Rb_tree_iterator_int____Rb_tree_iterator(struct std___Rb_tree_iterator_int_* v444, struct std___Rb_tree_node_base* v445) {
-bb446:
+bb446: ;
   struct std___Rb_tree_iterator_int_* this447;
   struct std___Rb_tree_node_base* __x448;
   this447 = v444;
@@ -1053,7 +1037,7 @@ bb446:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE16_M_insert_uniqueIiEESt4pairISt17_Rb_tree_iteratorIiEbEOT_
 struct std__pair_std___Rb_tree_iterator_int___bool_ std__pair_std___Rb_tree_iterator_int___bool__std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_insert_unique_int_(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v451, int* v452) {
-bb453:
+bb453: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this454;
   int* __v455;
   struct std__pair_std___Rb_tree_iterator_int___bool_ __retval456;
@@ -1113,7 +1097,7 @@ bb453:
 
 // function: _ZNSt4pairISt23_Rb_tree_const_iteratorIiEbEC2IRSt17_Rb_tree_iteratorIiERbQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS8_S9_EEEEOT_OT0_
 void _ZNSt4pairISt23_Rb_tree_const_iteratorIiEbEC2IRSt17_Rb_tree_iteratorIiERbQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS8_S9_EEEEOT_OT0_(struct std__pair_std___Rb_tree_const_iterator_int___bool_* v479, struct std___Rb_tree_iterator_int_* v480, _Bool* v481) {
-bb482:
+bb482: ;
   struct std__pair_std___Rb_tree_const_iterator_int___bool_* this483;
   struct std___Rb_tree_iterator_int_* __x484;
   _Bool* __y485;
@@ -1132,7 +1116,7 @@ bb482:
 
 // function: _ZNSt3setIiSt4lessIiESaIiEE6insertEOi
 struct std__pair_std___Rb_tree_const_iterator_int___bool_ std__set_int__std__less_int___std__allocator_int_____insert(struct std__set_int__std__less_int___std__allocator_int__* v491, int* v492) {
-bb493:
+bb493: ;
   struct std__set_int__std__less_int___std__allocator_int__* this494;
   int* __x495;
   struct std__pair_std___Rb_tree_const_iterator_int___bool_ __retval496;
@@ -1154,7 +1138,7 @@ bb493:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE4sizeEv
 unsigned long std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____size___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v502) {
-bb503:
+bb503: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this504;
   unsigned long __retval505;
   this504 = v502;
@@ -1168,7 +1152,7 @@ bb503:
 
 // function: _ZNKSt3setIiSt4lessIiESaIiEE4sizeEv
 unsigned long std__set_int__std__less_int___std__allocator_int_____size___const(struct std__set_int__std__less_int___std__allocator_int__* v510) {
-bb511:
+bb511: ;
   struct std__set_int__std__less_int___std__allocator_int__* this512;
   unsigned long __retval513;
   this512 = v510;
@@ -1181,7 +1165,7 @@ bb511:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE14_M_lower_boundEPSt18_Rb_tree_node_baseS7_RKi
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_lower_bound_std___Rb_tree_node_base___std___Rb_tree_node_base___int_const___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v517, struct std___Rb_tree_node_base* v518, struct std___Rb_tree_node_base* v519, int* v520) {
-bb521:
+bb521: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this522;
   struct std___Rb_tree_node_base* __x523;
   struct std___Rb_tree_node_base* __y524;
@@ -1231,7 +1215,7 @@ bb521:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE11lower_boundERKi
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____lower_bound(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v544, int* v545) {
-bb546:
+bb546: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this547;
   int* __k548;
   struct std___Rb_tree_iterator_int_ __retval549;
@@ -1253,7 +1237,7 @@ bb546:
 
 // function: _ZNSt3setIiSt4lessIiESaIiEE11lower_boundERKi
 struct std___Rb_tree_const_iterator_int_ std__set_int__std__less_int___std__allocator_int_____lower_bound(struct std__set_int__std__less_int___std__allocator_int__* v556, int* v557) {
-bb558:
+bb558: ;
   struct std__set_int__std__less_int___std__allocator_int__* this559;
   int* __x560;
   struct std___Rb_tree_const_iterator_int_ __retval561;
@@ -1275,7 +1259,7 @@ bb558:
 
 // function: _ZNSt23_Rb_tree_const_iteratorIiEaSEOS0_
 struct std___Rb_tree_const_iterator_int_* std___Rb_tree_const_iterator_int___operator_(struct std___Rb_tree_const_iterator_int_* v567, struct std___Rb_tree_const_iterator_int_* v568) {
-bb569:
+bb569: ;
   struct std___Rb_tree_const_iterator_int_* this570;
   struct std___Rb_tree_const_iterator_int_* unnamed571;
   struct std___Rb_tree_const_iterator_int_* __retval572;
@@ -1292,7 +1276,7 @@ bb569:
 
 // function: _ZNKSt23_Rb_tree_const_iteratorIiEdeEv
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* v577) {
-bb578:
+bb578: ;
   struct std___Rb_tree_const_iterator_int_* this579;
   int* __retval580;
   this579 = v577;
@@ -1311,7 +1295,7 @@ bb578:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE14_M_upper_boundEPSt18_Rb_tree_node_baseS7_RKi
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_upper_bound_std___Rb_tree_node_base___std___Rb_tree_node_base___int_const___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v586, struct std___Rb_tree_node_base* v587, struct std___Rb_tree_node_base* v588, int* v589) {
-bb590:
+bb590: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this591;
   struct std___Rb_tree_node_base* __x592;
   struct std___Rb_tree_node_base* __y593;
@@ -1360,7 +1344,7 @@ bb590:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE11upper_boundERKi
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____upper_bound(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v612, int* v613) {
-bb614:
+bb614: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this615;
   int* __k616;
   struct std___Rb_tree_iterator_int_ __retval617;
@@ -1382,7 +1366,7 @@ bb614:
 
 // function: _ZNSt3setIiSt4lessIiESaIiEE11upper_boundERKi
 struct std___Rb_tree_const_iterator_int_ std__set_int__std__less_int___std__allocator_int_____upper_bound(struct std__set_int__std__less_int___std__allocator_int__* v624, int* v625) {
-bb626:
+bb626: ;
   struct std__set_int__std__less_int___std__allocator_int__* this627;
   int* __x628;
   struct std___Rb_tree_const_iterator_int_ __retval629;
@@ -1404,7 +1388,7 @@ bb626:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE3endEv
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____end(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v635) {
-bb636:
+bb636: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this637;
   struct std___Rb_tree_iterator_int_ __retval638;
   this637 = v635;
@@ -1417,7 +1401,7 @@ bb636:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE5clearEv
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____clear(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v642) {
-bb643:
+bb643: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this644;
   this644 = v642;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* t645 = this644;
@@ -1436,7 +1420,7 @@ bb643:
 
 // function: _ZNSt9__rb_tree12_Node_traitsIiPiE22_S_rebalance_for_eraseEPSt18_Rb_tree_node_baseRS3_
 struct std___Rb_tree_node_base* std____rb_tree___Node_traits_int__int_____S_rebalance_for_erase(struct std___Rb_tree_node_base* v648, struct std___Rb_tree_node_base* v649) {
-bb650:
+bb650: ;
   struct std___Rb_tree_node_base* __z651;
   struct std___Rb_tree_node_base* __header652;
   struct std___Rb_tree_node_base* __retval653;
@@ -1452,7 +1436,7 @@ bb650:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE12_M_erase_auxESt23_Rb_tree_const_iteratorIiE
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_erase_aux(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v658, struct std___Rb_tree_const_iterator_int_ v659) {
-bb660:
+bb660: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this661;
   struct std___Rb_tree_const_iterator_int_ __position662;
   struct std___Rb_tree_node_base* __y663;
@@ -1476,7 +1460,7 @@ bb660:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE12_M_erase_auxESt23_Rb_tree_const_iteratorIiES7_
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_erase_aux_2(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v674, struct std___Rb_tree_const_iterator_int_ v675, struct std___Rb_tree_const_iterator_int_ v676) {
-bb677:
+bb677: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this678;
   struct std___Rb_tree_const_iterator_int_ __first679;
   struct std___Rb_tree_const_iterator_int_ __last680;
@@ -1526,7 +1510,7 @@ bb677:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE5eraseB5cxx11ESt23_Rb_tree_const_iteratorIiES7_
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____erase_abi_cxx11_(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v698, struct std___Rb_tree_const_iterator_int_ v699, struct std___Rb_tree_const_iterator_int_ v700) {
-bb701:
+bb701: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this702;
   struct std___Rb_tree_const_iterator_int_ __first703;
   struct std___Rb_tree_const_iterator_int_ __last704;
@@ -1554,7 +1538,7 @@ bb701:
 
 // function: _ZNSt3setIiSt4lessIiESaIiEE5eraseB5cxx11ESt23_Rb_tree_const_iteratorIiES5_
 struct std___Rb_tree_const_iterator_int_ std__set_int__std__less_int___std__allocator_int_____erase_abi_cxx11_(struct std__set_int__std__less_int___std__allocator_int__* v713, struct std___Rb_tree_const_iterator_int_ v714, struct std___Rb_tree_const_iterator_int_ v715) {
-bb716:
+bb716: ;
   struct std__set_int__std__less_int___std__allocator_int__* this717;
   struct std___Rb_tree_const_iterator_int_ __first718;
   struct std___Rb_tree_const_iterator_int_ __last719;
@@ -1583,7 +1567,7 @@ bb716:
 
 // function: _ZStorSt12_Ios_IostateS_
 int std__operator_(int v729, int v730) {
-bb731:
+bb731: ;
   int __a732;
   int __b733;
   int __retval734;
@@ -1599,7 +1583,7 @@ bb731:
 
 // function: _ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
 int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* v739) {
-bb740:
+bb740: ;
   struct std__basic_ios_char__std__char_traits_char__* this741;
   int __retval742;
   this741 = v739;
@@ -1613,7 +1597,7 @@ bb740:
 
 // function: _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
 void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* v747, int v748) {
-bb749:
+bb749: ;
   struct std__basic_ios_char__std__char_traits_char__* this750;
   int __state751;
   this750 = v747;
@@ -1634,7 +1618,7 @@ bb749:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE2eqERKcS3_
 _Bool __gnu_cxx__char_traits_char___eq(char* v756, char* v757) {
-bb758:
+bb758: ;
   char* __c1759;
   char* __c2760;
   _Bool __retval761;
@@ -1654,7 +1638,7 @@ bb758:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE6lengthEPKc
 unsigned long __gnu_cxx__char_traits_char___length(char* v770) {
-bb771:
+bb771: ;
   char* __p772;
   unsigned long __retval773;
   unsigned long __i774;
@@ -1687,7 +1671,7 @@ bb771:
 
 // function: _ZNSt11char_traitsIcE6lengthEPKc
 unsigned long std__char_traits_char___length(char* v787) {
-bb788:
+bb788: ;
   char* __s789;
   unsigned long __retval790;
   __s789 = v787;
@@ -1712,7 +1696,7 @@ bb788:
 
 // function: _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v798, char* v799) {
-bb800:
+bb800: ;
   struct std__basic_ostream_char__std__char_traits_char__* __out801;
   char* __s802;
   struct std__basic_ostream_char__std__char_traits_char__* __retval803;
@@ -1764,7 +1748,7 @@ bb800:
 
 // function: _ZNSt23_Rb_tree_const_iteratorIiEC2EPSt18_Rb_tree_node_base
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator(struct std___Rb_tree_const_iterator_int_* v828, struct std___Rb_tree_node_base* v829) {
-bb830:
+bb830: ;
   struct std___Rb_tree_const_iterator_int_* this831;
   struct std___Rb_tree_node_base* __x832;
   this831 = v828;
@@ -1777,7 +1761,7 @@ bb830:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE5beginEv
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____begin___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v835) {
-bb836:
+bb836: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this837;
   struct std___Rb_tree_const_iterator_int_ __retval838;
   this837 = v835;
@@ -1791,7 +1775,7 @@ bb836:
 
 // function: _ZNKSt3setIiSt4lessIiESaIiEE5beginEv
 struct std___Rb_tree_const_iterator_int_ std__set_int__std__less_int___std__allocator_int_____begin___const(struct std__set_int__std__less_int___std__allocator_int__* v843) {
-bb844:
+bb844: ;
   struct std__set_int__std__less_int___std__allocator_int__* this845;
   struct std___Rb_tree_const_iterator_int_ __retval846;
   this845 = v843;
@@ -1804,7 +1788,7 @@ bb844:
 
 // function: _ZSteqRKSt23_Rb_tree_const_iteratorIiES2_
 _Bool std__operator___2(struct std___Rb_tree_const_iterator_int_* v850, struct std___Rb_tree_const_iterator_int_* v851) {
-bb852:
+bb852: ;
   struct std___Rb_tree_const_iterator_int_* __x853;
   struct std___Rb_tree_const_iterator_int_* __y854;
   _Bool __retval855;
@@ -1822,7 +1806,7 @@ bb852:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE3endEv
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____end___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v862) {
-bb863:
+bb863: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this864;
   struct std___Rb_tree_const_iterator_int_ __retval865;
   this864 = v862;
@@ -1835,7 +1819,7 @@ bb863:
 
 // function: _ZNKSt3setIiSt4lessIiESaIiEE3endEv
 struct std___Rb_tree_const_iterator_int_ std__set_int__std__less_int___std__allocator_int_____end___const(struct std__set_int__std__less_int___std__allocator_int__* v869) {
-bb870:
+bb870: ;
   struct std__set_int__std__less_int___std__allocator_int__* this871;
   struct std___Rb_tree_const_iterator_int_ __retval872;
   this871 = v869;
@@ -1848,7 +1832,7 @@ bb870:
 
 // function: _ZNSt23_Rb_tree_const_iteratorIiEppEi
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_const_iterator_int___operator__(struct std___Rb_tree_const_iterator_int_* v876, int v877) {
-bb878:
+bb878: ;
   struct std___Rb_tree_const_iterator_int_* this879;
   int unnamed880;
   struct std___Rb_tree_const_iterator_int_ __retval881;
@@ -1865,7 +1849,7 @@ bb878:
 
 // function: _ZNSolsEPFRSoS_E
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* v886, void* v887) {
-bb888:
+bb888: ;
   struct std__basic_ostream_char__std__char_traits_char__* this889;
   void* __pf890;
   struct std__basic_ostream_char__std__char_traits_char__* __retval891;
@@ -1885,7 +1869,7 @@ bb888:
 
 // function: _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v896) {
-bb897:
+bb897: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os898;
   struct std__basic_ostream_char__std__char_traits_char__* __retval899;
   __os898 = v896;
@@ -1902,7 +1886,7 @@ bb897:
 
 // function: _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
 struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* v903) {
-bb904:
+bb904: ;
   struct std__ctype_char_* __f905;
   struct std__ctype_char_* __retval906;
   __f905 = v903;
@@ -1924,7 +1908,7 @@ bb904:
 
 // function: _ZNKSt5ctypeIcE5widenEc
 char std__ctype_char___widen_char__const(struct std__ctype_char_* v912, char v913) {
-bb914:
+bb914: ;
   struct std__ctype_char_* this915;
   char __c916;
   char __retval917;
@@ -1962,7 +1946,7 @@ bb914:
 
 // function: _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* v933, char v934) {
-bb935:
+bb935: ;
   struct std__basic_ios_char__std__char_traits_char__* this936;
   char __c937;
   char __retval938;
@@ -1988,7 +1972,7 @@ bb935:
 
 // function: _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v945) {
-bb946:
+bb946: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os947;
   struct std__basic_ostream_char__std__char_traits_char__* __retval948;
   __os947 = v945;
@@ -2028,7 +2012,7 @@ bb946:
 
 // function: _ZNSt3setIiSt4lessIiESaIiEED2Ev
 void std__set_int__std__less_int___std__allocator_int______set(struct std__set_int__std__less_int___std__allocator_int__* v967) {
-bb968:
+bb968: ;
   struct std__set_int__std__less_int___std__allocator_int__* this969;
   this969 = v967;
   struct std__set_int__std__less_int___std__allocator_int__* t970 = this969;
@@ -2040,7 +2024,7 @@ bb968:
 
 // function: main
 int main() {
-bb971:
+bb971: ;
   int __retval972;
   struct std__set_int__std__less_int___std__allocator_int__ myset973;
   struct std___Rb_tree_const_iterator_int_ it974;
@@ -2093,7 +2077,7 @@ bb971:
     if (c1001) {
     } else {
       char* cast1002 = (char*)&(_str);
-      char* c1003 = _str_1;
+      char* c1003 = (char*)_str_1;
       unsigned int c1004 = 19;
       char* cast1005 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast1002, c1003, c1004, cast1005);
@@ -2117,7 +2101,7 @@ bb971:
     if (c1012) {
     } else {
       char* cast1013 = (char*)&(_str_2);
-      char* c1014 = _str_1;
+      char* c1014 = (char*)_str_1;
       unsigned int c1015 = 21;
       char* cast1016 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast1013, c1014, c1015, cast1016);
@@ -2141,7 +2125,7 @@ bb971:
     if (c1023) {
     } else {
       char* cast1024 = (char*)&(_str_3);
-      char* c1025 = _str_1;
+      char* c1025 = (char*)_str_1;
       unsigned int c1026 = 23;
       char* cast1027 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast1024, c1025, c1026, cast1027);
@@ -2165,7 +2149,7 @@ bb971:
     if (c1033) {
     } else {
       char* cast1034 = (char*)&(_str_4);
-      char* c1035 = _str_1;
+      char* c1035 = (char*)_str_1;
       unsigned int c1036 = 25;
       char* cast1037 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast1034, c1035, c1036, cast1037);
@@ -2237,7 +2221,7 @@ bb971:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEEC2Ev
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______Rb_tree(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v1061) {
-bb1062:
+bb1062: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this1063;
   this1063 = v1061;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* t1064 = this1063;
@@ -2247,7 +2231,7 @@ bb1062:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEED2Ev
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_______Rb_tree(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v1065) {
-bb1066:
+bb1066: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this1067;
   this1067 = v1065;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* t1068 = this1067;
@@ -2267,7 +2251,7 @@ bb1066:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE13_Rb_tree_implIS3_Lb1EEC2Ev
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______Rb_tree_impl_std__less_int___true____Rb_tree_impl(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_* v1070) {
-bb1071:
+bb1071: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_* this1072;
   this1072 = v1070;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_* t1073 = this1072;
@@ -2282,7 +2266,7 @@ bb1071:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE13_Rb_tree_implIS3_Lb1EED2Ev
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______Rb_tree_impl_std__less_int___true_____Rb_tree_impl(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_* v1077) {
-bb1078:
+bb1078: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_* this1079;
   this1079 = v1077;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_* t1080 = this1079;
@@ -2295,7 +2279,7 @@ bb1078:
 
 // function: _ZNSt15__new_allocatorISt13_Rb_tree_nodeIiEEC2Ev
 void std____new_allocator_std___Rb_tree_node_int_______new_allocator(struct std____new_allocator_std___Rb_tree_node_int__* v1082) {
-bb1083:
+bb1083: ;
   struct std____new_allocator_std___Rb_tree_node_int__* this1084;
   this1084 = v1082;
   struct std____new_allocator_std___Rb_tree_node_int__* t1085 = this1084;
@@ -2304,7 +2288,7 @@ bb1083:
 
 // function: _ZNSaISt13_Rb_tree_nodeIiEEC2Ev
 void std__allocator_std___Rb_tree_node_int_____allocator(struct std__allocator_std___Rb_tree_node_int__* v1086) {
-bb1087:
+bb1087: ;
   struct std__allocator_std___Rb_tree_node_int__* this1088;
   this1088 = v1086;
   struct std__allocator_std___Rb_tree_node_int__* t1089 = this1088;
@@ -2315,7 +2299,7 @@ bb1087:
 
 // function: _ZNSt20_Rb_tree_key_compareISt4lessIiEEC2Ev
 void std___Rb_tree_key_compare_std__less_int______Rb_tree_key_compare(struct std___Rb_tree_key_compare_std__less_int__* v1091) {
-bb1092:
+bb1092: ;
   struct std___Rb_tree_key_compare_std__less_int__* this1093;
   this1093 = v1091;
   return;
@@ -2323,7 +2307,7 @@ bb1092:
 
 // function: _ZNSt15_Rb_tree_header8_M_resetEv
 void std___Rb_tree_header___M_reset(struct std___Rb_tree_header* v1094) {
-bb1095:
+bb1095: ;
   struct std___Rb_tree_header* this1096;
   this1096 = v1094;
   struct std___Rb_tree_header* t1097 = this1096;
@@ -2338,7 +2322,7 @@ bb1095:
 
 // function: _ZNSt15_Rb_tree_headerC2Ev
 void std___Rb_tree_header___Rb_tree_header(struct std___Rb_tree_header* v1100) {
-bb1101:
+bb1101: ;
   struct std___Rb_tree_header* this1102;
   this1102 = v1100;
   struct std___Rb_tree_header* t1103 = this1102;
@@ -2353,7 +2337,7 @@ bb1101:
 
 // function: _ZNSaISt13_Rb_tree_nodeIiEED2Ev
 void std__allocator_std___Rb_tree_node_int______allocator(struct std__allocator_std___Rb_tree_node_int__* v1105) {
-bb1106:
+bb1106: ;
   struct std__allocator_std___Rb_tree_node_int__* this1107;
   this1107 = v1105;
   struct std__allocator_std___Rb_tree_node_int__* t1108 = this1107;
@@ -2362,7 +2346,7 @@ bb1106:
 
 // function: _ZNSt13_Rb_tree_nodeIiE11_M_node_ptrEv
 struct std___Rb_tree_node_int_* std___Rb_tree_node_int____M_node_ptr(struct std___Rb_tree_node_int_* v1109) {
-bb1110:
+bb1110: ;
   struct std___Rb_tree_node_int_* this1111;
   struct std___Rb_tree_node_int_* __retval1112;
   this1111 = v1109;
@@ -2374,7 +2358,7 @@ bb1110:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE8_S_rightEPSt13_Rb_tree_nodeIiE
 struct std___Rb_tree_node_int_* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______S_right(struct std___Rb_tree_node_int_* v1115) {
-bb1116:
+bb1116: ;
   struct std___Rb_tree_node_int_* __x1117;
   struct std___Rb_tree_node_int_* __retval1118;
   __x1117 = v1115;
@@ -2401,7 +2385,7 @@ bb1116:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE7_S_leftEPSt13_Rb_tree_nodeIiE
 struct std___Rb_tree_node_int_* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______S_left(struct std___Rb_tree_node_int_* v1131) {
-bb1132:
+bb1132: ;
   struct std___Rb_tree_node_int_* __x1133;
   struct std___Rb_tree_node_int_* __retval1134;
   __x1133 = v1131;
@@ -2428,7 +2412,7 @@ bb1132:
 
 // function: _ZSt10destroy_atIiEvPT_
 void void_std__destroy_at_int_(int* v1147) {
-bb1148:
+bb1148: ;
   int* __location1149;
   __location1149 = v1147;
   return;
@@ -2436,7 +2420,7 @@ bb1148:
 
 // function: _ZNSt16allocator_traitsISaISt13_Rb_tree_nodeIiEEE7destroyIiEEvRS2_PT_
 void void_std__allocator_traits_std__allocator_std___Rb_tree_node_int_______destroy_int_(struct std__allocator_std___Rb_tree_node_int__* v1150, int* v1151) {
-bb1152:
+bb1152: ;
   struct std__allocator_std___Rb_tree_node_int__* __a1153;
   int* __p1154;
   __a1153 = v1150;
@@ -2451,7 +2435,7 @@ bb1152:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE21_M_get_Node_allocatorEv
 struct std__allocator_std___Rb_tree_node_int__* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_get_Node_allocator(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v1156) {
-bb1157:
+bb1157: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this1158;
   struct std__allocator_std___Rb_tree_node_int__* __retval1159;
   this1158 = v1156;
@@ -2464,7 +2448,7 @@ bb1157:
 
 // function: _ZN9__gnu_cxx16__aligned_membufIiE7_M_addrEv
 void* __gnu_cxx____aligned_membuf_int____M_addr(struct __gnu_cxx____aligned_membuf_int_* v1163) {
-bb1164:
+bb1164: ;
   struct __gnu_cxx____aligned_membuf_int_* this1165;
   void* __retval1166;
   this1165 = v1163;
@@ -2477,7 +2461,7 @@ bb1164:
 
 // function: _ZN9__gnu_cxx16__aligned_membufIiE6_M_ptrEv
 int* __gnu_cxx____aligned_membuf_int____M_ptr(struct __gnu_cxx____aligned_membuf_int_* v1170) {
-bb1171:
+bb1171: ;
   struct __gnu_cxx____aligned_membuf_int_* this1172;
   int* __retval1173;
   this1172 = v1170;
@@ -2491,7 +2475,7 @@ bb1171:
 
 // function: _ZNSt13_Rb_tree_nodeIiE9_M_valptrEv
 int* std___Rb_tree_node_int____M_valptr(struct std___Rb_tree_node_int_* v1178) {
-bb1179:
+bb1179: ;
   struct std___Rb_tree_node_int_* this1180;
   int* __retval1181;
   this1180 = v1178;
@@ -2504,7 +2488,7 @@ bb1179:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE15_M_destroy_nodeEPSt13_Rb_tree_nodeIiE
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_destroy_node(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v1185, struct std___Rb_tree_node_int_* v1186) {
-bb1187:
+bb1187: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this1188;
   struct std___Rb_tree_node_int_* __p1189;
   this1188 = v1185;
@@ -2523,7 +2507,7 @@ bb1187:
 
 // function: _ZSt23__is_constant_evaluatedv
 _Bool std____is_constant_evaluated() {
-bb1195:
+bb1195: ;
   _Bool __retval1196;
     _Bool c1197 = 0;
     __retval1196 = c1197;
@@ -2534,7 +2518,7 @@ bb1195:
 
 // function: _ZNSt15__new_allocatorISt13_Rb_tree_nodeIiEE10deallocateEPS1_m
 void std____new_allocator_std___Rb_tree_node_int_____deallocate(struct std____new_allocator_std___Rb_tree_node_int__* v1199, struct std___Rb_tree_node_int_* v1200, unsigned long v1201) {
-bb1202:
+bb1202: ;
   struct std____new_allocator_std___Rb_tree_node_int__* this1203;
   struct std___Rb_tree_node_int_* __p1204;
   unsigned long __n1205;
@@ -2566,7 +2550,7 @@ bb1202:
 
 // function: _ZNSaISt13_Rb_tree_nodeIiEE10deallocateEPS0_m
 void std__allocator_std___Rb_tree_node_int_____deallocate(struct std__allocator_std___Rb_tree_node_int__* v1221, struct std___Rb_tree_node_int_* v1222, unsigned long v1223) {
-bb1224:
+bb1224: ;
   struct std__allocator_std___Rb_tree_node_int__* this1225;
   struct std___Rb_tree_node_int_* __p1226;
   unsigned long __n1227;
@@ -2593,7 +2577,7 @@ bb1224:
 
 // function: _ZNSt16allocator_traitsISaISt13_Rb_tree_nodeIiEEE10deallocateERS2_PS1_m
 void std__allocator_traits_std__allocator_std___Rb_tree_node_int_______deallocate(struct std__allocator_std___Rb_tree_node_int__* v1235, struct std___Rb_tree_node_int_* v1236, unsigned long v1237) {
-bb1238:
+bb1238: ;
   struct std__allocator_std___Rb_tree_node_int__* __a1239;
   struct std___Rb_tree_node_int_* __p1240;
   unsigned long __n1241;
@@ -2612,7 +2596,7 @@ bb1238:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE11_M_put_nodeEPSt13_Rb_tree_nodeIiE
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_put_node(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v1245, struct std___Rb_tree_node_int_* v1246) {
-bb1247:
+bb1247: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this1248;
   struct std___Rb_tree_node_int_* __p1249;
   this1248 = v1245;
@@ -2630,7 +2614,7 @@ bb1247:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE12_M_drop_nodeEPSt13_Rb_tree_nodeIiE
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_drop_node(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v1254, struct std___Rb_tree_node_int_* v1255) {
-bb1256:
+bb1256: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this1257;
   struct std___Rb_tree_node_int_* __p1258;
   this1257 = v1254;
@@ -2645,7 +2629,7 @@ bb1256:
 
 // function: _ZNSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE8_M_eraseEPSt13_Rb_tree_nodeIiE
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_erase(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v1262, struct std___Rb_tree_node_int_* v1263) {
-bb1264:
+bb1264: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this1265;
   struct std___Rb_tree_node_int_* __x1266;
   this1265 = v1262;
@@ -2678,7 +2662,7 @@ bb1264:
 
 // function: _ZNKSt8_Rb_treeIiiSt9_IdentityIiESt4lessIiESaIiEE13_M_begin_nodeEv
 struct std___Rb_tree_node_int_* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_begin_node___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* v1277) {
-bb1278:
+bb1278: ;
   struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* this1279;
   struct std___Rb_tree_node_int_* __retval1280;
   struct std___Rb_tree_node_base* __begin1281;
@@ -2706,7 +2690,7 @@ bb1278:
 
 // function: _ZNSt23_Rb_tree_const_iteratorIiEC2ERKSt17_Rb_tree_iteratorIiE
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_2(struct std___Rb_tree_const_iterator_int_* v1293, struct std___Rb_tree_iterator_int_* v1294) {
-bb1295:
+bb1295: ;
   struct std___Rb_tree_const_iterator_int_* this1296;
   struct std___Rb_tree_iterator_int_* __it1297;
   this1296 = v1293;

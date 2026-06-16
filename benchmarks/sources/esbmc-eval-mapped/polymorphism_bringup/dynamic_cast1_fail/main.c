@@ -1,18 +1,10 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Struct definitions (auto-parsed)
+struct CPolygon { void* __field0; int width; int height; };
+struct CRectangle { struct CPolygon __field0; };
+struct CTriangle { struct CPolygon __field0; };
+struct anon_struct_0 { unsigned char* __field0; unsigned char* __field1; };
+struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
+struct anon_struct_2 { unsigned char* __field0[3]; };
 
 // Virtual dispatch: default implementations (override as `weak`).
 // __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
@@ -21,14 +13,6 @@ __attribute__((weak)) int __VERIFIER_virtual_call_int(void* __obj, int __slot) {
   void* __fn = ((void**)*(void**)__obj)[__slot];
   return ((int(*)(void*))__fn)(__obj);
 }
-
-// Struct definitions (auto-parsed)
-struct CPolygon { void* __field0; int width; int height; };
-struct CRectangle { struct CPolygon __field0; };
-struct CTriangle { struct CPolygon __field0; };
-struct anon_struct_0 { unsigned char* __field0; unsigned char* __field1; };
-struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; unsigned char* __field2; };
-struct anon_struct_2 { unsigned char* __field0[3]; };
 
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
 extern void *_ZTVN10__cxxabiv120__si_class_type_infoE[];
@@ -51,6 +35,7 @@ void CTriangle__CTriangle(struct CTriangle* p0, int p1, int p2);
 void operator_delete(void* p0, unsigned long p1) { free(p0); }
 void CRectangle__CRectangle(struct CRectangle* p0, int p1, int p2);
 extern void* __dynamic_cast(void* p0, unsigned char* p1, unsigned char* p2, long p3);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void CPolygon__set_values(struct CPolygon* p0, int p1, int p2);
 int main();
@@ -65,7 +50,7 @@ void *_ZTV10CRectangle[] = { (void*)0, (void*)0, (void*)&CRectangle__area };
 
 // function: _ZN9CTriangleC2Eii
 void CTriangle__CTriangle(struct CTriangle* v0, int v1, int v2) {
-bb3:
+bb3: ;
   struct CTriangle* this4;
   int w5;
   int h6;
@@ -89,7 +74,7 @@ bb3:
 
 // function: _ZN10CRectangleC2Eii
 void CRectangle__CRectangle(struct CRectangle* v15, int v16, int v17) {
-bb18:
+bb18: ;
   struct CRectangle* this19;
   int w20;
   int h21;
@@ -113,7 +98,7 @@ bb18:
 
 // function: _ZN8CPolygon10set_valuesEii
 void CPolygon__set_values(struct CPolygon* v30, int v31, int v32) {
-bb33:
+bb33: ;
   struct CPolygon* this34;
   int a35;
   int b36;
@@ -130,7 +115,7 @@ bb33:
 
 // function: main
 int main() {
-bb40:
+bb40: ;
   int __retval41;
   struct CPolygon* polygons42[2];
   struct CTriangle* __new_result43;
@@ -175,8 +160,8 @@ bb40:
         struct CTriangle* ternary73;
         if (cast72) {
           void* cast74 = (void*)t71;
-          unsigned char* c75 = _ZTI8CPolygon;
-          unsigned char* c76 = _ZTI9CTriangle;
+          unsigned char* c75 = (unsigned char*)_ZTI8CPolygon;
+          unsigned char* c76 = (unsigned char*)_ZTI9CTriangle;
           long c77 = 0;
           void* r78 = __dynamic_cast(cast74, c75, c76, c77);
           struct CTriangle* cast79 = (struct CTriangle*)r78;
@@ -199,9 +184,10 @@ bb40:
             if (c91) {
             } else {
               char* cast92 = (char*)&(_str);
-              char* c93 = _str_1;
+              char* c93 = (char*)_str_1;
               unsigned int c94 = 55;
               char* cast95 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast92, c93, c94, cast95);
             }
             struct CTriangle* t96 = trin68;
@@ -218,9 +204,10 @@ bb40:
             if (c107) {
             } else {
               char* cast108 = (char*)&(_str_2);
-              char* c109 = _str_1;
+              char* c109 = (char*)_str_1;
               unsigned int c110 = 58;
               char* cast111 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast108, c109, c110, cast111);
             }
           }
@@ -262,7 +249,7 @@ bb40:
 
 // function: _ZN8CPolygonC2Ev
 void CPolygon__CPolygon(struct CPolygon* v131) {
-bb132:
+bb132: ;
   struct CPolygon* this133;
   this133 = v131;
   struct CPolygon* t134 = this133;
@@ -274,7 +261,7 @@ bb132:
 
 // function: _ZN9CTriangle4areaEv
 int CTriangle__area(struct CTriangle* v137) {
-bb138:
+bb138: ;
   struct CTriangle* this139;
   int __retval140;
   this139 = v137;
@@ -293,7 +280,7 @@ bb138:
 
 // function: _ZN10CRectangle4areaEv
 int CRectangle__area(struct CRectangle* v150) {
-bb151:
+bb151: ;
   struct CRectangle* this152;
   int __retval153;
   this152 = v150;

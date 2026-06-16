@@ -1,28 +1,4 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
-
 // Struct definitions (auto-parsed)
 struct __locale_data { unsigned char __placeholder; };
 struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
@@ -44,6 +20,14 @@ struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __fi
 struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int __field5; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
 struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
 struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 char _str[14] = "Test string: ";
 char _str_1[6] = ", y, ";
@@ -164,7 +148,7 @@ void std__allocator_char___allocator(struct std__allocator_char_* p0, struct std
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC2EvQ26is_default_constructible_vIT1_E
 void _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC2EvQ26is_default_constructible_vIT1_E(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v0) {
-bb1:
+bb1: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this2;
   struct std__allocator_char_ ref_tmp03;
   this2 = v0;
@@ -183,7 +167,7 @@ bb1:
 
 // function: _ZNSt16allocator_traitsISaIcEE8max_sizeERKS0_
 unsigned long std__allocator_traits_std__allocator_char_____max_size(struct std__allocator_char_* v7) {
-bb8:
+bb8: ;
   struct std__allocator_char_* __a9;
   unsigned long __retval10;
   __a9 = v7;
@@ -197,7 +181,7 @@ bb8:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE16_M_get_allocatorEv
 struct std__allocator_char_* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_get_allocator___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v15) {
-bb16:
+bb16: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this17;
   struct std__allocator_char_* __retval18;
   this17 = v15;
@@ -210,7 +194,7 @@ bb16:
 
 // function: _ZSt3minImERKT_S2_S2_
 unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* v22, unsigned long* v23) {
-bb24:
+bb24: ;
   unsigned long* __a25;
   unsigned long* __b26;
   unsigned long* __retval27;
@@ -235,7 +219,7 @@ bb24:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE8max_sizeEv
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____max_size___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v37) {
-bb38:
+bb38: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this39;
   unsigned long __retval40;
   unsigned long __diffmax41;
@@ -258,7 +242,7 @@ bb38:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE15_M_check_lengthEmmPKc
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_check_length_unsigned_long__unsigned_long__char_const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v52, unsigned long v53, unsigned long v54, char* v55) {
-bb56:
+bb56: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this57;
   unsigned long __n158;
   unsigned long __n259;
@@ -284,7 +268,7 @@ bb56:
 
 // function: _ZNSt19__ptr_traits_ptr_toIPKcS0_Lb0EE10pointer_toERS0_
 char* std____ptr_traits_ptr_to_char_const___char_const__false___pointer_to(char* v70) {
-bb71:
+bb71: ;
   char* __r72;
   char* __retval73;
   __r72 = v70;
@@ -296,7 +280,7 @@ bb71:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE13_M_local_dataEv
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_local_data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v76) {
-bb77:
+bb77: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this78;
   char* __retval79;
   this78 = v76;
@@ -310,7 +294,7 @@ bb77:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE11_M_is_localEv
 _Bool std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_is_local___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v84) {
-bb85:
+bb85: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this86;
   _Bool __retval87;
   this86 = v84;
@@ -338,7 +322,7 @@ bb85:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE8capacityEv
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____capacity___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v99) {
-bb100:
+bb100: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this101;
   unsigned long __retval102;
   unsigned long __sz103;
@@ -378,7 +362,7 @@ bb100:
 
 // function: _ZNKSt15__new_allocatorIcE11_M_max_sizeEv
 unsigned long std____new_allocator_char____M_max_size___const(struct std____new_allocator_char_* v119) {
-bb120:
+bb120: ;
   struct std____new_allocator_char_* this121;
   unsigned long __retval122;
   this121 = v119;
@@ -393,7 +377,7 @@ bb120:
 
 // function: _ZNSt15__new_allocatorIcE8allocateEmPKv
 char* std____new_allocator_char___allocate(struct std____new_allocator_char_* v128, unsigned long v129, void* v130) {
-bb131:
+bb131: ;
   struct std____new_allocator_char_* this132;
   unsigned long __n133;
   void* unnamed134;
@@ -445,7 +429,7 @@ bb131:
 
 // function: _ZNSaIcE8allocateEm
 char* std__allocator_char___allocate(struct std__allocator_char_* v163, unsigned long v164) {
-bb165:
+bb165: ;
   struct std__allocator_char_* this166;
   unsigned long __n167;
   char* __retval168;
@@ -480,7 +464,7 @@ bb165:
 
 // function: _ZNSt16allocator_traitsISaIcEE8allocateERS0_m
 char* std__allocator_traits_std__allocator_char_____allocate(struct std__allocator_char_* v184, unsigned long v185) {
-bb186:
+bb186: ;
   struct std__allocator_char_* __a187;
   unsigned long __n188;
   char* __retval189;
@@ -496,7 +480,7 @@ bb186:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE11_S_allocateERS3_m
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______S_allocate(struct std__allocator_char_* v194, unsigned long v195) {
-bb196:
+bb196: ;
   struct std__allocator_char_* __a197;
   unsigned long __n198;
   char* __retval199;
@@ -515,7 +499,7 @@ bb196:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE16_M_get_allocatorEv
 struct std__allocator_char_* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_get_allocator(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v206) {
-bb207:
+bb207: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this208;
   struct std__allocator_char_* __retval209;
   this208 = v206;
@@ -528,7 +512,7 @@ bb207:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE4copyEPcPKcm
 char* __gnu_cxx__char_traits_char___copy(char* v213, char* v214, unsigned long v215) {
-bb216:
+bb216: ;
   char* __s1217;
   char* __s2218;
   unsigned long __n219;
@@ -588,7 +572,7 @@ bb216:
 
 // function: _ZNSt11char_traitsIcE4copyEPcPKcm
 char* std__char_traits_char___copy(char* v254, char* v255, unsigned long v256) {
-bb257:
+bb257: ;
   char* __s1258;
   char* __s2259;
   unsigned long __n260;
@@ -629,7 +613,7 @@ bb257:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_S_copyEPcPKcm
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______S_copy(char* v281, char* v282, unsigned long v283) {
-bb284:
+bb284: ;
   char* __d285;
   char* __s286;
   unsigned long __n287;
@@ -654,7 +638,7 @@ bb284:
 
 // function: _ZNSt15__new_allocatorIcE10deallocateEPcm
 void std____new_allocator_char___deallocate(struct std____new_allocator_char_* v297, char* v298, unsigned long v299) {
-bb300:
+bb300: ;
   struct std____new_allocator_char_* this301;
   char* __p302;
   unsigned long __n303;
@@ -686,7 +670,7 @@ bb300:
 
 // function: _ZNSaIcE10deallocateEPcm
 void std__allocator_char___deallocate(struct std__allocator_char_* v319, char* v320, unsigned long v321) {
-bb322:
+bb322: ;
   struct std__allocator_char_* this323;
   char* __p324;
   unsigned long __n325;
@@ -710,7 +694,7 @@ bb322:
 
 // function: _ZNKSt4lessIPKcEclES1_S1_
 _Bool std__less_char_const____operator___char_const___char_const___const(struct std__less_const_char___* v333, char* v334, char* v335) {
-bb336:
+bb336: ;
   struct std__less_const_char___* this337;
   char* __x338;
   char* __y339;
@@ -740,7 +724,7 @@ bb336:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE11_M_disjunctEPKc
 _Bool std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_disjunct_char_const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v353, char* v354) {
-bb355:
+bb355: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this356;
   char* __s357;
   _Bool __retval358;
@@ -771,7 +755,7 @@ bb355:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE6assignERcRKc
 void __gnu_cxx__char_traits_char___assign_2(char* v373, char* v374) {
-bb375:
+bb375: ;
   char* __c1376;
   char* __c2377;
   __c1376 = v373;
@@ -792,7 +776,7 @@ bb375:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE4moveEPcPKcm
 char* __gnu_cxx__char_traits_char___move(char* v385, char* v386, unsigned long v387) {
-bb388:
+bb388: ;
   char* __s1389;
   char* __s2390;
   unsigned long __n391;
@@ -881,7 +865,7 @@ bb388:
 
 // function: _ZNSt11char_traitsIcE4moveEPcPKcm
 char* std__char_traits_char___move(char* v442, char* v443, unsigned long v444) {
-bb445:
+bb445: ;
   char* __s1446;
   char* __s2447;
   unsigned long __n448;
@@ -922,7 +906,7 @@ bb445:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_S_moveEPcPKcm
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______S_move(char* v469, char* v470, unsigned long v471) {
-bb472:
+bb472: ;
   char* __d473;
   char* __s474;
   unsigned long __n475;
@@ -947,7 +931,7 @@ bb472:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE15_M_replace_coldEPcmPKcmm
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_replace_cold(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v485, char* v486, unsigned long v487, char* v488, unsigned long v489, unsigned long v490) {
-bb491:
+bb491: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this492;
   char* __p493;
   unsigned long __len1494;
@@ -1071,7 +1055,7 @@ bb491:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE6lengthEv
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____length___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v574) {
-bb575:
+bb575: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this576;
   unsigned long __retval577;
   this576 = v574;
@@ -1084,7 +1068,7 @@ bb575:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_createERmm
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_create(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v581, unsigned long* v582, unsigned long v583) {
-bb584:
+bb584: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this585;
   unsigned long* __capacity586;
   unsigned long __old_capacity587;
@@ -1147,7 +1131,7 @@ bb584:
 
 // function: _ZNSt16allocator_traitsISaIcEE10deallocateERS0_Pcm
 void std__allocator_traits_std__allocator_char_____deallocate(struct std__allocator_char_* v624, char* v625, unsigned long v626) {
-bb627:
+bb627: ;
   struct std__allocator_char_* __a628;
   char* __p629;
   unsigned long __n630;
@@ -1163,7 +1147,7 @@ bb627:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE10_M_destroyEm
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_destroy(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v634, unsigned long v635) {
-bb636:
+bb636: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this637;
   unsigned long __size638;
   this637 = v634;
@@ -1180,7 +1164,7 @@ bb636:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE10_M_disposeEv
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_dispose(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v645) {
-bb646:
+bb646: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this647;
   this647 = v645;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* t648 = this647;
@@ -1195,7 +1179,7 @@ bb646:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_M_dataEPc
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_data(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v652, char* v653) {
-bb654:
+bb654: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this655;
   char* __p656;
   this655 = v652;
@@ -1208,7 +1192,7 @@ bb654:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE11_M_capacityEm
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_capacity(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v659, unsigned long v660) {
-bb661:
+bb661: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this662;
   unsigned long __capacity663;
   this662 = v659;
@@ -1221,7 +1205,7 @@ bb661:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_mutateEmmPKcm
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_mutate(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v666, unsigned long v667, unsigned long v668, char* v669, unsigned long v670) {
-bb671:
+bb671: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this672;
   unsigned long __pos673;
   unsigned long __len1674;
@@ -1304,7 +1288,7 @@ bb671:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE10_M_replaceEmmPKcm
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_replace(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v724, unsigned long v725, unsigned long v726, char* v727, unsigned long v728) {
-bb729:
+bb729: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this730;
   unsigned long __pos731;
   unsigned long __len1732;
@@ -1441,7 +1425,7 @@ bb729:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE4sizeEv
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____size___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v821) {
-bb822:
+bb822: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this823;
   unsigned long __retval824;
   unsigned long __sz825;
@@ -1463,7 +1447,7 @@ bb822:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE2eqERKcS3_
 _Bool __gnu_cxx__char_traits_char___eq(char* v833, char* v834) {
-bb835:
+bb835: ;
   char* __c1836;
   char* __c2837;
   _Bool __retval838;
@@ -1483,7 +1467,7 @@ bb835:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE6lengthEPKc
 unsigned long __gnu_cxx__char_traits_char___length(char* v847) {
-bb848:
+bb848: ;
   char* __p849;
   unsigned long __retval850;
   unsigned long __i851;
@@ -1512,7 +1496,7 @@ bb848:
 
 // function: _ZNSt11char_traitsIcE6lengthEPKc
 unsigned long std__char_traits_char___length(char* v864) {
-bb865:
+bb865: ;
   char* __s866;
   unsigned long __retval867;
   __s866 = v864;
@@ -1533,7 +1517,7 @@ bb865:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE6assignEPKc
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____assign(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v875, char* v876) {
-bb877:
+bb877: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this878;
   char* __s879;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __retval880;
@@ -1553,7 +1537,7 @@ bb877:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEaSEPKc
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____operator_(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v889, char* v890) {
-bb891:
+bb891: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this892;
   char* __s893;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __retval894;
@@ -1569,7 +1553,7 @@ bb891:
 
 // function: _ZSt12construct_atIcJRcEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_
 char* _ZSt12construct_atIcJRcEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(char* v899, char* v900) {
-bb901:
+bb901: ;
   char* __location902;
   char* __args903;
   char* __retval904;
@@ -1592,7 +1576,7 @@ bb901:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE6assignEPcmc
 char* __gnu_cxx__char_traits_char___assign(char* v913, unsigned long v914, char v915) {
-bb916:
+bb916: ;
   char* __s917;
   unsigned long __n918;
   char __a919;
@@ -1647,7 +1631,7 @@ bb916:
 
 // function: _ZNSt11char_traitsIcE6assignEPcmc
 char* std__char_traits_char___assign(char* v951, unsigned long v952, char v953) {
-bb954:
+bb954: ;
   char* __s955;
   unsigned long __n956;
   char __a957;
@@ -1688,7 +1672,7 @@ bb954:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_S_assignEPcmc
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______S_assign(char* v978, unsigned long v979, char v980) {
-bb981:
+bb981: ;
   char* __d982;
   unsigned long __n983;
   char __c984;
@@ -1712,7 +1696,7 @@ bb981:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE14_M_replace_auxEmmmc
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_replace_aux(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v993, unsigned long v994, unsigned long v995, unsigned long v996, char v997) {
-bb998:
+bb998: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this999;
   unsigned long __pos11000;
   unsigned long __n11001;
@@ -1803,7 +1787,7 @@ bb998:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE6assignEmc
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____assign_2(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1057, unsigned long v1058, char v1059) {
-bb1060:
+bb1060: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1061;
   unsigned long __n1062;
   char __c1063;
@@ -1824,7 +1808,7 @@ bb1060:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEaSEc
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____operator__2(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1072, char v1073) {
-bb1074:
+bb1074: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1075;
   char __c1076;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __retval1077;
@@ -1841,7 +1825,7 @@ bb1074:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_appendEPKcm
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_append(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1083, char* v1084, unsigned long v1085) {
-bb1086:
+bb1086: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1087;
   char* __s1088;
   unsigned long __n1089;
@@ -1885,7 +1869,7 @@ bb1086:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE6appendEPKcm
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____append(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1112, char* v1113, unsigned long v1114) {
-bb1115:
+bb1115: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1116;
   char* __s1117;
   unsigned long __n1118;
@@ -1908,7 +1892,7 @@ bb1115:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE6appendERKS4_
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____append_2(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1128, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1129) {
-bb1130:
+bb1130: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1131;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __str1132;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __retval1133;
@@ -1927,7 +1911,7 @@ bb1130:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEpLERKS4_
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____operator__(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1141, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1142) {
-bb1143:
+bb1143: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1144;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __str1145;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __retval1146;
@@ -1943,7 +1927,7 @@ bb1143:
 
 // function: _ZNSt11char_traitsIcE2ltERKcS2_
 _Bool std__char_traits_char___lt(char* v1151, char* v1152) {
-bb1153:
+bb1153: ;
   char* __c11154;
   char* __c21155;
   _Bool __retval1156;
@@ -1965,7 +1949,7 @@ bb1153:
 
 // function: _ZNSt11char_traitsIcE7compareEPKcS2_m
 int std__char_traits_char___compare(char* v1167, char* v1168, unsigned long v1169) {
-bb1170:
+bb1170: ;
   char* __s11171;
   char* __s21172;
   unsigned long __n1173;
@@ -2044,7 +2028,7 @@ bb1170:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE4dataEv
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1218) {
-bb1219:
+bb1219: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1220;
   char* __retval1221;
   this1220 = v1218;
@@ -2057,7 +2041,7 @@ bb1219:
 
 // function: _ZSteqIcSt11char_traitsIcESaIcEEbRKNSt7__cxx1112basic_stringIT_T0_T1_EEPKS5_
 _Bool bool_std__operator___char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1225, char* v1226) {
-bb1227:
+bb1227: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __lhs1228;
   char* __rhs1229;
   _Bool __retval1230;
@@ -2090,7 +2074,7 @@ bb1227:
 
 // function: _ZStlsIcSt11char_traitsIcESaIcEERSt13basic_ostreamIT_T0_ES7_RKNSt7__cxx1112basic_stringIS4_S5_T1_EE
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____char__std__char_traits_char___std__allocator_char___(struct std__basic_ostream_char__std__char_traits_char__* v1247, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1248) {
-bb1249:
+bb1249: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os1250;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* __str1251;
   struct std__basic_ostream_char__std__char_traits_char__* __retval1252;
@@ -2110,7 +2094,7 @@ bb1249:
 
 // function: _ZNSolsEPFRSoS_E
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* v1261, void* v1262) {
-bb1263:
+bb1263: ;
   struct std__basic_ostream_char__std__char_traits_char__* this1264;
   void* __pf1265;
   struct std__basic_ostream_char__std__char_traits_char__* __retval1266;
@@ -2126,7 +2110,7 @@ bb1263:
 
 // function: _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v1271) {
-bb1272:
+bb1272: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os1273;
   struct std__basic_ostream_char__std__char_traits_char__* __retval1274;
   __os1273 = v1271;
@@ -2139,7 +2123,7 @@ bb1272:
 
 // function: _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
 struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* v1278) {
-bb1279:
+bb1279: ;
   struct std__ctype_char_* __f1280;
   struct std__ctype_char_* __retval1281;
   __f1280 = v1278;
@@ -2157,7 +2141,7 @@ bb1279:
 
 // function: _ZNKSt5ctypeIcE5widenEc
 char std__ctype_char___widen_char__const(struct std__ctype_char_* v1287, char v1288) {
-bb1289:
+bb1289: ;
   struct std__ctype_char_* this1290;
   char __c1291;
   char __retval1292;
@@ -2187,7 +2171,7 @@ bb1289:
 
 // function: _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* v1308, char v1309) {
-bb1310:
+bb1310: ;
   struct std__basic_ios_char__std__char_traits_char__* this1311;
   char __c1312;
   char __retval1313;
@@ -2205,7 +2189,7 @@ bb1310:
 
 // function: _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v1320) {
-bb1321:
+bb1321: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os1322;
   struct std__basic_ostream_char__std__char_traits_char__* __retval1323;
   __os1322 = v1320;
@@ -2233,7 +2217,7 @@ bb1321:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED2Ev
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______basic_string(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1342) {
-bb1343:
+bb1343: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1344;
   this1344 = v1342;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* t1345 = this1344;
@@ -2246,7 +2230,7 @@ bb1343:
 
 // function: main
 int main() {
-bb1346:
+bb1346: ;
   int __retval1347;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str11348;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str21349;
@@ -2271,7 +2255,7 @@ bb1346:
         if (r1363) {
         } else {
           char* cast1364 = (char*)&(_str_3);
-          char* c1365 = _str_4;
+          char* c1365 = (char*)_str_4;
           unsigned int c1366 = 24;
           char* cast1367 = (char*)&(__PRETTY_FUNCTION___main);
           __assert_fail(cast1364, c1365, c1366, cast1367);
@@ -2298,7 +2282,7 @@ bb1346:
 
 // function: _ZNSt19__ptr_traits_ptr_toIPccLb0EE10pointer_toERc
 char* std____ptr_traits_ptr_to_char___char__false___pointer_to(char* v1374) {
-bb1375:
+bb1375: ;
   char* __r1376;
   char* __retval1377;
   __r1376 = v1374;
@@ -2310,7 +2294,7 @@ bb1375:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE13_M_local_dataEv
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_local_data(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1380) {
-bb1381:
+bb1381: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1382;
   char* __retval1383;
   this1382 = v1380;
@@ -2324,7 +2308,7 @@ bb1381:
 
 // function: _ZNSaIcEC2Ev
 void std__allocator_char___allocator_2(struct std__allocator_char_* v1388) {
-bb1389:
+bb1389: ;
   struct std__allocator_char_* this1390;
   this1390 = v1388;
   struct std__allocator_char_* t1391 = this1390;
@@ -2335,7 +2319,7 @@ bb1389:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_Alloc_hiderC2EPcOS3_
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______Alloc_hider___Alloc_hider(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider* v1393, char* v1394, struct std__allocator_char_* v1395) {
-bb1396:
+bb1396: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider* this1397;
   char* __dat1398;
   struct std__allocator_char_* __a1399;
@@ -2353,7 +2337,7 @@ bb1396:
 
 // function: _ZNSaIcED2Ev
 void std__allocator_char____allocator(struct std__allocator_char_* v1404) {
-bb1405:
+bb1405: ;
   struct std__allocator_char_* this1406;
   this1406 = v1404;
   struct std__allocator_char_* t1407 = this1406;
@@ -2362,7 +2346,7 @@ bb1405:
 
 // function: _ZSt21is_constant_evaluatedv
 _Bool std__is_constant_evaluated() {
-bb1408:
+bb1408: ;
   _Bool __retval1409;
     _Bool c1410 = 0;
     __retval1409 = c1410;
@@ -2373,7 +2357,7 @@ bb1408:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE17_M_init_local_bufEv
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_init_local_buf(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1412) {
-bb1413:
+bb1413: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1414;
   this1414 = v1412;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* t1415 = this1414;
@@ -2401,7 +2385,7 @@ bb1413:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_lengthEm
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_length(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1427, unsigned long v1428) {
-bb1429:
+bb1429: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1430;
   unsigned long __length1431;
   this1430 = v1427;
@@ -2414,7 +2398,7 @@ bb1429:
 
 // function: _ZSt23__is_constant_evaluatedv
 _Bool std____is_constant_evaluated() {
-bb1434:
+bb1434: ;
   _Bool __retval1435;
     _Bool c1436 = 0;
     __retval1435 = c1436;
@@ -2425,7 +2409,7 @@ bb1434:
 
 // function: _ZSt12construct_atIcJRKcEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_
 char* _ZSt12construct_atIcJRKcEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(char* v1438, char* v1439) {
-bb1440:
+bb1440: ;
   char* __location1441;
   char* __args1442;
   char* __retval1443;
@@ -2448,7 +2432,7 @@ bb1440:
 
 // function: _ZNSt11char_traitsIcE6assignERcRKc
 void std__char_traits_char___assign_2(char* v1452, char* v1453) {
-bb1454:
+bb1454: ;
   char* __c11455;
   char* __c21456;
   __c11455 = v1452;
@@ -2469,7 +2453,7 @@ bb1454:
 
 // function: _ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7_M_dataEv
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1464) {
-bb1465:
+bb1465: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1466;
   char* __retval1467;
   this1466 = v1464;
@@ -2482,7 +2466,7 @@ bb1465:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE13_M_set_lengthEm
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_set_length(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* v1471, unsigned long v1472) {
-bb1473:
+bb1473: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* this1474;
   unsigned long __n1475;
   char ref_tmp01476;
@@ -2502,7 +2486,7 @@ bb1473:
 
 // function: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_Alloc_hiderD2Ev
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______Alloc_hider____Alloc_hider(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider* v1483) {
-bb1484:
+bb1484: ;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider* this1485;
   this1485 = v1483;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider* t1486 = this1485;
@@ -2515,7 +2499,7 @@ bb1484:
 
 // function: _ZNSt15__new_allocatorIcEC2Ev
 void std____new_allocator_char_____new_allocator_2(struct std____new_allocator_char_* v1488) {
-bb1489:
+bb1489: ;
   struct std____new_allocator_char_* this1490;
   this1490 = v1488;
   struct std____new_allocator_char_* t1491 = this1490;
@@ -2524,7 +2508,7 @@ bb1489:
 
 // function: _ZNSt15__new_allocatorIcEC2ERKS0_
 void std____new_allocator_char_____new_allocator(struct std____new_allocator_char_* v1492, struct std____new_allocator_char_* v1493) {
-bb1494:
+bb1494: ;
   struct std____new_allocator_char_* this1495;
   struct std____new_allocator_char_* unnamed1496;
   this1495 = v1492;
@@ -2535,7 +2519,7 @@ bb1494:
 
 // function: _ZNSaIcEC2ERKS_
 void std__allocator_char___allocator(struct std__allocator_char_* v1498, struct std__allocator_char_* v1499) {
-bb1500:
+bb1500: ;
   struct std__allocator_char_* this1501;
   struct std__allocator_char_* __a1502;
   this1501 = v1498;

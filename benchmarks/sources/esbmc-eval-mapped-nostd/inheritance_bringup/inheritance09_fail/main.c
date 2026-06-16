@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct Base1 { int value; };
 struct Base2 { char letter; };
@@ -32,6 +16,7 @@ void Base1__Base1(struct Base1* p0, int p1);
 void Base2__Base2(struct Base2* p0, char p1);
 void Derived__Derived(struct Derived* p0, int p1, char p2, double p3);
 int Base1__getData___const(struct Base1* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 char Base2__getData___const(struct Base2* p0);
 double Derived__getReal___const(struct Derived* p0);
@@ -39,7 +24,7 @@ int main();
 
 // function: _ZN5Base1C2Ei
 void Base1__Base1(struct Base1* v0, int v1) {
-bb2:
+bb2: ;
   struct Base1* this3;
   int parameterValue4;
   this3 = v0;
@@ -52,7 +37,7 @@ bb2:
 
 // function: _ZN5Base2C2Ec
 void Base2__Base2(struct Base2* v7, char v8) {
-bb9:
+bb9: ;
   struct Base2* this10;
   char characterData11;
   this10 = v7;
@@ -65,7 +50,7 @@ bb9:
 
 // function: _ZN7DerivedC2Eicd
 void Derived__Derived(struct Derived* v14, int v15, char v16, double v17) {
-bb18:
+bb18: ;
   struct Derived* this19;
   int integer20;
   char character21;
@@ -88,7 +73,7 @@ bb18:
 
 // function: _ZNK5Base17getDataEv
 int Base1__getData___const(struct Base1* v29) {
-bb30:
+bb30: ;
   struct Base1* this31;
   int __retval32;
   this31 = v29;
@@ -101,7 +86,7 @@ bb30:
 
 // function: _ZNK5Base27getDataEv
 char Base2__getData___const(struct Base2* v36) {
-bb37:
+bb37: ;
   struct Base2* this38;
   char __retval39;
   this38 = v36;
@@ -114,7 +99,7 @@ bb37:
 
 // function: _ZNK7Derived7getRealEv
 double Derived__getReal___const(struct Derived* v43) {
-bb44:
+bb44: ;
   struct Derived* this45;
   double __retval46;
   this45 = v43;
@@ -127,7 +112,7 @@ bb44:
 
 // function: main
 int main() {
-bb50:
+bb50: ;
   int __retval51;
   struct Base1 base152;
   struct Base1* base1Ptr53;
@@ -154,9 +139,10 @@ bb50:
   if (c67) {
   } else {
     char* cast68 = (char*)&(_str);
-    char* c69 = _str_1;
+    char* c69 = (char*)_str_1;
     unsigned int c70 = 63;
     char* cast71 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast68, c69, c70, cast71);
   }
   char r72 = Base2__getData___const(&base254);
@@ -166,9 +152,10 @@ bb50:
   if (c75) {
   } else {
     char* cast76 = (char*)&(_str_2);
-    char* c77 = _str_1;
+    char* c77 = (char*)_str_1;
     unsigned int c78 = 64;
     char* cast79 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast76, c77, c78, cast79);
   }
   struct Base1* base80 = (struct Base1*)((char *)&(derived56) + 0);
@@ -178,9 +165,10 @@ bb50:
   if (c83) {
   } else {
     char* cast84 = (char*)&(_str_3);
-    char* c85 = _str_1;
+    char* c85 = (char*)_str_1;
     unsigned int c86 = 66;
     char* cast87 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast84, c85, c86, cast87);
   }
   struct Base2* base88 = (struct Base2*)((char *)&(derived56) + 4);
@@ -191,9 +179,10 @@ bb50:
   if (c92) {
   } else {
     char* cast93 = (char*)&(_str_4);
-    char* c94 = _str_1;
+    char* c94 = (char*)_str_1;
     unsigned int c95 = 67;
     char* cast96 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast93, c94, c95, cast96);
   }
   double r97 = Derived__getReal___const(&derived56);
@@ -202,9 +191,10 @@ bb50:
   if (c99) {
   } else {
     char* cast100 = (char*)&(_str_5);
-    char* c101 = _str_1;
+    char* c101 = (char*)_str_1;
     unsigned int c102 = 68;
     char* cast103 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast100, c101, c102, cast103);
   }
   struct Base1* base104 = (struct Base1*)((char *)&(derived56) + 0);
@@ -216,9 +206,10 @@ bb50:
   if (c108) {
   } else {
     char* cast109 = (char*)&(_str_6);
-    char* c110 = _str_1;
+    char* c110 = (char*)_str_1;
     unsigned int c111 = 71;
     char* cast112 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast109, c110, c111, cast112);
   }
   struct Base2* base113 = ((&(derived56)) ? (struct Base2*)((char *)&(derived56) + 4) : (struct Base2*)0);
@@ -231,9 +222,10 @@ bb50:
   if (c118) {
   } else {
     char* cast119 = (char*)&(_str_7);
-    char* c120 = _str_1;
+    char* c120 = (char*)_str_1;
     unsigned int c121 = 74;
     char* cast122 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast119, c120, c121, cast122);
   }
   int c123 = 0;

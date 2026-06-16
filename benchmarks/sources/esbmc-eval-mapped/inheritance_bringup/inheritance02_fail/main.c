@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct anon_struct_0 { unsigned char* __field0[3]; };
 struct anon_struct_1 { unsigned char* __field0; unsigned char* __field1; };
@@ -38,6 +22,7 @@ void exforsys__exforsys(struct exforsys* p0);
 void sample__sample(struct sample* p0);
 void exforsys__f(struct exforsys* p0, int p1);
 int exforsys__getX(struct exforsys* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void sample__f1(struct sample* p0, int p1);
 int sample__getS1(struct sample* p0);
@@ -50,7 +35,7 @@ unsigned char* _ZTT6sample[1] __attribute__((aligned(8))) = {(unsigned char*)(&_
 
 // function: _ZN8exforsysC2Ev
 void exforsys__exforsys(struct exforsys* v0) {
-bb1:
+bb1: ;
   struct exforsys* this2;
   this2 = v0;
   struct exforsys* t3 = this2;
@@ -61,7 +46,7 @@ bb1:
 
 // function: _ZN6sampleC1Ev
 void sample__sample(struct sample* v5) {
-bb6:
+bb6: ;
   struct sample* this7;
   this7 = v5;
   struct sample* t8 = this7;
@@ -77,7 +62,7 @@ bb6:
 
 // function: _ZN8exforsys1fEi
 void exforsys__f(struct exforsys* v13, int v14) {
-bb15:
+bb15: ;
   struct exforsys* this16;
   int n117;
   this16 = v13;
@@ -92,7 +77,7 @@ bb15:
 
 // function: _ZN8exforsys4getXEv
 int exforsys__getX(struct exforsys* v22) {
-bb23:
+bb23: ;
   struct exforsys* this24;
   int __retval25;
   this24 = v22;
@@ -105,7 +90,7 @@ bb23:
 
 // function: _ZN6sample2f1Ei
 void sample__f1(struct sample* v29, int v30) {
-bb31:
+bb31: ;
   struct sample* this32;
   int n133;
   this32 = v29;
@@ -120,7 +105,7 @@ bb31:
 
 // function: _ZN6sample5getS1Ev
 int sample__getS1(struct sample* v38) {
-bb39:
+bb39: ;
   struct sample* this40;
   int __retval41;
   this40 = v38;
@@ -133,7 +118,7 @@ bb39:
 
 // function: _ZN8exforsys7add_oneEv
 void exforsys__add_one(struct exforsys* v45) {
-bb46:
+bb46: ;
   struct exforsys* this47;
   this47 = v45;
   struct exforsys* t48 = this47;
@@ -145,7 +130,7 @@ bb46:
 
 // function: _ZN6sample7add_oneEv
 void sample__add_one(struct sample* v51) {
-bb52:
+bb52: ;
   struct sample* this53;
   this53 = v51;
   struct sample* t54 = this53;
@@ -169,7 +154,7 @@ bb52:
 
 // function: main
 int main() {
-bb68:
+bb68: ;
   int __retval69;
   struct sample s70;
   int c71 = 0;
@@ -205,9 +190,10 @@ bb68:
   if (c97) {
   } else {
     char* cast98 = (char*)&(_str);
-    char* c99 = _str_1;
+    char* c99 = (char*)_str_1;
     unsigned int c100 = 53;
     char* cast101 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast98, c99, c100, cast101);
   }
   int c102 = 20;
@@ -218,9 +204,10 @@ bb68:
   if (c105) {
   } else {
     char* cast106 = (char*)&(_str_2);
-    char* c107 = _str_1;
+    char* c107 = (char*)_str_1;
     unsigned int c108 = 55;
     char* cast109 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast106, c107, c108, cast109);
   }
   sample__add_one(&s70);
@@ -241,9 +228,10 @@ bb68:
   if (c123) {
   } else {
     char* cast124 = (char*)&(_str_3);
-    char* c125 = _str_1;
+    char* c125 = (char*)_str_1;
     unsigned int c126 = 57;
     char* cast127 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast124, c125, c126, cast127);
   }
   int r128 = sample__getS1(&s70);
@@ -252,9 +240,10 @@ bb68:
   if (c130) {
   } else {
     char* cast131 = (char*)&(_str_2);
-    char* c132 = _str_1;
+    char* c132 = (char*)_str_1;
     unsigned int c133 = 58;
     char* cast134 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast131, c132, c133, cast134);
   }
   int t135 = __retval69;

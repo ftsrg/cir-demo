@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct A { int i; };
 struct B_bool_ { struct A __field0; _Bool b; unsigned char __field2[3]; } __attribute__((packed));
@@ -26,6 +10,7 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[13] = "b2.b == true";
 void B_int___B(struct B_int_* p0);
 void __cxx_global_var_init();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void B_bool___B(struct B_bool_* p0);
 int main();
@@ -34,7 +19,7 @@ __attribute__((constructor)) void _GLOBAL__sub_I_main_cpp();
 
 // function: _ZN1BIiEC2Ev
 void B_int___B(struct B_int_* v0) {
-bb1:
+bb1: ;
   struct B_int_* this2;
   this2 = v0;
   struct B_int_* t3 = this2;
@@ -45,14 +30,14 @@ bb1:
 
 // function: __cxx_global_var_init
 void __cxx_global_var_init() {
-bb5:
+bb5: ;
   B_int___B(&b1);
   return;
 }
 
 // function: _ZN1BIbEC2Ev
 void B_bool___B(struct B_bool_* v6) {
-bb7:
+bb7: ;
   struct B_bool_* this8;
   this8 = v6;
   struct B_bool_* t9 = this8;
@@ -65,7 +50,7 @@ bb7:
 
 // function: main
 int main() {
-bb12:
+bb12: ;
   int __retval13;
   struct B_bool_ b214;
   int c15 = 0;
@@ -78,9 +63,10 @@ bb12:
   if (c19) {
   } else {
     char* cast20 = (char*)&(_str);
-    char* c21 = _str_1;
+    char* c21 = (char*)_str_1;
     unsigned int c22 = 51;
     char* cast23 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast20, c21, c22, cast23);
   }
   B_bool___B(&b214);
@@ -92,9 +78,10 @@ bb12:
   if (c28) {
   } else {
     char* cast29 = (char*)&(_str_2);
-    char* c30 = _str_1;
+    char* c30 = (char*)_str_1;
     unsigned int c31 = 53;
     char* cast32 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast29, c30, c31, cast32);
   }
   int t33 = __retval13;
@@ -103,7 +90,7 @@ bb12:
 
 // function: _ZN1AC2Ev
 void A__A(struct A* v34) {
-bb35:
+bb35: ;
   struct A* this36;
   this36 = v34;
   struct A* t37 = this36;
@@ -114,7 +101,7 @@ bb35:
 
 // function: _GLOBAL__sub_I_main.cpp
 __attribute__((constructor)) void _GLOBAL__sub_I_main_cpp() {
-bb39:
+bb39: ;
   __cxx_global_var_init();
   return;
 }

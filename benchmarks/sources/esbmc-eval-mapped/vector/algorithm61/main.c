@@ -1,20 +1,16 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
+// Struct definitions (auto-parsed)
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+struct myclass { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+
 // Virtual dispatch: default implementations (override as `weak`).
 // __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
 // pointer is at offset 0; the function is vtable[slot].
@@ -22,15 +18,6 @@ __attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __
   void* __fn = ((void**)*(void**)__obj)[__slot];
   return ((char(*)(void*, char))__fn)(__obj, __a0);
 }
-
-// Struct definitions (auto-parsed)
-struct __locale_data { unsigned char __placeholder; };
-struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
-struct myclass { unsigned char __field0; };
-struct std__ctype_char_;
-struct std__ios_base;
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
 
 int __const_main_myints[7] = {3, 7, 2, 5, 6, 4, 9};
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
@@ -49,6 +36,7 @@ char _str_8[41] = "*max_element(myints,myints+7,myobj) == 9";
 int* max_element(int* p0, int* p1);
 int* min_element(int* p0, int* p1);
 _Bool myfn(int p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int* int__min_element_int__bool_____int__int___int___int___bool____(int* p0, int* p1, void* p2);
 int* int__max_element_int__bool_____int__int___int___int___bool____(int* p0, int* p1, void* p2);
@@ -60,7 +48,7 @@ int main();
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z11max_elementPiS_
 int* max_element(int* v0, int* v1) {
-bb2:
+bb2: ;
   int* first3;
   int* last4;
   int* __retval5;
@@ -104,7 +92,7 @@ bb2:
 
 // function: _Z11min_elementPiS_
 int* min_element(int* v26, int* v27) {
-bb28:
+bb28: ;
   int* first29;
   int* last30;
   int* __retval31;
@@ -148,7 +136,7 @@ bb28:
 
 // function: _Z4myfnii
 _Bool myfn(int v52, int v53) {
-bb54:
+bb54: ;
   int i55;
   int j56;
   _Bool __retval57;
@@ -164,7 +152,7 @@ bb54:
 
 // function: _Z11min_elementIiPFbiiEEPT_S3_S3_T0_
 int* int__min_element_int__bool_____int__int___int___int___bool____(int* v62, int* v63, void* v64) {
-bb65:
+bb65: ;
   int* first66;
   int* last67;
   void* pred68;
@@ -211,7 +199,7 @@ bb65:
 
 // function: _Z11max_elementIiPFbiiEEPT_S3_S3_T0_
 int* int__max_element_int__bool_____int__int___int___int___bool____(int* v91, int* v92, void* v93) {
-bb94:
+bb94: ;
   int* first95;
   int* last96;
   void* pred97;
@@ -258,7 +246,7 @@ bb94:
 
 // function: _ZN7myclassclEii
 _Bool myclass__operator__(struct myclass* v120, int v121, int v122) {
-bb123:
+bb123: ;
   struct myclass* this124;
   int i125;
   int j126;
@@ -277,7 +265,7 @@ bb123:
 
 // function: _Z11min_elementIi7myclassEPT_S2_S2_T0_
 int* int__min_element_int__myclass_(int* v133, int* v134, struct myclass v135) {
-bb136:
+bb136: ;
   int* first137;
   int* last138;
   struct myclass pred139;
@@ -323,7 +311,7 @@ bb136:
 
 // function: _Z11max_elementIi7myclassEPT_S2_S2_T0_
 int* int__max_element_int__myclass_(int* v161, int* v162, struct myclass v163) {
-bb164:
+bb164: ;
   int* first165;
   int* last166;
   struct myclass pred167;
@@ -369,7 +357,7 @@ bb164:
 
 // function: main
 int main() {
-bb189:
+bb189: ;
   int __retval190;
   int myints191[7];
   struct myclass agg_tmp0192;
@@ -404,9 +392,10 @@ bb189:
   if (c214) {
   } else {
     char* cast215 = (char*)&(_str_1);
-    char* c216 = _str_2;
+    char* c216 = (char*)_str_2;
     unsigned int c217 = 110;
     char* cast218 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast215, c216, c217, cast218);
   }
   char* cast219 = (char*)&(_str_3);
@@ -433,9 +422,10 @@ bb189:
   if (c236) {
   } else {
     char* cast237 = (char*)&(_str_4);
-    char* c238 = _str_2;
+    char* c238 = (char*)_str_2;
     unsigned int c239 = 112;
     char* cast240 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast237, c238, c239, cast240);
   }
   char* cast241 = (char*)&(_str);
@@ -462,9 +452,10 @@ bb189:
   if (c258) {
   } else {
     char* cast259 = (char*)&(_str_5);
-    char* c260 = _str_2;
+    char* c260 = (char*)_str_2;
     unsigned int c261 = 116;
     char* cast262 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast259, c260, c261, cast262);
   }
   char* cast263 = (char*)&(_str_3);
@@ -491,9 +482,10 @@ bb189:
   if (c280) {
   } else {
     char* cast281 = (char*)&(_str_6);
-    char* c282 = _str_2;
+    char* c282 = (char*)_str_2;
     unsigned int c283 = 118;
     char* cast284 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast281, c282, c283, cast284);
   }
   char* cast285 = (char*)&(_str);
@@ -522,9 +514,10 @@ bb189:
   if (c304) {
   } else {
     char* cast305 = (char*)&(_str_7);
-    char* c306 = _str_2;
+    char* c306 = (char*)_str_2;
     unsigned int c307 = 122;
     char* cast308 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast305, c306, c307, cast308);
   }
   char* cast309 = (char*)&(_str_3);
@@ -553,9 +546,10 @@ bb189:
   if (c328) {
   } else {
     char* cast329 = (char*)&(_str_8);
-    char* c330 = _str_2;
+    char* c330 = (char*)_str_2;
     unsigned int c331 = 124;
     char* cast332 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast329, c330, c331, cast332);
   }
   int c333 = 0;

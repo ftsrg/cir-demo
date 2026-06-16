@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct S_int_ { unsigned char __field0; };
 
@@ -24,13 +8,14 @@ char _str_1[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void S_int___S(struct S_int_* p0);
 void __cxx_global_var_init();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 __attribute__((constructor)) void _GLOBAL__sub_I_main_cpp();
 
 // function: _ZN1SIiEC2Ev
 void S_int___S(struct S_int_* v0) {
-bb1:
+bb1: ;
   struct S_int_* this2;
   this2 = v0;
   struct S_int_* t3 = this2;
@@ -41,7 +26,7 @@ bb1:
 
 // function: __cxx_global_var_init
 void __cxx_global_var_init() {
-bb5:
+bb5: ;
   unsigned long c6 = 1;
   struct S_int_* cast7 = (struct S_int_*)&(_ZL1s);
   struct S_int_* ptr8 = &(cast7)[c6];
@@ -62,7 +47,7 @@ bb5:
 
 // function: main
 int main() {
-bb15:
+bb15: ;
   int __retval16;
   int c17 = 0;
   __retval16 = c17;
@@ -71,9 +56,10 @@ bb15:
     _Bool u20 = !cast19;
     if (u20) {
       char* cast21 = (char*)&(_str);
-      char* c22 = _str_1;
+      char* c22 = (char*)_str_1;
       unsigned int c23 = 24;
       char* cast24 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast21, c22, c23, cast24);
     }
   int t25 = __retval16;
@@ -82,7 +68,7 @@ bb15:
 
 // function: _GLOBAL__sub_I_main.cpp
 __attribute__((constructor)) void _GLOBAL__sub_I_main_cpp() {
-bb26:
+bb26: ;
   __cxx_global_var_init();
   return;
 }

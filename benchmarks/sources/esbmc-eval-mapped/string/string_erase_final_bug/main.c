@@ -1,28 +1,4 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
-
 // Struct definitions (auto-parsed)
 struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
 struct __gnu_cxx____normal_iterator_char____std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ { char* _M_current; };
@@ -34,11 +10,23 @@ struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_c
 struct std____new_allocator_char_;
 struct std__allocator_char_ { unsigned char __field0; };
 struct std__forward_iterator_tag { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
 struct std__random_access_iterator_tag { unsigned char __field0; };
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
-struct std__ctype_char_;
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int __field5; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 char _str[27] = "This is an example phrase.";
 char _str_1[19] = "This is an phrase.";
@@ -55,13 +43,14 @@ char _str_9[24] = "basic_string::_M_create";
 char _str_10[20] = "basic_string::erase";
 unsigned long _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE4nposE __attribute__((aligned(8))) = -1;
 char _str_11[55] = "%s: __pos (which is %zu) > this->size() (which is %zu)";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str2;
   struct std__allocator_char_ ref_tmp03;
@@ -103,9 +92,10 @@ bb0:
     if (u23) {
     } else {
       char* cast24 = (char*)&(_str_2);
-      char* c25 = _str_3;
+      char* c25 = (char*)_str_3;
       unsigned int c26 = 22;
       char* cast27 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast24, c25, c26, cast27);
     }
     struct std__basic_ostream_char__std__char_traits_char__* std28;
@@ -135,9 +125,10 @@ bb0:
     if (u38) {
     } else {
       char* cast39 = (char*)&(_str_5);
-      char* c40 = _str_3;
+      char* c40 = (char*)_str_3;
       unsigned int c41 = 27;
       char* cast42 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast39, c40, c41, cast42);
     }
     struct std__basic_ostream_char__std__char_traits_char__* std43;
@@ -176,9 +167,10 @@ bb0:
     if (u56) {
     } else {
       char* cast57 = (char*)&(_str_7);
-      char* c58 = _str_3;
+      char* c58 = (char*)_str_3;
       unsigned int c59 = 31;
       char* cast60 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast57, c58, c59, cast60);
     }
     struct std__basic_ostream_char__std__char_traits_char__* std61;

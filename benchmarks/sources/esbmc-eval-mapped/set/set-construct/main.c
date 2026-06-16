@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -30,7 +14,7 @@ struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocat
 struct std___Rb_tree_iterator_int_ { struct std___Rb_tree_node_base* _M_node; };
 struct std___Rb_tree_key_compare_std__less_int__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_;
+struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
 struct std____new_allocator_std___Rb_tree_node_int__;
 struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
 struct std__allocator_std___Rb_tree_node_int__;
@@ -50,6 +34,7 @@ char _str_3[19] = "second.size() == 5";
 char _str_4[10] = "*it == 10";
 char _str_5[10] = "*it == 50";
 _Bool fncomp(int p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -57,7 +42,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _Z6fncompii
 _Bool fncomp(int v0, int v1) {
-bb2:
+bb2: ;
   int lhs3;
   int rhs4;
   _Bool __retval5;
@@ -73,7 +58,7 @@ bb2:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   struct std__set_int__std__less_int___std__allocator_int__ first12;
   struct std___Rb_tree_const_iterator_int_ ref_tmp013;
@@ -93,9 +78,10 @@ bb10:
     if (c23) {
     } else {
       char* cast24 = (char*)&(_str);
-      char* c25 = _str_1;
+      char* c25 = (char*)_str_1;
       unsigned int c26 = 24;
       char* cast27 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast24, c25, c26, cast27);
     }
     struct std___Rb_tree_const_iterator_int_ std28;
@@ -109,9 +95,10 @@ bb10:
     if (std30) {
     } else {
       char* cast31 = (char*)&(_str_2);
-      char* c32 = _str_1;
+      char* c32 = (char*)_str_1;
       unsigned int c33 = 25;
       char* cast34 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast31, c32, c33, cast34);
     }
     // array copy
@@ -130,9 +117,10 @@ bb10:
       if (c41) {
       } else {
         char* cast42 = (char*)&(_str_3);
-        char* c43 = _str_1;
+        char* c43 = (char*)_str_1;
         unsigned int c44 = 28;
         char* cast45 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast42, c43, c44, cast45);
       }
       struct std___Rb_tree_const_iterator_int_ std46;
@@ -146,9 +134,10 @@ bb10:
       if (c50) {
       } else {
         char* cast51 = (char*)&(_str_4);
-        char* c52 = _str_1;
+        char* c52 = (char*)_str_1;
         unsigned int c53 = 30;
         char* cast54 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast51, c52, c53, cast54);
       }
       struct std___Rb_tree_const_iterator_int_ std55;
@@ -168,9 +157,10 @@ bb10:
       if (c62) {
       } else {
         char* cast63 = (char*)&(_str_5);
-        char* c64 = _str_1;
+        char* c64 = (char*)_str_1;
         unsigned int c65 = 33;
         char* cast66 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast63, c64, c65, cast66);
       }
       int c67 = 0;

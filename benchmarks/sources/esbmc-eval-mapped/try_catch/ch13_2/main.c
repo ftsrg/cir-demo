@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -30,9 +14,11 @@ struct __locale_data { unsigned char __placeholder; };
 struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
 struct anon_struct_0 { unsigned char* __field0[5]; };
 struct std__exception;
-struct std__ios_base;
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* __field5; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 
 extern void *_ZTVSt9exception[];
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
@@ -53,6 +39,7 @@ char _str_9[47] = "Program control continues after catch in main\n";
 extern void *_ZTVSt9exception[];
 extern int __gxx_personality_v0();
 void std__exception___exception(struct std__exception* p0) {}
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void throwException();
 int main();
@@ -60,7 +47,7 @@ int main();
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z14throwExceptionv
 void throwException() {
-bb0:
+bb0: ;
     struct std__exception* caughtException1;
       char* cast3 = (char*)&(_str);
       struct std__basic_ostream_char__std__char_traits_char__* std4;
@@ -68,7 +55,6 @@ bb0:
       static char exc_buf5[8] = {0};
       struct std__exception* exc6 = (struct std__exception*)exc_buf5;
       // externalized std:: op: std::exception::exception()
-      __VERIFIER_nondet_memory(exc6, sizeof(*exc6));
       __cir_exc_ptr = (void*)exc6;
       __cir_exc_dtor = (void*)&std__exception___exception;
       __cir_exc_type = (const void*)__cir_eh_type__ZTISt9exception;
@@ -90,9 +76,10 @@ bb0:
         struct std__basic_ostream_char__std__char_traits_char__* std12;
         __VERIFIER_nondet_memory(&std12, sizeof(std12));
         char* cast13 = (char*)&(_str_3);
-        char* c14 = _str_4;
+        char* c14 = (char*)_str_4;
         unsigned int c15 = 31;
         char* cast16 = (char*)&(__PRETTY_FUNCTION____Z14throwExceptionv);
+        reach_error();
         __assert_fail(cast13, c14, c15, cast16);
         __cir_exc_active = 1;
         {
@@ -115,7 +102,7 @@ bb0:
 
 // function: main
 int main() {
-bb19:
+bb19: ;
   int __retval20;
   int c21 = 0;
   __retval20 = c21;

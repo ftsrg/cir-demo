@@ -1,28 +1,4 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
-
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ { double* _M_current; };
 struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ { void* _M_comp; };
@@ -57,6 +33,14 @@ struct std___Vector_base_double__std__allocator_double__ { struct std___Vector_b
 struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
 struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
 struct std__vector_double__std__allocator_double__ { struct std___Vector_base_double__std__allocator_double__ __field0; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 double __const_main_mydoubles[4] = {0x1.68f5c28f5c28fp0, 0x1.bae147ae147aep0, 0x1.51eb851eb851fp0, 0x1.9eb851eb851ecp0};
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
@@ -270,7 +254,7 @@ void void_std____detail____return_temporary_buffer_double_(double* p0, unsigned 
 
 // function: _Z15compare_as_intsdd
 _Bool compare_as_ints(double v0, double v1) {
-bb2:
+bb2: ;
   double i3;
   double j4;
   _Bool __retval5;
@@ -288,7 +272,7 @@ bb2:
 
 // function: _ZNSt6vectorIdSaIdEEC2Ev
 void std__vector_double__std__allocator_double_____vector(struct std__vector_double__std__allocator_double__* v12) {
-bb13:
+bb13: ;
   struct std__vector_double__std__allocator_double__* this14;
   this14 = v12;
   struct std__vector_double__std__allocator_double__* t15 = this14;
@@ -299,7 +283,7 @@ bb13:
 
 // function: _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEC2Ev
 void __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________normal_iterator_2(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v17) {
-bb18:
+bb18: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this19;
   this19 = v17;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* t20 = this19;
@@ -310,7 +294,7 @@ bb18:
 
 // function: _ZNKSt6vectorIdSaIdEE4sizeEv
 unsigned long std__vector_double__std__allocator_double_____size___const(struct std__vector_double__std__allocator_double__* v22) {
-bb23:
+bb23: ;
   struct std__vector_double__std__allocator_double__* this24;
   unsigned long __retval25;
   long __dif26;
@@ -339,7 +323,7 @@ bb23:
 
 // function: _ZSt10__distanceIPdENSt15iterator_traitsIT_E15difference_typeES2_S2_St26random_access_iterator_tag
 long std__iterator_traits_double____difference_type_std____distance_double__(double* v41, double* v42, struct std__random_access_iterator_tag v43) {
-bb44:
+bb44: ;
   double* __first45;
   double* __last46;
   struct std__random_access_iterator_tag unnamed47;
@@ -357,7 +341,7 @@ bb44:
 
 // function: _ZSt8distanceIPdENSt15iterator_traitsIT_E15difference_typeES2_S2_
 long std__iterator_traits_double____difference_type_std__distance_double__(double* v53, double* v54) {
-bb55:
+bb55: ;
   double* __first56;
   double* __last57;
   long __retval58;
@@ -377,7 +361,7 @@ bb55:
 
 // function: _ZNKSt6vectorIdSaIdEE8capacityEv
 unsigned long std__vector_double__std__allocator_double_____capacity___const(struct std__vector_double__std__allocator_double__* v66) {
-bb67:
+bb67: ;
   struct std__vector_double__std__allocator_double__* this68;
   unsigned long __retval69;
   long __dif70;
@@ -406,7 +390,7 @@ bb67:
 
 // function: _ZSt3minImERKT_S2_S2_
 unsigned long* unsigned_long_const__std__min_unsigned_long_(unsigned long* v85, unsigned long* v86) {
-bb87:
+bb87: ;
   unsigned long* __a88;
   unsigned long* __b89;
   unsigned long* __retval90;
@@ -431,7 +415,7 @@ bb87:
 
 // function: _ZNSt6vectorIdSaIdEE11_S_max_sizeERKS0_
 unsigned long std__vector_double__std__allocator_double______S_max_size(struct std__allocator_double_* v100) {
-bb101:
+bb101: ;
   struct std__allocator_double_* __a102;
   unsigned long __retval103;
   unsigned long __diffmax104;
@@ -450,7 +434,7 @@ bb101:
 
 // function: _ZNSaIdEC2ERKS_
 void std__allocator_double___allocator(struct std__allocator_double_* v111, struct std__allocator_double_* v112) {
-bb113:
+bb113: ;
   struct std__allocator_double_* this114;
   struct std__allocator_double_* __a115;
   this114 = v111;
@@ -465,7 +449,7 @@ bb113:
 
 // function: _ZNSaIdED2Ev
 void std__allocator_double____allocator(struct std__allocator_double_* v120) {
-bb121:
+bb121: ;
   struct std__allocator_double_* this122;
   this122 = v120;
   struct std__allocator_double_* t123 = this122;
@@ -474,7 +458,7 @@ bb121:
 
 // function: _ZNSt6vectorIdSaIdEE17_S_check_init_lenEmRKS0_
 unsigned long std__vector_double__std__allocator_double______S_check_init_len(unsigned long v124, struct std__allocator_double_* v125) {
-bb126:
+bb126: ;
   unsigned long __n127;
   struct std__allocator_double_* __a128;
   unsigned long __retval129;
@@ -504,7 +488,7 @@ bb126:
 
 // function: _ZNSt12_Vector_baseIdSaIdEE19_M_get_Tp_allocatorEv
 struct std__allocator_double_* std___Vector_base_double__std__allocator_double______M_get_Tp_allocator(struct std___Vector_base_double__std__allocator_double__* v140) {
-bb141:
+bb141: ;
   struct std___Vector_base_double__std__allocator_double__* this142;
   struct std__allocator_double_* __retval143;
   this142 = v140;
@@ -517,7 +501,7 @@ bb141:
 
 // function: _ZNKSt15__new_allocatorIdE11_M_max_sizeEv
 unsigned long std____new_allocator_double____M_max_size___const(struct std____new_allocator_double_* v147) {
-bb148:
+bb148: ;
   struct std____new_allocator_double_* this149;
   unsigned long __retval150;
   this149 = v147;
@@ -532,7 +516,7 @@ bb148:
 
 // function: _ZNSt15__new_allocatorIdE8allocateEmPKv
 double* std____new_allocator_double___allocate(struct std____new_allocator_double_* v156, unsigned long v157, void* v158) {
-bb159:
+bb159: ;
   struct std____new_allocator_double_* this160;
   unsigned long __n161;
   void* unnamed162;
@@ -584,7 +568,7 @@ bb159:
 
 // function: _ZNSaIdE8allocateEm
 double* std__allocator_double___allocate(struct std__allocator_double_* v191, unsigned long v192) {
-bb193:
+bb193: ;
   struct std__allocator_double_* this194;
   unsigned long __n195;
   double* __retval196;
@@ -619,7 +603,7 @@ bb193:
 
 // function: _ZNSt16allocator_traitsISaIdEE8allocateERS0_m
 double* std__allocator_traits_std__allocator_double_____allocate(struct std__allocator_double_* v212, unsigned long v213) {
-bb214:
+bb214: ;
   struct std__allocator_double_* __a215;
   unsigned long __n216;
   double* __retval217;
@@ -635,7 +619,7 @@ bb214:
 
 // function: _ZNSt12_Vector_baseIdSaIdEE11_M_allocateEm
 double* std___Vector_base_double__std__allocator_double______M_allocate(struct std___Vector_base_double__std__allocator_double__* v222, unsigned long v223) {
-bb224:
+bb224: ;
   struct std___Vector_base_double__std__allocator_double__* this225;
   unsigned long __n226;
   double* __retval227;
@@ -662,7 +646,7 @@ bb224:
 
 // function: _ZNSt6vectorIdSaIdEE12_Guard_allocC2EPdmRSt12_Vector_baseIdS0_E
 void std__vector_double__std__allocator_double______Guard_alloc___Guard_alloc(struct std__vector_double__std__allocator_double_____Guard_alloc* v238, double* v239, unsigned long v240, struct std___Vector_base_double__std__allocator_double__* v241) {
-bb242:
+bb242: ;
   struct std__vector_double__std__allocator_double_____Guard_alloc* this243;
   double* __s244;
   unsigned long __l245;
@@ -683,7 +667,7 @@ bb242:
 
 // function: _ZNSt6vectorIdSaIdEE12_Guard_alloc10_M_releaseEv
 double* std__vector_double__std__allocator_double______Guard_alloc___M_release(struct std__vector_double__std__allocator_double_____Guard_alloc* v251) {
-bb252:
+bb252: ;
   struct std__vector_double__std__allocator_double_____Guard_alloc* this253;
   double* __retval254;
   double* __res255;
@@ -701,7 +685,7 @@ bb252:
 
 // function: _ZNSt6vectorIdSaIdEE12_Guard_allocD2Ev
 void std__vector_double__std__allocator_double______Guard_alloc____Guard_alloc(struct std__vector_double__std__allocator_double_____Guard_alloc* v261) {
-bb262:
+bb262: ;
   struct std__vector_double__std__allocator_double_____Guard_alloc* this263;
   this263 = v261;
   struct std__vector_double__std__allocator_double_____Guard_alloc* t264 = this263;
@@ -718,7 +702,7 @@ bb262:
 
 // function: _ZNSt6vectorIdSaIdEE20_M_allocate_and_copyIPdEES3_mT_S4_
 double* double__std__vector_double__std__allocator_double______M_allocate_and_copy_double__(struct std__vector_double__std__allocator_double__* v270, unsigned long v271, double* v272, double* v273) {
-bb274:
+bb274: ;
   struct std__vector_double__std__allocator_double__* this275;
   unsigned long __n276;
   double* __first277;
@@ -755,7 +739,7 @@ bb274:
 
 // function: _ZSt10destroy_atIdEvPT_
 void void_std__destroy_at_double_(double* v296) {
-bb297:
+bb297: ;
   double* __location298;
   __location298 = v296;
   return;
@@ -763,7 +747,7 @@ bb297:
 
 // function: _ZSt8_DestroyIPdEvT_S1_
 void void_std___Destroy_double__(double* v299, double* v300) {
-bb301:
+bb301: ;
   double* __first302;
   double* __last303;
   __first302 = v299;
@@ -789,7 +773,7 @@ bb301:
 
 // function: _ZSt8_DestroyIPddEvT_S1_RSaIT0_E
 void void_std___Destroy_double___double_(double* v313, double* v314, struct std__allocator_double_* v315) {
-bb316:
+bb316: ;
   double* __first317;
   double* __last318;
   struct std__allocator_double_* unnamed319;
@@ -804,7 +788,7 @@ bb316:
 
 // function: _ZNSt6vectorIdSaIdEE15_M_erase_at_endEPd
 void std__vector_double__std__allocator_double______M_erase_at_end(struct std__vector_double__std__allocator_double__* v322, double* v323) {
-bb324:
+bb324: ;
   struct std__vector_double__std__allocator_double__* this325;
   double* __pos326;
   this325 = v322;
@@ -838,7 +822,7 @@ bb324:
 
 // function: _ZSt12__niter_wrapIPdET_RKS1_S1_
 double* double__std____niter_wrap_double__(double** v346, double* v347) {
-bb348:
+bb348: ;
   double** unnamed349;
   double* __res350;
   double* __retval351;
@@ -852,7 +836,7 @@ bb348:
 
 // function: _ZSt12__assign_oneILb0EPdS0_EvRT0_RT1_
 void void_std____assign_one_false__double___double__(double** v354, double** v355) {
-bb356:
+bb356: ;
   double** __out357;
   double** __in358;
   __out357 = v354;
@@ -868,7 +852,7 @@ bb356:
 
 // function: _ZSt14__copy_move_a2ILb0EPdS0_S0_ET2_T0_T1_S1_
 double* double__std____copy_move_a2_false__double___double___double__(double* v364, double* v365, double* v366) {
-bb367:
+bb367: ;
   double* __first368;
   double* __last369;
   double* __result370;
@@ -942,7 +926,7 @@ bb367:
 
 // function: _ZSt14__copy_move_a1ILb0EPdS0_ET1_T0_S2_S1_
 double* double__std____copy_move_a1_false__double___double__(double* v412, double* v413, double* v414) {
-bb415:
+bb415: ;
   double* __first416;
   double* __last417;
   double* __result418;
@@ -961,7 +945,7 @@ bb415:
 
 // function: _ZSt12__niter_baseIPdET_S1_
 double* double__std____niter_base_double__(double* v425) {
-bb426:
+bb426: ;
   double* __it427;
   double* __retval428;
   __it427 = v425;
@@ -973,7 +957,7 @@ bb426:
 
 // function: _ZSt13__copy_move_aILb0EPdS0_ET1_T0_S2_S1_
 double* double__std____copy_move_a_false__double___double__(double* v431, double* v432, double* v433) {
-bb434:
+bb434: ;
   double* __first435;
   double* __last436;
   double* __result437;
@@ -996,7 +980,7 @@ bb434:
 
 // function: _ZSt12__miter_baseIPdET_S1_
 double* double__std____miter_base_double__(double* v448) {
-bb449:
+bb449: ;
   double* __it450;
   double* __retval451;
   __it450 = v448;
@@ -1008,7 +992,7 @@ bb449:
 
 // function: _ZSt4copyIPdS0_ET0_T_S2_S1_
 double* double__std__copy_double___double__(double* v454, double* v455, double* v456) {
-bb457:
+bb457: ;
   double* __first458;
   double* __last459;
   double* __result460;
@@ -1029,7 +1013,7 @@ bb457:
 
 // function: _ZSt9__advanceIPdlEvRT_T0_St26random_access_iterator_tag
 void void_std____advance_double___long_(double** v469, long v470, struct std__random_access_iterator_tag v471) {
-bb472:
+bb472: ;
   double** __i473;
   long __n474;
   struct std__random_access_iterator_tag unnamed475;
@@ -1086,7 +1070,7 @@ bb472:
 
 // function: _ZSt7advanceIPdmEvRT_T0_
 void void_std__advance_double___unsigned_long_(double** v502, unsigned long v503) {
-bb504:
+bb504: ;
   double** __i505;
   unsigned long __n506;
   long __d507;
@@ -1108,7 +1092,7 @@ bb504:
 
 // function: _ZSt21is_constant_evaluatedv
 _Bool std__is_constant_evaluated() {
-bb516:
+bb516: ;
   _Bool __retval517;
     _Bool c518 = 0;
     __retval517 = c518;
@@ -1119,7 +1103,7 @@ bb516:
 
 // function: _ZNSt19_UninitDestroyGuardIPdvEC2ERS0_
 void std___UninitDestroyGuard_double___void____UninitDestroyGuard(struct std___UninitDestroyGuard_double____void_* v520, double** v521) {
-bb522:
+bb522: ;
   struct std___UninitDestroyGuard_double____void_* this523;
   double** __first524;
   this523 = v520;
@@ -1135,7 +1119,7 @@ bb522:
 
 // function: _ZSt12construct_atIdJRdEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_
 double* _ZSt12construct_atIdJRdEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S1_pispclsr3stdE7declvalIT0_EEEEEPS1_S4_DpOS3_(double* v529, double* v530) {
-bb531:
+bb531: ;
   double* __location532;
   double* __args533;
   double* __retval534;
@@ -1158,7 +1142,7 @@ bb531:
 
 // function: _ZSt10_ConstructIdJRdEEvPT_DpOT0_
 void void_std___Construct_double__double__(double* v543, double* v544) {
-bb545:
+bb545: ;
   double* __p546;
   double* __args547;
   __p546 = v543;
@@ -1181,7 +1165,7 @@ bb545:
 
 // function: _ZNSt19_UninitDestroyGuardIPdvE7releaseEv
 void std___UninitDestroyGuard_double___void___release(struct std___UninitDestroyGuard_double____void_* v557) {
-bb558:
+bb558: ;
   struct std___UninitDestroyGuard_double____void_* this559;
   this559 = v557;
   struct std___UninitDestroyGuard_double____void_* t560 = this559;
@@ -1192,7 +1176,7 @@ bb558:
 
 // function: _ZNSt19_UninitDestroyGuardIPdvED2Ev
 void std___UninitDestroyGuard_double___void_____UninitDestroyGuard(struct std___UninitDestroyGuard_double____void_* v562) {
-bb563:
+bb563: ;
   struct std___UninitDestroyGuard_double____void_* this564;
   this564 = v562;
   struct std___UninitDestroyGuard_double____void_* t565 = this564;
@@ -1210,7 +1194,7 @@ bb563:
 
 // function: _ZSt16__do_uninit_copyIPdS0_S0_ET1_T_T0_S1_
 double* double__std____do_uninit_copy_double___double___double__(double* v572, double* v573, double* v574) {
-bb575:
+bb575: ;
   double* __first576;
   double* __last577;
   double* __result578;
@@ -1252,7 +1236,7 @@ bb575:
 
 // function: _ZSt18uninitialized_copyIPdS0_ET0_T_S2_S1_
 double* double__std__uninitialized_copy_double___double__(double* v596, double* v597, double* v598) {
-bb599:
+bb599: ;
   double* __first600;
   double* __last601;
   double* __result602;
@@ -1294,7 +1278,7 @@ bb599:
 
 // function: _ZSt22__uninitialized_copy_aIPdS0_S0_dET1_T_T0_S1_RSaIT2_E
 double* double__std____uninitialized_copy_a_double___double___double___double_(double* v627, double* v628, double* v629, struct std__allocator_double_* v630) {
-bb631:
+bb631: ;
   double* __first632;
   double* __last633;
   double* __result634;
@@ -1326,7 +1310,7 @@ bb631:
 
 // function: _ZNSt6vectorIdSaIdEE13_M_assign_auxIPdEEvT_S4_St20forward_iterator_tag
 void void_std__vector_double__std__allocator_double______M_assign_aux_double__(struct std__vector_double__std__allocator_double__* v648, double* v649, double* v650, struct std__forward_iterator_tag v651) {
-bb652:
+bb652: ;
   struct std__vector_double__std__allocator_double__* this653;
   double* __first654;
   double* __last655;
@@ -1452,7 +1436,7 @@ bb652:
 
 // function: _ZSt19__iterator_categoryIPdENSt15iterator_traitsIT_E17iterator_categoryERKS2_
 struct std__random_access_iterator_tag std__iterator_traits_double____iterator_category_std____iterator_category_double__(double** v747) {
-bb748:
+bb748: ;
   double** unnamed749;
   struct std__random_access_iterator_tag __retval750;
   unnamed749 = v747;
@@ -1462,7 +1446,7 @@ bb748:
 
 // function: _ZNSt6vectorIdSaIdEE6assignIPdvEEvT_S4_
 void void_std__vector_double__std__allocator_double_____assign_double___void_(struct std__vector_double__std__allocator_double__* v752, double* v753, double* v754) {
-bb755:
+bb755: ;
   struct std__vector_double__std__allocator_double__* this756;
   double* __first757;
   double* __last758;
@@ -1484,7 +1468,7 @@ bb755:
 
 // function: _ZStorSt12_Ios_IostateS_
 int std__operator_(int v767, int v768) {
-bb769:
+bb769: ;
   int __a770;
   int __b771;
   int __retval772;
@@ -1500,7 +1484,7 @@ bb769:
 
 // function: _ZNKSt9basic_iosIcSt11char_traitsIcEE7rdstateEv
 int std__basic_ios_char__std__char_traits_char_____rdstate___const(struct std__basic_ios_char__std__char_traits_char__* v777) {
-bb778:
+bb778: ;
   struct std__basic_ios_char__std__char_traits_char__* this779;
   int __retval780;
   this779 = v777;
@@ -1514,7 +1498,7 @@ bb778:
 
 // function: _ZNSt9basic_iosIcSt11char_traitsIcEE8setstateESt12_Ios_Iostate
 void std__basic_ios_char__std__char_traits_char_____setstate(struct std__basic_ios_char__std__char_traits_char__* v785, int v786) {
-bb787:
+bb787: ;
   struct std__basic_ios_char__std__char_traits_char__* this788;
   int __state789;
   this788 = v785;
@@ -1529,7 +1513,7 @@ bb787:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE2eqERKcS3_
 _Bool __gnu_cxx__char_traits_char___eq(char* v794, char* v795) {
-bb796:
+bb796: ;
   char* __c1797;
   char* __c2798;
   _Bool __retval799;
@@ -1549,7 +1533,7 @@ bb796:
 
 // function: _ZN9__gnu_cxx11char_traitsIcE6lengthEPKc
 unsigned long __gnu_cxx__char_traits_char___length(char* v808) {
-bb809:
+bb809: ;
   char* __p810;
   unsigned long __retval811;
   unsigned long __i812;
@@ -1578,7 +1562,7 @@ bb809:
 
 // function: _ZNSt11char_traitsIcE6lengthEPKc
 unsigned long std__char_traits_char___length(char* v825) {
-bb826:
+bb826: ;
   char* __s827;
   unsigned long __retval828;
   __s827 = v825;
@@ -1599,7 +1583,7 @@ bb826:
 
 // function: _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v836, char* v837) {
-bb838:
+bb838: ;
   struct std__basic_ostream_char__std__char_traits_char__* __out839;
   char* __s840;
   struct std__basic_ostream_char__std__char_traits_char__* __retval841;
@@ -1639,7 +1623,7 @@ bb838:
 
 // function: _ZNK9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEE4baseEv
 double** __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______base___const(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v866) {
-bb867:
+bb867: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this868;
   double** __retval869;
   this868 = v866;
@@ -1651,7 +1635,7 @@ bb867:
 
 // function: _ZN9__gnu_cxxeqIPdSt6vectorIdSaIdEEEEbRKNS_17__normal_iteratorIT_T0_EESA_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE
 _Bool _ZN9__gnu_cxxeqIPdSt6vectorIdSaIdEEEEbRKNS_17__normal_iteratorIT_T0_EESA_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v872, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v873) {
-bb874:
+bb874: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __lhs875;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __rhs876;
   _Bool __retval877;
@@ -1671,7 +1655,7 @@ bb874:
 
 // function: _ZN9__gnu_cxxmiIPdSt6vectorIdSaIdEEEENS_17__normal_iteratorIT_T0_E15difference_typeERKS8_SB_
 long __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______difference_type___gnu_cxx__operator__double___std__vector_double__std__allocator_double_____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v886, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v887) {
-bb888:
+bb888: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __lhs889;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __rhs890;
   long __retval891;
@@ -1691,7 +1675,7 @@ bb888:
 
 // function: _ZNSt17_Temporary_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdEC2ES6_l
 void std___Temporary_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double____Temporary_buffer(struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* v900, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v901, long v902) {
-bb903:
+bb903: ;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* this904;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __seed905;
   long __original_len906;
@@ -1714,7 +1698,7 @@ bb903:
 
 // function: _ZNKSt17_Temporary_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdE14requested_sizeEv
 long std___Temporary_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___requested_size___const(struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* v914) {
-bb915:
+bb915: ;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* this916;
   long __retval917;
   this916 = v914;
@@ -1727,7 +1711,7 @@ bb915:
 
 // function: _ZNKSt17_Temporary_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdE4sizeEv
 long std___Temporary_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___size___const(struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* v921) {
-bb922:
+bb922: ;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* this923;
   long __retval924;
   this923 = v921;
@@ -1740,7 +1724,7 @@ bb922:
 
 // function: _ZN9__gnu_cxx5__ops15_Iter_comp_iterIPFbddEEclINS_17__normal_iteratorIPdSt6vectorIdSaIdEEEESB_EEbT_T0_
 _Bool bool___gnu_cxx____ops___Iter_comp_iter_bool_____double__double____operator_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* v928, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v929, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v930) {
-bb931:
+bb931: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* this932;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it1933;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it2934;
@@ -1762,7 +1746,7 @@ bb931:
 
 // function: _ZNK9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEdeEv
 double* __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______operator____const(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v944) {
-bb945:
+bb945: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this946;
   double* __retval947;
   this946 = v944;
@@ -1775,7 +1759,7 @@ bb945:
 
 // function: _ZSt12__niter_wrapIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_ET_S7_T0_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____niter_wrap___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double__(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v951, double* v952) {
-bb953:
+bb953: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __from954;
   double* __res955;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __retval956;
@@ -1796,7 +1780,7 @@ bb953:
 
 // function: _ZSt7advanceIPdlEvRT_T0_
 void void_std__advance_double___long_(double** v965, long v966) {
-bb967:
+bb967: ;
   double** __i968;
   long __n969;
   long __d970;
@@ -1817,7 +1801,7 @@ bb967:
 
 // function: _ZSt12__assign_oneILb1EPdS0_EvRT0_RT1_
 void void_std____assign_one_true__double___double__(double** v978, double** v979) {
-bb980:
+bb980: ;
   double** __out981;
   double** __in982;
   __out981 = v978;
@@ -1833,7 +1817,7 @@ bb980:
 
 // function: _ZSt23__copy_move_backward_a2ILb1EPdS0_ET1_T0_S2_S1_
 double* double__std____copy_move_backward_a2_true__double___double__(double* v988, double* v989, double* v990) {
-bb991:
+bb991: ;
   double* __first992;
   double* __last993;
   double* __result994;
@@ -1901,7 +1885,7 @@ bb991:
 
 // function: _ZSt23__copy_move_backward_a1ILb1EPdS0_ET1_T0_S2_S1_
 double* double__std____copy_move_backward_a1_true__double___double__(double* v1031, double* v1032, double* v1033) {
-bb1034:
+bb1034: ;
   double* __first1035;
   double* __last1036;
   double* __result1037;
@@ -1920,7 +1904,7 @@ bb1034:
 
 // function: _ZSt12__niter_baseIPdSt6vectorIdSaIdEEET_N9__gnu_cxx17__normal_iteratorIS4_T0_EE
 double* double__std____niter_base_double___std__vector_double__std__allocator_double_____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1044) {
-bb1045:
+bb1045: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it1046;
   double* __retval1047;
   __it1046 = v1044;
@@ -1933,7 +1917,7 @@ bb1045:
 
 // function: _ZSt22__copy_move_backward_aILb1EN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES6_ET1_T0_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____copy_move_backward_a_true____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1051, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1052, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1053) {
-bb1054:
+bb1054: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1055;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1056;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result1057;
@@ -1965,7 +1949,7 @@ bb1054:
 
 // function: _ZSt12__miter_baseIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEET_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____miter_base___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1073) {
-bb1074:
+bb1074: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it1075;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __retval1076;
   __it1075 = v1073;
@@ -1976,7 +1960,7 @@ bb1074:
 
 // function: _ZSt13move_backwardIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES6_ET0_T_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std__move_backward___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1078, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1079, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1080) {
-bb1081:
+bb1081: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1082;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1083;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result1084;
@@ -2009,7 +1993,7 @@ bb1081:
 
 // function: _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEmmEv
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______operator__(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1100) {
-bb1101:
+bb1101: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this1102;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __retval1103;
   this1102 = v1100;
@@ -2025,7 +2009,7 @@ bb1101:
 
 // function: _ZN9__gnu_cxx5__ops14_Val_comp_iterIPFbddEEclIdNS_17__normal_iteratorIPdSt6vectorIdSaIdEEEEEEbRT_T0_
 _Bool bool___gnu_cxx____ops___Val_comp_iter_bool_____double__double____operator___double____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__* v1109, double* v1110, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1111) {
-bb1112:
+bb1112: ;
   struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__* this1113;
   double* __val1114;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it1115;
@@ -2047,7 +2031,7 @@ bb1112:
 
 // function: _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEaSERKS5_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______operator__2(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1125, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1126) {
-bb1127:
+bb1127: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this1128;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* unnamed1129;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __retval1130;
@@ -2064,7 +2048,7 @@ bb1127:
 
 // function: _ZSt25__unguarded_linear_insertIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEENS0_5__ops14_Val_comp_iterIPFbddEEEEvT_T0_
 void void_std____unguarded_linear_insert___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Val_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Val_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1135, struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__ v1136) {
-bb1137:
+bb1137: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1138;
   struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__ __comp1139;
   double __val1140;
@@ -2097,7 +2081,7 @@ bb1137:
 
 // function: _ZN9__gnu_cxx5__ops14_Val_comp_iterIPFbddEEC2EONS0_15_Iter_comp_iterIS3_EE
 void __gnu_cxx____ops___Val_comp_iter_bool_____double__double_____Val_comp_iter___gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__* v1155, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* v1156) {
-bb1157:
+bb1157: ;
   struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__* this1158;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* __comp1159;
   this1158 = v1155;
@@ -2111,7 +2095,7 @@ bb1157:
 
 // function: _ZN9__gnu_cxx5__ops15__val_comp_iterIPFbddEEENS0_14_Val_comp_iterIT_EENS0_15_Iter_comp_iterIS5_EE
 struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__ __gnu_cxx____ops___Val_comp_iter_bool_____double__double_____gnu_cxx____ops____val_comp_iter_bool_____double__double_____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1163) {
-bb1164:
+bb1164: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ __comp1165;
   struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__ __retval1166;
   __comp1165 = v1163;
@@ -2122,7 +2106,7 @@ bb1164:
 
 // function: _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEppEv
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______operator___3(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1168) {
-bb1169:
+bb1169: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this1170;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __retval1171;
   this1170 = v1168;
@@ -2138,7 +2122,7 @@ bb1169:
 
 // function: _ZSt16__insertion_sortIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEENS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_
 void void_std____insertion_sort___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1177, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1178, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1179) {
-bb1180:
+bb1180: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1181;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1182;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ __comp1183;
@@ -2207,7 +2191,7 @@ bb1180:
 
 // function: _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEpLEl
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______operator___2(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1219, long v1220) {
-bb1221:
+bb1221: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this1222;
   long __n1223;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __retval1224;
@@ -2225,7 +2209,7 @@ bb1221:
 
 // function: _ZSt22__chunk_insertion_sortIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEElNS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_T1_
 void void_std____chunk_insertion_sort___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1230, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1231, long v1232, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1233) {
-bb1234:
+bb1234: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1235;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1236;
   long __chunk_size1237;
@@ -2269,7 +2253,7 @@ bb1234:
 
 // function: _ZSt14__copy_move_a2ILb1EPdS0_S0_ET2_T0_T1_S1_
 double* double__std____copy_move_a2_true__double___double___double__(double* v1258, double* v1259, double* v1260) {
-bb1261:
+bb1261: ;
   double* __first1262;
   double* __last1263;
   double* __result1264;
@@ -2343,7 +2327,7 @@ bb1261:
 
 // function: _ZSt14__copy_move_a1ILb1EPdS0_ET1_T0_S2_S1_
 double* double__std____copy_move_a1_true__double___double__(double* v1306, double* v1307, double* v1308) {
-bb1309:
+bb1309: ;
   double* __first1310;
   double* __last1311;
   double* __result1312;
@@ -2362,7 +2346,7 @@ bb1309:
 
 // function: _ZSt13__copy_move_aILb1EN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_ET1_T0_S8_S7_
 double* double__std____copy_move_a_true____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double__(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1319, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1320, double* v1321) {
-bb1322:
+bb1322: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1323;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1324;
   double* __result1325;
@@ -2389,7 +2373,7 @@ bb1322:
 
 // function: _ZSt4moveIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_ET0_T_S8_S7_
 double* double__std__move___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double__(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1338, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1339, double* v1340) {
-bb1341:
+bb1341: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1342;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1343;
   double* __result1344;
@@ -2420,7 +2404,7 @@ bb1341:
 
 // function: _ZSt12__move_mergeIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_NS0_5__ops15_Iter_comp_iterIPFbddEEEET0_T_SD_SD_SD_SC_T1_
 double* double__std____move_merge___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1359, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1360, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1361, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1362, double* v1363, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1364) {
-bb1365:
+bb1365: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first11366;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last11367;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first21368;
@@ -2494,7 +2478,7 @@ bb1365:
 
 // function: _ZSt3minIlERKT_S2_S2_
 long* long_const__std__min_long_(long* v1407, long* v1408) {
-bb1409:
+bb1409: ;
   long* __a1410;
   long* __b1411;
   long* __retval1412;
@@ -2519,7 +2503,7 @@ bb1409:
 
 // function: _ZSt17__merge_sort_loopIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_lNS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_T1_T2_
 void void_std____merge_sort_loop___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___long____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___long____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1422, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1423, double* v1424, long v1425, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1426) {
-bb1427:
+bb1427: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1428;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1429;
   double* __result1430;
@@ -2599,7 +2583,7 @@ bb1427:
 
 // function: _ZN9__gnu_cxx5__ops15_Iter_comp_iterIPFbddEEclIPdS6_EEbT_T0_
 _Bool bool___gnu_cxx____ops___Iter_comp_iter_bool_____double__double____operator___double___double__(struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* v1480, double* v1481, double* v1482) {
-bb1483:
+bb1483: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* this1484;
   double* __it11485;
   double* __it21486;
@@ -2621,7 +2605,7 @@ bb1483:
 
 // function: _ZSt13__copy_move_aILb1EPdN9__gnu_cxx17__normal_iteratorIS0_St6vectorIdSaIdEEEEET1_T0_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____copy_move_a_true__double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(double* v1496, double* v1497, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1498) {
-bb1499:
+bb1499: ;
   double* __first1500;
   double* __last1501;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result1502;
@@ -2649,7 +2633,7 @@ bb1499:
 
 // function: _ZSt4moveIPdN9__gnu_cxx17__normal_iteratorIS0_St6vectorIdSaIdEEEEET0_T_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std__move_double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(double* v1516, double* v1517, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1518) {
-bb1519:
+bb1519: ;
   double* __first1520;
   double* __last1521;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result1522;
@@ -2672,7 +2656,7 @@ bb1519:
 
 // function: _ZSt12__move_mergeIPdN9__gnu_cxx17__normal_iteratorIS0_St6vectorIdSaIdEEEENS1_5__ops15_Iter_comp_iterIPFbddEEEET0_T_SD_SD_SD_SC_T1_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____move_merge_double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool_____double__double_____double___double___double___double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool____(double* v1532, double* v1533, double* v1534, double* v1535, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1536, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1537) {
-bb1538:
+bb1538: ;
   double* __first11539;
   double* __last11540;
   double* __first21541;
@@ -2744,7 +2728,7 @@ bb1538:
 
 // function: _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEaSEOS5_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______operator_(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1581, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1582) {
-bb1583:
+bb1583: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this1584;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* unnamed1585;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __retval1586;
@@ -2761,7 +2745,7 @@ bb1583:
 
 // function: _ZSt17__merge_sort_loopIPdN9__gnu_cxx17__normal_iteratorIS0_St6vectorIdSaIdEEEElNS1_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_T1_T2_
 void void_std____merge_sort_loop_double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_____double___double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long____gnu_cxx____ops___Iter_comp_iter_bool____(double* v1591, double* v1592, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1593, long v1594, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1595) {
-bb1596:
+bb1596: ;
   double* __first1597;
   double* __last1598;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result1599;
@@ -2839,7 +2823,7 @@ bb1596:
 
 // function: _ZSt24__merge_sort_with_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_NS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_T1_
 void void_std____merge_sort_with_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1651, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1652, double* v1653, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1654) {
-bb1655:
+bb1655: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1656;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1657;
   double* __buffer1658;
@@ -2911,7 +2895,7 @@ bb1655:
 
 // function: _ZN9__gnu_cxx5__ops15_Iter_comp_iterIPFbddEEclINS_17__normal_iteratorIPdSt6vectorIdSaIdEEEES7_EEbT_T0_
 _Bool bool___gnu_cxx____ops___Iter_comp_iter_bool_____double__double____operator_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double__(struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* v1699, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1700, double* v1701) {
-bb1702:
+bb1702: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* this1703;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it11704;
   double* __it21705;
@@ -2933,7 +2917,7 @@ bb1702:
 
 // function: _ZSt21__move_merge_adaptiveIPdN9__gnu_cxx17__normal_iteratorIS0_St6vectorIdSaIdEEEES6_NS1_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_SD_T1_T2_
 void void_std____move_merge_adaptive_double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool_____double__double_____double___double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool____(double* v1715, double* v1716, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1717, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1718, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1719, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1720) {
-bb1721:
+bb1721: ;
   double* __first11722;
   double* __last11723;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first21724;
@@ -3001,7 +2985,7 @@ bb1721:
 
 // function: _ZSt22__copy_move_backward_aILb1EPdN9__gnu_cxx17__normal_iteratorIS0_St6vectorIdSaIdEEEEET1_T0_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____copy_move_backward_a_true__double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(double* v1759, double* v1760, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1761) {
-bb1762:
+bb1762: ;
   double* __first1763;
   double* __last1764;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result1765;
@@ -3029,7 +3013,7 @@ bb1762:
 
 // function: _ZSt13move_backwardIPdN9__gnu_cxx17__normal_iteratorIS0_St6vectorIdSaIdEEEEET0_T_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std__move_backward_double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(double* v1779, double* v1780, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1781) {
-bb1782:
+bb1782: ;
   double* __first1783;
   double* __last1784;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result1785;
@@ -3052,7 +3036,7 @@ bb1782:
 
 // function: _ZN9__gnu_cxx5__ops15_Iter_comp_iterIPFbddEEclIPdNS_17__normal_iteratorIS6_St6vectorIdSaIdEEEEEEbT_T0_
 _Bool bool___gnu_cxx____ops___Iter_comp_iter_bool_____double__double____operator___double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* v1795, double* v1796, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1797) {
-bb1798:
+bb1798: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* this1799;
   double* __it11800;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it21801;
@@ -3074,7 +3058,7 @@ bb1798:
 
 // function: _ZSt30__move_merge_adaptive_backwardIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_S6_NS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_SD_T1_T2_
 void void_std____move_merge_adaptive_backward___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1811, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1812, double* v1813, double* v1814, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1815, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1816) {
-bb1817:
+bb1817: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first11818;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last11819;
   double* __first21820;
@@ -3164,7 +3148,7 @@ bb1817:
 
 // function: _ZSt16__merge_adaptiveIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEElS2_NS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_SC_T0_SD_T1_T2_
 void void_std____merge_adaptive___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long__double_____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long__long__double_____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1867, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1868, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1869, long v1870, long v1871, double* v1872, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1873) {
-bb1874:
+bb1874: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1875;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __middle1876;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1877;
@@ -3240,7 +3224,7 @@ bb1874:
 
 // function: _ZSt22__stable_sort_adaptiveIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_NS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_SC_T0_T1_
 void void_std____stable_sort_adaptive___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1919, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1920, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1921, double* v1922, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v1923) {
-bb1924:
+bb1924: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first1925;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __middle1926;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last1927;
@@ -3294,7 +3278,7 @@ bb1924:
 
 // function: _ZNK9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEplEl
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______operator__long__const_2(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1955, long v1956) {
-bb1957:
+bb1957: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this1958;
   long __n1959;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __retval1960;
@@ -3313,7 +3297,7 @@ bb1957:
 
 // function: _ZNSt17_Temporary_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdE5beginEv
 double* std___Temporary_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___begin(struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* v1967) {
-bb1968:
+bb1968: ;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* this1969;
   double* __retval1970;
   this1969 = v1967;
@@ -3326,7 +3310,7 @@ bb1968:
 
 // function: _ZSt4swapIdENSt9enable_ifIXsr6__and_ISt6__not_ISt15__is_tuple_likeIT_EESt21is_move_constructibleIS3_ESt18is_move_assignableIS3_EEE5valueEvE4typeERS3_SC_
 void std__enable_if___and__std____not__std____is_tuple_like_double_____std__is_move_constructible_double___std__is_move_assignable_double_____value__void___type_std__swap_double_(double* v1974, double* v1975) {
-bb1976:
+bb1976: ;
   double* __a1977;
   double* __b1978;
   double __tmp1979;
@@ -3347,7 +3331,7 @@ bb1976:
 
 // function: _ZSt9iter_swapIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES6_EvT_T0_
 void void_std__iter_swap___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1987, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v1988) {
-bb1989:
+bb1989: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __a1990;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __b1991;
   __a1990 = v1987;
@@ -3360,7 +3344,7 @@ bb1989:
 
 // function: _ZSt9__advanceIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEElEvRT_T0_St26random_access_iterator_tag
 void void_std____advance___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long_(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v1994, long v1995, struct std__random_access_iterator_tag v1996) {
-bb1997:
+bb1997: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __i1998;
   long __n1999;
   struct std__random_access_iterator_tag unnamed2000;
@@ -3409,7 +3393,7 @@ bb1997:
 
 // function: _ZSt19__iterator_categoryIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEENSt15iterator_traitsIT_E17iterator_categoryERKS8_
 struct std__random_access_iterator_tag std__iterator_traits___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________iterator_category_std____iterator_category___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v2022) {
-bb2023:
+bb2023: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* unnamed2024;
   struct std__random_access_iterator_tag __retval2025;
   unnamed2024 = v2022;
@@ -3419,7 +3403,7 @@ bb2023:
 
 // function: _ZSt7advanceIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEElEvRT_T0_
 void void_std__advance___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long_(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v2027, long v2028) {
-bb2029:
+bb2029: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* __i2030;
   long __n2031;
   long __d2032;
@@ -3440,7 +3424,7 @@ bb2029:
 
 // function: _ZN9__gnu_cxx5__ops14_Iter_comp_valIPFbddEEclINS_17__normal_iteratorIPdSt6vectorIdSaIdEEEEKdEEbT_RT0_
 _Bool bool___gnu_cxx____ops___Iter_comp_val_bool_____double__double____operator_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_const_(struct __gnu_cxx____ops___Iter_comp_val_bool_____double__double__* v2040, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2041, double* v2042) {
-bb2043:
+bb2043: ;
   struct __gnu_cxx____ops___Iter_comp_val_bool_____double__double__* this2044;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it2045;
   double* __val2046;
@@ -3462,7 +3446,7 @@ bb2043:
 
 // function: _ZSt13__lower_boundIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdNS0_5__ops14_Iter_comp_valIPFbddEEEET_SC_SC_RKT0_T1_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____lower_bound___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double____gnu_cxx____ops___Iter_comp_val_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_const_____gnu_cxx____ops___Iter_comp_val_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2056, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2057, double* v2058, struct __gnu_cxx____ops___Iter_comp_val_bool_____double__double__ v2059) {
-bb2060:
+bb2060: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2061;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2062;
   double* __val2063;
@@ -3521,7 +3505,7 @@ bb2060:
 
 // function: _ZN9__gnu_cxx5__ops14_Iter_comp_valIPFbddEEC2EONS0_15_Iter_comp_iterIS3_EE
 void __gnu_cxx____ops___Iter_comp_val_bool_____double__double_____Iter_comp_val___gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____ops___Iter_comp_val_bool_____double__double__* v2094, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* v2095) {
-bb2096:
+bb2096: ;
   struct __gnu_cxx____ops___Iter_comp_val_bool_____double__double__* this2097;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* __comp2098;
   this2097 = v2094;
@@ -3535,7 +3519,7 @@ bb2096:
 
 // function: _ZN9__gnu_cxx5__ops15__iter_comp_valIPFbddEEENS0_14_Iter_comp_valIT_EENS0_15_Iter_comp_iterIS5_EE
 struct __gnu_cxx____ops___Iter_comp_val_bool_____double__double__ __gnu_cxx____ops___Iter_comp_val_bool_____double__double_____gnu_cxx____ops____iter_comp_val_bool_____double__double_____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v2102) {
-bb2103:
+bb2103: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ __comp2104;
   struct __gnu_cxx____ops___Iter_comp_val_bool_____double__double__ __retval2105;
   __comp2104 = v2102;
@@ -3546,7 +3530,7 @@ bb2103:
 
 // function: _ZSt10__distanceIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEENSt15iterator_traitsIT_E15difference_typeES8_S8_St26random_access_iterator_tag
 long std__iterator_traits___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________difference_type_std____distance___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2107, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2108, struct std__random_access_iterator_tag v2109) {
-bb2110:
+bb2110: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2111;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2112;
   struct std__random_access_iterator_tag unnamed2113;
@@ -3562,7 +3546,7 @@ bb2110:
 
 // function: _ZSt8distanceIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEENSt15iterator_traitsIT_E15difference_typeES8_S8_
 long std__iterator_traits___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________difference_type_std__distance___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2117, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2118) {
-bb2119:
+bb2119: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2120;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2121;
   long __retval2122;
@@ -3586,7 +3570,7 @@ bb2119:
 
 // function: _ZN9__gnu_cxx5__ops14_Val_comp_iterIPFbddEEclIKdNS_17__normal_iteratorIPdSt6vectorIdSaIdEEEEEEbRT_T0_
 _Bool bool___gnu_cxx____ops___Val_comp_iter_bool_____double__double____operator___double_const____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__* v2132, double* v2133, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2134) {
-bb2135:
+bb2135: ;
   struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__* this2136;
   double* __val2137;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __it2138;
@@ -3608,7 +3592,7 @@ bb2135:
 
 // function: _ZSt13__upper_boundIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdNS0_5__ops14_Val_comp_iterIPFbddEEEET_SC_SC_RKT0_T1_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____upper_bound___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double____gnu_cxx____ops___Val_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_const_____gnu_cxx____ops___Val_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2148, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2149, double* v2150, struct __gnu_cxx____ops___Val_comp_iter_bool_____double__double__ v2151) {
-bb2152:
+bb2152: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2153;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2154;
   double* __val2155;
@@ -3667,7 +3651,7 @@ bb2152:
 
 // function: _ZSt11swap_rangesIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES6_ET0_T_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std__swap_ranges___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2186, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2187, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2188) {
-bb2189:
+bb2189: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first12190;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last12191;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first22192;
@@ -3697,7 +3681,7 @@ bb2189:
 
 // function: _ZSt13__copy_move_aILb1EN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES6_ET1_T0_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____copy_move_a_true____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2204, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2205, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2206) {
-bb2207:
+bb2207: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2208;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2209;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result2210;
@@ -3729,7 +3713,7 @@ bb2207:
 
 // function: _ZSt4moveIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES6_ET0_T_S8_S7_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std__move___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2226, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2227, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2228) {
-bb2229:
+bb2229: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2230;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2231;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __result2232;
@@ -3762,7 +3746,7 @@ bb2229:
 
 // function: _ZNK9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEmiEl
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______operator__long__const(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v2248, long v2249) {
-bb2250:
+bb2250: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this2251;
   long __n2252;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __retval2253;
@@ -3782,7 +3766,7 @@ bb2250:
 
 // function: _ZSt4swapIlENSt9enable_ifIXsr6__and_ISt6__not_ISt15__is_tuple_likeIT_EESt21is_move_constructibleIS3_ESt18is_move_assignableIS3_EEE5valueEvE4typeERS3_SC_
 void std__enable_if___and__std____not__std____is_tuple_like_long_____std__is_move_constructible_long___std__is_move_assignable_long_____value__void___type_std__swap_long_(long* v2261, long* v2262) {
-bb2263:
+bb2263: ;
   long* __a2264;
   long* __b2265;
   long __tmp2266;
@@ -3803,7 +3787,7 @@ bb2263:
 
 // function: _ZNSt3_V28__rotateIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEEET_S8_S8_S8_St26random_access_iterator_tag
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std___V2____rotate___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2274, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2275, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2276, struct std__random_access_iterator_tag v2277) {
-bb2278:
+bb2278: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2279;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __middle2280;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2281;
@@ -4076,7 +4060,7 @@ bb2278:
 
 // function: _ZNSt3_V26rotateIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEEET_S8_S8_S8_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std___V2__rotate___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2451, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2452, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2453) {
-bb2454:
+bb2454: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2455;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __middle2456;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2457;
@@ -4105,7 +4089,7 @@ bb2454:
 
 // function: _ZSt22__merge_without_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEElNS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_SC_T0_SD_T1_
 void void_std____merge_without_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long__long____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2470, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2471, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2472, long v2473, long v2474, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v2475) {
-bb2476:
+bb2476: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2477;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __middle2478;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2479;
@@ -4289,7 +4273,7 @@ bb2476:
 
 // function: _ZSt21__inplace_stable_sortIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEENS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_
 void void_std____inplace_stable_sort___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2590, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2591, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v2592) {
-bb2593:
+bb2593: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2594;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2595;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ __comp2596;
@@ -4358,7 +4342,7 @@ bb2593:
 
 // function: _ZSt17__rotate_adaptiveIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_lET_S7_S7_S7_T1_S8_T0_S8_
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double______std____rotate_adaptive___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___long_(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2633, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2634, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2635, long v2636, long v2637, double* v2638, long v2639) {
-bb2640:
+bb2640: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2641;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __middle2642;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2643;
@@ -4491,7 +4475,7 @@ bb2640:
 
 // function: _ZSt23__merge_adaptive_resizeIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEElS2_NS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_SC_T0_SD_T1_SD_T2_
 void void_std____merge_adaptive_resize___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long__double_____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______long__long__double___long____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2715, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2716, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2717, long v2718, long v2719, double* v2720, long v2721, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v2722) {
-bb2723:
+bb2723: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2724;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __middle2725;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2726;
@@ -4681,7 +4665,7 @@ bb2723:
 
 // function: _ZSt29__stable_sort_adaptive_resizeIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEES2_lNS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_T1_T2_
 void void_std____stable_sort_adaptive_resize___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___long____gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___long____gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2846, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2847, double* v2848, long v2849, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v2850) {
-bb2851:
+bb2851: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2852;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2853;
   double* __buffer2854;
@@ -4769,7 +4753,7 @@ bb2851:
 
 // function: _ZNSt17_Temporary_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdED2Ev
 void std___Temporary_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double_____Temporary_buffer(struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* v2906) {
-bb2907:
+bb2907: ;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* this2908;
   this2908 = v2906;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* t2909 = this2908;
@@ -4786,7 +4770,7 @@ bb2907:
 
 // function: _ZSt13__stable_sortIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEENS0_5__ops15_Iter_comp_iterIPFbddEEEEvT_SC_T0_
 void void_std____stable_sort___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool_____double__double_______gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2914, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2915, struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ v2916) {
-bb2917:
+bb2917: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2918;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2919;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ __comp2920;
@@ -4865,7 +4849,7 @@ bb2917:
 
 // function: _ZN9__gnu_cxx5__ops15_Iter_comp_iterIPFbddEEC2ES3_
 void __gnu_cxx____ops___Iter_comp_iter_bool_____double__double_____Iter_comp_iter_bool____(struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* v2961, void* v2962) {
-bb2963:
+bb2963: ;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__* this2964;
   void* __comp2965;
   this2964 = v2961;
@@ -4878,7 +4862,7 @@ bb2963:
 
 // function: _ZN9__gnu_cxx5__ops16__iter_comp_iterIPFbddEEENS0_15_Iter_comp_iterIT_EES5_
 struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ __gnu_cxx____ops___Iter_comp_iter_bool_____double__double_____gnu_cxx____ops____iter_comp_iter_bool_____double__double___bool____(void* v2968) {
-bb2969:
+bb2969: ;
   void* __comp2970;
   struct __gnu_cxx____ops___Iter_comp_iter_bool_____double__double__ __retval2971;
   __comp2970 = v2968;
@@ -4890,7 +4874,7 @@ bb2969:
 
 // function: _ZSt11stable_sortIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEPFbddEEvT_S9_T0_
 void void_std__stable_sort___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______bool_____double__double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______bool____(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2974, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v2975, void* v2976) {
-bb2977:
+bb2977: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __first2978;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __last2979;
   void* __comp2980;
@@ -4914,7 +4898,7 @@ bb2977:
 
 // function: _ZN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEC2ERKS1_
 void __gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_________normal_iterator(struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* v2989, double** v2990) {
-bb2991:
+bb2991: ;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___* this2992;
   double** __i2993;
   this2992 = v2989;
@@ -4928,7 +4912,7 @@ bb2991:
 
 // function: _ZNSt6vectorIdSaIdEE5beginEv
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ std__vector_double__std__allocator_double_____begin(struct std__vector_double__std__allocator_double__* v2997) {
-bb2998:
+bb2998: ;
   struct std__vector_double__std__allocator_double__* this2999;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __retval3000;
   this2999 = v2997;
@@ -4942,7 +4926,7 @@ bb2998:
 
 // function: _ZNSt6vectorIdSaIdEE3endEv
 struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ std__vector_double__std__allocator_double_____end(struct std__vector_double__std__allocator_double__* v3005) {
-bb3006:
+bb3006: ;
   struct std__vector_double__std__allocator_double__* this3007;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __retval3008;
   this3007 = v3005;
@@ -4956,7 +4940,7 @@ bb3006:
 
 // function: _ZNSt6vectorIdSaIdEEixEm
 double* std__vector_double__std__allocator_double_____operator__(struct std__vector_double__std__allocator_double__* v3013, unsigned long v3014) {
-bb3015:
+bb3015: ;
   struct std__vector_double__std__allocator_double__* this3016;
   unsigned long __n3017;
   double* __retval3018;
@@ -4990,7 +4974,7 @@ bb3015:
 
 // function: _ZNSolsEPFRSoS_E
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* v3035, void* v3036) {
-bb3037:
+bb3037: ;
   struct std__basic_ostream_char__std__char_traits_char__* this3038;
   void* __pf3039;
   struct std__basic_ostream_char__std__char_traits_char__* __retval3040;
@@ -5006,7 +4990,7 @@ bb3037:
 
 // function: _ZSt5flushIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__flush_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v3045) {
-bb3046:
+bb3046: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os3047;
   struct std__basic_ostream_char__std__char_traits_char__* __retval3048;
   __os3047 = v3045;
@@ -5019,7 +5003,7 @@ bb3046:
 
 // function: _ZSt13__check_facetISt5ctypeIcEERKT_PS3_
 struct std__ctype_char_* std__ctype_char__const__std____check_facet_std__ctype_char___(struct std__ctype_char_* v3052) {
-bb3053:
+bb3053: ;
   struct std__ctype_char_* __f3054;
   struct std__ctype_char_* __retval3055;
   __f3054 = v3052;
@@ -5037,7 +5021,7 @@ bb3053:
 
 // function: _ZNKSt5ctypeIcE5widenEc
 char std__ctype_char___widen_char__const(struct std__ctype_char_* v3061, char v3062) {
-bb3063:
+bb3063: ;
   struct std__ctype_char_* this3064;
   char __c3065;
   char __retval3066;
@@ -5067,7 +5051,7 @@ bb3063:
 
 // function: _ZNKSt9basic_iosIcSt11char_traitsIcEE5widenEc
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* v3082, char v3083) {
-bb3084:
+bb3084: ;
   struct std__basic_ios_char__std__char_traits_char__* this3085;
   char __c3086;
   char __retval3087;
@@ -5085,7 +5069,7 @@ bb3084:
 
 // function: _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* v3094) {
-bb3095:
+bb3095: ;
   struct std__basic_ostream_char__std__char_traits_char__* __os3096;
   struct std__basic_ostream_char__std__char_traits_char__* __retval3097;
   __os3096 = v3094;
@@ -5113,7 +5097,7 @@ bb3095:
 
 // function: _ZNSt6vectorIdSaIdEED2Ev
 void std__vector_double__std__allocator_double______vector(struct std__vector_double__std__allocator_double__* v3116) {
-bb3117:
+bb3117: ;
   struct std__vector_double__std__allocator_double__* this3118;
   this3118 = v3116;
   struct std__vector_double__std__allocator_double__* t3119 = this3118;
@@ -5135,7 +5119,7 @@ bb3117:
 
 // function: main
 int main() {
-bb3129:
+bb3129: ;
   int __retval3130;
   double mydoubles3131[4];
   struct std__vector_double__std__allocator_double__ myvector3132;
@@ -5172,7 +5156,7 @@ bb3129:
     if (c3153) {
     } else {
       char* cast3154 = (char*)&(_str_2);
-      char* c3155 = _str_3;
+      char* c3155 = (char*)_str_3;
       unsigned int c3156 = 41;
       char* cast3157 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast3154, c3155, c3156, cast3157);
@@ -5185,7 +5169,7 @@ bb3129:
     if (c3162) {
     } else {
       char* cast3163 = (char*)&(_str_4);
-      char* c3164 = _str_3;
+      char* c3164 = (char*)_str_3;
       unsigned int c3165 = 42;
       char* cast3166 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast3163, c3164, c3165, cast3166);
@@ -5198,7 +5182,7 @@ bb3129:
     if (c3171) {
     } else {
       char* cast3172 = (char*)&(_str_5);
-      char* c3173 = _str_3;
+      char* c3173 = (char*)_str_3;
       unsigned int c3174 = 43;
       char* cast3175 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast3172, c3173, c3174, cast3175);
@@ -5211,7 +5195,7 @@ bb3129:
     if (c3180) {
     } else {
       char* cast3181 = (char*)&(_str_6);
-      char* c3182 = _str_3;
+      char* c3182 = (char*)_str_3;
       unsigned int c3183 = 44;
       char* cast3184 = (char*)&(__PRETTY_FUNCTION___main);
       __assert_fail(cast3181, c3182, c3183, cast3184);
@@ -5231,7 +5215,7 @@ bb3129:
 
 // function: _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2EvQ26is_default_constructible_vIN9__gnu_cxx14__alloc_traitsIT0_NS5_10value_typeEE6rebindIT_E5otherEE
 void _ZNSt12_Vector_baseIdSaIdEE12_Vector_implC2EvQ26is_default_constructible_vIN9__gnu_cxx14__alloc_traitsIT0_NS5_10value_typeEE6rebindIT_E5otherEE(struct std___Vector_base_double__std__allocator_double_____Vector_impl* v3190) {
-bb3191:
+bb3191: ;
   struct std___Vector_base_double__std__allocator_double_____Vector_impl* this3192;
   this3192 = v3190;
   struct std___Vector_base_double__std__allocator_double_____Vector_impl* t3193 = this3192;
@@ -5244,7 +5228,7 @@ bb3191:
 
 // function: _ZNSt12_Vector_baseIdSaIdEE12_Vector_implD2Ev
 void std___Vector_base_double__std__allocator_double______Vector_impl____Vector_impl(struct std___Vector_base_double__std__allocator_double_____Vector_impl* v3196) {
-bb3197:
+bb3197: ;
   struct std___Vector_base_double__std__allocator_double_____Vector_impl* this3198;
   this3198 = v3196;
   struct std___Vector_base_double__std__allocator_double_____Vector_impl* t3199 = this3198;
@@ -5257,7 +5241,7 @@ bb3197:
 
 // function: _ZNSt12_Vector_baseIdSaIdEEC2Ev
 void std___Vector_base_double__std__allocator_double______Vector_base(struct std___Vector_base_double__std__allocator_double__* v3201) {
-bb3202:
+bb3202: ;
   struct std___Vector_base_double__std__allocator_double__* this3203;
   this3203 = v3201;
   struct std___Vector_base_double__std__allocator_double__* t3204 = this3203;
@@ -5267,7 +5251,7 @@ bb3202:
 
 // function: _ZSt23__is_constant_evaluatedv
 _Bool std____is_constant_evaluated() {
-bb3205:
+bb3205: ;
   _Bool __retval3206;
     _Bool c3207 = 0;
     __retval3206 = c3207;
@@ -5278,7 +5262,7 @@ bb3205:
 
 // function: _ZNSt15__new_allocatorIdE10deallocateEPdm
 void std____new_allocator_double___deallocate(struct std____new_allocator_double_* v3209, double* v3210, unsigned long v3211) {
-bb3212:
+bb3212: ;
   struct std____new_allocator_double_* this3213;
   double* __p3214;
   unsigned long __n3215;
@@ -5310,7 +5294,7 @@ bb3212:
 
 // function: _ZNSaIdE10deallocateEPdm
 void std__allocator_double___deallocate(struct std__allocator_double_* v3231, double* v3232, unsigned long v3233) {
-bb3234:
+bb3234: ;
   struct std__allocator_double_* this3235;
   double* __p3236;
   unsigned long __n3237;
@@ -5334,7 +5318,7 @@ bb3234:
 
 // function: _ZNSt16allocator_traitsISaIdEE10deallocateERS0_Pdm
 void std__allocator_traits_std__allocator_double_____deallocate(struct std__allocator_double_* v3245, double* v3246, unsigned long v3247) {
-bb3248:
+bb3248: ;
   struct std__allocator_double_* __a3249;
   double* __p3250;
   unsigned long __n3251;
@@ -5350,7 +5334,7 @@ bb3248:
 
 // function: _ZNSt12_Vector_baseIdSaIdEE13_M_deallocateEPdm
 void std___Vector_base_double__std__allocator_double______M_deallocate(struct std___Vector_base_double__std__allocator_double__* v3255, double* v3256, unsigned long v3257) {
-bb3258:
+bb3258: ;
   struct std___Vector_base_double__std__allocator_double__* this3259;
   double* __p3260;
   unsigned long __n3261;
@@ -5371,7 +5355,7 @@ bb3258:
 
 // function: _ZNSt12_Vector_baseIdSaIdEED2Ev
 void std___Vector_base_double__std__allocator_double_______Vector_base(struct std___Vector_base_double__std__allocator_double__* v3268) {
-bb3269:
+bb3269: ;
   struct std___Vector_base_double__std__allocator_double__* this3270;
   this3270 = v3268;
   struct std___Vector_base_double__std__allocator_double__* t3271 = this3270;
@@ -5392,7 +5376,7 @@ bb3269:
 
 // function: _ZNSt15__new_allocatorIdEC2Ev
 void std____new_allocator_double_____new_allocator_2(struct std____new_allocator_double_* v3280) {
-bb3281:
+bb3281: ;
   struct std____new_allocator_double_* this3282;
   this3282 = v3280;
   struct std____new_allocator_double_* t3283 = this3282;
@@ -5401,7 +5385,7 @@ bb3281:
 
 // function: _ZNSaIdEC2Ev
 void std__allocator_double___allocator_2(struct std__allocator_double_* v3284) {
-bb3285:
+bb3285: ;
   struct std__allocator_double_* this3286;
   this3286 = v3284;
   struct std__allocator_double_* t3287 = this3286;
@@ -5412,7 +5396,7 @@ bb3285:
 
 // function: _ZNSt12_Vector_baseIdSaIdEE17_Vector_impl_dataC2Ev
 void std___Vector_base_double__std__allocator_double______Vector_impl_data___Vector_impl_data(struct std___Vector_base_double__std__allocator_double_____Vector_impl_data* v3289) {
-bb3290:
+bb3290: ;
   struct std___Vector_base_double__std__allocator_double_____Vector_impl_data* this3291;
   this3291 = v3289;
   struct std___Vector_base_double__std__allocator_double_____Vector_impl_data* t3292 = this3291;
@@ -5427,7 +5411,7 @@ bb3290:
 
 // function: _ZNSt15__new_allocatorIdEC2ERKS0_
 void std____new_allocator_double_____new_allocator(struct std____new_allocator_double_* v3296, struct std____new_allocator_double_* v3297) {
-bb3298:
+bb3298: ;
   struct std____new_allocator_double_* this3299;
   struct std____new_allocator_double_* unnamed3300;
   this3299 = v3296;
@@ -5438,7 +5422,7 @@ bb3298:
 
 // function: _ZNSt17_Temporary_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdE5_ImplC2El
 void std___Temporary_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double____Impl___Impl(struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double____Impl* v3302, long v3303) {
-bb3304:
+bb3304: ;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double____Impl* this3305;
   long __original_len3306;
   struct std__pair_double____long_ __p3307;
@@ -5457,7 +5441,7 @@ bb3304:
 
 // function: _ZNSt38__uninitialized_construct_buf_dispatchILb1EE5__ucrIPdN9__gnu_cxx17__normal_iteratorIS2_St6vectorIdSaIdEEEEEEvT_S9_T0_
 void void_std____uninitialized_construct_buf_dispatch_true_____ucr_double_____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(double* v3313, double* v3314, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v3315) {
-bb3316:
+bb3316: ;
   double* unnamed3317;
   double* unnamed3318;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ unnamed3319;
@@ -5469,7 +5453,7 @@ bb3316:
 
 // function: _ZSt29__uninitialized_construct_bufIdN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEEvPT_S8_T0_
 void void_std____uninitialized_construct_buf_double____gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______(double* v3320, double* v3321, struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ v3322) {
-bb3323:
+bb3323: ;
   double* __first3324;
   double* __last3325;
   struct __gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double___ __seed3326;
@@ -5487,7 +5471,7 @@ bb3323:
 
 // function: _ZNSt17_Temporary_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdE3endEv
 double* std___Temporary_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double___end(struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* v3331) {
-bb3332:
+bb3332: ;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double_* this3333;
   double* __retval3334;
   this3333 = v3331;
@@ -5502,7 +5486,7 @@ bb3332:
 
 // function: _ZNSt17_Temporary_bufferIN9__gnu_cxx17__normal_iteratorIPdSt6vectorIdSaIdEEEEdE5_ImplD2Ev
 void std___Temporary_buffer___gnu_cxx____normal_iterator_double___std__vector_double__std__allocator_double_______double____Impl____Impl(struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double____Impl* v3340) {
-bb3341:
+bb3341: ;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double____Impl* this3342;
   this3342 = v3340;
   struct std___Temporary_buffer___gnu_cxx____normal_iterator_double____std__vector_double__std__allocator_double_____double____Impl* t3343 = this3342;
@@ -5515,7 +5499,7 @@ bb3341:
 
 // function: _ZNSt8__detail22__get_temporary_bufferIdEEPT_l
 double* double__std____detail____get_temporary_buffer_double_(long v3347) {
-bb3348:
+bb3348: ;
   long __len3349;
   double* __retval3350;
   struct std__nothrow_t ref_tmp13351;
@@ -5561,7 +5545,7 @@ bb3348:
 
 // function: _ZNSt4pairIPdlEC2IRS0_RlQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_
 void _ZNSt4pairIPdlEC2IRS0_RlQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(struct std__pair_double____long_* v3379, double** v3380, long* v3381) {
-bb3382:
+bb3382: ;
   struct std__pair_double____long_* this3383;
   double** __x3384;
   long* __y3385;
@@ -5581,7 +5565,7 @@ bb3382:
 
 // function: _ZNSt4pairIPdlEC2EvQaa26is_default_constructible_vIT_E26is_default_constructible_vIT0_E
 void _ZNSt4pairIPdlEC2EvQaa26is_default_constructible_vIT_E26is_default_constructible_vIT0_E(struct std__pair_double____long_* v3392) {
-bb3393:
+bb3393: ;
   struct std__pair_double____long_* this3394;
   this3394 = v3392;
   struct std__pair_double____long_* t3395 = this3394;
@@ -5595,7 +5579,7 @@ bb3393:
 
 // function: _ZSt20get_temporary_bufferIdESt4pairIPT_lEl
 struct std__pair_double____long_ std__pair_double___long__std__get_temporary_buffer_double_(long v3399) {
-bb3400:
+bb3400: ;
   long __len3401;
   struct std__pair_double____long_ __retval3402;
   long __max3403;
@@ -5650,7 +5634,7 @@ bb3400:
 
 // function: _ZNSt8__detail25__return_temporary_bufferIdEEvPT_m
 void void_std____detail____return_temporary_buffer_double_(double* v3430, unsigned long v3431) {
-bb3432:
+bb3432: ;
   double* __p3433;
   unsigned long __len3434;
   __p3433 = v3430;

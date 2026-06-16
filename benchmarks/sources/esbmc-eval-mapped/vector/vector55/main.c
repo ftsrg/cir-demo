@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -56,13 +40,14 @@ char _str_8[19] = "__n < this->size()";
 char _str_9[23] = "vector::_M_fill_insert";
 char _str_10[23] = "vector::_M_fill_append";
 struct std__ranges____imove___IterMove _ZNSt6ranges4_Cpo9iter_moveE;
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__vector_int__std__allocator_int__ myvector2;
   int ref_tmp03;
@@ -117,9 +102,10 @@ bb0:
     if (c26) {
     } else {
       char* cast27 = (char*)&(_str);
-      char* c28 = _str_1;
+      char* c28 = (char*)_str_1;
       unsigned int c29 = 21;
       char* cast30 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast27, c28, c29, cast30);
     }
     // externalized std:: op: _ZN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEC2IPiQsr3stdE16is_convertible_vITL0__T_EEERKNS0_ISA_S5_EE
@@ -141,9 +127,10 @@ bb0:
     if (c39) {
     } else {
       char* cast40 = (char*)&(_str_2);
-      char* c41 = _str_1;
+      char* c41 = (char*)_str_1;
       unsigned int c42 = 23;
       char* cast43 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast40, c41, c42, cast43);
     }
     int c44 = 0;

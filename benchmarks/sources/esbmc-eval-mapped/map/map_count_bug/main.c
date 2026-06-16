@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -32,7 +16,7 @@ struct std___Rb_tree_const_iterator_std__pair_const_char__int__ { struct std___R
 struct std___Rb_tree_iterator_std__pair_const_char__int__ { struct std___Rb_tree_node_base* _M_node; };
 struct std___Rb_tree_key_compare_std__less_char__ { unsigned char __field0; };
 struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_std__pair_const_char__int__;
+struct std___Rb_tree_node_std__pair_const_char__int__ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_std__pair_const_char__int__ _M_storage; };
 struct std___Select1st_std__pair_const_char__int__ { unsigned char __field0; };
 struct std___Tuple_impl_0UL__char____ { struct std___Head_base_0UL__char_____false_ __field0; };
 struct std____new_allocator_std___Rb_tree_node_std__pair_const_char__int___;
@@ -40,7 +24,7 @@ struct std____pair_base_const_char__int_;
 struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
 struct std__allocator_std___Rb_tree_node_std__pair_const_char__int___;
 struct std__less_char_ { unsigned char __field0; };
-struct std__pair_const_char__int_;
+struct std__pair_const_char__int_ { char first; int second; };
 struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
 struct std__piecewise_construct_t { unsigned char __field0; };
 struct std__tuple__ { unsigned char __field0; };
@@ -57,6 +41,7 @@ char _str_1[105] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[32] = "mymap.count(chararray2[i]) != 0";
 struct std__piecewise_construct_t _ZSt19piecewise_construct;
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -64,7 +49,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___ mymap2;
   char c3;
@@ -116,9 +101,10 @@ bb0:
         if (u30) {
         } else {
           char* cast31 = (char*)&(_str);
-          char* c32 = _str_1;
+          char* c32 = (char*)_str_1;
           unsigned int c33 = 35;
           char* cast34 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast31, c32, c33, cast34);
         }
       for_step21: ;
@@ -141,9 +127,10 @@ bb0:
         if (c46) {
         } else {
           char* cast47 = (char*)&(_str_2);
-          char* c48 = _str_1;
+          char* c48 = (char*)_str_1;
           unsigned int c49 = 38;
           char* cast50 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast47, c48, c49, cast50);
         }
       for_step38: ;

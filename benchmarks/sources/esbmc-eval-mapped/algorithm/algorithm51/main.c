@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ { void* _M_comp; };
 struct __gnu_cxx____ops___Iter_less_iter { unsigned char __field0; };
@@ -25,13 +9,14 @@ char _str_1[109] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[67] = "includes(container,container+10,continent,continent+4, myfunction)";
 _Bool myfunction(int p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: _Z10myfunctionii
 _Bool myfunction(int v0, int v1) {
-bb2:
+bb2: ;
   int i3;
   int j4;
   _Bool __retval5;
@@ -47,7 +32,7 @@ bb2:
 
 // function: main
 int main() {
-bb10:
+bb10: ;
   int __retval11;
   int container12[10];
   int continent13[4];
@@ -70,9 +55,10 @@ bb10:
   if (std23) {
   } else {
     char* cast24 = (char*)&(_str);
-    char* c25 = _str_1;
+    char* c25 = (char*)_str_1;
     unsigned int c26 = 23;
     char* cast27 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast24, c25, c26, cast27);
   }
   int* cast28 = (int*)&(container12);
@@ -88,9 +74,10 @@ bb10:
   if (std36) {
   } else {
     char* cast37 = (char*)&(_str_2);
-    char* c38 = _str_1;
+    char* c38 = (char*)_str_1;
     unsigned int c39 = 24;
     char* cast40 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast37, c38, c39, cast40);
   }
   int c41 = 0;

@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 union anon_0 { char _M_local_buf[16]; unsigned long _M_allocated_capacity; };
@@ -27,6 +11,7 @@ char _str_1[110] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 _Bool _ZNSt17integral_constantIbLb1EE5valueE;
 char _str_2[24] = "basic_string::_M_create";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
@@ -34,7 +19,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str12;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ ref_tmp03;
@@ -59,9 +44,10 @@ bb0:
     if (c10) {
     } else {
       char* cast11 = (char*)&(_str);
-      char* c12 = _str_1;
+      char* c12 = (char*)_str_1;
       unsigned int c13 = 15;
       char* cast14 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast11, c12, c13, cast14);
     }
   {

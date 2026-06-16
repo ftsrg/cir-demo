@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -39,13 +23,14 @@ extern void *_ZTVSt9exception[];
 extern int __gxx_personality_v0();
 void std__exception__exception(struct std__exception* p0);
 void std__exception___exception(struct std__exception* p0) {}
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void throwException();
 int main();
 
 // function: _ZNSt9exceptionC2Ev
 void std__exception__exception(struct std__exception* v0) {
-bb1:
+bb1: ;
   struct std__exception* this2;
   this2 = v0;
   struct std__exception* t3 = this2;
@@ -57,7 +42,7 @@ bb1:
 
 // function: _Z14throwExceptionv
 void throwException() {
-bb6:
+bb6: ;
     struct std__exception* caughtException7;
     int a8;
       static char exc_buf10[8] = {0};
@@ -85,9 +70,10 @@ bb6:
         if (c17) {
         } else {
           char* cast18 = (char*)&(_str);
-          char* c19 = _str_1;
+          char* c19 = (char*)_str_1;
           unsigned int c20 = 20;
           char* cast21 = (char*)&(__PRETTY_FUNCTION____Z14throwExceptionv);
+          reach_error();
           __assert_fail(cast18, c19, c20, cast21);
         }
         __cir_exc_active = 1;
@@ -108,7 +94,7 @@ bb6:
 
 // function: main
 int main() {
-bb22:
+bb22: ;
   int __retval23;
   int c24 = 0;
   __retval23 = c24;

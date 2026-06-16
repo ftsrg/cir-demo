@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Exception handling state (modelled in plain C)
 static void *__cir_exc_ptr;
@@ -72,6 +56,7 @@ char _str_6[21] = "!(outfile.is_open())";
 extern void *_ZTVSt14basic_ifstreamIcSt11char_traitsIcEE[];
 extern void *_ZTVSt9basic_iosIcSt11char_traitsIcEE[];
 extern void *_ZTVSt14basic_ofstreamIcSt11char_traitsIcEE[];
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void *malloc(unsigned long);
 extern void free(void*);
@@ -87,7 +72,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern long __VERIFIER_nondet_long(void);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   char* buffer2;
   long size3;
@@ -113,9 +98,10 @@ bb0:
       if (std14) {
       } else {
         char* cast15 = (char*)&(_str_2);
-        char* c16 = _str_3;
+        char* c16 = (char*)_str_3;
         unsigned int c17 = 21;
         char* cast18 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast15, c16, c17, cast18);
       }
       _Bool std19;
@@ -123,9 +109,10 @@ bb0:
       if (std19) {
       } else {
         char* cast20 = (char*)&(_str_4);
-        char* c21 = _str_3;
+        char* c21 = (char*)_str_3;
         unsigned int c22 = 22;
         char* cast23 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast20, c21, c22, cast23);
       }
       struct std__basic_istream_char__std__char_traits_char__* base24 = (struct std__basic_istream_char__std__char_traits_char__*)((char *)&(infile4) + 0);
@@ -194,9 +181,10 @@ bb0:
       if (u53) {
       } else {
         char* cast54 = (char*)&(_str_5);
-        char* c55 = _str_3;
+        char* c55 = (char*)_str_3;
         unsigned int c56 = 44;
         char* cast57 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast54, c55, c56, cast57);
       }
       _Bool std58;
@@ -205,9 +193,10 @@ bb0:
       if (u59) {
       } else {
         char* cast60 = (char*)&(_str_6);
-        char* c61 = _str_3;
+        char* c61 = (char*)_str_3;
         unsigned int c62 = 45;
         char* cast63 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast60, c61, c62, cast63);
       }
       int c64 = 0;

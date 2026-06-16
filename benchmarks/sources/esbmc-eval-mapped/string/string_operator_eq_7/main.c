@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
 // Struct definitions (auto-parsed)
 struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
@@ -35,13 +19,14 @@ char _str_5[50] = "basic_string: construction from null is not valid";
 char _str_6[24] = "basic_string::_M_create";
 char _str_7[21] = "basic_string::append";
 _Bool _ZNSt17integral_constantIbLb1EE5valueE;
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str12;
   struct std__allocator_char_ ref_tmp03;
@@ -106,9 +91,10 @@ bb0:
           if (std20) {
           } else {
             char* cast21 = (char*)&(_str_3);
-            char* c22 = _str_4;
+            char* c22 = (char*)_str_4;
             unsigned int c23 = 21;
             char* cast24 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast21, c22, c23, cast24);
           }
         {

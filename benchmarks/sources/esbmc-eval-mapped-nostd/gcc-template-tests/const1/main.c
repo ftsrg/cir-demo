@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct Foo { unsigned char __field0; };
 
@@ -24,12 +8,13 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 void bar();
 void void_Foo__operator___void_____void___const__(struct Foo* p0, void* p1);
 void void_Foo__operator___void________void____const__(struct Foo* p0, void** p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _Z3barv
 void bar() {
-bb0:
+bb0: ;
   int t1 = barcnt;
   int u2 = t1 + 1;
   *&barcnt = u2;
@@ -38,7 +23,7 @@ bb0:
 
 // function: _ZN3FooclIFvvEEEvRKT_
 void void_Foo__operator___void_____void___const__(struct Foo* v3, void* v4) {
-bb5:
+bb5: ;
   struct Foo* this6;
   void* fcn7;
   this6 = v3;
@@ -51,7 +36,7 @@ bb5:
 
 // function: _ZN3FooclIPFvvEEEvRKT_
 void void_Foo__operator___void________void____const__(struct Foo* v10, void** v11) {
-bb12:
+bb12: ;
   struct Foo* this13;
   void** fcn14;
   this13 = v10;
@@ -65,7 +50,7 @@ bb12:
 
 // function: main
 int main() {
-bb18:
+bb18: ;
   int __retval19;
   struct Foo myFoo20;
   void* ref_tmp021;
@@ -79,9 +64,10 @@ bb18:
     _Bool c25 = ((t23 != c24)) ? 1 : 0;
     if (c25) {
       char* cast26 = (char*)&(_str);
-      char* c27 = _str_1;
+      char* c27 = (char*)_str_1;
       unsigned int c28 = 35;
       char* cast29 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast26, c27, c28, cast29);
     }
   int t30 = __retval19;

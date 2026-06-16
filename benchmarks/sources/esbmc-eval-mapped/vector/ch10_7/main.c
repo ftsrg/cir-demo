@@ -1,20 +1,37 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
+// Struct definitions (auto-parsed)
+struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
+struct __locale_data { unsigned char __placeholder; };
+struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
+union anon_0 { char _M_local_buf[16]; unsigned long _M_allocated_capacity; };
+struct std___Setprecision { int _M_n; };
+struct std___UninitDestroyGuard_Employee_____void_ { struct Employee** _M_first; struct Employee*** _M_cur; };
+struct std___Vector_base_Employee____std__allocator_Employee_______Vector_impl_data { struct Employee** _M_start; struct Employee** _M_finish; struct Employee** _M_end_of_storage; };
+struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider { char* _M_p; };
+struct std____new_allocator_Employee___;
+struct std____new_allocator_char_;
+struct std__allocator_Employee___ { unsigned char __field0; };
+struct std__allocator_char_ { unsigned char __field0; };
+struct std__forward_iterator_tag { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__random_access_iterator_tag { unsigned char __field0; };
+struct std__type_info { void* __field0; char* __name; };
+struct std___Vector_base_Employee____std__allocator_Employee_______Vector_impl { struct std___Vector_base_Employee____std__allocator_Employee_______Vector_impl_data __field0; };
+struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long _M_precision; long __field2; int _M_flags; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct Employee { void* __field0; struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ firstName; struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ lastName; struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ socialSecurityNumber; };
+struct HourlyEmployee { struct Employee __field0; double __field1; double __field2; };
+struct SalariedEmployee { struct Employee __field0; double __field1; };
+struct std___Vector_base_Employee____std__allocator_Employee____ { struct std___Vector_base_Employee____std__allocator_Employee_______Vector_impl _M_impl; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+struct std__vector_Employee____std__allocator_Employee____ { struct std___Vector_base_Employee____std__allocator_Employee____ __field0; };
+struct CommissionEmployee { struct Employee __field0; double __field1; double __field2; };
+struct BasePlusCommissionEmployee { struct CommissionEmployee __field0; double __field1; };
+
 // Virtual dispatch: default implementations (override as `weak`).
 // __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
 // pointer is at offset 0; the function is vtable[slot].
@@ -30,36 +47,6 @@ __attribute__((weak)) void __VERIFIER_virtual_call_void(void* __obj, int __slot)
   void* __fn = ((void**)*(void**)__obj)[__slot];
   ((void(*)(void*))__fn)(__obj);
 }
-
-// Struct definitions (auto-parsed)
-struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
-struct __locale_data { unsigned char __placeholder; };
-struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
-union anon_0 { char _M_local_buf[16]; unsigned long _M_allocated_capacity; };
-struct std___Setprecision { int _M_n; };
-struct std___UninitDestroyGuard_Employee_____void_ { struct Employee** _M_first; struct Employee*** _M_cur; };
-struct std___Vector_base_Employee____std__allocator_Employee_______Vector_impl_data { struct Employee** _M_start; struct Employee** _M_finish; struct Employee** _M_end_of_storage; };
-struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider { char* _M_p; };
-struct std____new_allocator_Employee___;
-struct std____new_allocator_char_;
-struct std__allocator_Employee___ { unsigned char __field0; };
-struct std__allocator_char_ { unsigned char __field0; };
-struct std__forward_iterator_tag { unsigned char __field0; };
-struct std__random_access_iterator_tag { unsigned char __field0; };
-struct std__type_info;
-struct std___Vector_base_Employee____std__allocator_Employee_______Vector_impl { struct std___Vector_base_Employee____std__allocator_Employee_______Vector_impl_data __field0; };
-struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
-struct std__ctype_char_;
-struct std__ios_base;
-struct Employee { void* __field0; struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ firstName; struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ lastName; struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ socialSecurityNumber; };
-struct HourlyEmployee { struct Employee __field0; double __field1; double __field2; };
-struct SalariedEmployee { struct Employee __field0; double __field1; };
-struct std___Vector_base_Employee____std__allocator_Employee____ { struct std___Vector_base_Employee____std__allocator_Employee_______Vector_impl _M_impl; };
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
-struct std__vector_Employee____std__allocator_Employee____ { struct std___Vector_base_Employee____std__allocator_Employee____ __field0; };
-struct CommissionEmployee { struct Employee __field0; double __field1; double __field2; };
-struct BasePlusCommissionEmployee { struct CommissionEmployee __field0; double __field1; };
 
 int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
 int _ZNSt8ios_base10floatfieldE_const __attribute__((aligned(4))) = 260;
@@ -105,6 +92,7 @@ extern void HourlyEmployee__HourlyEmployee(struct HourlyEmployee* p0, struct std
 extern void* __dynamic_cast(void* p0, unsigned char* p1, unsigned char* p2, long p3);
 extern double BasePlusCommissionEmployee__getBaseSalary___const(struct BasePlusCommissionEmployee* p0);
 extern void BasePlusCommissionEmployee__setBaseSalary(struct BasePlusCommissionEmployee* p0, double p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void __cxa_bad_typeid();
 void Employee___Employee(struct Employee* p0);
@@ -114,7 +102,7 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 // function: _ZN8EmployeeD2Ev
 void Employee___Employee(struct Employee* v0) {
-bb1:
+bb1: ;
   struct Employee* this2;
   this2 = v0;
   struct Employee* t3 = this2;
@@ -135,7 +123,7 @@ bb1:
 
 // function: main
 int main() {
-bb4:
+bb4: ;
   int __retval5;
   struct std___Setprecision agg_tmp06;
   struct std__vector_Employee____std__allocator_Employee____ employees7;
@@ -486,8 +474,8 @@ bb4:
           struct BasePlusCommissionEmployee* ternary139;
           if (cast138) {
             void* cast140 = (void*)t137;
-            unsigned char* c141 = _ZTI8Employee;
-            unsigned char* c142 = _ZTI26BasePlusCommissionEmployee;
+            unsigned char* c141 = (unsigned char*)_ZTI8Employee;
+            unsigned char* c142 = (unsigned char*)_ZTI26BasePlusCommissionEmployee;
             long c143 = 0;
             void* r144 = __dynamic_cast(cast140, c141, c142, c143);
             struct BasePlusCommissionEmployee* cast145 = (struct BasePlusCommissionEmployee*)r144;
@@ -542,9 +530,10 @@ bb4:
           if (ternary170) {
           } else {
             char* cast175 = (char*)&(_str_14);
-            char* c176 = _str_15;
+            char* c176 = (char*)_str_15;
             unsigned int c177 = 73;
             char* cast178 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast175, c176, c177, cast178);
           }
           char* cast179 = (char*)&(_str_16);

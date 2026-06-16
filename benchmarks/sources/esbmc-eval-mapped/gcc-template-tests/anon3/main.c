@@ -1,30 +1,15 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 int* _ZN12_GLOBAL__N_11AIiE1aE __attribute__((aligned(8)));
 char _str[19] = "0 == ( foo() != 0)";
 char _str_1[112] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/esbmc-eval/gcc-template-tests/anon3/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 int* foo();
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _Z3foov
 int* foo() {
-bb0:
+bb0: ;
   int* __retval1;
   int* t2 = _ZN12_GLOBAL__N_11AIiE1aE;
   __retval1 = t2;
@@ -34,7 +19,7 @@ bb0:
 
 // function: main
 int main() {
-bb4:
+bb4: ;
   int __retval5;
   int c6 = 0;
   __retval5 = c6;
@@ -47,9 +32,10 @@ bb4:
   if (c12) {
   } else {
     char* cast13 = (char*)&(_str);
-    char* c14 = _str_1;
+    char* c14 = (char*)_str_1;
     unsigned int c15 = 27;
     char* cast16 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast13, c14, c15, cast16);
   }
   int t17 = __retval5;

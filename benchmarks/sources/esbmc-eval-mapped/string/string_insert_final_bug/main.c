@@ -1,28 +1,4 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 extern void abort(void);
-// Virtual dispatch: default implementations (override as `weak`).
-// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
-// pointer is at offset 0; the function is vtable[slot].
-__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
-  void* __fn = ((void**)*(void**)__obj)[__slot];
-  return ((char(*)(void*, char))__fn)(__obj, __a0);
-}
-
 // Struct definitions (auto-parsed)
 struct _Guard { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* _M_guarded; };
 struct __gnu_cxx____normal_iterator_char____std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ { char* _M_current; };
@@ -34,12 +10,24 @@ struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_c
 struct std____new_allocator_char_;
 struct std__allocator_char_ { unsigned char __field0; };
 struct std__forward_iterator_tag { unsigned char __field0; };
+struct std__ios_base___Words { void* __field0; long __field1; };
 struct std__less_const_char___ { unsigned char __field0; };
+struct std__locale { struct std__locale___Impl* __field0; };
+struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
 struct std__random_access_iterator_tag { unsigned char __field0; };
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
-struct std__ctype_char_;
-struct std__basic_ios_char__std__char_traits_char__;
-struct std__basic_ostream_char__std__char_traits_char__;
+struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
+struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int __field5; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
+struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
+struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+
+// Virtual dispatch: default implementations (override as `weak`).
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+__attribute__((weak)) char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
 
 char _str[15] = "to be question";
 char _str_1[5] = "the ";
@@ -72,13 +60,14 @@ char _str_25[25] = "basic_string::_M_replace";
 char _str_26[55] = "%s: __pos (which is %zu) > this->size() (which is %zu)";
 char _str_27[21] = "basic_string::insert";
 char _str_28[29] = "basic_string::_M_replace_aux";
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 // function: main
 int main() {
-bb0:
+bb0: ;
   int __retval1;
   struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ str2;
   struct std__allocator_char_ ref_tmp03;
@@ -147,9 +136,10 @@ bb0:
         if (u30) {
         } else {
           char* cast31 = (char*)&(_str_4);
-          char* c32 = _str_5;
+          char* c32 = (char*)_str_5;
           unsigned int c33 = 24;
           char* cast34 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast31, c32, c33, cast34);
         }
         unsigned long c35 = 6;
@@ -164,9 +154,10 @@ bb0:
         if (u41) {
         } else {
           char* cast42 = (char*)&(_str_7);
-          char* c43 = _str_5;
+          char* c43 = (char*)_str_5;
           unsigned int c44 = 27;
           char* cast45 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast42, c43, c44, cast45);
         }
         unsigned long c46 = 10;
@@ -181,9 +172,10 @@ bb0:
         if (u52) {
         } else {
           char* cast53 = (char*)&(_str_10);
-          char* c54 = _str_5;
+          char* c54 = (char*)_str_5;
           unsigned int c55 = 30;
           char* cast56 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast53, c54, c55, cast56);
         }
         unsigned long c57 = 10;
@@ -197,9 +189,10 @@ bb0:
         if (u62) {
         } else {
           char* cast63 = (char*)&(_str_13);
-          char* c64 = _str_5;
+          char* c64 = (char*)_str_5;
           unsigned int c65 = 33;
           char* cast66 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast63, c64, c65, cast66);
         }
         unsigned long c67 = 15;
@@ -214,9 +207,10 @@ bb0:
         if (u73) {
         } else {
           char* cast74 = (char*)&(_str_15);
-          char* c75 = _str_5;
+          char* c75 = (char*)_str_5;
           unsigned int c76 = 36;
           char* cast77 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast74, c75, c76, cast77);
         }
         struct __gnu_cxx____normal_iterator_char____std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ std78;
@@ -243,9 +237,10 @@ bb0:
         if (u87) {
         } else {
           char* cast88 = (char*)&(_str_17);
-          char* c89 = _str_5;
+          char* c89 = (char*)_str_5;
           unsigned int c90 = 39;
           char* cast91 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast88, c89, c90, cast91);
         }
         struct __gnu_cxx____normal_iterator_char____std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ std92;
@@ -267,9 +262,10 @@ bb0:
         if (u99) {
         } else {
           char* cast100 = (char*)&(_str_19);
-          char* c101 = _str_5;
+          char* c101 = (char*)_str_5;
           unsigned int c102 = 42;
           char* cast103 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast100, c101, c102, cast103);
         }
         long c104 = 2;
@@ -302,9 +298,10 @@ bb0:
         if (u116) {
         } else {
           char* cast117 = (char*)&(_str_21);
-          char* c118 = _str_5;
+          char* c118 = (char*)_str_5;
           unsigned int c119 = 45;
           char* cast120 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast117, c118, c119, cast120);
         }
         struct std__basic_ostream_char__std__char_traits_char__* std121;

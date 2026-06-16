@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Budapest University of Technology and Economics
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Struct definitions (auto-parsed)
 struct A_Aint_ { unsigned char __field0; };
 struct Aint { unsigned char __field0; };
@@ -32,12 +16,13 @@ extern void free(void*);
 void* operator_new__(unsigned long p0) { return malloc(p0); }
 void operator_delete__(void* p0, unsigned long p1) { free(p0); }
 void A_Aint___f(struct A_Aint_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN4AintC2Ev
 void Aint__Aint_2(struct Aint* v0) {
-bb1:
+bb1: ;
   struct Aint* this2;
   this2 = v0;
   struct Aint* t3 = this2;
@@ -46,7 +31,7 @@ bb1:
 
 // function: _ZN4AintD2Ev
 void Aint___Aint_2(struct Aint* v4) {
-bb5:
+bb5: ;
   struct Aint* this6;
   this6 = v4;
   struct Aint* t7 = this6;
@@ -55,7 +40,7 @@ bb5:
 
 // function: _ZNK1AI4AintE7BlksizeEv
 unsigned int A_Aint___Blksize___const(struct A_Aint_* v8) {
-bb9:
+bb9: ;
   struct A_Aint_* this10;
   unsigned int __retval11;
   this10 = v8;
@@ -71,7 +56,7 @@ bb9:
 
 // function: _ZN1AI4AintE1fEv
 void A_Aint___f(struct A_Aint_* v17) {
-bb18:
+bb18: ;
   struct A_Aint_* this19;
   struct Aint* __new_result20;
   this19 = v17;
@@ -117,7 +102,7 @@ bb18:
 
 // function: main
 int main() {
-bb48:
+bb48: ;
   int __retval49;
   struct A_Aint_ a50;
   int c51 = 0;
@@ -132,9 +117,10 @@ bb48:
   if (c57) {
   } else {
     char* cast58 = (char*)&(_str);
-    char* c59 = _str_1;
+    char* c59 = (char*)_str_1;
     unsigned int c60 = 52;
     char* cast61 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast58, c59, c60, cast61);
   }
   int t62 = __retval49;
