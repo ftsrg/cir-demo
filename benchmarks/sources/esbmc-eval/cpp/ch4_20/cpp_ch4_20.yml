@@ -26,4 +26,4 @@ options:
   language: CPP
 properties:
 - expected_verdict: true
-  property_file: ../../no-assertion-violation.prp
+  property_file: ../../unreach-call.prp

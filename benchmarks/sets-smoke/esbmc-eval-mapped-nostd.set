@@ -1,0 +1,19 @@
+#
+# Copyright 2025 Budapest University of Technology and Economics
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+#
+# Smoke-test subset: a handful of tasks present in all three variants,
+# for validating the pipeline end-to-end quickly. Regenerate with care.
+#
+../sources/esbmc-eval-mapped-nostd/algorithm/algorithm0/algorithm_algorithm0.yml
+../sources/esbmc-eval-mapped-nostd/algorithm/algorithm1/algorithm_algorithm1.yml
+../sources/esbmc-eval-mapped-nostd/cbmc/Templates1/cbmc_Templates1.yml
+../sources/esbmc-eval-mapped-nostd/cbmc/Templates10/cbmc_Templates10.yml
+../sources/esbmc-eval-mapped-nostd/cpp/Method_qualifier1/cpp_Method_qualifier1.yml
+../sources/esbmc-eval-mapped-nostd/cpp/bicycle/cpp_bicycle.yml
+../sources/esbmc-eval-mapped-nostd/deque/deque_assign/deque_deque_assign.yml
+../sources/esbmc-eval-mapped-nostd/deque/deque_assign_bug/deque_deque_assign_bug.yml
+../sources/esbmc-eval-mapped-nostd/gcc-template-tests/anon3/gcc-template-tests_anon3.yml
+../sources/esbmc-eval-mapped-nostd/gcc-template-tests/arg6/gcc-template-tests_arg6.yml

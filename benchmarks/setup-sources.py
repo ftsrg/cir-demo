@@ -63,10 +63,33 @@ def copy_esbmc_eval(dry_run: bool) -> None:
     dest = SOURCES_DIR / "esbmc-eval"
     if dest.exists():
         print(f"  [skip] {dest} already exists")
+        retag_properties(dest, dry_run)
         return
     print(f"  Copying {ESBMC_EVAL_SRC} → {dest}")
     if not dry_run:
         shutil.copytree(ESBMC_EVAL_SRC, dest)
+
+
+def retag_properties(root: Path, dry_run: bool) -> None:
+    """Point any pre-rename property references under root at unreach-call.prp.
+
+    Lets a re-run migrate an already-populated suite (whose copied/generated .yml
+    files were skipped) to the SV-COMP-standard property name in place, instead
+    of leaving the task property_file out of sync with the benchmark XMLs.
+    """
+    fixed = 0
+    for yml in root.rglob("*.yml"):
+        text = yml.read_text(encoding="utf-8")
+        if "no-assertion-violation.prp" in text:
+            if not dry_run:
+                yml.write_text(text.replace("no-assertion-violation.prp", "unreach-call.prp"),
+                               encoding="utf-8")
+            fixed += 1
+    stale = root / "no-assertion-violation.prp"
+    if stale.exists() and not dry_run:
+        stale.unlink()
+    if fixed:
+        print(f"  Retagged {fixed} .yml file(s) under {root} to unreach-call.prp")
 
 
 def find_yml_files(root: Path) -> list[Path]:
@@ -106,7 +129,7 @@ def make_mapped_yml(data_model: str, expected_verdict: str) -> str:
           language: C
         properties:
         - expected_verdict: {expected_verdict}
-          property_file: ../../no-assertion-violation.prp
+          property_file: ../../unreach-call.prp
         """)
 
 
@@ -162,9 +185,13 @@ def map_one(
 
 
 def copy_property_file(dest_root: Path, dry_run: bool) -> None:
-    """Copy no-assertion-violation.prp into the mapped suite root so relative paths in .yml files resolve."""
+    """Copy unreach-call.prp into the mapped suite root so relative paths in .yml files resolve."""
     src_prp = ESBMC_EVAL_SRC / "unreach-call.prp"
-    dest_prp = dest_root / "no-assertion-violation.prp"
+    dest_prp = dest_root / "unreach-call.prp"
+    # Drop the pre-rename property file if a previous run left one behind.
+    stale = dest_root / "no-assertion-violation.prp"
+    if stale.exists() and not dry_run:
+        stale.unlink()
     if dest_prp.exists():
         return
     print(f"  Copying property file → {dest_prp}")
@@ -186,6 +213,8 @@ def run_variant(
     mode = "dry-run" if dry_run else ("yaml-only" if yaml_only else "live")
     print(f"\n=== {variant_name} ({len(yml_files)} tasks, {mode}) ===")
     copy_property_file(dest_root, dry_run)
+    if dest_root.exists():
+        retag_properties(dest_root, dry_run)
 
     counts: dict[str, int] = {}
     with ThreadPoolExecutor(max_workers=jobs) as ex:
@@ -247,8 +276,14 @@ def main() -> int:
 
 
 def write_set_files(dry_run: bool) -> None:
-    """(Re)write benchmarks/sets/ by enumerating all .yml files on disk."""
-    sets_dir = BENCHMARKS_DIR / "sets"
+    """(Re)write benchmarks/sets-full/ by enumerating all .yml files on disk.
+
+    The live `sets/` directory is a symlink to either sets-full/ or sets-smoke/
+    (selected via the SETS env var in the Makefile), so we always write the full
+    enumeration to sets-full/ and leave the curated sets-smoke/ untouched.
+    """
+    sets_dir = BENCHMARKS_DIR / "sets-full"
+    sets_dir.mkdir(exist_ok=True)
     for variant in ("esbmc-eval", "esbmc-eval-mapped", "esbmc-eval-mapped-nostd"):
         variant_root = SOURCES_DIR / variant
         ymls = sorted(variant_root.rglob("*.yml"))

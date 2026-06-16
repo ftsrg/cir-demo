@@ -1,0 +1,9 @@
+# Live task-set symlink, chosen at run time via `make SETS=smoke|full ...`.
+# The real sets live in sets-full/ (generated) and sets-smoke/ (curated).
+/sets
+
+# BenchExec run outputs and generated comparison tables.
+/results/
+/tables/
+
+__pycache__/
