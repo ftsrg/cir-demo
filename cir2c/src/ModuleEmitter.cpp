@@ -210,18 +210,25 @@ void Mapper::ensureVerifierNondetMemoryDeclared() {
 void Mapper::ensureMemcpyDeclared() {
   if (memcpyDeclared_) return;
   memcpyDeclared_ = true;
+  // If the program already references memcpy, emitFuncForwardDecl has emitted a
+  // prototype for it (non-const, derived from the CIR type — CIR drops the
+  // const). Emitting our const-correct one too would be a conflicting
+  // redeclaration, so defer to the existing one.
+  if (forwardDeclaredFuncNames_.count("memcpy")) return;
   verifierDeclsBuf_ << "extern void *memcpy(void*, const void*, unsigned long);\n";
 }
 
 void Mapper::ensureMemsetDeclared() {
   if (memsetDeclared_) return;
   memsetDeclared_ = true;
+  if (forwardDeclaredFuncNames_.count("memset")) return;
   verifierDeclsBuf_ << "extern void *memset(void*, int, unsigned long);\n";
 }
 
 void Mapper::ensureMemchrDeclared() {
   if (memchrDeclared_) return;
   memchrDeclared_ = true;
+  if (forwardDeclaredFuncNames_.count("memchr")) return;
   verifierDeclsBuf_ << "extern void *memchr(const void*, int, unsigned long);\n";
 }
 
@@ -775,6 +782,9 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
     out << "extern ";
 
   out << retType << " " << outName << "(" << params << ");\n";
+  // Record that a prototype for this C name now exists, so the injected libc
+  // declarations (memcpy/memset/memchr) don't emit a conflicting second one.
+  forwardDeclaredFuncNames_.insert(outName);
   return true;
 }
 

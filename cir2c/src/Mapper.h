@@ -313,6 +313,12 @@ private:
   // Set once the malloc/free externs needed by synthesised operator
   // new/delete stubs have been emitted, so they appear at most once.
   bool mallocFreeDeclEmitted_ = false;
+  // C output names of functions for which emitFuncForwardDecl already emitted a
+  // prototype (second pass, before any body). Used so the injected libc decls
+  // (memcpy/memset/memchr) skip emitting a second, conflicting declaration when
+  // the program already references that function (its CIR-derived prototype,
+  // which is non-const because CIR drops cv-qualifiers, is already present).
+  std::set<std::string> forwardDeclaredFuncNames_;
   // STD externalization (issue #7). On by default.
   bool externalizeStd_ = true;
   bool lastCallExternalized_ = false;
