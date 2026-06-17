@@ -245,6 +245,250 @@ void Mapper::emitAbiAttrNote(std::ostream &out) {
   out << "\n";
 }
 
+void Mapper::emitFileHeader(std::ostream &out, mlir::ModuleOp module) {
+  // ── Detect op-based C constructs by scanning the module ──────────────────
+  // These mirror what the handlers translate, so the manifest reflects what is
+  // actually emitted (e.g. a struct that is declared but never accessed does
+  // not count; only real member access trips `structAccess`).
+  struct Feat {
+    bool pointers = false;          // pointer values / variables manipulated
+    bool arrayIndexing = false;     // a[i] value (PtrStride/GetElement deref'd)
+    bool arrayElemAddr = false;     // &a[i] interior/end pointer
+    bool ptrDiff = false;           // p - q
+    bool ptrReinterpret = false;    // (T*)ptr  pointer-to-pointer cast
+    bool intPtrCast = false;        // (T*)int / (int)ptr
+    bool structAccess = false;      // .field / ->field
+    bool bitfields = false;
+    bool unions = false;
+    bool functionPtr = false;       // indirect call through a function pointer
+    bool virtualCalls = false;      // vtable dispatch
+    bool rtti = false;              // typeid / dynamic_cast
+    bool variadic = false;          // va_list
+    bool fpArith = false;           // floating-point arithmetic
+    bool libm = false;              // sqrt/sin/pow/... named libm calls
+    bool complex = false;           // _Complex
+    bool overflow = false;          // __builtin_*_overflow
+    bool bitBuiltins = false;       // popcount/clz/ctz/...
+    bool frameAddr = false;         // __builtin_{frame,return}_address
+    bool setjmp = false;            // setjmp/longjmp
+    bool gotoLabel = false;         // goto / labels
+  } feat;
+
+  auto isLibmName = [](const std::string &n) -> bool {
+    static const std::set<std::string> base = {
+        "sqrt", "cbrt", "sin", "cos", "tan", "asin", "acos", "atan", "atan2",
+        "sinh", "cosh", "tanh", "asinh", "acosh", "atanh", "exp", "exp2",
+        "expm1", "log", "log2", "log10", "log1p", "pow", "hypot", "fmod",
+        "remainder", "fdim", "fma", "ceil", "floor", "round", "trunc", "rint",
+        "nearbyint", "lround", "llround", "lrint", "llrint", "copysign", "fabs",
+        "fmax", "fmin", "erf", "erfc", "tgamma", "lgamma", "ldexp", "scalbn",
+        "scalbln", "nextafter"};
+    if (base.count(n)) return true;
+    // float / long-double variants: strip a single trailing 'f' or 'l'.
+    if (n.size() > 1 && (n.back() == 'f' || n.back() == 'l'))
+      return base.count(n.substr(0, n.size() - 1)) > 0;
+    return false;
+  };
+
+  auto classifyOffset = [&](mlir::Value res) {
+    if (res.use_empty()) {
+      // A computed pointer that is never dereferenced here (e.g. an end
+      // iterator passed onward) — the address itself escapes.
+      feat.arrayElemAddr = true;
+      return;
+    }
+    for (mlir::OpOperand &use : res.getUses()) {
+      mlir::Operation *u = use.getOwner();
+      bool derefHere = false;
+      if (auto ld = mlir::dyn_cast<cir::LoadOp>(u))
+        derefHere = (ld.getAddr() == res);
+      else if (auto st = mlir::dyn_cast<cir::StoreOp>(u))
+        derefHere = (st.getAddr() == res);
+      if (derefHere) feat.arrayIndexing = true;   // a[i]
+      else           feat.arrayElemAddr = true;   // &a[i]
+    }
+  };
+
+  auto scanOp = [&](mlir::Operation *op) {
+    // Pointer offsetting: always emitted as subscript (&base[i] / base[i]),
+    // never as additive pointer arithmetic. Distinguish from p - q.
+    if (mlir::isa<cir::PtrStrideOp, cir::GetElementOp>(op)) {
+      feat.pointers = true;
+      classifyOffset(op->getResult(0));
+    } else if (mlir::isa<cir::PtrDiffOp>(op)) {
+      feat.pointers = true;
+      feat.ptrDiff = true;
+    } else if (auto c = mlir::dyn_cast<cir::CastOp>(op)) {
+      mlir::Type st = c->getOperand(0).getType();
+      mlir::Type rt = c->getResult(0).getType();
+      bool sp = mlir::isa<cir::PointerType>(st);
+      bool rp = mlir::isa<cir::PointerType>(rt);
+      bool si = mlir::isa<cir::IntType>(st);
+      bool ri = mlir::isa<cir::IntType>(rt);
+      if ((sp && ri) || (si && rp)) { feat.intPtrCast = true; feat.pointers = true; }
+      else if (sp && rp)            { feat.ptrReinterpret = true; feat.pointers = true; }
+      else if (rp)                  { feat.pointers = true; } // e.g. array decay
+    } else if (mlir::isa<cir::GetMemberOp, cir::ExtractMemberOp>(op)) {
+      feat.structAccess = true;
+    } else if (mlir::isa<cir::GetBitfieldOp, cir::SetBitfieldOp>(op)) {
+      feat.bitfields = true;
+    } else if (mlir::isa<cir::VTableGetVirtualFnAddrOp>(op)) {
+      feat.virtualCalls = true;
+    } else if (mlir::isa<cir::VTableGetTypeInfoOp>(op)) {
+      feat.rtti = true;
+    } else if (mlir::isa<cir::VAStartOp, cir::VAArgOp, cir::VACopyOp,
+                         cir::VAEndOp>(op)) {
+      feat.variadic = true;
+    } else if (mlir::isa<cir::FAddOp, cir::FSubOp, cir::FMulOp, cir::FDivOp,
+                         cir::FRemOp, cir::FNegOp>(op)) {
+      feat.fpArith = true;
+    } else if (mlir::isa<cir::SqrtOp, cir::SinOp, cir::CosOp, cir::TanOp,
+                         cir::ACosOp, cir::ASinOp, cir::ATanOp, cir::ATan2Op,
+                         cir::ExpOp, cir::Exp2Op, cir::LogOp, cir::Log2Op,
+                         cir::Log10Op, cir::PowOp, cir::FModOp, cir::CeilOp,
+                         cir::FloorOp, cir::RoundOp, cir::RoundEvenOp,
+                         cir::RintOp, cir::NearbyintOp, cir::CopysignOp,
+                         cir::FMaxNumOp, cir::FMinNumOp, cir::FMaximumOp,
+                         cir::FMinimumOp, cir::LroundOp, cir::LlroundOp,
+                         cir::LrintOp, cir::LlrintOp>(op)) {
+      feat.libm = true;
+    } else if (mlir::isa<cir::ComplexCreateOp, cir::ComplexAddOp,
+                         cir::ComplexSubOp, cir::ComplexMulOp, cir::ComplexDivOp,
+                         cir::ComplexRealOp, cir::ComplexImagOp,
+                         cir::ComplexRealPtrOp, cir::ComplexImagPtrOp>(op)) {
+      feat.complex = true;
+    } else if (mlir::isa<cir::AddOverflowOp, cir::SubOverflowOp,
+                         cir::MulOverflowOp>(op)) {
+      feat.overflow = true;
+    } else if (mlir::isa<cir::BitClzOp, cir::BitCtzOp, cir::BitFfsOp,
+                         cir::BitParityOp, cir::BitPopcountOp,
+                         cir::BitReverseOp, cir::BitClrsbOp, cir::ByteSwapOp>(op)) {
+      feat.bitBuiltins = true;
+    } else if (mlir::isa<cir::FrameAddrOp, cir::ReturnAddrOp>(op)) {
+      feat.frameAddr = true;
+    } else if (mlir::isa<cir::EhSetjmpOp, cir::EhLongjmpOp>(op)) {
+      feat.setjmp = true;
+    } else if (mlir::isa<cir::GotoOp>(op)) {
+      feat.gotoLabel = true;
+    } else if (mlir::isa<cir::CallOp>(op)) {
+      // Resolve the callee symbol (when direct). Many libm functions reach the
+      // output as a plain `cir.call @sqrt` (clang lowers __builtin_sqrt to a
+      // libcall, not a cir.sqrt op), so detect libm by callee name as well as
+      // by the cir math ops handled above.
+      std::string callee;
+      if (auto sa = op->getAttrOfType<mlir::StringAttr>("callee"))
+        callee = sa.getValue().str();
+      else if (auto sr = op->getAttrOfType<mlir::SymbolRefAttr>("callee"))
+        callee = sr.getRootReference().str();
+      if (!callee.empty()) {
+        if (isLibmName(callee)) feat.libm = true;
+      } else if (op->getNumOperands() > 0) {
+        // Indirect call: callee is a function-pointer operand, no symbol attr.
+        if (auto pt = mlir::dyn_cast<cir::PointerType>(op->getOperand(0).getType()))
+          if (mlir::isa<cir::FuncType>(pt.getPointee()))
+            feat.functionPtr = true;
+      }
+    }
+    // Unions: any value whose type is a union record.
+    if (!feat.unions) {
+      auto isUnionTy = [](mlir::Type t) {
+        if (auto rt = mlir::dyn_cast<cir::RecordType>(t)) return rt.isUnion();
+        return false;
+      };
+      for (mlir::Value r : op->getResults())
+        if (isUnionTy(r.getType())) { feat.unions = true; break; }
+      if (!feat.unions)
+        for (mlir::Value o : op->getOperands())
+          if (auto pt = mlir::dyn_cast<cir::PointerType>(o.getType())) {
+            if (isUnionTy(pt.getPointee())) { feat.unions = true; break; }
+          }
+    }
+  };
+
+  // Scan only the function bodies that are actually emitted: skip
+  // declaration-only and elided (unreachable / dead std::) definitions, so dead
+  // instantiations don't contribute constructs that never reach the output
+  // (e.g. an indirect comparator call inside a std:: body that gets havoced
+  // away). This mirrors the elision condition in the third emission pass.
+  module->walk([&](cir::FuncOp f) {
+    mlir::Operation *fop = f.getOperation();
+    if (fop->getNumRegions() == 0 || fop->getRegion(0).empty()) return;
+    if (auto sym = fop->getAttrOfType<mlir::StringAttr>(
+            mlir::SymbolTable::getSymbolAttrName()))
+      if (funcDefElided(sym.getValue())) return;
+    fop->walk([&](mlir::Operation *op) { scanOp(op); });
+  });
+
+  // ── Build the ordered token list ─────────────────────────────────────────
+  // Combine op-based detection with the declaration-driven flags set during
+  // body emission. Trivially-supported constructs (plain control flow, scalar
+  // arithmetic, function calls, abort) are intentionally omitted.
+  std::vector<std::string> tokens;
+  auto add = [&](bool cond, const char *tok) { if (cond) tokens.push_back(tok); };
+
+  add(feat.pointers,        "pointers");
+  add(feat.arrayIndexing,   "array indexing (a[i])");
+  add(feat.arrayElemAddr,   "array element address (&a[i])");
+  add(feat.ptrDiff,         "pointer difference (p - q)");
+  add(feat.ptrReinterpret,  "pointer reinterpretation casts");
+  add(feat.intPtrCast,      "integer<->pointer casts");
+  add(feat.structAccess,    "structs");
+  add(feat.bitfields,       "bitfields");
+  add(feat.unions,          "unions");
+  add(usesPackedStruct_,    "__attribute__((packed))");
+  add(feat.functionPtr,     "function pointers");
+  add(usesMemberFnPtr_,     "pointer-to-member functions");
+  add(usesMemberFnPtr_,     "__attribute__((aligned(2)))");
+  add(feat.virtualCalls,    "virtual calls (vtables)");
+  add(feat.rtti,            "RTTI (typeid/dynamic_cast)");
+  add(memcpyDeclared_,      "memcpy");
+  add(memsetDeclared_,      "memset");
+  add(memchrDeclared_,      "memchr");
+  add(mallocFreeDeclEmitted_, "heap allocation (malloc/free)");
+  add(feat.variadic,        "variadic functions (va_list)");
+  add(feat.fpArith,         "floating-point arithmetic");
+  add(feat.libm,            "libm math functions");
+  add(feat.complex,         "complex numbers (_Complex)");
+  add(feat.overflow,        "integer overflow builtins");
+  add(feat.bitBuiltins,     "bit builtins (popcount/clz/ctz/...)");
+  add(feat.frameAddr,       "frame/return address builtins");
+  add(feat.setjmp,          "setjmp/longjmp");
+  add(feat.gotoLabel,       "goto/labels");
+  add(hasExceptions_,       "C++ exceptions");
+
+  // ── Emit the banner + manifest ───────────────────────────────────────────
+  out << "// Generated by cir2c - CIR (ClangIR) lowered to verifier-friendly C.\n";
+  if (!tokens.empty()) {
+    // Word-wrap the comma-separated list at ~76 columns for readability.
+    const std::string lead = "// Verifier should support: ";
+    const std::string cont = "//   ";
+    std::string line = lead;
+    bool first = true, lineStarted = true;
+    for (size_t i = 0; i < tokens.size(); ++i) {
+      std::string piece = tokens[i] + (i + 1 < tokens.size() ? "," : ".");
+      if (!lineStarted && line.size() + 1 + piece.size() > 76) {
+        out << line << "\n";
+        line = cont + piece;
+      } else {
+        line += (lineStarted ? "" : " ") + piece;
+      }
+      lineStarted = false;
+      (void)first;
+    }
+    out << line << "\n";
+  }
+
+  // Over-approximation note: __VERIFIER_nondet_memory is the std-/library-call
+  // externalization havoc — the result is replaced by an unconstrained value,
+  // which is unsound for code whose correctness depends on that result.
+  if (verifierNondetMemoryDeclared_) {
+    out << "// Over-approximated (may be unsound): library/std:: calls replaced "
+           "by\n"
+           "//   __VERIFIER_nondet_memory havoc (results are nondeterministic).\n";
+  }
+  out << "\n";
+}
+
 bool Mapper::isStdCallName(const std::string &mangled,
                             const std::string &demangled) {
   // Use the Itanium mangled name when available: the prefix unambiguously
@@ -1002,8 +1246,16 @@ bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
   return true;
 }
 
-bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
+bool Mapper::mapModule(ModuleOp module, std::ostream &realOut) {
   currentModule_ = module;
+  // For the top-level module, buffer the whole body so the file header / feature
+  // manifest can be prepended afterwards: the manifest depends on flags that are
+  // only set during body emission (memcpyDeclared_, usesPackedStruct_, the
+  // __VERIFIER_nondet_memory havoc, ...). Nested modules write straight through
+  // to the parent's buffer.
+  const bool isTopLevelModule = !module->getParentOp();
+  std::ostringstream topLevelBuf;
+  std::ostream &out = isTopLevelModule ? topLevelBuf : realOut;
   // Prepare function names (demangle where possible and unique) before
   // emitting any function declarations/definitions so we can avoid name
   // collisions when demangling.
@@ -1917,6 +2169,13 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   verifierDeclsBuf_.clear();
   if (!decls.empty()) out << decls;
   out << funcsBuf.str();
+
+  // Top-level module: the body is now fully buffered (so every emission-time
+  // flag is set). Emit the header/manifest, then flush the body after it.
+  if (isTopLevelModule) {
+    emitFileHeader(realOut, module);
+    realOut << topLevelBuf.str();
+  }
 
   // Top-level module only: warn on stderr about non-ISO ABI attributes the
   // output kept, so whoever runs the mapper (and picks a verifier) is alerted.
