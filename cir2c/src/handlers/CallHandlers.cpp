@@ -374,7 +374,10 @@ private:
   }
 
   static bool handleUnreachable(cir::UnreachableOp op, Mapper &m, std::ostream &out) {
-    out << "  __builtin_unreachable();\n";
+    // abort() rather than __builtin_unreachable(): verifiers model abort but
+    // treat the builtin as a no-op (or assume-false), which silently prunes
+    // paths. abort() is declared via the hasTrap_ pre-scan in mapModule.
+    out << "  abort();\n";
     return true;
   }
 

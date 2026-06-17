@@ -85,8 +85,9 @@ private:
     if (arrayStorage) {
       std::string base  = "((unsigned char*)(" + storageExpr + ") + " + std::to_string(byteOff) + ")";
       std::string avail = "(sizeof(" + storageExpr + ") - " + std::to_string(byteOff) + ")";
+      m.ensureMemcpyDeclared();
       out << "  unsigned long " << s << " = 0;\n";
-      out << "  __builtin_memcpy(&" << s << ", " << base
+      out << "  memcpy(&" << s << ", " << base
           << ", sizeof(" << s << ") < " << avail << " ? sizeof(" << s << ") : "
           << avail << ");\n";
     } else {
@@ -430,7 +431,8 @@ private:
     if (arrayStorage) {
       std::string base  = "((unsigned char*)(" + storageExpr + ") + " + std::to_string(byteOff) + ")";
       std::string avail = "(sizeof(" + storageExpr + ") - " + std::to_string(byteOff) + ")";
-      out << "  __builtin_memcpy(" << base << ", &" << st
+      m.ensureMemcpyDeclared();
+      out << "  memcpy(" << base << ", &" << st
           << ", sizeof(unsigned long) < " << avail
           << " ? sizeof(unsigned long) : " << avail << ");\n";
     } else {

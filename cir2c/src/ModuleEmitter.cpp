@@ -207,6 +207,30 @@ void Mapper::ensureVerifierNondetMemoryDeclared() {
   verifierDeclsBuf_ << "extern void __VERIFIER_nondet_memory(void*, unsigned long);\n";
 }
 
+void Mapper::ensureMemcpyDeclared() {
+  if (memcpyDeclared_) return;
+  memcpyDeclared_ = true;
+  verifierDeclsBuf_ << "extern void *memcpy(void*, const void*, unsigned long);\n";
+}
+
+void Mapper::ensureMemsetDeclared() {
+  if (memsetDeclared_) return;
+  memsetDeclared_ = true;
+  verifierDeclsBuf_ << "extern void *memset(void*, int, unsigned long);\n";
+}
+
+void Mapper::ensureMemchrDeclared() {
+  if (memchrDeclared_) return;
+  memchrDeclared_ = true;
+  verifierDeclsBuf_ << "extern void *memchr(const void*, int, unsigned long);\n";
+}
+
+void Mapper::ensureAbortDeclared(std::ostream &out) {
+  if (abortDeclEmitted_) return;
+  abortDeclEmitted_ = true;
+  out << "extern void abort(void);\n";
+}
+
 bool Mapper::isStdCallName(const std::string &mangled,
                             const std::string &demangled) {
   // Use the Itanium mangled name when available: the prefix unambiguously
@@ -399,11 +423,11 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
     return true;
   }
   // __cxa_pure_virtual fills pure-virtual vtable slots (Itanium ABI). It is a
-  // libstdc++ symbol; emit a weak self-contained stub so the file links. It is
-  // only reached if a pure virtual is actually invoked (a program bug) — trap.
+  // libstdc++ symbol; emit a self-contained stub so the file links. It is only
+  // reached if a pure virtual is actually invoked (a program bug) — abort.
   if (mangledSym == "__cxa_pure_virtual" || mangledSym == "__cxa_deleted_virtual") {
-    out << "__attribute__((weak)) void " << outName
-        << "(void) { __builtin_trap(); }\n";
+    ensureAbortDeclared(out);
+    out << "void " << outName << "(void) { abort(); }\n";
     return true;
   }
 
@@ -1042,7 +1066,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
         bool isVol    = storeOp.getIsVolatile();
         if (isAtomic || isVol)
           recordAccess(storeOp.getAddr(), isAtomic, isVol);
-      } else if (mlir::isa<cir::TrapOp>(op)) {
+      } else if (mlir::isa<cir::TrapOp>(op) || mlir::isa<cir::UnreachableOp>(op)) {
+        // Both lower to abort(); flag so abort gets declared.
         hasTrap_ = true;
       }
       for (auto &region : op.getRegions())
@@ -1579,10 +1604,8 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // declared before use.  All other external functions (malloc, free,
   // __assert_fail, …) are emitted as `extern` by emitFuncForwardDecl when
   // the CIR contains the corresponding declaration-only FuncOp.
-  if ((hasTrap_ || hasExceptions_) && !abortDeclEmitted_) {
-    out << "extern void abort(void);\n";
-    abortDeclEmitted_ = true;
-  }
+  if (hasTrap_ || hasExceptions_)
+    ensureAbortDeclared(out);
 
   if (hasExceptions_ && !ehPreambleEmitted) {
     out << "// Exception handling state (modelled in plain C)\n";
@@ -1686,10 +1709,10 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
     // The call site passes (object, slot, args...); the wrapper loads the
     // object's vtable pointer (at offset 0), indexes by `slot` to get the
     // function pointer, and calls it with (object, args...). One wrapper per
-    // distinct (return type, arg types). Emitted `weak` so a verification
-    // tool can override the semantics.
+    // distinct (return type, arg types), defined exactly once per output file,
+    // so no `weak` linkage is needed (and it would not be plain ISO C).
     if (!virtualCallSigs_.empty()) {
-      out << "// Virtual dispatch: default implementations (override as `weak`).\n"
+      out << "// Virtual dispatch: default implementations.\n"
              "// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable\n"
              "// pointer is at offset 0; the function is vtable[slot].\n";
       for (const auto &kv : virtualCallSigs_) {
@@ -1703,7 +1726,7 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
           fwd += ", __a" + std::to_string(i);
           fnArgTypes += ", " + args[i];
         }
-        out << "__attribute__((weak)) " << ret << " __VERIFIER_virtual_call_"
+        out << ret << " __VERIFIER_virtual_call_"
             << suffix << "(void* __obj, int __slot" << params << ") {\n";
         out << "  void* __fn = ((void**)*(void**)__obj)[__slot];\n";
         out << "  " << (ret == "void" ? "" : "return ")

@@ -228,14 +228,15 @@ private:
       return true;
     }
 
-    // Array-typed value: C does not allow array assignment; use __builtin_memcpy.
+    // Array-typed value: C does not allow array assignment; use memcpy.
     if (mlir::isa<cir::ArrayType>(val.getType())) {
       std::string vn = m.getOrCreateName(val);
       std::string pn = m.getOrCreateName(ptr);
       // pn is a pointer to the array; vn is the array lvalue (direct access).
       std::string src = (m.isDirectAccess(val) && !vn.empty() && vn[0] != '&')
                             ? ("&(" + vn + ")") : vn;
-      out << "  __builtin_memcpy(" << pn << ", " << src
+      m.ensureMemcpyDeclared();
+      out << "  memcpy(" << pn << ", " << src
           << ", sizeof(*" << pn << "));\n";
       return true;
     }
@@ -300,13 +301,15 @@ private:
       auto dstArrTy = llvm::dyn_cast<cir::ArrayType>(dstPtrTy.getPointee());
       if (srcArrTy && dstArrTy && srcArrTy.getSize() == dstArrTy.getSize() && srcArrTy.getElementType() == dstArrTy.getElementType()) {
         uint64_t size = srcArrTy.getSize();
-        // Copy via __builtin_memcpy rather than an element-wise loop: when the
-        // element type is itself an array (multi-dimensional), `dst[i] = src[i]`
-        // is an array assignment, which C rejects. memcpy works for any element
-        // type. Length = outer count * sizeof(one element); subscripting works
-        // whether the operand is a direct-access array or a pointer.
+        // Copy via memcpy rather than an element-wise loop: when the element
+        // type is itself an array (multi-dimensional), `dst[i] = src[i]` is an
+        // array assignment, which C rejects. memcpy works for any element type.
+        // Length = outer count * sizeof(one element); subscripting works whether
+        // the operand is a direct-access array or a pointer. Standard `memcpy`
+        // (not `__builtin_memcpy`) so SV-COMP verifiers model the copy.
+        m.ensureMemcpyDeclared();
         out << "  // array copy\n";
-        out << "  __builtin_memcpy(" << dstName << ", " << srcName << ", "
+        out << "  memcpy(" << dstName << ", " << srcName << ", "
             << "(unsigned long)" << size << " * sizeof(" << srcName << "[0]));\n";
         return true;
       }

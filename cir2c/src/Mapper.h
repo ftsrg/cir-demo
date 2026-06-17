@@ -142,6 +142,25 @@ public:
   /// into the internal buffer; used for complex (non-primitive) return types.
   void ensureVerifierNondetMemoryDeclared();
 
+  /// Record `extern void *memcpy(void*, const void*, unsigned long);` once into
+  /// the internal buffer. Emitted for array/struct/bitfield copies instead of
+  /// `__builtin_memcpy`: SV-COMP verifiers (CPAchecker, ESBMC) model the libc
+  /// `memcpy` by name but treat the `__builtin_` form as an unknown no-op, which
+  /// would leave the destination nondeterministic.
+  void ensureMemcpyDeclared();
+
+  /// Record `extern void *memset(void*, int, unsigned long);` once. Same
+  /// rationale as ensureMemcpyDeclared: emit the libc name, not `__builtin_`.
+  void ensureMemsetDeclared();
+
+  /// Record `extern void *memchr(const void*, int, unsigned long);` once. Same
+  /// rationale as ensureMemcpyDeclared.
+  void ensureMemchrDeclared();
+
+  /// Emit `extern void abort(void);` once (SV-COMP convention) into `out`.
+  /// Used by trap/unreachable lowering and the __cxa_pure_virtual stub.
+  void ensureAbortDeclared(std::ostream &out);
+
   /// Map a single function. Returns true on success, false on unrecoverable error.
   bool mapFunc(mlir::Operation *fop, std::ostream &out);
 
@@ -291,6 +310,9 @@ private:
   std::ostringstream verifierDeclsBuf_;
   std::set<std::string> verifierNondetDeclared_;
   bool verifierNondetMemoryDeclared_ = false;
+  bool memcpyDeclared_ = false;
+  bool memsetDeclared_ = false;
+  bool memchrDeclared_ = false;
   // Dead-code elision state (issue #7 follow-up).
   bool reachabilityComputed_ = false;
   std::set<std::string> reachableDefs_;   // function symbols to retain

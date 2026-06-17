@@ -294,19 +294,23 @@ private:
     std::string len = m.getOrCreateName(o->getOperand(2));
     std::string ctype = m.mapTypeToC(o->getResult(0).getType());
     std::string tmp = m.freshName("memchr");
-    // Use the GCC builtin so we don't need <string.h> or an extern declaration.
-    out << "  " << ctype << " " << tmp << " = (" << ctype << ")__builtin_memchr("
+    // Emit the libc name with a forward declaration, not `__builtin_memchr`:
+    // SV-COMP verifiers model `memchr` but treat the builtin as an unknown.
+    m.ensureMemchrDeclared();
+    out << "  " << ctype << " " << tmp << " = (" << ctype << ")memchr("
         << src << ", " << pat << ", " << len << ");\n";
     m.setName(o->getResult(0), tmp);
     return true;
   }
 
-  // cir.libc.memset(dst, val, len) -> __builtin_memset (no <string.h> required).
+  // cir.libc.memset(dst, val, len) -> memset, declared via ensureMemsetDeclared
+  // (libc name, not `__builtin_memset`, so SV-COMP verifiers model it).
   static bool handleMemSet(cir::MemSetOp op, Mapper &m, std::ostream &out) {
     std::string dst = m.getOrCreateName(op.getDst());
     std::string val = m.getOrCreateName(op.getVal());
     std::string len = m.getOrCreateName(op.getLen());
-    out << "  __builtin_memset(" << dst << ", (int)" << val
+    m.ensureMemsetDeclared();
+    out << "  memset(" << dst << ", (int)" << val
         << ", (unsigned long)" << len << ");\n";
     return true;
   }
