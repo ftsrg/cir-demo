@@ -231,6 +231,20 @@ void Mapper::ensureAbortDeclared(std::ostream &out) {
   out << "extern void abort(void);\n";
 }
 
+void Mapper::emitAbiAttrNote(std::ostream &out) {
+  if (abiAttrNoteEmitted_) return;
+  if (!usesPackedStruct_ && !usesMemberFnPtr_) return;
+  abiAttrNoteEmitted_ = true;
+  out << "// WARNING: this output relies on non-ISO ABI attribute(s) below.\n"
+         "// A verifier/compiler that ignores them produces UNSOUND results:\n";
+  if (usesPackedStruct_)
+    out << "//   __attribute__((packed))     - exact struct byte layout (no padding)\n";
+  if (usesMemberFnPtr_)
+    out << "//   __attribute__((aligned(2))) - even function addresses, required by\n"
+           "//                                 pointer-to-member dispatch (low-bit tag)\n";
+  out << "\n";
+}
+
 bool Mapper::isStdCallName(const std::string &mangled,
                             const std::string &demangled) {
   // Use the Itanium mangled name when available: the prefix unambiguously
@@ -1699,9 +1713,16 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
       bool isPacked = false;
       if (auto itr = knownRecordTypes.find(sname); itr != knownRecordTypes.end())
         isPacked = itr->second.getPacked();
+      if (isPacked) usesPackedStruct_ = true;
       out << (isPacked ? " } __attribute__((packed));\n" : " };\n");
     }
     out << "\n";
+
+    // One-time banner: the output still relies on two non-ISO ABI attributes.
+    // A verifier/compiler that silently ignores them produces UNSOUND results
+    // (wrong struct offsets / misread member-function pointers), so flag them
+    // both in the artifact and on stderr (below, in mapModule).
+    emitAbiAttrNote(out);
 
     // Default __VERIFIER_virtual_call_<sig> implementations. Emitted after
     // struct definitions because return types may be std__ structs that need
@@ -1896,6 +1917,17 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   verifierDeclsBuf_.clear();
   if (!decls.empty()) out << decls;
   out << funcsBuf.str();
+
+  // Top-level module only: warn on stderr about non-ISO ABI attributes the
+  // output kept, so whoever runs the mapper (and picks a verifier) is alerted.
+  if (!module->getParentOp()) {
+    if (usesPackedStruct_)
+      llvm::errs() << "xcfa-mapper: warning: output uses __attribute__((packed)); "
+                      "the verifier must honor exact struct layout for sound results.\n";
+    if (usesMemberFnPtr_)
+      llvm::errs() << "xcfa-mapper: warning: output uses __attribute__((aligned(2))) "
+                      "for pointer-to-member dispatch; functions must stay 2-byte aligned.\n";
+  }
   return true;
 }
 

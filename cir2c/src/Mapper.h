@@ -161,6 +161,11 @@ public:
   /// Used by trap/unreachable lowering and the __cxa_pure_virtual stub.
   void ensureAbortDeclared(std::ostream &out);
 
+  /// Emit a one-time comment banner into `out` flagging the non-ISO ABI
+  /// attributes (`packed`, `aligned(2)`) the output relies on, so a downstream
+  /// verifier knows it must honor them. No-op if none are used.
+  void emitAbiAttrNote(std::ostream &out);
+
   /// Map a single function. Returns true on success, false on unrecoverable error.
   bool mapFunc(mlir::Operation *fop, std::ostream &out);
 
@@ -350,6 +355,11 @@ private:
   // set, every emitted function is force-aligned (GCC otherwise packs functions
   // onto odd addresses, misreading a non-virtual member pointer as virtual).
   bool usesMemberFnPtr_ = false;
+  // Set when the output emits a packed struct (exact ABI byte layout). Both this
+  // and usesMemberFnPtr_ drive the one-time ABI-attribute warning (output banner
+  // + stderr) telling the consumer the verifier must honor the attribute.
+  bool usesPackedStruct_ = false;
+  bool abiAttrNoteEmitted_ = false;
   mlir::ModuleOp currentModule_;  // set at the start of mapModule for use in helpers
 
   // Exception handling: set if any cir.try / cir.throw / cir.try_call /
