@@ -460,11 +460,11 @@ bool Mapper::emitFuncForwardDecl(mlir::Operation *fop, std::ostream &out) {
     }
   }
 
-  // _GLOBAL__sub_I_* functions are C++ global constructor trampolines placed
-  // in the .init_array section.  Tag them with __attribute__((constructor))
-  // so GCC invokes them before main() when we compile as plain C.
-  if (sym.getValue().str().rfind("_GLOBAL__sub_I_", 0) == 0)
-    out << "__attribute__((constructor)) ";
+  // _GLOBAL__sub_I_* functions are C++ global constructor trampolines that
+  // normally run before main() via the .init_array section. We emit them as
+  // ordinary functions (no __attribute__((constructor))) and instead call them
+  // explicitly at the top of main() — see mapModule's collection pass and the
+  // injection in mapFunc. SV-COMP verifiers ignore the constructor attribute.
 
   // Declaration-only functions are external references; emit them as extern so
   // the verifier knows their signature without pulling in any system headers.
@@ -580,22 +580,19 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
     if (!params.empty()) params += ", ...";
   }
 
-  // Tag _GLOBAL__sub_I_* trampolines as constructor so they run before main.
+  // Global constructors (`_GLOBAL__sub_I_*` trampolines and explicit
+  // __attribute__((constructor)) functions, marked global_ctor in CIR) are NOT
+  // tagged with the attribute here: SV-COMP verifiers ignore it. They are
+  // emitted as ordinary functions and called explicitly at the top of main()
+  // (collected in mapModule, injected below).
+  //
+  // KNOWN LIMITATION: explicit __attribute__((destructor)) functions (global_dtor
+  // in CIR) are likewise emitted as plain functions but are NOT re-invoked. A
+  // sound replacement would have to run them on every exit path from main(),
+  // including exit()/abort(), which have no single textual site. None occur in
+  // the current workload (C++ static-object destructors register via
+  // __cxa_atexit inside __cxx_global_var_init, not via this attribute).
   std::string ctorAttr;
-  if (sym.getValue().str().rfind("_GLOBAL__sub_I_", 0) == 0)
-    ctorAttr = "__attribute__((constructor)) ";
-  // Functions carrying __attribute__((constructor))/((destructor)) are marked
-  // global_ctor/global_dtor in CIR. Without re-emitting the attribute they would
-  // never run automatically. Priority 65535 is GCC's "unspecified" default, so
-  // only emit an explicit priority when it differs.
-  if (auto funcOp = mlir::dyn_cast<cir::FuncOp>(fop)) {
-    if (auto p = funcOp.getGlobalCtorPriority())
-      ctorAttr += (*p == 65535) ? "__attribute__((constructor)) "
-                  : ("__attribute__((constructor(" + std::to_string(*p) + "))) ");
-    if (auto p = funcOp.getGlobalDtorPriority())
-      ctorAttr += (*p == 65535) ? "__attribute__((destructor)) "
-                  : ("__attribute__((destructor(" + std::to_string(*p) + "))) ");
-  }
   // Force even function addresses when the module uses pointer-to-member
   // functions, so the Itanium `ptr & 1` virtual/non-virtual discriminator works
   // (GCC otherwise packs functions onto odd addresses).
@@ -625,6 +622,17 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
 
   out << " {\n";
   traceability.recordOperationTrace(fop->getName().getStringRef(), funcInputText, funcHeaderText + " {\n", true);
+
+  // C++ static initialization and explicit __attribute__((constructor))
+  // functions normally run before main() via .init_array. We don't emit the
+  // constructor attribute (SV-COMP verifiers ignore it), so call the collected
+  // constructors explicitly here, in the order the loader would. This assumes
+  // main() is the program entry point.
+  if (sym.getValue().str() == "main" && !globalCtorSymbols_.empty()) {
+    out << "  // global constructors (C++ static init), normally run before main\n";
+    for (const std::string &ctorSym : globalCtorSymbols_)
+      out << "  " << getFunctionOutputName(ctorSym) << "();\n";
+  }
 
   Region &r = fop->getRegion(0);
 
@@ -967,6 +975,40 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &out) {
   // weak definitions (e.g. the std I/O machinery left dead after I/O
   // externalization) can be elided. Computed once for the whole module tree.
   computeReachableDefs(module);
+
+  // Collect global constructors (C++ static-init trampolines `_GLOBAL__sub_I_*`
+  // and explicit `__attribute__((constructor))` functions) so they can be
+  // called explicitly at the top of main(). We deliberately do NOT emit
+  // `__attribute__((constructor))`: SV-COMP verifiers treat main() as the sole
+  // entry and ignore the attribute, which would leave globals uninitialized.
+  // We therefore ASSUME main() is the program entry point. Collected once, from
+  // the top-level module only (`walk` reaches nested modules), so the recursive
+  // mapModule calls in the third pass below do not clobber the list.
+  if (!module->getParentOp()) {
+    globalCtorSymbols_.clear();
+    struct Ctor { uint32_t priority; unsigned order; std::string sym; };
+    std::vector<Ctor> ctors;
+    unsigned order = 0;
+    module->walk([&](cir::FuncOp f) {
+      auto sym = f->getAttrOfType<mlir::StringAttr>(
+          mlir::SymbolTable::getSymbolAttrName());
+      if (!sym) return;
+      std::string s = sym.getValue().str();
+      bool isTrampoline = s.rfind("_GLOBAL__sub_I_", 0) == 0;
+      std::optional<uint32_t> prio = f.getGlobalCtorPriority();
+      if (!isTrampoline && !prio) return;
+      // GCC runs lower priority numbers first; unprioritized constructors
+      // (including the `_GLOBAL__sub_I_*` trampoline) run after, in module
+      // order. 65535 is GCC's "unspecified" default priority.
+      ctors.push_back({prio.value_or(65535), order++, std::move(s)});
+    });
+    std::stable_sort(ctors.begin(), ctors.end(),
+                     [](const Ctor &a, const Ctor &b) {
+                       if (a.priority != b.priority) return a.priority < b.priority;
+                       return a.order < b.order;
+                     });
+    for (auto &c : ctors) globalCtorSymbols_.push_back(c.sym);
+  }
 
   // Pre-scan: detect _Atomic and volatile qualifiers on global variables and
   // local allocas by inspecting cir.load / cir.store operations.  When a

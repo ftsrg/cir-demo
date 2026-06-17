@@ -238,6 +238,12 @@ public:
 private:
   bool structsEmitted = false;
   bool ehPreambleEmitted = false;
+  // Global constructors (C++ static-init trampolines `_GLOBAL__sub_I_*` and
+  // explicit `__attribute__((constructor))` functions), in the order the loader
+  // would run them. Collected once from the whole module tree and called
+  // explicitly at the top of main() instead of relying on the constructor
+  // attribute, which SV-COMP verifiers ignore. Holds raw (mangled) symbols.
+  std::vector<std::string> globalCtorSymbols_;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
   TraceabilityTracker traceability;
   llvm::DenseMap<mlir::Value, std::string> valueNames;
