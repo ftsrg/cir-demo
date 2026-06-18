@@ -1,0 +1,33 @@
+======================================
+  Test Summary
+======================================
+Total tests:        1812
+Passed (full):      979   (compile + link + run + output match)
+Compiled, not run:  40   (valid C; could not link/run)
+Skipped:            778
+  blocklisted op:     50   (out-of-scope CIR op)
+  arch SIMD intrinsic:389   (__m128i/__m256i/… — wrong target arch)
+  unsupported target: 77   (AltiVec / inline asm / …)
+  GNU/MSVC extension: 84   (typeof/__int64/… not in ISO c23)
+  missing header:     4   (CIR gen: header not found)
+  unknown type name:  11   (CIR gen)
+  CIR not implemented:35   (ClangIR feature NYI)
+  other CIR-gen error:91   (parse/compile error)
+  upstream ClangIR:   37   (clang -fclangir also wrong — not our bug)
+Timed out:          14
+Failed:             1
+  mapper failed:      0
+  compile failed:     1
+  output mismatch:    0   (linked & ran; wrong output/exit)
+Some tests failed. Check output files in /__w/cir-demo/cir-demo/cir2c/test/integration/output, /__w/cir-demo/cir-demo/cir2c/test/llvm-eval/output and /__w/cir-demo/cir-demo/cir2c/test/esbmc-eval/output
+{
+  "total": 1812,
+  "passed": 979,
+  "compiled_not_run": 40,
+  "skipped": 778,
+  "timed_out": 14,
+  "failed": 1,
+  "mapper_failed": 0,
+  "compile_failed": 1,
+  "mismatch": 0
+}

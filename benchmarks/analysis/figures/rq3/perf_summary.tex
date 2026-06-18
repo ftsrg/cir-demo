@@ -1,0 +1,15 @@
+\begin{table}[t]
+  \centering
+  \caption{CPU time and memory per task suite (all retained verifiers, all runs). Times in seconds, memory in GB.}
+  \label{tab:perf-summary}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+ & runs & timeouts & cpu\_median\_s & cpu\_p90\_s & cpu\_max\_s & cpu\_total\_h & mem\_median\_gb & mem\_p90\_gb & mem\_max\_gb \\
+config &  &  &  &  &  &  &  &  &  \\
+\midrule
+esbmc-eval & 1122 & 9 & 0.382 & 18.49 & 900.9 & 4.397 & 0.048 & 0.369 & 15 \\
+esbmc-eval-mapped & 19209 & 1135 & 7.395 & 290.8 & 903.1 & 449.5 & 0.151 & 1.095 & 15 \\
+esbmc-eval-mapped-nostd & 3382 & 115 & 2.421 & 57.98 & 902.6 & 49.08 & 0.118 & 0.604 & 15 \\
+\bottomrule
+\end{tabular}
+\end{table}

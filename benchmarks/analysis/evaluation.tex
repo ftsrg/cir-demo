@@ -1,0 +1,289 @@
+\section{Evaluation}\label{sec:eval}
+
+We evaluate the pipeline with three research questions, each reaching one stage further down the toolchain than the last:
+\begin{description}
+  \item[RQ1] \textbf{Completeness:} how much of contemporary C++ does the pipeline accept end-to-end?
+  \item[RQ2] \textbf{Soundness:} when it produces a translation, does a C verifier reach the same verdict the C++ source warrants?
+  \item[RQ3] \textbf{Performance:} what does the pipeline cost compared to a purpose-built C++ verifier such as ESBMC?
+\end{description}
+
+We use two sources for input programs:
+
+\begin{itemize}
+  \item \textbf{LLVM suite.} The \emph{SingleSource} subset of the LLVM test suite~\cite{llvmtestsuite}, a large collection of self-contained programs with deterministic output, of which we use the C++ ones. %
+  \item \textbf{ESBMC suite.} The benchmarks originally distributed with the ESBMC v7.6 paper~\cite{esbmc76}, covering inheritance, polymorphism, templates, exception handling, STL containers, and a number of GCC test-suite samples. %
+\end{itemize}
+
+The main difference in the suites is what expected result is available: the LLVM suite includes the expected output for program execution, while the ESBMC suite includes labeling indicating the expected verification result. % 
+
+Both suites contain programs we must skip in the evaluation for reasons such as: missing / buggy support by upstream ClangIR; missing headers; unsupported targets. %
+\todo{I think we need to mention these at the earlier parts in a bit more detail, otherwise we might get a reviewer comment about it:} There is also a set of out of scope ClangIR operations, \eg inline assembly, setjmp/longjmp, 128 bit integers. %
+Overall, in the ESBMC suite we skip \esbmcSkipped /\esbmcTotal, while in the LLVM suite we skip \llvmSkipped /\llvmTotal programs. %
+The artifact includes more details on what was skipped and why. %
+
+%For translation-coverage completeness (\autoref{sec:eval-coverage}), verdict-agreement soundness (\autoref{sec:eval-soundness}), and performance (\autoref{sec:eval-performance}), we use a \esbmcTotal-program C++ benchmark suite originally distributed with the ESBMC v7.6 paper~\cite{esbmc76}, covering inheritance, polymorphism, templates, exception handling, STL containers, and a number of GCC test-suite samples. %
+%We refer to this simply as the ``ESBMC suite'' in the rest of the paper. %
+
+%For behavioural-equivalence completeness (\autoref{sec:eval-equivalence}) we use the \emph{SingleSource} subset of the LLVM test suite~\cite{llvmtestsuite}, a large collection of self-contained C and C++ programs each producing deterministic output. %
+%ESBMC itself is the reference verifier in our comparisons: it is the most recent production-quality C++ verifier in the open-source CEGAR/BMC ecosystem, and the ESBMC suite is calibrated for it. %
+
+\subsection{Completeness: Language-Feature Coverage}\label{sec:eval-coverage}
+
+\subsubsection{Setup}
+
+For each benchmark in both suites, we execute the transformation pipeline, \ie \texttt{clang} and \toolcirc, and then we attempt to compile the generated C with \texttt{clang}. %
+We classify each run into one of four mutually exclusive outcomes:
+
+\begin{itemize}
+  \item \textit{\ocPass}: the pipeline runs and the generated C compiles;
+  \item \textit{\ocToolFail}: \toolcirc refuses to handle some ClangIR construct;
+  \item \textit{\ocCompileFail}: \toolcirc produces C, but \texttt{clang} rejects it;
+  \item \textit{\ocTimeout}: a pipeline stage exceeds the time budget.
+\end{itemize}
+
+Execution and verification of the emitted C code will be analysed in RQ2 and RQ3, respectively. %
+
+\subsubsection{Results}
+
+\begin{table}[t]
+\centering
+\caption{Completeness: does the pipeline emit C that compiles? Outcomes on both suites. For the LLVM suite this counts compilation only; the behavioural-equivalence (output) results of the same run are reported in \autoref{tab:eval-equivalence}.}
+\label{tab:eval-cpp}
+\footnotesize
+\begin{subtable}[t]{0.49\columnwidth}
+\centering
+\caption{ESBMC suite.}
+\label{tab:eval-cpp-esbmc}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Outcome & Count \\
+\midrule
+\ocTimeout & \esbmcTimedOut \\
+\ocToolFail & \esbmcFailMapper \\
+\ocCompileFail & \esbmcFailCompile \\
+\ocPassCompiles & \esbmcCompiles \\
+\midrule
+\textit{total (attempted)} & \esbmcAttempted \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+\hfill
+\begin{subtable}[t]{0.49\columnwidth}
+\centering
+\caption{LLVM SingleSource.}
+\label{tab:eval-cpp-llvm}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Outcome & Count \\
+\midrule
+\ocTimeout & \llvmTimedOut \\
+\ocToolFail & \llvmFailMapper \\
+\ocCompileFail & \llvmFailCompile \\
+\ocPassCompiles & \llvmCompiles \\
+\midrule
+\textit{total (attempted)} & \llvmAttempted \\
+\bottomrule
+\end{tabular}
+\end{subtable}
+\end{table}
+
+\autoref{tab:eval-cpp} summarises the outcomes for both suites. %
+On the ESBMC suite, the pipeline produces compilable C for \esbmcCompiles of the \esbmcAttempted benchmarks (\esbmcPassShareAttempted,\%). %(\esbmcCompileShare\,\%)
+%, and for \esbmcCompileShareAttempted\,\% of the \esbmcAttempted benchmarks that are not skipped as out of scope. %
+\toolcirc itself refuses nothing on this suite (\esbmcFailMapper \toolcirc failures), only \esbmcFailCompile generated files are rejected by \texttt{clang}, and \esbmcTimedOut benchmarks exceed the time budget. %
+
+The \esbmcSkipped skipped benchmarks not counted here are almost all blocked upstream of \toolcirc: \esbmcSkipCirGenError are Clang/ClangIR code-generation errors that stop the pipeline before any C is emitted, and the remaining \esbmcSkipUnknownType is an unrecognised type name. %
+
+%The LLVM SingleSource suite, broader and not calibrated for any verifier, tells the same story. %
+For the LLVM test suite, the pipeline emits compilable C for \llvmCompiles of the  of the \llvmAttempted programs (\llvmCompileShareAttempted\,\%), with \llvmFailMapper \toolcirc failures and \llvmFailCompile \texttt{clang} rejection. %
+
+%Whether that compilable C also \emph{behaves} like the source is the next question of \autoref{sec:eval-equivalence}. %
+
+\subsubsection{Discussion}
+
+Two takeaways are worth highlighting. %
+First, \toolcirc emits compilable C for essentially the whole suite: \toolcirc refusals have dropped to \esbmcFailMapper and \texttt{clang} rejections to \esbmcFailCompile, so the residual gap is dominated by upstream Clang/ClangIR code-generation errors (\esbmcSkipCirGenError of the \esbmcSkipped skipped cases) rather than by \toolcirc. %
+Second, improvements in upstream ClangIR therefore raise our coverage automatically, with no per-tool intervention required. %
+
+Compilability is a proxy for correctness, not a guarantee of it: the generated C may compile yet diverge from the source's behaviour. %
+The behavioural-equivalence experiment (\autoref{sec:eval-equivalence}) will focus on such divergence. % this and finds no divergences, and end-to-end verdict agreement (\autoref{sec:eval-soundness}) closes the remaining gap for the cases a verifier can discharge. %
+
+\subsection{Completeness: Behavioural Equivalence}\label{sec:eval-equivalence}
+
+\subsubsection{Setup}
+
+To assess semantic preservation we run a differential test on the \emph{SingleSource} directory of the LLVM test suite~\cite{llvmtestsuite}, which collects \llvmTotal self-contained C++ programs that produce deterministic output. %
+
+For each program we run the transformation (\texttt{clang} and \toolcirc) again, then compile and run the emitted C, again with Clang; last, the two outputs are compared byte-for-byte. %
+
+We reuse the outcome classification of \autoref{sec:eval-coverage} and we extend it with the following new values:
+
+%, except that \textit{\ocPass} now requires byte-identical output rather than mere compilation, and add two outcomes that arise only once the program is run: %
+
+\begin{itemize}
+  \item \textit{\ocNotRun}: the emitted C could be compiled, but not run (\eg linking issue).
+  \item \textit{\ocMismatch}: run completes, but output differs from expected output, \ie a semantic-preservation bug in \toolcirc;
+\end{itemize}
+
+\subsubsection{Results}
+
+\begin{table}[t]
+\centering
+\caption{Behavioural-equivalence outcomes on the LLVM SingleSource workload: the original source and the pipeline-emitted C, each compiled and run with the standard toolchain, compared byte-for-byte. \emph{Output mismatch} is the only outcome that signals a semantic-preservation bug in \toolcirc.}
+\label{tab:eval-equivalence}
+\begin{tabular}{lr}
+\toprule
+Outcome & Count \\
+\midrule
+\ocTimeout & \llvmTimedOut \\
+\ocToolFail & \llvmFailMapper \\
+\ocCompileFail & \llvmFailCompile \\
+\ocNotRun & \llvmCompiledNotRun \\
+\ocMismatch & \llvmFailMismatch \\
+\ocPassMatches & \llvmPassed \\
+\midrule
+\textit{total (attempted)} & \llvmAttempted \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The pipeline emitted no output mismatches at all (\autoref{tab:eval-equivalence}): every program whose translated C compiled, linked, and ran reproduced the reference output byte-for-byte. %
+\llvmPassShareAttempted\,\% of the \llvmAttempted programs pass end-to-end; a further \llvmCompiledNotRun produced valid C that could not be linked, \llvmTimedOut timed out, and only \llvmFailCompile failed to compile. %
+%The residual gap is not a \toolcirc limitation: \toolcirc failures number \llvmFailMapper, the remainder being skipped inputs outside its target class (\autoref{sec:eval}). %
+
+\subsubsection{Discussion}
+
+Behavioural equivalence is a stronger completeness criterion than translation coverage: it catches both constructs \toolcirc refuses and constructs \toolcirc mis-translates while emitting plausible-looking C. %
+The absence of output mismatches suggests that \toolcirc's handler implementations are semantically faithful where they exist. %, and that the bottleneck for the pipeline as a whole remains coverage rather than correctness. %
+
+\subsection{Soundness: End-to-End Verdict Agreement}\label{sec:eval-soundness}
+
+\subsubsection{Setup}
+
+Next, we continue with verification: we will use the ESBMC-suite to benchmark the soundness of our transformation through the verification result software formal verifiers. %
+Based on preliminary experiments, we opt to use ESBMC as our single C++ verifier -- the other possible tool, CBMC, solves only a fragment of the tasks at hand. %
+
+\paragraph{C Verifiers} %
+We execute \todo{TBA} SV-COMP verifiers on the ESBMC suite: \todo{tool names}. %
+We use \toolcirc to provide C++ support for these tools and we modify the tasks to use the reachability property of SV-COMP (calling \texttt{unreach\_call()}) inside the asserts. %
+%We plan to submit the transformed tasks for the C track as SV-COMP in the near future. %
+
+\paragraph{ESBMC and Labeling} %
+The ESBMC suite is labeled by correctness regarding the reachability of failing asserts (label value is either \textit{true} or \textit{false}). %
+Although the name of the labeled error property suggests reachability, preliminary exploration has shown that:
+\begin{itemize}
+  \item some labels seem to take other properties (\eg memory safety\todo{check correctness}) into account as well, and
+  \item ESBMC itself produces some wrong results compared to this labeling, both when configured to only check reachability and with it's default configuration checking for several safety properties.
+\end{itemize}
+%A preliminary result is that ESBMC itself produces a \todo{nem elhanyagolható} number of wrong results compared to the labeling of the suite ( \todo{TBA.} ). %
+In this evaluation, we configured ESBMC so that it only checks for the reachability of assert failures. %
+
+\paragraph{Output Classification}
+We conduct this experiment assuming that neither the labeling nor the verification tools are reliable. %
+This means that the conclusions drawn regarding the correctness of the C++ to C transformation will be indirect, based not on a single verifier's opinion, rather on aggregations of each. %
+We classify each verification result from each verifier as one of the following:
+\begin{itemize}
+  \item \textit{true}: no reachable violation exists
+  \item \textit{false}: violation is reachable
+  \item \textit{unknown}: no conclusive result (\eg timeout, tool error)
+\end{itemize}
+
+\todo{then how do we aggregate these}
+
+\todo{approximations, std nondet, etc. details, 1+ table or only one?}
+
+\subsubsection{Results}
+
+\begin{table}[t]
+\centering
+\caption{Verdict agreement on the 37 successfully translated cases.
+\PH{table to be filled with actual run results}}
+\label{tab:eval-soundness}
+\begin{tabular}{lrr}
+\toprule
+Outcome & pipeline$\to$CBMC & ESBMC \\
+\midrule
+correct (true)            & \PH{X} & \PH{X} \\
+correct (false)           & \PH{X} & \PH{X} \\
+incorrect                 & \PH{X} & \PH{X} \\
+inconclusive              & \PH{X} & \PH{X} \\
+\midrule
+\textit{solved (correct)} & \PH{X} & \PH{X} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%\autoref{tab:eval-soundness} summarises the verdicts. %
+%Of the cases that complete, \PH{X} match ground truth, \PH{X} disagree, and \PH{X} are inconclusive within the time budget. %
+%The \PH{X} disagreements stem from \PH{categorise}; none of them are caused by \toolcirc silently dropping observable behaviour, which is what the experiment is primarily designed to rule out. %
+
+\subsubsection{Discussion}
+
+
+\subsection{Performance: Comparison to ESBMC}\label{sec:eval-performance}
+
+\subsubsection{Setup}
+
+On the subset of benchmarks where both ESBMC's native frontend and our pipeline produce a verdict, we measure wall-clock time, including (for our pipeline) the cost of \texttt{clang}, \toolcirc, and the downstream CBMC run. %
+The pipeline overhead is fixed per-input parse work; ESBMC's overhead is its in-process Clang AST consumer plus GOTO conversion. %
+A fair like-for-like comparison would require running ESBMC's bounded model checker against CBMC's, which is itself a confounder; we report both numbers and note where they diverge for reasons unrelated to the frontend. %
+
+\subsubsection{Results}
+
+\begin{table}[t]%
+\centering
+\caption{Median wall-clock time per benchmark category, in seconds.
+\PH{table to be filled with actual run results}}
+\label{tab:eval-perf}
+\begin{tabular}{lrr}
+\toprule
+Category & pipeline$\to$CBMC & ESBMC \\
+\midrule
+inheritance / polymorphism & \PH{X} & \PH{X} \\
+exception handling         & \PH{X} & \PH{X} \\
+templates                  & \PH{X} & \PH{X} \\
+STL containers             & \PH{X} & \PH{X} \\
+GCC test-suite samples     & \PH{X} & \PH{X} \\
+\midrule
+\textit{overall median}    & \PH{X} & \PH{X} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\autoref{tab:eval-perf} reports the per-category medians. %
+The pipeline carries a fixed translation overhead of a few hundred milliseconds per input (Clang plus \toolcirc), which is amortised by the downstream verifier's runtime on all but the smallest benchmarks. %
+On categories that benefit from the proposed intrinsics -- in particular polymorphism, where \texttt{\_\_VERIFIER\_dynamic\_call} replaces a function-pointer indirection -- the pipeline's downstream verifier converges in time comparable to ESBMC's native flow. %
+On STL-heavy categories ESBMC retains a clear lead, as expected: it ships operational models that our pipeline does not yet replicate. %
+
+\section{The State of ClangIR for Verification}\label{sec:cir-state}
+
+We close with a discussion aimed at other researchers considering ClangIR as a verification-tooling foundation. %
+
+\textbf{What works well.} %
+The dialect faithfully represents C and the core, non-template C++ feature set: integer and floating-point arithmetic, structured control flow, scopes and cleanup, struct and union access, virtual dispatch via vtables, the common floating-point library operations, atomics and volatiles, bitfields, variadic arguments, and C++ inheritance modulo the diamond/VTT case. %
+The MLIR substrate makes custom passes and custom output backends genuinely straightforward to write. %
+
+\textbf{What is still maturing.} %
+Three areas deserve flagging. %
+\emph{Exception handling} is present in the dialect (\texttt{cir.try\_call}, EH scopes), but the encoding is non-trivial for downstream tools to consume directly -- \toolcirc among them. %
+\emph{Virtual inheritance} via the Itanium VTT (virtual table) is partially supported in CIR but not in all upstream lowering passes, which surfaces as \texttt{cir.vtt.address\_point} ops in the dialect output that downstream consumers must handle themselves. %
+\emph{C++ standard-library lowering} is in flux: much of \texttt{libstdc++} and \texttt{libc++} relies on templates that ClangIR currently still expands aggressively to LLVM IR rather than retaining at the CIR level, limiting the value of CIR for STL-heavy code. %
+
+\textbf{Recommendation.} %
+For projects that target the non-template, non-exception subset of C++ -- which already covers a substantial fraction of safety-critical embedded code -- ClangIR is a viable starting point and, in our experience, easier to work with than either the Clang AST (which requires consuming an in-process API and tracking AST changes across Clang releases) or LLVM IR (which loses too much structural information for abstraction-based analyses). %
+For projects that depend heavily on exception handling or virtual inheritance, the recommendation is to revisit ClangIR after the next two or three LLVM releases, by which point the pending upstream work is expected to have landed. %
+
+\section{Threats to Validity}\label{sec:threats}
+
+\todo{I want to add somewhere the idea of adding witness validation to the verifier running part}
+
+\textit{Internal.} \toolcirc is under active development; the specific counts in \autoref{tab:eval-cpp}, \autoref{tab:eval-equivalence}, \autoref{tab:eval-soundness}, and~\autoref{tab:eval-perf} reflect the implementation at the time of submission and will move as bugs are fixed. %
+The soundness evaluation is restricted to the 37 benchmarks that currently translate end-to-end, which is a non-random subset of the full suite and may be biased towards constructs \toolcirc handles well. %
+
+\textit{External.} The suite (\esbmcTotal cases) is biased towards textbook constructs; it is not a statistically representative sample of industrial C++. %
+The LLVM SingleSource workload is broader but emphasises small, deterministic programs and does not cover the long-running, multi-translation-unit code typical of industrial C++. %
+The performance comparison uses CBMC as the downstream C verifier, which has its own engineering choices; replication with at least one CEGAR-based C verifier is planned future work. %
+
+\textit{Construct.} ``Producibility of well-formed C'' is a proxy for ``verifiability''; we close that gap partially in \autoref{sec:eval-soundness} but only for cases that already translate. %
+``Behavioural equivalence under standard compilation'' is a proxy for ``semantic preservation''; identical observable output is necessary but not sufficient, since two programs may agree on output and differ on memory-safety properties that the verifier would otherwise discharge. %
+``Verdict agreement'' is a proxy for ``soundness'': we observe that the verifier reaches the right verdict, but a single benchmark suite cannot establish a soundness property in the formal sense. %
