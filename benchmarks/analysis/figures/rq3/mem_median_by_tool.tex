@@ -2,30 +2,35 @@
   \centering
   \caption{Median memory (GB) per verifier and task suite.}
   \label{tab:mem-median-by-tool}
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrr}
 \toprule
-config & esbmc-eval & esbmc-eval-mapped & esbmc-eval-mapped-nostd \\
-tool &  &  &  \\
+config & cpp-baseline & c-exact\_std & c-havoc\_std & c-nohavoc\_std \\
+tool &  &  &  &  \\
 \midrule
-2ls & NaN & 0.005 & 0.005 \\
-bubaak & NaN & 0.041 & 0.038 \\
-bubaak-split & NaN & 0.061 & 0.058 \\
-cbmc & 0.006 & 0.006 & 0.006 \\
-cpachecker & NaN & 0.179 & 0.167 \\
-divine & 0.204 & 0.568 & 0.17 \\
-emergentheta & NaN & 0.463 & 0.126 \\
-esbmc-kind & 0.048 & 0.048 & 0.047 \\
-mopsa & NaN & 0.107 & 0.081 \\
-nacpa & NaN & 0.154 & 0.14 \\
-pinaka & NaN & 0.005 & 0.005 \\
-svf-svc & NaN & 0.058 & 0.037 \\
-theta & NaN & 0.5 & 0.126 \\
-thorn & NaN & 0.302 & 0.125 \\
-uautomizer & NaN & 0.504 & 0.358 \\
-ukojak & NaN & 0.585 & 0.356 \\
-uparalizer & NaN & 9.899 & 1.362 \\
-utaipan & NaN & 0.469 & 0.359 \\
-veriabs & NaN & 0.298 & 0.21 \\
+2ls & NaN & 0.007 & 0.005 & 0.005 \\
+bubaak & NaN & 0.045 & 0.041 & 0.038 \\
+bubaak-split & NaN & 0.067 & 0.061 & 0.058 \\
+cbmc & NaN & 0.007 & 0.006 & 0.006 \\
+cpachecker & NaN & 0.267 & 0.179 & 0.167 \\
+crux & NaN & 0.034 & 0.019 & 0.017 \\
+divine & 0.368 & 0.168 & 0.568 & 0.17 \\
+emergentheta & NaN & 0.185 & 0.462 & 0.126 \\
+esbmc-kind & 0.113 & 0.061 & 0.048 & 0.047 \\
+goblint & NaN & 0.04 & 0.031 & 0.031 \\
+goblint-par & NaN & 0.044 & 0.025 & 0.023 \\
+goblitch & NaN & 0.046 & 0.024 & 0.023 \\
+mopsa & NaN & 0.108 & 0.107 & 0.079 \\
+nacpa & NaN & 0.342 & 0.155 & 0.14 \\
+pinaka & NaN & 0.01 & 0.005 & 0.005 \\
+svf-svc & NaN & 0.134 & 0.058 & 0.036 \\
+symbiotic & NaN & 0.065 & 0.055 & 0.043 \\
+theta & NaN & 0.186 & 0.506 & 0.126 \\
+thorn & NaN & 0.186 & 0.303 & 0.126 \\
+uautomizer & NaN & 0.321 & 0.508 & 0.359 \\
+ukojak & NaN & 0.321 & 0.589 & 0.358 \\
+uparalizer & NaN & 0.324 & 9.848 & 1.408 \\
+utaipan & NaN & 0.322 & 0.469 & 0.357 \\
+veriabs & NaN & 1.274 & 0.306 & 0.214 \\
 \bottomrule
 \end{tabular}
 \end{table}

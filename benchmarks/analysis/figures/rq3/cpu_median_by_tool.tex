@@ -2,30 +2,35 @@
   \centering
   \caption{Median CPU time (s) per verifier and task suite.}
   \label{tab:cpu-median-by-tool}
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrr}
 \toprule
-config & esbmc-eval & esbmc-eval-mapped & esbmc-eval-mapped-nostd \\
-tool &  &  &  \\
+config & cpp-baseline & c-exact\_std & c-havoc\_std & c-nohavoc\_std \\
+tool &  &  &  &  \\
 \midrule
-2ls & NaN & 0.12 & 0.12 \\
-bubaak & NaN & 1.32 & 0.29 \\
-bubaak-split & NaN & 2.09 & 1 \\
-cbmc & 0.14 & 0.11 & 0.11 \\
-cpachecker & NaN & 7.27 & 6.7 \\
-divine & 4.43 & 16.99 & 3.19 \\
-emergentheta & NaN & 12.03 & 3.16 \\
-esbmc-kind & 0.4 & 0.39 & 0.38 \\
-mopsa & NaN & 18.47 & 1.86 \\
-nacpa & NaN & 1.31 & 0.96 \\
-pinaka & NaN & 0.07 & 0.07 \\
-svf-svc & NaN & 0.48 & 0.39 \\
-theta & NaN & 312.5 & 2.33 \\
-thorn & NaN & 17.75 & 2.73 \\
-uautomizer & NaN & 38.07 & 19.88 \\
-ukojak & NaN & 45.53 & 18.4 \\
-uparalizer & NaN & 195.3 & 43.56 \\
-utaipan & NaN & 35.25 & 17.97 \\
-veriabs & NaN & 43.88 & 29.46 \\
+2ls & NaN & 0.13 & 0.1 & 0.09 \\
+bubaak & NaN & 0.82 & 1.31 & 0.3 \\
+bubaak-split & NaN & 1.96 & 1.92 & 0.95 \\
+cbmc & NaN & 0.14 & 0.12 & 0.12 \\
+cpachecker & NaN & 15.21 & 7.05 & 6.49 \\
+crux & NaN & 0.41 & 0.16 & 0.14 \\
+divine & 17.06 & 2.34 & 16.76 & 3.24 \\
+emergentheta & NaN & 4.74 & 11.9 & 2.92 \\
+esbmc-kind & 1.49 & 1.4 & 0.38 & 0.38 \\
+goblint & NaN & 0.46 & 0.24 & 0.22 \\
+goblint-par & NaN & 1.14 & 0.25 & 0.16 \\
+goblitch & NaN & 1.12 & 0.2 & 0.16 \\
+mopsa & NaN & 60.51 & 18.85 & 1.92 \\
+nacpa & NaN & 7.64 & 1.49 & 0.99 \\
+pinaka & NaN & 0.09 & 0.06 & 0.06 \\
+svf-svc & NaN & 0.82 & 0.47 & 0.37 \\
+symbiotic & NaN & 5.11 & 2.54 & 0.65 \\
+theta & NaN & 3.96 & 313.1 & 2.4 \\
+thorn & NaN & 4.26 & 18.03 & 2.71 \\
+uautomizer & NaN & 24.64 & 36.6 & 18.57 \\
+ukojak & NaN & 25.46 & 45.57 & 19 \\
+uparalizer & NaN & 32.43 & 202 & 51.26 \\
+utaipan & NaN & 28.16 & 42.31 & 21.41 \\
+veriabs & NaN & 113.3 & 44.95 & 30 \\
 \bottomrule
 \end{tabular}
 \end{table}
