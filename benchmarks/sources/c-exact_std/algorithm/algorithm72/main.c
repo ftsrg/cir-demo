@@ -159,6 +159,7 @@ struct std__pair___gnu_cxx____normal_iterator_int____std__vector_int__std__alloc
 void __gnu_cxx____ops___Iter_comp_iter_bool_____int__int_____Iter_comp_iter_bool____(struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__* p0, void* p1);
 struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ __gnu_cxx____ops___Iter_comp_iter_bool_____int__int_____gnu_cxx____ops____iter_comp_iter_bool_____int__int___bool____(void* p0);
 struct std__pair___gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int_____int___ std__pair___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int___std__mismatch___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int___bool_____int__int_____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int___bool____(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1, int* p2, void* p3);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -2044,6 +2045,7 @@ bb1100: ;
       char* c1169 = (char*)_str_3;
       unsigned int c1170 = 44;
       char* cast1171 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1168, c1169, c1170, cast1171);
     }
     int* t1172 = mypair1104.second;
@@ -2056,6 +2058,7 @@ bb1100: ;
       char* c1177 = (char*)_str_3;
       unsigned int c1178 = 45;
       char* cast1179 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1176, c1177, c1178, cast1179);
     }
     char* cast1180 = (char*)&(_str_5);

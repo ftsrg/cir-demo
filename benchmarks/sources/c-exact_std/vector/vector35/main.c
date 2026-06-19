@@ -170,6 +170,7 @@ int* int__std____uninitialized_copy_a_int___int___int___int_(int* p0, int* p1, i
 void void_std__vector_int__std__allocator_int______M_range_insert_int__(struct std__vector_int__std__allocator_int__* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1, int* p2, int* p3, struct std__forward_iterator_tag p4);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______std__vector_int__std__allocator_int_____insert_int___void_(struct std__vector_int__std__allocator_int__* p0, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p1, int* p2, int* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -4580,6 +4581,7 @@ bb2422: ;
           char* c2486 = (char*)_str_1;
           unsigned int c2487 = 32;
           char* cast2488 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast2485, c2486, c2487, cast2488);
         }
       int c2489 = 0;

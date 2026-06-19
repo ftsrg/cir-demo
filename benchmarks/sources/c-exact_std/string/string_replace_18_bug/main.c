@@ -89,6 +89,7 @@ extern int memcmp(void* p0, void* p1, unsigned long p2);
 int std__char_traits_char___compare(char* p0, char* p1, unsigned long p2);
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 _Bool bool_std__operator___char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std____throw_out_of_range_fmt(char* p0, ...);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_check_unsigned_long__char_const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, unsigned long p1, char* p2);
@@ -2001,6 +2002,7 @@ bb1156: ;
               char* c1190 = (char*)_str_6;
               unsigned int c1191 = 25;
               char* cast1192 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1189, c1190, c1191, cast1192);
             }
             unsigned long c1193 = 19;
@@ -2017,6 +2019,7 @@ bb1156: ;
               char* c1202 = (char*)_str_6;
               unsigned int c1203 = 28;
               char* cast1204 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1201, c1202, c1203, cast1204);
             }
             unsigned long c1205 = 8;
@@ -2033,6 +2036,7 @@ bb1156: ;
               char* c1214 = (char*)_str_6;
               unsigned int c1215 = 31;
               char* cast1216 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1213, c1214, c1215, cast1216);
             }
             unsigned long c1217 = 8;
@@ -2048,6 +2052,7 @@ bb1156: ;
               char* c1225 = (char*)_str_6;
               unsigned int c1226 = 34;
               char* cast1227 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1224, c1225, c1226, cast1227);
             }
             unsigned long c1228 = 22;
@@ -2064,6 +2069,7 @@ bb1156: ;
               char* c1237 = (char*)_str_6;
               unsigned int c1238 = 37;
               char* cast1239 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1236, c1237, c1238, cast1239);
             }
             struct __gnu_cxx____normal_iterator_char____std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ r1240 = std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____begin(&str1166);
@@ -2087,6 +2093,7 @@ bb1156: ;
               char* c1251 = (char*)_str_6;
               unsigned int c1252 = 42;
               char* cast1253 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1250, c1251, c1252, cast1253);
             }
             _ZN9__gnu_cxx17__normal_iteratorIPKcNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEEC2IPcQsr3stdE16is_convertible_vITL0__T_EEERKNS0_ISD_S8_EE(&agg_tmp21172, &it1167);
@@ -2108,6 +2115,7 @@ bb1156: ;
               char* c1265 = (char*)_str_6;
               unsigned int c1266 = 45;
               char* cast1267 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1264, c1265, c1266, cast1267);
             }
             long c1268 = 8;
@@ -2130,6 +2138,7 @@ bb1156: ;
               char* c1280 = (char*)_str_6;
               unsigned int c1281 = 49;
               char* cast1282 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1279, c1280, c1281, cast1282);
             }
             struct std__basic_ostream_char__std__char_traits_char__* r1283 = std__basic_ostream_char__std__char_traits_char_____std__operator____char__std__char_traits_char___std__allocator_char___(&_ZSt4cout, &str1166);

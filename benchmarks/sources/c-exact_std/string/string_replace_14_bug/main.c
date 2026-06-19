@@ -76,6 +76,7 @@ extern int memcmp(void* p0, void* p1, unsigned long p2);
 int std__char_traits_char___compare(char* p0, char* p1, unsigned long p2);
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 _Bool bool_std__operator___char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std____throw_out_of_range_fmt(char* p0, ...);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_check_unsigned_long__char_const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, unsigned long p1, char* p2);
@@ -1436,6 +1437,7 @@ bb806: ;
               char* c829 = (char*)_str_6;
               unsigned int c830 = 28;
               char* cast831 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast828, c829, c830, cast831);
             }
             unsigned long c832 = 19;
@@ -1452,6 +1454,7 @@ bb806: ;
               char* c841 = (char*)_str_6;
               unsigned int c842 = 31;
               char* cast843 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast840, c841, c842, cast843);
             }
             unsigned long c844 = 8;
@@ -1468,6 +1471,7 @@ bb806: ;
               char* c853 = (char*)_str_6;
               unsigned int c854 = 34;
               char* cast855 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast852, c853, c854, cast855);
             }
             unsigned long c856 = 8;
@@ -1483,6 +1487,7 @@ bb806: ;
               char* c864 = (char*)_str_6;
               unsigned int c865 = 37;
               char* cast866 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast863, c864, c865, cast866);
             }
             struct std__basic_ostream_char__std__char_traits_char__* r867 = std__basic_ostream_char__std__char_traits_char_____std__operator____char__std__char_traits_char___std__allocator_char___(&_ZSt4cout, &str816);

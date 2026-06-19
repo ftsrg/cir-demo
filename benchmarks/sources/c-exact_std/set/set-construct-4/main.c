@@ -51,6 +51,7 @@ struct std___Rb_tree_const_iterator_int_ std__set_int__std__less_int___std__allo
 void std__set_int__std__less_int___std__allocator_int_____set_std___Rb_tree_const_iterator_int___(struct std__set_int__std__less_int___std__allocator_int__* p0, struct std___Rb_tree_const_iterator_int_ p1, struct std___Rb_tree_const_iterator_int_ p2);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(struct std___Rb_tree_const_iterator_int_* p0);
 unsigned long std__set_int__std__less_int___std__allocator_int_____size___const(struct std__set_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_const_iterator_int_* std___Rb_tree_const_iterator_int___operator_(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
@@ -428,6 +429,7 @@ bb115: ;
         char* c139 = (char*)_str_1;
         unsigned int c140 = 27;
         char* cast141 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast138, c139, c140, cast141);
       }
       struct std___Rb_tree_const_iterator_int_ r142 = std__set_int__std__less_int___std__allocator_int_____begin___const(&fourth119);
@@ -443,6 +445,7 @@ bb115: ;
         char* c149 = (char*)_str_1;
         unsigned int c150 = 29;
         char* cast151 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast148, c149, c150, cast151);
       }
       struct std___Rb_tree_const_iterator_int_ r152 = std__set_int__std__less_int___std__allocator_int_____end___const(&fourth119);
@@ -461,6 +464,7 @@ bb115: ;
         char* c161 = (char*)_str_1;
         unsigned int c162 = 32;
         char* cast163 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast160, c161, c162, cast163);
       }
       int c164 = 0;

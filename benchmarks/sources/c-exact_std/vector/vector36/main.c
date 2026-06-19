@@ -130,6 +130,7 @@ struct __gnu_cxx____normal_iterator_unsigned_int____std__vector_unsigned_int__st
 void _ZN9__gnu_cxx17__normal_iteratorIPKjSt6vectorIjSaIjEEEC2IPjQsr3stdE16is_convertible_vITL0__T_EEERKNS0_ISA_S5_EE(struct __gnu_cxx____normal_iterator_const_unsigned_int____std__vector_unsigned_int__std__allocator_unsigned_int___* p0, struct __gnu_cxx____normal_iterator_unsigned_int____std__vector_unsigned_int__std__allocator_unsigned_int___* p1);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 unsigned int* std__vector_unsigned_int__std__allocator_unsigned_int_____operator__(struct std__vector_unsigned_int__std__allocator_unsigned_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void void_std___Destroy_unsigned_int__(unsigned int* p0, unsigned int* p1);
 void void_std___Destroy_unsigned_int___unsigned_int_(unsigned int* p0, unsigned int* p1, struct std__allocator_unsigned_int_* p2);
@@ -2171,6 +2172,7 @@ bb1232: ;
       char* c1265 = (char*)_str_1;
       unsigned int c1266 = 24;
       char* cast1267 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1264, c1265, c1266, cast1267);
     }
     struct __gnu_cxx____normal_iterator_unsigned_int____std__vector_unsigned_int__std__allocator_unsigned_int___ r1268 = std__vector_unsigned_int__std__allocator_unsigned_int_____begin(&myvector1235);
@@ -2197,6 +2199,7 @@ bb1232: ;
       char* c1281 = (char*)_str_1;
       unsigned int c1282 = 27;
       char* cast1283 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1280, c1281, c1282, cast1283);
     }
     char* cast1284 = (char*)&(_str_3);

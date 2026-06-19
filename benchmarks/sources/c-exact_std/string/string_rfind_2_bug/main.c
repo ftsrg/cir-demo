@@ -69,6 +69,7 @@ unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allo
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____size___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____rfind_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____const___unsigned_long__const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p1, unsigned long p2);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_check_length_unsigned_long__unsigned_long__char_const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, unsigned long p1, unsigned long p2, char* p3);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____capacity___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
@@ -1438,6 +1439,7 @@ bb818: ;
         char* c834 = (char*)_str_3;
         unsigned int c835 = 23;
         char* cast836 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast833, c834, c835, cast836);
       }
         unsigned long t837 = found824;
@@ -1458,6 +1460,7 @@ bb818: ;
         char* c848 = (char*)_str_3;
         unsigned int c849 = 28;
         char* cast850 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast847, c848, c849, cast850);
       }
       struct std__basic_ostream_char__std__char_traits_char__* r851 = std__basic_ostream_char__std__char_traits_char_____std__operator____char__std__char_traits_char___std__allocator_char___(&_ZSt4cout, &str820);

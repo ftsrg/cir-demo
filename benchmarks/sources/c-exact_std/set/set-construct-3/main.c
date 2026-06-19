@@ -47,6 +47,7 @@ void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(struct std___R
 void std__set_int__std__less_int___std__allocator_int_____set_int__(struct std__set_int__std__less_int___std__allocator_int__* p0, int* p1, int* p2);
 void std__set_int__std__less_int___std__allocator_int_____set(struct std__set_int__std__less_int___std__allocator_int__* p0, struct std__set_int__std__less_int___std__allocator_int__* p1);
 unsigned long std__set_int__std__less_int___std__allocator_int_____size___const(struct std__set_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_node_base* p1);
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____begin___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
@@ -436,6 +437,7 @@ bb113: ;
           char* c132 = (char*)_str_1;
           unsigned int c133 = 30;
           char* cast134 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast131, c132, c133, cast134);
         }
         struct std___Rb_tree_const_iterator_int_ r135 = std__set_int__std__less_int___std__allocator_int_____begin___const(&third119);
@@ -451,6 +453,7 @@ bb113: ;
           char* c142 = (char*)_str_1;
           unsigned int c143 = 32;
           char* cast144 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast141, c142, c143, cast144);
         }
         struct std___Rb_tree_const_iterator_int_ r145 = std__set_int__std__less_int___std__allocator_int_____end___const(&third119);
@@ -469,6 +472,7 @@ bb113: ;
           char* c154 = (char*)_str_1;
           unsigned int c155 = 35;
           char* cast156 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast153, c154, c155, cast156);
         }
         int c157 = 0;

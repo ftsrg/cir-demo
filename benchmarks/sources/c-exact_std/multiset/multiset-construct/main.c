@@ -60,6 +60,7 @@ _Bool fncomp(int p0, int p1);
 void std__multiset_int__std__less_int___std__allocator_int_____multiset_2(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
 unsigned long std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____size___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____size___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool std__operator__(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_node_base* p1);
@@ -642,6 +643,7 @@ bb188: ;
       char* c217 = (char*)_str_1;
       unsigned int c218 = 24;
       char* cast219 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast216, c217, c218, cast219);
     }
     struct std___Rb_tree_const_iterator_int_ r220 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&first190);
@@ -655,6 +657,7 @@ bb188: ;
       char* c224 = (char*)_str_1;
       unsigned int c225 = 25;
       char* cast226 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast223, c224, c225, cast226);
     }
     // array copy
@@ -680,6 +683,7 @@ bb188: ;
         char* c235 = (char*)_str_1;
         unsigned int c236 = 28;
         char* cast237 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast234, c235, c236, cast237);
       }
       struct std___Rb_tree_const_iterator_int_ r238 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&second194);
@@ -694,6 +698,7 @@ bb188: ;
         char* c244 = (char*)_str_1;
         unsigned int c245 = 30;
         char* cast246 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast243, c244, c245, cast246);
       }
       struct std___Rb_tree_const_iterator_int_ r247 = std__multiset_int__std__less_int___std__allocator_int_____end___const(&second194);
@@ -712,6 +717,7 @@ bb188: ;
         char* c256 = (char*)_str_1;
         unsigned int c257 = 33;
         char* cast258 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast255, c256, c257, cast258);
       }
       std__multiset_int__std__less_int___std__allocator_int_____multiset(&third198, &second194);
@@ -734,6 +740,7 @@ bb188: ;
           char* c263 = (char*)_str_1;
           unsigned int c264 = 35;
           char* cast265 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast262, c263, c264, cast265);
         }
         struct std___Rb_tree_const_iterator_int_ r266 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&third198);
@@ -749,6 +756,7 @@ bb188: ;
           char* c273 = (char*)_str_1;
           unsigned int c274 = 37;
           char* cast275 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast272, c273, c274, cast275);
         }
         struct std___Rb_tree_const_iterator_int_ r276 = std__multiset_int__std__less_int___std__allocator_int_____end___const(&third198);
@@ -767,6 +775,7 @@ bb188: ;
           char* c285 = (char*)_str_1;
           unsigned int c286 = 40;
           char* cast287 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast284, c285, c286, cast287);
         }
         struct std___Rb_tree_const_iterator_int_ r288 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&second194);
@@ -798,6 +807,7 @@ bb188: ;
             char* c296 = (char*)_str_1;
             unsigned int c297 = 42;
             char* cast298 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast295, c296, c297, cast298);
           }
           struct std___Rb_tree_const_iterator_int_ r299 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&fourth202);
@@ -813,6 +823,7 @@ bb188: ;
             char* c306 = (char*)_str_1;
             unsigned int c307 = 44;
             char* cast308 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast305, c306, c307, cast308);
           }
           struct std___Rb_tree_const_iterator_int_ r309 = std__multiset_int__std__less_int___std__allocator_int_____end___const(&fourth202);
@@ -831,6 +842,7 @@ bb188: ;
             char* c318 = (char*)_str_1;
             unsigned int c319 = 47;
             char* cast320 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast317, c318, c319, cast320);
           }
           std__multiset_int__classcomp__std__allocator_int_____multiset(&fifth208);
@@ -843,6 +855,7 @@ bb188: ;
               char* c325 = (char*)_str_1;
               unsigned int c326 = 49;
               char* cast327 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast324, c325, c326, cast327);
             }
             fn_pt209 = &fncomp;

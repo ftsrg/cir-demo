@@ -93,6 +93,7 @@ extern int memcmp(void* p0, void* p1, unsigned long p2);
 int std__char_traits_char___compare(char* p0, char* p1, unsigned long p2);
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 _Bool bool_std__operator___char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std____throw_out_of_range_fmt(char* p0, ...);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_check_unsigned_long__char_const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, unsigned long p1, char* p2);
@@ -2099,6 +2100,7 @@ bb1218: ;
               char* c1261 = (char*)_str_6;
               unsigned int c1262 = 27;
               char* cast1263 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1260, c1261, c1262, cast1263);
             }
             unsigned long c1264 = 19;
@@ -2114,6 +2116,7 @@ bb1218: ;
               char* c1272 = (char*)_str_6;
               unsigned int c1273 = 30;
               char* cast1274 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1271, c1272, c1273, cast1274);
             }
             unsigned long c1275 = 8;
@@ -2129,6 +2132,7 @@ bb1218: ;
               char* c1283 = (char*)_str_6;
               unsigned int c1284 = 33;
               char* cast1285 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1282, c1283, c1284, cast1285);
             }
             unsigned long c1286 = 8;
@@ -2143,6 +2147,7 @@ bb1218: ;
               char* c1293 = (char*)_str_6;
               unsigned int c1294 = 36;
               char* cast1295 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1292, c1293, c1294, cast1295);
             }
             unsigned long c1296 = 22;
@@ -2158,6 +2163,7 @@ bb1218: ;
               char* c1304 = (char*)_str_6;
               unsigned int c1305 = 39;
               char* cast1306 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1303, c1304, c1305, cast1306);
             }
             struct __gnu_cxx____normal_iterator_char____std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ r1307 = std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____begin(&str1228);
@@ -2180,6 +2186,7 @@ bb1218: ;
               char* c1317 = (char*)_str_6;
               unsigned int c1318 = 44;
               char* cast1319 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1316, c1317, c1318, cast1319);
             }
             _ZN9__gnu_cxx17__normal_iteratorIPKcNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEEC2IPcQsr3stdE16is_convertible_vITL0__T_EEERKNS0_ISD_S8_EE(&agg_tmp21234, &it1229);
@@ -2200,6 +2207,7 @@ bb1218: ;
               char* c1330 = (char*)_str_6;
               unsigned int c1331 = 47;
               char* cast1332 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1329, c1330, c1331, cast1332);
             }
             long c1333 = 8;
@@ -2221,6 +2229,7 @@ bb1218: ;
               char* c1344 = (char*)_str_6;
               unsigned int c1345 = 51;
               char* cast1346 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1343, c1344, c1345, cast1346);
             }
             long c1347 = 4;
@@ -2246,6 +2255,7 @@ bb1218: ;
               char* c1360 = (char*)_str_6;
               unsigned int c1361 = 54;
               char* cast1362 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1359, c1360, c1361, cast1362);
             }
             long c1363 = 3;
@@ -2271,6 +2281,7 @@ bb1218: ;
               char* c1376 = (char*)_str_6;
               unsigned int c1377 = 58;
               char* cast1378 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast1375, c1376, c1377, cast1378);
             }
             struct std__basic_ostream_char__std__char_traits_char__* r1379 = std__basic_ostream_char__std__char_traits_char_____std__operator____char__std__char_traits_char___std__allocator_char___(&_ZSt4cout, &str1228);

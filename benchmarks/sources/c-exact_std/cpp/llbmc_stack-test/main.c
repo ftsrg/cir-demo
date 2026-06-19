@@ -77,6 +77,7 @@ struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___
 int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* p0);
 int* std__deque_int__std__allocator_int_____back(struct std__deque_int__std__allocator_int__* p0);
 int* std__stack_int__std__deque_int__std__allocator_int_______top(struct std__stack_int__std__deque_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void void_std__allocator_traits_std__allocator_int_____destroy_int_(struct std__allocator_int_* p0, int* p1);
 void std__deque_int__std__allocator_int______M_pop_back_aux(struct std__deque_int__std__allocator_int__* p0);
@@ -1585,6 +1586,7 @@ bb811: ;
             char* c834 = (char*)_str_1;
             unsigned int c835 = 19;
             char* cast836 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast833, c834, c835, cast836);
           }
           std__stack_int__std__deque_int__std__allocator_int_______pop(&s813);

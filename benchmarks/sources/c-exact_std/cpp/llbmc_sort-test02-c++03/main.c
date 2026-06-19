@@ -122,6 +122,7 @@ unsigned long std__deque_int__std__allocator_int_____size___const(struct std__de
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std___Deque_iterator_int__int___int____operator___long__const(struct std___Deque_iterator_int__int____int___* p0, long p1);
 int* std__deque_int__std__allocator_int_____operator__(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__deque_int__std__allocator_int______deque(struct std__deque_int__std__allocator_int__* p0);
 int main();
@@ -2896,6 +2897,7 @@ bb1504: ;
             char* c1537 = (char*)_str_1;
             unsigned int c1538 = 28;
             char* cast1539 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1536, c1537, c1538, cast1539);
           }
       for_step1524: ;

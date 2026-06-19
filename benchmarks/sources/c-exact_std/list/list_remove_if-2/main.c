@@ -92,6 +92,7 @@ struct std___List_iterator_int_* std___List_iterator_int___operator__2(struct st
 unsigned long unsigned_long_std____cxx11__list_int__std__allocator_int_____remove_if_bool_____int_const____bool____(struct std____cxx11__list_int__std__allocator_int__* p0, void* p1);
 unsigned long std____cxx11___List_base_int__std__allocator_int______M_get_size___const(struct std____cxx11___List_base_int__std__allocator_int__* p0);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___List_iterator_int_ std____cxx11__list_int__std__allocator_int_____begin(struct std____cxx11__list_int__std__allocator_int__* p0);
 struct std___List_iterator_int_* std___List_iterator_int___operator_(struct std___List_iterator_int_* p0, struct std___List_iterator_int_* p1);
@@ -1241,6 +1242,7 @@ bb597: ;
       char* c617 = (char*)_str_1;
       unsigned int c618 = 31;
       char* cast619 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast616, c617, c618, cast619);
     }
     struct std___List_iterator_int_ r620 = std____cxx11__list_int__std__allocator_int_____begin(&mylist600);
@@ -1258,6 +1260,7 @@ bb597: ;
       char* c628 = (char*)_str_1;
       unsigned int c629 = 34;
       char* cast630 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast627, c628, c629, cast630);
     }
     struct is_odd t631 = agg_tmp0604;
@@ -1271,6 +1274,7 @@ bb597: ;
       char* c637 = (char*)_str_1;
       unsigned int c638 = 37;
       char* cast639 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast636, c637, c638, cast639);
     }
     struct std___List_iterator_int_ r640 = std____cxx11__list_int__std__allocator_int_____begin(&mylist600);
@@ -1289,6 +1293,7 @@ bb597: ;
       char* c649 = (char*)_str_1;
       unsigned int c650 = 40;
       char* cast651 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast648, c649, c650, cast651);
     }
     char* cast652 = (char*)&(_str_5);

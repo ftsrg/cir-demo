@@ -81,6 +81,7 @@ struct std___Rb_tree_const_iterator_int_ std__set_int__std__less_int___std__allo
 struct std___Rb_tree_const_iterator_int_* std___Rb_tree_const_iterator_int___operator_(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_const_iterator_int___operator__(struct std___Rb_tree_const_iterator_int_* p0, int p1);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 extern struct std___Rb_tree_node_base* std___Rb_tree_rebalance_for_erase(struct std___Rb_tree_node_base* p0, struct std___Rb_tree_node_base* p1);
@@ -1403,6 +1404,7 @@ bb592: ;
       char* c624 = (char*)_str_1;
       unsigned int c625 = 24;
       char* cast626 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast623, c624, c625, cast626);
     }
     agg_tmp1600 = it596; // copy
@@ -1432,6 +1434,7 @@ bb592: ;
       char* c638 = (char*)_str_1;
       unsigned int c639 = 28;
       char* cast640 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast637, c638, c639, cast640);
     }
     int c641 = 40;
@@ -1521,6 +1524,7 @@ bb592: ;
             char* c671 = (char*)_str_1;
             unsigned int c672 = 37;
             char* cast673 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast670, c671, c672, cast673);
           }
       for_step657: ;

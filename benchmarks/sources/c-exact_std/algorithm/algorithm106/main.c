@@ -97,6 +97,7 @@ void __gnu_cxx____ops___Val_comp_iter_bool_____int__int_____Val_comp_iter_bool__
 struct __gnu_cxx____ops___Val_comp_iter_bool_____int__int__ __gnu_cxx____ops___Val_comp_iter_bool_____int__int_____gnu_cxx____ops____val_comp_iter_bool_____int__int___bool____(void* p0);
 struct std__pair___gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int_______gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int____ std__pair___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int________std__equal_range___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int__bool_____int__int_____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int_const___bool____(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1, int* p2, void* p3);
 int* __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______operator____const(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -1977,6 +1978,7 @@ bb1112: ;
       char* c1166 = (char*)_str_1;
       unsigned int c1167 = 31;
       char* cast1168 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1165, c1166, c1167, cast1168);
     }
     int c1169 = 0;

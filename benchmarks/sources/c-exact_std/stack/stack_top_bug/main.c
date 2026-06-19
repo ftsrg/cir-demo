@@ -128,6 +128,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__stack_int__std__deque_int__std__allocator_int________stack(struct std__stack_int__std__deque_int__std__allocator_int___* p0);
 int main();
@@ -1913,6 +1914,7 @@ bb932: ;
       char* c955 = (char*)_str_2;
       unsigned int c956 = 24;
       char* cast957 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast954, c955, c956, cast957);
     }
     int c958 = 0;

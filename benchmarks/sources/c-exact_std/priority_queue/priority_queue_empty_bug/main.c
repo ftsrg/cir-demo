@@ -144,6 +144,7 @@ void void_std____pop_heap___gnu_cxx____normal_iterator_int___std__vector_int__st
 void void_std__pop_heap___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______std__less_int___(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1, struct std__less_int_ p2);
 void std__vector_int__std__allocator_int_____pop_back(struct std__vector_int__std__allocator_int__* p0);
 void std__priority_queue_int__std__vector_int__std__allocator_int_____std__less_int_____pop(struct std__priority_queue_int__std__vector_int__std__allocator_int____std__less_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -2225,6 +2226,7 @@ bb1256: ;
       char* c1279 = (char*)_str_1;
       unsigned int c1280 = 26;
       char* cast1281 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1278, c1279, c1280, cast1281);
     }
     char* cast1282 = (char*)&(_str_2);

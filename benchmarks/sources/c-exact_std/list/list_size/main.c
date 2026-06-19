@@ -89,6 +89,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__allocator_std___List_node_int__* std____cxx11___List_base_int__std__allocator_int______M_get_Node_allocator(struct std____cxx11___List_base_int__std__allocator_int__* p0);
 extern void std____throw_bad_array_new_length();
@@ -1375,6 +1376,7 @@ bb703: ;
       char* c721 = (char*)_str_2;
       unsigned int c722 = 18;
       char* cast723 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast720, c721, c722, cast723);
     }
       int i724;
@@ -1406,6 +1408,7 @@ bb703: ;
       char* c742 = (char*)_str_2;
       unsigned int c743 = 21;
       char* cast744 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast741, c742, c743, cast744);
     }
     struct std___List_iterator_int_ r745 = std____cxx11__list_int__std__allocator_int_____begin(&myints705);
@@ -1432,6 +1435,7 @@ bb703: ;
       char* c760 = (char*)_str_2;
       unsigned int c761 = 24;
       char* cast762 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast759, c760, c761, cast762);
     }
     std____cxx11__list_int__std__allocator_int_____pop_back(&myints705);
@@ -1450,6 +1454,7 @@ bb703: ;
       char* c773 = (char*)_str_2;
       unsigned int c774 = 27;
       char* cast775 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast772, c773, c774, cast775);
     }
     int c776 = 0;

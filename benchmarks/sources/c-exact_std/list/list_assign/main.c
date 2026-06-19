@@ -103,6 +103,7 @@ void std____cxx11__list_int__std__allocator_int_____assign(struct std____cxx11__
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 struct std___List_iterator_int_* std___List_iterator_int___operator__(struct std___List_iterator_int_* p0);
 int* std____cxx11__list_int__std__allocator_int_____back(struct std____cxx11__list_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
 void std____cxx11__list_int__std__allocator_int_____list_std___List_iterator_int___void_(struct std____cxx11__list_int__std__allocator_int__* p0, struct std___List_iterator_int_ p1, struct std___List_iterator_int_ p2, struct std__allocator_int_* p3);
@@ -1562,6 +1563,7 @@ bb801: ;
         char* c817 = (char*)_str_1;
         unsigned int c818 = 20;
         char* cast819 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast816, c817, c818, cast819);
       }
       unsigned long r820 = std____cxx11__list_int__std__allocator_int_____size___const(&first803);
@@ -1573,6 +1575,7 @@ bb801: ;
         char* c824 = (char*)_str_1;
         unsigned int c825 = 21;
         char* cast826 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast823, c824, c825, cast826);
       }
       struct std___List_iterator_int_ r827 = std____cxx11__list_int__std__allocator_int_____begin(&first803);
@@ -1592,6 +1595,7 @@ bb801: ;
         char* c836 = (char*)_str_1;
         unsigned int c837 = 24;
         char* cast838 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast835, c836, c837, cast838);
       }
       unsigned long r839 = std____cxx11__list_int__std__allocator_int_____size___const(&second804);
@@ -1603,6 +1607,7 @@ bb801: ;
         char* c843 = (char*)_str_1;
         unsigned int c844 = 25;
         char* cast845 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast842, c843, c844, cast845);
       }
       // array copy
@@ -1622,6 +1627,7 @@ bb801: ;
         char* c855 = (char*)_str_1;
         unsigned int c856 = 30;
         char* cast857 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast854, c855, c856, cast857);
       }
       unsigned long r858 = std____cxx11__list_int__std__allocator_int_____size___const(&first803);
@@ -1633,6 +1639,7 @@ bb801: ;
         char* c862 = (char*)_str_1;
         unsigned int c863 = 31;
         char* cast864 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast861, c862, c863, cast864);
       }
       char* cast865 = (char*)&(_str_7);

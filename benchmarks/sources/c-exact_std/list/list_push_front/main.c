@@ -68,6 +68,7 @@ struct std____detail___List_node_base* std____detail___List_node_base___M_base__
 _Bool std____cxx11__list_int__std__allocator_int_____empty___const(struct std____cxx11__list_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std____cxx11__list_int__std__allocator_int_____front(struct std____cxx11__list_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int* _ZSt12construct_atIiJiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S0_pispclsr3stdE7declvalIT0_EEEEEPS0_S3_DpOS2_(int* p0, int* p1);
 void void_std__allocator_traits_std__allocator_std___List_node_int_______construct_int__int_(struct std__allocator_std___List_node_int__* p0, int* p1, int* p2);
@@ -795,6 +796,7 @@ bb367: ;
       char* c382 = (char*)_str_1;
       unsigned int c383 = 17;
       char* cast384 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast381, c382, c383, cast384);
     }
     int c385 = 200;
@@ -810,6 +812,7 @@ bb367: ;
       char* c391 = (char*)_str_1;
       unsigned int c392 = 19;
       char* cast393 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast390, c391, c392, cast393);
     }
     int c394 = 300;
@@ -825,6 +828,7 @@ bb367: ;
       char* c400 = (char*)_str_1;
       unsigned int c401 = 21;
       char* cast402 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast399, c400, c401, cast402);
     }
     char* cast403 = (char*)&(_str_4);

@@ -157,6 +157,7 @@ void void_std___Destroy_int___int_(int* p0, int* p1, struct std__allocator_int_*
 void std__vector_int__std__allocator_int______M_erase_at_end(struct std__vector_int__std__allocator_int__* p0, int* p1);
 void std__vector_int__std__allocator_int_____resize(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* p0, int* p1);
 void void_std___Construct_int__int_const__(int* p0, int* p1);
@@ -3212,6 +3213,7 @@ bb1633: ;
       char* c1654 = (char*)_str_1;
       unsigned int c1655 = 24;
       char* cast1656 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1653, c1654, c1655, cast1656);
     }
     unsigned long c1657 = 8;
@@ -3234,6 +3236,7 @@ bb1633: ;
       char* c1663 = (char*)_str_1;
       unsigned int c1664 = 26;
       char* cast1665 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1662, c1663, c1664, cast1665);
     }
     unsigned long c1666 = 12;
@@ -3254,6 +3257,7 @@ bb1633: ;
       char* c1671 = (char*)_str_1;
       unsigned int c1672 = 28;
       char* cast1673 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1670, c1671, c1672, cast1673);
     }
     char* cast1674 = (char*)&(_str_4);

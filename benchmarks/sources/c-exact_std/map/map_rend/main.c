@@ -139,6 +139,7 @@ struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___
 struct std__pair_const_char__int_* std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
 struct std__pair_const_char__int_* std__pair_char_const__int___std__reverse_iterator_std___Rb_tree_iterator_std__pair_char_const__int________S_to_pointer_std___Rb_tree_iterator_std__pair_char_const__int_____(struct std___Rb_tree_iterator_std__pair_const_char__int__ p0);
 struct std__pair_const_char__int_* _ZNKSt16reverse_iteratorISt17_Rb_tree_iteratorISt4pairIKciEEEptEvQoo12is_pointer_vIT_ErQS6__XcldtfpK_onptEE(struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern struct std___Rb_tree_node_base* std___Rb_tree_increment(struct std___Rb_tree_node_base* p0);
 struct std___Rb_tree_iterator_std__pair_const_char__int__* std___Rb_tree_iterator_std__pair_char_const__int_____operator___2(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
@@ -2269,6 +2270,7 @@ bb1024: ;
       char* c1055 = (char*)_str_1;
       unsigned int c1056 = 24;
       char* cast1057 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1054, c1055, c1056, cast1057);
     }
     struct std__pair_const_char__int_* r1058 = _ZNKSt16reverse_iteratorISt17_Rb_tree_iteratorISt4pairIKciEEEptEvQoo12is_pointer_vIT_ErQS6__XcldtfpK_onptEE(&rit1027);
@@ -2288,6 +2290,7 @@ bb1024: ;
       char* c1063 = (char*)_str_1;
       unsigned int c1064 = 25;
       char* cast1065 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1062, c1063, c1064, cast1065);
     }
     struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___ r1066 = std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______rend(&mymap1026);
@@ -2321,6 +2324,7 @@ bb1024: ;
       char* c1076 = (char*)_str_1;
       unsigned int c1077 = 28;
       char* cast1078 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1075, c1076, c1077, cast1078);
     }
     struct std__pair_const_char__int_* r1079 = _ZNKSt16reverse_iteratorISt17_Rb_tree_iteratorISt4pairIKciEEEptEvQoo12is_pointer_vIT_ErQS6__XcldtfpK_onptEE(&rit1027);
@@ -2340,6 +2344,7 @@ bb1024: ;
       char* c1084 = (char*)_str_1;
       unsigned int c1085 = 29;
       char* cast1086 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1083, c1084, c1085, cast1086);
     }
       struct std__reverse_iterator_std___Rb_tree_iterator_std__pair_const_char__int___ ref_tmp51087;

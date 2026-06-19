@@ -65,6 +65,7 @@ void __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_____
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin(struct std__vector_int__std__allocator_int__* p0);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______operator_(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p1);
 int* __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______operator____const(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
 long std__iterator_traits_int____difference_type_std____distance_int__(int* p0, int* p1, struct std__random_access_iterator_tag p2);
@@ -1988,6 +1989,7 @@ bb1145: ;
       char* c1174 = (char*)_str_1;
       unsigned int c1175 = 63;
       char* cast1176 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1173, c1174, c1175, cast1176);
     }
     int* cast1177 = (int*)&(myints11148);

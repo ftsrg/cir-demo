@@ -75,6 +75,7 @@ struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___
 struct std___Rb_tree_const_iterator_int_ std__multiset_int__std__less_int___std__allocator_int_____upper_bound(struct std__multiset_int__std__less_int___std__allocator_int__* p0, int* p1);
 struct std___Rb_tree_const_iterator_int_* std___Rb_tree_const_iterator_int___operator_(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____begin(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____clear(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
@@ -1070,6 +1071,7 @@ bb428: ;
       char* c455 = (char*)_str_1;
       unsigned int c456 = 22;
       char* cast457 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast454, c455, c456, cast457);
     }
     int c458 = 60;
@@ -1094,6 +1096,7 @@ bb428: ;
       char* c466 = (char*)_str_1;
       unsigned int c467 = 24;
       char* cast468 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast465, c466, c467, cast468);
     }
     agg_tmp0439 = itlow433; // copy
@@ -1118,6 +1121,7 @@ bb428: ;
       char* c476 = (char*)_str_1;
       unsigned int c477 = 27;
       char* cast478 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast475, c476, c477, cast478);
     }
     char* cast479 = (char*)&(_str_4);

@@ -121,6 +121,7 @@ int** __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int____
 long __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______difference_type___gnu_cxx__operator__int___std__vector_int__std__allocator_int_____(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p1);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______std____adjacent_find___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____ops___Iter_comp_iter_bool_____int__int_______gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1, struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ p2);
 _Bool bool___gnu_cxx____ops___Iter_comp_iter_bool_____int__int____operator_____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p2);
@@ -2119,6 +2120,7 @@ bb1170: ;
       char* c1203 = (char*)_str_1;
       unsigned int c1204 = 30;
       char* cast1205 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1202, c1203, c1204, cast1205);
     }
     unsigned long c1206 = 1;
@@ -2132,6 +2134,7 @@ bb1170: ;
       char* c1212 = (char*)_str_1;
       unsigned int c1213 = 31;
       char* cast1214 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1211, c1212, c1213, cast1214);
     }
     unsigned long c1215 = 2;
@@ -2145,6 +2148,7 @@ bb1170: ;
       char* c1221 = (char*)_str_1;
       unsigned int c1222 = 32;
       char* cast1223 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1220, c1221, c1222, cast1223);
     }
     unsigned long c1224 = 3;
@@ -2158,6 +2162,7 @@ bb1170: ;
       char* c1230 = (char*)_str_1;
       unsigned int c1231 = 33;
       char* cast1232 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1229, c1230, c1231, cast1232);
     }
     unsigned long c1233 = 4;
@@ -2171,6 +2176,7 @@ bb1170: ;
       char* c1239 = (char*)_str_1;
       unsigned int c1240 = 34;
       char* cast1241 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1238, c1239, c1240, cast1241);
     }
     struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r1242 = std__vector_int__std__allocator_int_____begin(&myvector1173);

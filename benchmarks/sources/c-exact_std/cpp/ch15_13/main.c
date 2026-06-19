@@ -97,6 +97,7 @@ extern int memcmp(void* p0, void* p1, unsigned long p2);
 int std__char_traits_char___compare(char* p0, char* p1, unsigned long p2);
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 _Bool bool_std__operator___char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool std__operator_(struct std__strong_ordering p0, struct std____cmp_cat____unspec p1);
 struct std__strong_ordering auto_std____detail____char_traits_cmp_cat_std__char_traits_char___(int p0);
@@ -1064,6 +1065,7 @@ bb539: ;
             char* c569 = (char*)_str_9;
             unsigned int c570 = 31;
             char* cast571 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast568, c569, c570, cast571);
           }
             _Bool r572 = bool_std__operator___char__std__char_traits_char___std__allocator_char___(&string1541, &string4547);

@@ -124,6 +124,7 @@ void std__deque_int__std__allocator_int______M_erase_at_end(struct std__deque_in
 void std__deque_int__std__allocator_int_____clear(struct std__deque_int__std__allocator_int__* p0);
 _Bool std__operator__(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1);
 _Bool std__deque_int__std__allocator_int_____empty___const(struct std__deque_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
@@ -2110,6 +2111,7 @@ bb1064: ;
       char* c1097 = (char*)_str_3;
       unsigned int c1098 = 26;
       char* cast1099 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1096, c1097, c1098, cast1099);
     }
     int c1100 = 1101;
@@ -2141,6 +2143,7 @@ bb1064: ;
       char* c1106 = (char*)_str_3;
       unsigned int c1107 = 29;
       char* cast1108 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1105, c1106, c1107, cast1108);
     }
     char* cast1109 = (char*)&(_str_5);

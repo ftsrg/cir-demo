@@ -141,6 +141,7 @@ struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator
 void _ZNSt5tupleIJOcEEC2IJcEQaaaacl27__disambiguating_constraintIDpTL0__EEcl15__constructibleIS4_EEntcl9__danglesIS4_EEEEDpOT_(struct std__tuple_char____* p0, char* p1);
 struct std__tuple_char____ std__tuple_char____std__forward_as_tuple_char_(char* p0);
 int* std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______operator__(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_iterator_std__pair_const_char__int__* std___Rb_tree_iterator_std__pair_char_const__int_____operator_(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, struct std___Rb_tree_iterator_std__pair_const_char__int__* p1);
 struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_* _ZNSt4pairISt17_Rb_tree_iteratorIS_IKciEEbEaSEOS4_Qcl13_S_assignableIT_T0_EE(struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_* p0, struct std__pair_std___Rb_tree_iterator_std__pair_const_char__int____bool_* p1);
@@ -2305,6 +2306,7 @@ bb1025: ;
       char* c1054 = (char*)_str_1;
       unsigned int c1055 = 22;
       char* cast1056 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1053, c1054, c1055, cast1056);
     }
     char c1057 = 122;
@@ -2340,6 +2342,7 @@ bb1025: ;
       char* c1066 = (char*)_str_1;
       unsigned int c1067 = 24;
       char* cast1068 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1065, c1066, c1067, cast1068);
     }
     char c1069 = 122;
@@ -2368,6 +2371,7 @@ bb1025: ;
       char* c1079 = (char*)_str_1;
       unsigned int c1080 = 26;
       char* cast1081 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1078, c1079, c1080, cast1081);
     }
       _Bool t1082 = ret1029.second;

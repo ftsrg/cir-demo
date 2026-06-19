@@ -96,6 +96,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_begin___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 struct std___Rb_tree_node_base* std___Rb_tree_node_base___M_base_ptr___const(struct std___Rb_tree_node_base* p0);
@@ -2135,6 +2136,7 @@ bb992: ;
       char* c1009 = (char*)_str_2;
       unsigned int c1010 = 17;
       char* cast1011 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1008, c1009, c1010, cast1011);
     }
       int i1012;
@@ -2196,6 +2198,7 @@ bb992: ;
       char* c1032 = (char*)_str_2;
       unsigned int c1033 = 20;
       char* cast1034 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1031, c1032, c1033, cast1034);
     }
     int c1035 = 100;
@@ -2245,6 +2248,7 @@ bb992: ;
       char* c1047 = (char*)_str_2;
       unsigned int c1048 = 23;
       char* cast1049 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1046, c1047, c1048, cast1049);
     }
     int c1050 = 5;
@@ -2293,6 +2297,7 @@ bb992: ;
       char* c1062 = (char*)_str_2;
       unsigned int c1063 = 26;
       char* cast1064 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1061, c1062, c1063, cast1064);
     }
     int c1065 = 0;

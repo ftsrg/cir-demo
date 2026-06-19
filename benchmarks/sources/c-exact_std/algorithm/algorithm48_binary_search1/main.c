@@ -107,6 +107,7 @@ _Bool bool_std__binary_search___gnu_cxx____normal_iterator_int___std__vector_int
 void __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________normal_iterator(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, int** p1);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin(struct std__vector_int__std__allocator_int__* p0);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____end(struct std__vector_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -1567,6 +1568,7 @@ bb868: ;
       char* c897 = (char*)_str_2;
       unsigned int c898 = 37;
       char* cast899 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast896, c897, c898, cast899);
     }
     int c900 = 0;

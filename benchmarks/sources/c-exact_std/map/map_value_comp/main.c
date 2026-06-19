@@ -172,6 +172,7 @@ struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char_
 _Bool std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______value_compare__operator___std__pair_char_const__int__const___std__pair_char_const__int__const___const(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int_____value_compare* p0, struct std__pair_const_char__int_* p1, struct std__pair_const_char__int_* p2);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator_std__pair_char_const__int_____operator___2(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, int p1);
 void _ZNSt4pairIKciEC2IciQaacl16_S_constructibleIRTL0__RTL0_0_EEntcl10_S_danglesIS4_S6_EEEERS_IT_T0_E(struct std__pair_const_char__int_* p0, struct std__pair_char__int_* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int________map(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 int main();
@@ -2363,6 +2364,7 @@ bb1018: ;
       char* c1071 = (char*)_str_3;
       unsigned int c1072 = 32;
       char* cast1073 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1070, c1071, c1072, cast1073);
     }
     int c1074 = 0;

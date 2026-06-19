@@ -104,6 +104,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* p0, int* p1);
 void void_std__allocator_traits_std__allocator_int_____construct_int__int_const__(struct std__allocator_int_* p0, int* p1, int* p2);
@@ -3532,6 +3533,7 @@ bb1805: ;
       char* c1823 = (char*)_str_2;
       unsigned int c1824 = 18;
       char* cast1825 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1822, c1823, c1824, cast1825);
     }
       int i1826;
@@ -3591,6 +3593,7 @@ bb1805: ;
       char* c1844 = (char*)_str_2;
       unsigned int c1845 = 22;
       char* cast1846 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1843, c1844, c1845, cast1846);
     }
     struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r1847 = std__vector_int__std__allocator_int_____end(&myints1807);
@@ -3645,6 +3648,7 @@ bb1805: ;
       char* c1862 = (char*)_str_2;
       unsigned int c1863 = 26;
       char* cast1864 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1861, c1862, c1863, cast1864);
     }
     std__vector_int__std__allocator_int_____pop_back(&myints1807);
@@ -3684,6 +3688,7 @@ bb1805: ;
       char* c1875 = (char*)_str_2;
       unsigned int c1876 = 30;
       char* cast1877 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1874, c1875, c1876, cast1877);
     }
     int c1878 = 0;

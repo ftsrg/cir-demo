@@ -89,6 +89,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -1369,6 +1370,7 @@ bb741: ;
       char* c767 = (char*)_str_1;
       unsigned int c768 = 28;
       char* cast769 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast766, c767, c768, cast769);
     }
     unsigned long c770 = 1;
@@ -1382,6 +1384,7 @@ bb741: ;
       char* c776 = (char*)_str_1;
       unsigned int c777 = 29;
       char* cast778 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast775, c776, c777, cast778);
     }
     unsigned long c779 = 2;
@@ -1395,6 +1398,7 @@ bb741: ;
       char* c785 = (char*)_str_1;
       unsigned int c786 = 30;
       char* cast787 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast784, c785, c786, cast787);
     }
     unsigned long c788 = 3;
@@ -1408,6 +1412,7 @@ bb741: ;
       char* c794 = (char*)_str_1;
       unsigned int c795 = 31;
       char* cast796 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast793, c794, c795, cast796);
     }
     unsigned long c797 = 4;
@@ -1421,6 +1426,7 @@ bb741: ;
       char* c803 = (char*)_str_1;
       unsigned int c804 = 32;
       char* cast805 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast802, c803, c804, cast805);
     }
     char* cast806 = (char*)&(_str_6);

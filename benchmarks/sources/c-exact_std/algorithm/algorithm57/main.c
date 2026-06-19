@@ -123,6 +123,7 @@ void void_std__allocator_traits_std__allocator_int_____destroy_int_(struct std__
 void std__vector_int__std__allocator_int_____pop_back(struct std__vector_int__std__allocator_int__* p0);
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -1357,6 +1358,7 @@ bb710: ;
       char* c751 = (char*)_str_3;
       unsigned int c752 = 26;
       char* cast753 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast750, c751, c752, cast753);
     }
     unsigned long c754 = 1;
@@ -1370,6 +1372,7 @@ bb710: ;
       char* c760 = (char*)_str_3;
       unsigned int c761 = 27;
       char* cast762 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast759, c760, c761, cast762);
     }
     unsigned long c763 = 2;
@@ -1383,6 +1386,7 @@ bb710: ;
       char* c769 = (char*)_str_3;
       unsigned int c770 = 28;
       char* cast771 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast768, c769, c770, cast771);
     }
     unsigned long c772 = 3;
@@ -1396,6 +1400,7 @@ bb710: ;
       char* c778 = (char*)_str_3;
       unsigned int c779 = 29;
       char* cast780 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast777, c778, c779, cast780);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r781 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);

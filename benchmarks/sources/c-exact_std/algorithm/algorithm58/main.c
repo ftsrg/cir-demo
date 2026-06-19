@@ -154,6 +154,7 @@ int* int__std__vector_int__std__allocator_int_____emplace_back_int_(struct std__
 void std__vector_int__std__allocator_int_____push_back(struct std__vector_int__std__allocator_int__* p0, int* p1);
 void void_std__push_heap___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -2069,6 +2070,7 @@ bb1141: ;
       char* c1195 = (char*)_str_4;
       unsigned int c1196 = 27;
       char* cast1197 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1194, c1195, c1196, cast1197);
     }
     unsigned long c1198 = 1;
@@ -2082,6 +2084,7 @@ bb1141: ;
       char* c1204 = (char*)_str_4;
       unsigned int c1205 = 28;
       char* cast1206 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1203, c1204, c1205, cast1206);
     }
     unsigned long c1207 = 2;
@@ -2095,6 +2098,7 @@ bb1141: ;
       char* c1213 = (char*)_str_4;
       unsigned int c1214 = 29;
       char* cast1215 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1212, c1213, c1214, cast1215);
     }
     unsigned long c1216 = 3;
@@ -2108,6 +2112,7 @@ bb1141: ;
       char* c1222 = (char*)_str_4;
       unsigned int c1223 = 30;
       char* cast1224 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1221, c1222, c1223, cast1224);
     }
     unsigned long c1225 = 4;
@@ -2121,6 +2126,7 @@ bb1141: ;
       char* c1231 = (char*)_str_4;
       unsigned int c1232 = 31;
       char* cast1233 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1230, c1231, c1232, cast1233);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r1234 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);

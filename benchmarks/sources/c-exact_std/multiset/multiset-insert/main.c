@@ -91,6 +91,7 @@ void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_2(struct std___R
 struct std___Rb_tree_const_iterator_int_ std__multiset_int__std__less_int___std__allocator_int_____insert(struct std__multiset_int__std__less_int___std__allocator_int__* p0, int* p1);
 unsigned long std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____size___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____size___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_const_iterator_int_* std___Rb_tree_const_iterator_int___operator_(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 struct std___Rb_tree_node_base** std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_rightmost(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
@@ -1690,6 +1691,7 @@ bb770: ;
       char* c814 = (char*)_str_1;
       unsigned int c815 = 21;
       char* cast816 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast813, c814, c815, cast816);
     }
     int c817 = 20;
@@ -1758,6 +1760,7 @@ bb770: ;
       char* c836 = (char*)_str_1;
       unsigned int c837 = 33;
       char* cast838 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast835, c836, c837, cast838);
     }
     int c839 = 0;
@@ -1773,6 +1776,7 @@ bb770: ;
       char* c846 = (char*)_str_1;
       unsigned int c847 = 35;
       char* cast848 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast845, c846, c847, cast848);
     }
     int c849 = 0;
@@ -1788,6 +1792,7 @@ bb770: ;
       char* c856 = (char*)_str_1;
       unsigned int c857 = 37;
       char* cast858 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast855, c856, c857, cast858);
     }
     int c859 = 0;
@@ -1803,6 +1808,7 @@ bb770: ;
       char* c866 = (char*)_str_1;
       unsigned int c867 = 39;
       char* cast868 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast865, c866, c867, cast868);
     }
     int c869 = 0;
@@ -1818,6 +1824,7 @@ bb770: ;
       char* c876 = (char*)_str_1;
       unsigned int c877 = 41;
       char* cast878 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast875, c876, c877, cast878);
     }
     int c879 = 0;
@@ -1833,6 +1840,7 @@ bb770: ;
       char* c886 = (char*)_str_1;
       unsigned int c887 = 43;
       char* cast888 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast885, c886, c887, cast888);
     }
     int c889 = 0;
@@ -1848,6 +1856,7 @@ bb770: ;
       char* c896 = (char*)_str_1;
       unsigned int c897 = 45;
       char* cast898 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast895, c896, c897, cast898);
     }
     int c899 = 0;
@@ -1863,6 +1872,7 @@ bb770: ;
       char* c906 = (char*)_str_1;
       unsigned int c907 = 47;
       char* cast908 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast905, c906, c907, cast908);
     }
     int c909 = 0;
@@ -1878,6 +1888,7 @@ bb770: ;
       char* c916 = (char*)_str_1;
       unsigned int c917 = 49;
       char* cast918 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast915, c916, c917, cast918);
     }
     int c919 = 0;

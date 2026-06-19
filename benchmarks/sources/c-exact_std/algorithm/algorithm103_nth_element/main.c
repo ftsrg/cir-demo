@@ -169,6 +169,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____end(struct std__vector_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator__2(int p0, int p1);
@@ -3187,6 +3188,7 @@ bb1841: ;
       char* c1872 = (char*)_str_1;
       unsigned int c1873 = 32;
       char* cast1874 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1871, c1872, c1873, cast1874);
     }
     unsigned long c1875 = 4;
@@ -3200,6 +3202,7 @@ bb1841: ;
       char* c1881 = (char*)_str_1;
       unsigned int c1882 = 33;
       char* cast1883 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1880, c1881, c1882, cast1883);
     }
     char* cast1884 = (char*)&(_str_3);

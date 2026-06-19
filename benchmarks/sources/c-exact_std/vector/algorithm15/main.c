@@ -64,6 +64,7 @@ char _str_10[19] = "__n < this->size()";
 _Bool _ZNSt17integral_constantIbLb0EE5valueE;
 _Bool _ZNSt17integral_constantIbLb1EE5valueE;
 void void_swap_esbmc_int_(int* p0, int* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__allocator_int___allocator_2(struct std__allocator_int_* p0);
 void std__vector_int__std__allocator_int_____vector_2(struct std__vector_int__std__allocator_int__* p0, unsigned long p1, int* p2, struct std__allocator_int_* p3);
@@ -1961,6 +1962,7 @@ bb1116: ;
     char* c1131 = (char*)_str_1;
     unsigned int c1132 = 25;
     char* cast1133 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast1130, c1131, c1132, cast1133);
   }
   int t1134 = y1119;
@@ -1972,6 +1974,7 @@ bb1116: ;
     char* c1138 = (char*)_str_1;
     unsigned int c1139 = 26;
     char* cast1140 = (char*)&(__PRETTY_FUNCTION___main);
+    reach_error();
     __assert_fail(cast1137, c1138, c1139, cast1140);
   }
   unsigned long c1141 = 4;
@@ -1998,6 +2001,7 @@ bb1116: ;
         char* c1149 = (char*)_str_1;
         unsigned int c1150 = 29;
         char* cast1151 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1148, c1149, c1150, cast1151);
       }
       char* cast1152 = (char*)&(_str_4);

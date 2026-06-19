@@ -120,6 +120,7 @@ void std____cxx11__list_int__std__allocator_int_____splice(struct std____cxx11__
 void std____cxx11__list_int__std__allocator_int_____splice_4(struct std____cxx11__list_int__std__allocator_int__* p0, struct std___List_const_iterator_int_ p1, struct std____cxx11__list_int__std__allocator_int__* p2);
 void std___List_const_iterator_int____List_const_iterator(struct std___List_const_iterator_int_* p0, struct std___List_iterator_int_* p1);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std____detail___List_node_base* std____detail___List_node_base___M_base___const(struct std____detail___List_node_base* p0);
 _Bool std____cxx11__list_int__std__allocator_int_____empty___const(struct std____cxx11__list_int__std__allocator_int__* p0);
@@ -1877,6 +1878,7 @@ bb976: ;
         char* c1029 = (char*)_str_1;
         unsigned int c1030 = 32;
         char* cast1031 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1028, c1029, c1030, cast1031);
       }
       _Bool r1032 = std____cxx11__list_int__std__allocator_int_____empty___const(&mylist2979);
@@ -1887,6 +1889,7 @@ bb976: ;
         char* c1035 = (char*)_str_1;
         unsigned int c1036 = 33;
         char* cast1037 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1034, c1035, c1036, cast1037);
       }
       int* r1038 = std___List_iterator_int___operator____const(&it980);
@@ -1899,6 +1902,7 @@ bb976: ;
         char* c1043 = (char*)_str_1;
         unsigned int c1044 = 34;
         char* cast1045 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1042, c1043, c1044, cast1045);
       }
       int c1046 = 0;
@@ -1914,6 +1918,7 @@ bb976: ;
         char* c1053 = (char*)_str_1;
         unsigned int c1054 = 36;
         char* cast1055 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1052, c1053, c1054, cast1055);
       }
       int c1056 = 0;
@@ -1935,6 +1940,7 @@ bb976: ;
         char* c1065 = (char*)_str_1;
         unsigned int c1066 = 43;
         char* cast1067 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1064, c1065, c1066, cast1067);
       }
       unsigned long r1068 = std____cxx11__list_int__std__allocator_int_____size___const(&mylist2979);
@@ -1946,6 +1952,7 @@ bb976: ;
         char* c1072 = (char*)_str_1;
         unsigned int c1073 = 44;
         char* cast1074 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1071, c1072, c1073, cast1074);
       }
       struct std___List_iterator_int_ r1075 = std____cxx11__list_int__std__allocator_int_____begin(&mylist1978);
@@ -1973,6 +1980,7 @@ bb976: ;
         char* c1087 = (char*)_str_1;
         unsigned int c1088 = 51;
         char* cast1089 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1086, c1087, c1088, cast1089);
       }
       struct std___List_iterator_int_ r1090 = std____cxx11__list_int__std__allocator_int_____begin(&mylist1978);
@@ -1988,6 +1996,7 @@ bb976: ;
         char* c1097 = (char*)_str_1;
         unsigned int c1098 = 53;
         char* cast1099 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1096, c1097, c1098, cast1099);
       }
       int c1100 = 0;
@@ -2003,6 +2012,7 @@ bb976: ;
         char* c1107 = (char*)_str_1;
         unsigned int c1108 = 54;
         char* cast1109 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1106, c1107, c1108, cast1109);
       }
       int c1110 = 0;
@@ -2018,6 +2028,7 @@ bb976: ;
         char* c1117 = (char*)_str_1;
         unsigned int c1118 = 55;
         char* cast1119 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1116, c1117, c1118, cast1119);
       }
       int c1120 = 0;
@@ -2033,6 +2044,7 @@ bb976: ;
         char* c1127 = (char*)_str_1;
         unsigned int c1128 = 56;
         char* cast1129 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1126, c1127, c1128, cast1129);
       }
       int c1130 = 0;
@@ -2048,6 +2060,7 @@ bb976: ;
         char* c1137 = (char*)_str_1;
         unsigned int c1138 = 57;
         char* cast1139 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1136, c1137, c1138, cast1139);
       }
       int c1140 = 0;
@@ -2063,6 +2076,7 @@ bb976: ;
         char* c1147 = (char*)_str_1;
         unsigned int c1148 = 58;
         char* cast1149 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1146, c1147, c1148, cast1149);
       }
       char* cast1150 = (char*)&(_str_13);

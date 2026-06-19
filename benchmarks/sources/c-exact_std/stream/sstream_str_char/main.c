@@ -147,6 +147,7 @@ struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_c
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____operator_(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p1);
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ std____cxx11__basic_stringbuf_char__std__char_traits_char___std__allocator_char_____str___const__(struct std____cxx11__basic_stringbuf_char__std__char_traits_char___std__allocator_char__* p0);
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ std____cxx11__basic_stringstream_char__std__char_traits_char___std__allocator_char_____str___const__(struct std____cxx11__basic_stringstream_char__std__char_traits_char___std__allocator_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______basic_string(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char p1);
@@ -2474,6 +2475,7 @@ bb1419: ;
         char* c1439 = (char*)_str_2;
         unsigned int c1440 = 23;
         char* cast1441 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1438, c1439, c1440, cast1441);
       }
     {
@@ -2492,6 +2494,7 @@ bb1419: ;
         char* c1449 = (char*)_str_2;
         unsigned int c1450 = 26;
         char* cast1451 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1448, c1449, c1450, cast1451);
       }
     {
@@ -2510,6 +2513,7 @@ bb1419: ;
         char* c1459 = (char*)_str_2;
         unsigned int c1460 = 29;
         char* cast1461 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1458, c1459, c1460, cast1461);
       }
     {

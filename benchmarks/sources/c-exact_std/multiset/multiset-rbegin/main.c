@@ -82,6 +82,7 @@ int* __gnu_cxx____aligned_membuf_int____M_ptr___const(struct __gnu_cxx____aligne
 int* std___Rb_tree_node_int____M_valptr___const(struct std___Rb_tree_node_int_* p0);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
 int* std__reverse_iterator_std___Rb_tree_const_iterator_int_____operator____const(struct std__reverse_iterator_std___Rb_tree_const_iterator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
@@ -640,6 +641,7 @@ bb218: ;
       char* c236 = (char*)_str_1;
       unsigned int c237 = 20;
       char* cast238 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast235, c236, c237, cast238);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r239 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);

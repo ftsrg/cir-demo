@@ -69,6 +69,7 @@ char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____size___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_check_length_unsigned_long__unsigned_long__char_const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, unsigned long p1, unsigned long p2, char* p3);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____capacity___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
@@ -1069,6 +1070,7 @@ bb568: ;
       char* c583 = (char*)_str_2;
       unsigned int c584 = 22;
       char* cast585 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast582, c583, c584, cast585);
     }
     unsigned long t586 = sz570;
@@ -1085,6 +1087,7 @@ bb568: ;
       char* c594 = (char*)_str_2;
       unsigned int c595 = 25;
       char* cast596 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast593, c594, c595, cast596);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r597 = std__basic_ostream_char__std__char_traits_char_____std__operator____char__std__char_traits_char___std__allocator_char___(&_ZSt4cout, &str571);
@@ -1100,6 +1103,7 @@ bb568: ;
       char* c604 = (char*)_str_2;
       unsigned int c605 = 29;
       char* cast606 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast603, c604, c605, cast606);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r607 = std__basic_ostream_char__std__char_traits_char_____std__operator____char__std__char_traits_char___std__allocator_char___(&_ZSt4cout, &str571);

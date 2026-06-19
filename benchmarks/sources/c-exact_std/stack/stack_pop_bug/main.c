@@ -126,6 +126,7 @@ void void_std__allocator_traits_std__allocator_int_____destroy_int_(struct std__
 void std__deque_int__std__allocator_int______M_pop_back_aux(struct std__deque_int__std__allocator_int__* p0);
 void std__deque_int__std__allocator_int_____pop_back(struct std__deque_int__std__allocator_int__* p0);
 void std__stack_int__std__deque_int__std__allocator_int_______pop(struct std__stack_int__std__deque_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
@@ -2056,6 +2057,7 @@ bb998: ;
             char* c1029 = (char*)_str_3;
             unsigned int c1030 = 26;
             char* cast1031 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1028, c1029, c1030, cast1031);
           }
       }
@@ -2073,6 +2075,7 @@ bb998: ;
       char* c1034 = (char*)_str_3;
       unsigned int c1035 = 28;
       char* cast1036 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1033, c1034, c1035, cast1036);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r1037 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);

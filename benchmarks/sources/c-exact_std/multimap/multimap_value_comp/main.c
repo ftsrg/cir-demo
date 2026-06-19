@@ -118,6 +118,7 @@ struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_
 _Bool std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______value_compare__operator___std__pair_char_const__int__const___std__pair_char_const__int__const___const(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int_____value_compare* p0, struct std__pair_const_char__int_* p1, struct std__pair_const_char__int_* p2);
 struct std__pair_const_char__int_* std___Rb_tree_iterator_std__pair_char_const__int_____operator____const(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
 void _ZNSt4pairIKciEC2IciQaacl16_S_constructibleIRTL0__RTL0_0_EEntcl10_S_danglesIS4_S6_EEEERS_IT_T0_E(struct std__pair_const_char__int_* p0, struct std__pair_char__int_* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 long std__ios_base__width___const(struct std__ios_base* p0);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__put(struct std__basic_ostream_char__std__char_traits_char__* p0, char p1);
@@ -1451,6 +1452,7 @@ bb592: ;
       char* c642 = (char*)_str_2;
       unsigned int c643 = 29;
       char* cast644 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast641, c642, c643, cast644);
     }
       struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int_____value_compare ref_tmp15645;

@@ -126,6 +126,7 @@ struct std__tuple_char____ std__tuple_char____std__forward_as_tuple_char_(char* 
 struct std___Rb_tree_iterator_std__pair_const_char__int__* std___Rb_tree_iterator_std__pair_char_const__int_____operator_(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, struct std___Rb_tree_iterator_std__pair_const_char__int__* p1);
 int* std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______operator__(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0, char* p1);
 unsigned long std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______size___const(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -1900,6 +1901,7 @@ bb846: ;
       char* c866 = (char*)_str_1;
       unsigned int c867 = 20;
       char* cast868 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast865, c866, c867, cast868);
     }
     char* cast869 = (char*)&(_str_2);

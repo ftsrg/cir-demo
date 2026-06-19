@@ -148,6 +148,7 @@ char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
 extern void BasePlusCommissionEmployee__setBaseSalary(struct BasePlusCommissionEmployee* p0, double p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void __cxa_bad_typeid();
 char* std__type_info__name___const(struct std__type_info* p0);
@@ -1253,6 +1254,7 @@ bb426: ;
             char* c598 = (char*)_str_15;
             unsigned int c599 = 73;
             char* cast600 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast597, c598, c599, cast600);
           }
           char* cast601 = (char*)&(_str_16);

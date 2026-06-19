@@ -75,6 +75,7 @@ void std__multiset_int__std__less_int___std__allocator_int_____multiset(struct s
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(struct std___Rb_tree_const_iterator_int_* p0);
 unsigned long std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____size___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____size___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_begin___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 struct std___Rb_tree_node_base* std___Rb_tree_node_base___M_base_ptr___const(struct std___Rb_tree_node_base* p0);
@@ -1813,6 +1814,7 @@ bb841: ;
       char* c861 = (char*)_str_1;
       unsigned int c862 = 18;
       char* cast863 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast860, c861, c862, cast863);
     }
       int ref_tmp0864;
@@ -1851,6 +1853,7 @@ bb841: ;
       char* c881 = (char*)_str_1;
       unsigned int c882 = 21;
       char* cast883 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast880, c881, c882, cast883);
     }
     int c884 = 20;
@@ -1875,6 +1878,7 @@ bb841: ;
       char* c892 = (char*)_str_1;
       unsigned int c893 = 23;
       char* cast894 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast891, c892, c893, cast894);
     }
     agg_tmp1848 = it844; // copy
@@ -1928,6 +1932,7 @@ bb841: ;
       char* c912 = (char*)_str_1;
       unsigned int c913 = 28;
       char* cast914 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast911, c912, c913, cast914);
     }
     char* cast915 = (char*)&(_str_5);

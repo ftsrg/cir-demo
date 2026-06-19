@@ -114,6 +114,7 @@ struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___
 struct std___Rb_tree_const_iterator_int_ std__multiset_int__std__less_int___std__allocator_int_____upper_bound(struct std__multiset_int__std__less_int___std__allocator_int__* p0, int* p1);
 struct std___Rb_tree_const_iterator_int_* std___Rb_tree_const_iterator_int___operator_(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____begin(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____end(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
@@ -1857,6 +1858,7 @@ bb842: ;
       char* c878 = (char*)_str_1;
       unsigned int c879 = 21;
       char* cast880 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast877, c878, c879, cast880);
     }
     int c881 = 60;
@@ -1881,6 +1883,7 @@ bb842: ;
       char* c889 = (char*)_str_1;
       unsigned int c890 = 23;
       char* cast891 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast888, c889, c890, cast891);
     }
     agg_tmp1852 = itlow846; // copy
@@ -1905,6 +1908,7 @@ bb842: ;
       char* c899 = (char*)_str_1;
       unsigned int c900 = 26;
       char* cast901 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast898, c899, c900, cast901);
     }
     char* cast902 = (char*)&(_str_4);

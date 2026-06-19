@@ -102,6 +102,7 @@ extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator__(struct std___Deque_iterator_int__int____int___* p0);
 int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* p0);
 int* std__deque_int__std__allocator_int_____back(struct std__deque_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator__2(int p0, int p1);
@@ -1970,6 +1971,7 @@ bb1016: ;
             char* c1035 = (char*)_str_1;
             unsigned int c1036 = 22;
             char* cast1037 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1034, c1035, c1036, cast1037);
           }
           int* r1038 = std__deque_int__std__allocator_int_____back(&mydeque1018);

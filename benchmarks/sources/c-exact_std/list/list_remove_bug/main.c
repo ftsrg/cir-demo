@@ -87,6 +87,7 @@ struct std___List_iterator_int_* std___List_iterator_int___operator__2(struct st
 unsigned long std____cxx11__list_int__std__allocator_int_____remove(struct std____cxx11__list_int__std__allocator_int__* p0, int* p1);
 unsigned long std____cxx11___List_base_int__std__allocator_int______M_get_size___const(struct std____cxx11___List_base_int__std__allocator_int__* p0);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___List_iterator_int_ std____cxx11__list_int__std__allocator_int_____begin(struct std____cxx11__list_int__std__allocator_int__* p0);
 struct std___List_iterator_int_* std___List_iterator_int___operator_(struct std___List_iterator_int_* p0, struct std___List_iterator_int_* p1);
@@ -1059,6 +1060,7 @@ bb499: ;
       char* c519 = (char*)_str_1;
       unsigned int c520 = 21;
       char* cast521 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast518, c519, c520, cast521);
     }
     struct std___List_iterator_int_ r522 = std____cxx11__list_int__std__allocator_int_____begin(&mylist502);
@@ -1077,6 +1079,7 @@ bb499: ;
       char* c531 = (char*)_str_1;
       unsigned int c532 = 23;
       char* cast533 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast530, c531, c532, cast533);
     }
     char* cast534 = (char*)&(_str_3);

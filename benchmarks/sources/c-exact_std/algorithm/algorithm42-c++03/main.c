@@ -101,6 +101,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator__2(int p0, int p1);
@@ -1387,6 +1388,7 @@ bb746: ;
       char* c775 = (char*)_str_1;
       unsigned int c776 = 29;
       char* cast777 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast774, c775, c776, cast777);
     }
     unsigned long c778 = 1;
@@ -1400,6 +1402,7 @@ bb746: ;
       char* c784 = (char*)_str_1;
       unsigned int c785 = 30;
       char* cast786 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast783, c784, c785, cast786);
     }
     unsigned long c787 = 2;
@@ -1413,6 +1416,7 @@ bb746: ;
       char* c793 = (char*)_str_1;
       unsigned int c794 = 31;
       char* cast795 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast792, c793, c794, cast795);
     }
     unsigned long c796 = 3;
@@ -1426,6 +1430,7 @@ bb746: ;
       char* c802 = (char*)_str_1;
       unsigned int c803 = 32;
       char* cast804 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast801, c802, c803, cast804);
     }
     unsigned long c805 = 4;
@@ -1439,6 +1444,7 @@ bb746: ;
       char* c811 = (char*)_str_1;
       unsigned int c812 = 33;
       char* cast813 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast810, c811, c812, cast813);
     }
     unsigned long c814 = 5;
@@ -1452,6 +1458,7 @@ bb746: ;
       char* c820 = (char*)_str_1;
       unsigned int c821 = 34;
       char* cast822 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast819, c820, c821, cast822);
     }
     unsigned long c823 = 6;
@@ -1465,6 +1472,7 @@ bb746: ;
       char* c829 = (char*)_str_1;
       unsigned int c830 = 35;
       char* cast831 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast828, c829, c830, cast831);
     }
     unsigned long c832 = 7;
@@ -1478,6 +1486,7 @@ bb746: ;
       char* c838 = (char*)_str_1;
       unsigned int c839 = 36;
       char* cast840 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast837, c838, c839, cast840);
     }
     unsigned long c841 = 8;
@@ -1491,6 +1500,7 @@ bb746: ;
       char* c847 = (char*)_str_1;
       unsigned int c848 = 37;
       char* cast849 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast846, c847, c848, cast849);
     }
     char* cast850 = (char*)&(_str_10);

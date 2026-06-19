@@ -137,6 +137,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
@@ -2311,6 +2312,7 @@ bb1299: ;
       char* c1325 = (char*)_str_1;
       unsigned int c1326 = 36;
       char* cast1327 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1324, c1325, c1326, cast1327);
     }
     unsigned long c1328 = 1;
@@ -2324,6 +2326,7 @@ bb1299: ;
       char* c1334 = (char*)_str_1;
       unsigned int c1335 = 37;
       char* cast1336 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1333, c1334, c1335, cast1336);
     }
     unsigned long c1337 = 2;
@@ -2337,6 +2340,7 @@ bb1299: ;
       char* c1343 = (char*)_str_1;
       unsigned int c1344 = 38;
       char* cast1345 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1342, c1343, c1344, cast1345);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r1346 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);

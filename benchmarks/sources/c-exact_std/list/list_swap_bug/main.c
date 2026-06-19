@@ -76,6 +76,7 @@ void __gnu_cxx____alloc_traits_std__allocator_std___List_node_int_____std___List
 void std____cxx11__list_int__std__allocator_int_____swap(struct std____cxx11__list_int__std__allocator_int__* p0, struct std____cxx11__list_int__std__allocator_int__* p1);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
 _Bool bool_std__operator___int__std__allocator_int___(struct std____cxx11__list_int__std__allocator_int__* p0, struct std____cxx11__list_int__std__allocator_int__* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -903,6 +904,7 @@ bb408: ;
             char* c427 = (char*)_str_1;
             unsigned int c428 = 23;
             char* cast429 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast426, c427, c428, cast429);
           }
           _Bool r430 = bool_std__operator___int__std__allocator_int___(&second413, &first1416);
@@ -913,6 +915,7 @@ bb408: ;
             char* c433 = (char*)_str_1;
             unsigned int c434 = 24;
             char* cast435 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast432, c433, c434, cast435);
           }
           char* cast436 = (char*)&(_str_3);

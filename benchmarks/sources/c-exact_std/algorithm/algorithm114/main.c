@@ -93,6 +93,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -2034,6 +2035,7 @@ bb1197: ;
       char* c1234 = (char*)_str_1;
       unsigned int c1235 = 26;
       char* cast1236 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1233, c1234, c1235, cast1236);
     }
     int c1237 = 0;

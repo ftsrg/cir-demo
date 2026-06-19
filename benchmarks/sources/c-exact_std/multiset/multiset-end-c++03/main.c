@@ -72,6 +72,7 @@ struct std___Rb_tree_const_iterator_int_ std___Rb_tree_int__int__std___Identity_
 struct std___Rb_tree_const_iterator_int_ std__multiset_int__std__less_int___std__allocator_int_____end___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_const_iterator_int___operator__(struct std___Rb_tree_const_iterator_int_* p0, int p1);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -758,6 +759,7 @@ bb282: ;
       char* c301 = (char*)_str_1;
       unsigned int c302 = 20;
       char* cast303 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast300, c301, c302, cast303);
     }
     char* cast304 = (char*)&(_str_2);

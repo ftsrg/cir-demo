@@ -148,6 +148,7 @@ extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__op
 int* __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______operator____const(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0);
 int* std__vector_int__std__allocator_int_____front___const(struct std__vector_int__std__allocator_int__* p0);
 int* std__priority_queue_int__std__vector_int__std__allocator_int_____std__less_int_____top___const(struct std__priority_queue_int__std__vector_int__std__allocator_int____std__less_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool _ZN9__gnu_cxxeqIPiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESA_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p1);
 void __gnu_cxx____ops___Iter_comp_iter_std__less_int______Iter_comp_iter(struct __gnu_cxx____ops___Iter_comp_iter_std__less_int__* p0, struct std__less_int_ p1);
@@ -2250,6 +2251,7 @@ bb1261: ;
             char* c1293 = (char*)_str_3;
             unsigned int c1294 = 28;
             char* cast1295 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1292, c1293, c1294, cast1295);
           }
           std__priority_queue_int__std__vector_int__std__allocator_int_____std__less_int_____pop(&mypq1263);

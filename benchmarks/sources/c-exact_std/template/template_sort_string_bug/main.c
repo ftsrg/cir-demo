@@ -141,6 +141,7 @@ int std__char_traits_char___compare(char* p0, char* p1, unsigned long p2);
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 _Bool bool_std__operator___char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, char* p1);
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_______operator____const(struct std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_______operator__(struct std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___* p0, int p1);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
@@ -2381,6 +2382,7 @@ bb998: ;
       char* c1022 = (char*)_str_4;
       unsigned int c1023 = 25;
       char* cast1024 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1021, c1022, c1023, cast1024);
     }
     int c1025 = 0;
@@ -2403,6 +2405,7 @@ bb998: ;
       char* c1032 = (char*)_str_4;
       unsigned int c1033 = 26;
       char* cast1034 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1031, c1032, c1033, cast1034);
     }
     int c1035 = 0;
@@ -2425,6 +2428,7 @@ bb998: ;
       char* c1042 = (char*)_str_4;
       unsigned int c1043 = 27;
       char* cast1044 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1041, c1042, c1043, cast1044);
     }
     char* cast1045 = (char*)&(_str_7);

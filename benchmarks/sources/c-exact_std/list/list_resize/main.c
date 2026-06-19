@@ -105,6 +105,7 @@ void void_std____cxx11__list_int__std__allocator_int______M_insert_int_(struct s
 void std____cxx11__list_int__std__allocator_int_____push_back(struct std____cxx11__list_int__std__allocator_int__* p0, int* p1);
 unsigned long std____cxx11___List_base_int__std__allocator_int______M_get_size___const(struct std____cxx11___List_base_int__std__allocator_int__* p0);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std___List_const_iterator_int____List_const_iterator_3(struct std___List_const_iterator_int_* p0);
 void std___List_const_iterator_int____List_const_iterator(struct std___List_const_iterator_int_* p0, struct std____detail___List_node_base* p1);
@@ -2386,6 +2387,7 @@ bb1086: ;
       char* c1106 = (char*)_str_1;
       unsigned int c1107 = 22;
       char* cast1108 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1105, c1106, c1107, cast1108);
     }
     unsigned long c1109 = 5;
@@ -2406,6 +2408,7 @@ bb1086: ;
       char* c1114 = (char*)_str_1;
       unsigned int c1115 = 24;
       char* cast1116 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1113, c1114, c1115, cast1116);
     }
     unsigned long c1117 = 8;
@@ -2428,6 +2431,7 @@ bb1086: ;
       char* c1123 = (char*)_str_1;
       unsigned int c1124 = 26;
       char* cast1125 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1122, c1123, c1124, cast1125);
     }
     int* r1126 = std____cxx11__list_int__std__allocator_int_____back(&mylist1088);
@@ -2440,6 +2444,7 @@ bb1086: ;
       char* c1131 = (char*)_str_1;
       unsigned int c1132 = 27;
       char* cast1133 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1130, c1131, c1132, cast1133);
     }
     unsigned long c1134 = 12;
@@ -2460,6 +2465,7 @@ bb1086: ;
       char* c1139 = (char*)_str_1;
       unsigned int c1140 = 29;
       char* cast1141 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1138, c1139, c1140, cast1141);
     }
     int* r1142 = std____cxx11__list_int__std__allocator_int_____back(&mylist1088);
@@ -2472,6 +2478,7 @@ bb1086: ;
       char* c1147 = (char*)_str_1;
       unsigned int c1148 = 30;
       char* cast1149 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1146, c1147, c1148, cast1149);
     }
     char* cast1150 = (char*)&(_str_7);

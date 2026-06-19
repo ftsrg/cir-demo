@@ -85,6 +85,7 @@ struct std__bidirectional_iterator_tag std__iterator_traits_std___Rb_tree_const_
 long std__iterator_traits_std___Rb_tree_const_iterator_std__pair_char_const__int_______difference_type_std__distance_std___Rb_tree_const_iterator_std__pair_char_const__int_____(struct std___Rb_tree_const_iterator_std__pair_const_char__int__ p0, struct std___Rb_tree_const_iterator_std__pair_const_char__int__ p1);
 unsigned long std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______count_char_const___const(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0, char* p1);
 unsigned long std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______count_char_const___const(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int________multimap(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 int main();
@@ -1335,6 +1336,7 @@ bb533: ;
       char* c593 = (char*)_str_1;
       unsigned int c594 = 25;
       char* cast595 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast592, c593, c594, cast595);
     }
     char c596 = 121;
@@ -1355,6 +1357,7 @@ bb533: ;
       char* c601 = (char*)_str_1;
       unsigned int c602 = 26;
       char* cast603 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast600, c601, c602, cast603);
     }
     char c604 = 122;
@@ -1375,6 +1378,7 @@ bb533: ;
       char* c609 = (char*)_str_1;
       unsigned int c610 = 27;
       char* cast611 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast608, c609, c610, cast611);
     }
     int c612 = 0;

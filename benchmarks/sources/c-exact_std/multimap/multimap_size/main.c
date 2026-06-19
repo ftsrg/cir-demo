@@ -89,6 +89,7 @@ void _ZNSt4pairIciEC2IciQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS2
 struct std__pair_char__int_ std__pair_std____strip_reference_wrapper_std__decay_char___type_____type__std____strip_reference_wrapper_std__decay_int___type_____type__std__make_pair_char__int_(char* p0, int* p1);
 unsigned long std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______size___const(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0);
 unsigned long std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______size___const(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 long std__ios_base__width___const(struct std__ios_base* p0);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__put(struct std__basic_ostream_char__std__char_traits_char__* p0, char p1);
@@ -1180,6 +1181,7 @@ bb479: ;
       char* c519 = (char*)_str_1;
       unsigned int c520 = 23;
       char* cast521 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast518, c519, c520, cast521);
     }
     char* cast522 = (char*)&(_str_2);

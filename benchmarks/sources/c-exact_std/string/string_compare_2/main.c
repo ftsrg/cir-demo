@@ -79,6 +79,7 @@ void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_cha
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_replace(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, unsigned long p1, unsigned long p2, char* p3, unsigned long p4);
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____assign(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, char* p1);
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____operator__2(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 char* std____ptr_traits_ptr_to_char___char__false___pointer_to(char* p0);
@@ -1906,6 +1907,7 @@ bb1064: ;
         char* c1100 = (char*)_str_3;
         unsigned int c1101 = 23;
         char* cast1102 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1099, c1100, c1101, cast1102);
       }
     {

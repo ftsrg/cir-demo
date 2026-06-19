@@ -78,6 +78,7 @@ struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___
 struct std___Deque_iterator_int__int____int___ std__operator__3(struct std___Deque_iterator_int__int____int___* p0, long p1);
 int* std___Deque_iterator_int__int___int____operator___long__const(struct std___Deque_iterator_int__int____int___* p0, long p1);
 int* std__deque_int__std__allocator_int_____operator__(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool std__operator__(struct std__allocator_int_* p0, struct std__allocator_int_* p1);
 void std___Deque_base_int__std__allocator_int______Deque_impl_data___Deque_impl_data(struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* p0, struct std___Deque_base_int__std__allocator_int_____Deque_impl_data* p1);
@@ -1103,6 +1104,7 @@ bb491: ;
         char* c511 = (char*)_str_1;
         unsigned int c512 = 20;
         char* cast513 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast510, c511, c512, cast513);
       }
       unsigned long c514 = 4;
@@ -1116,6 +1118,7 @@ bb491: ;
         char* c520 = (char*)_str_1;
         unsigned int c521 = 21;
         char* cast522 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast519, c520, c521, cast522);
       }
       std__deque_int__std__allocator_int_____swap(&first494, &second497);
@@ -1130,6 +1133,7 @@ bb491: ;
         char* c529 = (char*)_str_1;
         unsigned int c530 = 25;
         char* cast531 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast528, c529, c530, cast531);
       }
       unsigned long c532 = 2;
@@ -1143,6 +1147,7 @@ bb491: ;
         char* c538 = (char*)_str_1;
         unsigned int c539 = 26;
         char* cast540 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast537, c538, c539, cast540);
       }
       char* cast541 = (char*)&(_str_5);

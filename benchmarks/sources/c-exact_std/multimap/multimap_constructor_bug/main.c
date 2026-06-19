@@ -85,6 +85,7 @@ _Bool std__operator__(struct std___Rb_tree_iterator_std__pair_const_char__int__*
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______end(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______end(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 struct std__pair_const_char__int_* std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern struct std___Rb_tree_node_base* std___Rb_tree_increment(struct std___Rb_tree_node_base* p0);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator_std__pair_char_const__int_____operator___2(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, int p1);
@@ -1183,6 +1184,7 @@ bb434: ;
             char* c489 = (char*)_str_1;
             unsigned int c490 = 32;
             char* cast491 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast488, c489, c490, cast491);
           }
       for_step480: ;
@@ -1203,6 +1205,7 @@ bb434: ;
       char* c501 = (char*)_str_1;
       unsigned int c502 = 34;
       char* cast503 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast500, c501, c502, cast503);
     }
     struct std___Rb_tree_iterator_std__pair_const_char__int__ r504 = std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______begin(&first436);
@@ -1242,6 +1245,7 @@ bb434: ;
               char* c522 = (char*)_str_1;
               unsigned int c523 = 40;
               char* cast524 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast521, c522, c523, cast524);
             }
         for_step513: ;
@@ -1262,6 +1266,7 @@ bb434: ;
         char* c534 = (char*)_str_1;
         unsigned int c535 = 42;
         char* cast536 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast533, c534, c535, cast536);
       }
       std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______multimap(&third457, &second454);
@@ -1298,6 +1303,7 @@ bb434: ;
                 char* c551 = (char*)_str_1;
                 unsigned int c552 = 48;
                 char* cast553 = (char*)&(__PRETTY_FUNCTION___main);
+                reach_error();
                 __assert_fail(cast550, c551, c552, cast553);
               }
           for_step542: ;
@@ -1318,6 +1324,7 @@ bb434: ;
           char* c563 = (char*)_str_1;
           unsigned int c564 = 50;
           char* cast565 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast562, c563, c564, cast565);
         }
         std__multimap_char__int__classcomp__std__allocator_std__pair_char_const__int_______multimap(&fourth458);

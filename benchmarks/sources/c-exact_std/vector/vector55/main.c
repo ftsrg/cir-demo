@@ -110,6 +110,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____insert(struct std__vector_int__std__allocator_int__* p0, struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ p1, int* p2);
 void _ZN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEC2IPiQsr3stdE16is_convertible_vITL0__T_EEERKNS0_ISA_S5_EE(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p1);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______M_fill_append(struct std__vector_int__std__allocator_int__* p0, unsigned long p1, int* p2);
 void std__vector_int__std__allocator_int______Temporary_value___Temporary_value_int_const__(struct std__vector_int__std__allocator_int_____Temporary_value* p0, struct std__vector_int__std__allocator_int__* p1, int* p2);
@@ -2839,6 +2840,7 @@ bb1486: ;
       char* c1514 = (char*)_str_1;
       unsigned int c1515 = 21;
       char* cast1516 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1513, c1514, c1515, cast1516);
     }
     _ZN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEC2IPiQsr3stdE16is_convertible_vITL0__T_EEERKNS0_ISA_S5_EE(&agg_tmp11496, &it1491);
@@ -2866,6 +2868,7 @@ bb1486: ;
       char* c1527 = (char*)_str_1;
       unsigned int c1528 = 23;
       char* cast1529 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1526, c1527, c1528, cast1529);
     }
     int c1530 = 0;

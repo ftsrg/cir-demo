@@ -163,6 +163,7 @@ char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
 _Bool std__less_char___operator___char_const___char_const___const(struct std__less_char_* p0, char* p1, char* p2);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator_std__pair_char_const__int_____operator___2(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int________map(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 int main();
@@ -2241,6 +2242,7 @@ bb967: ;
       char* c1018 = (char*)_str_3;
       unsigned int c1019 = 35;
       char* cast1020 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1017, c1018, c1019, cast1020);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r1021 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);

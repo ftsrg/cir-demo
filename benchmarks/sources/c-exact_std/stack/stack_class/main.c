@@ -85,6 +85,7 @@ void std__deque_A_bool___std__allocator_A_bool________M_pop_back_aux(struct std_
 void std__deque_A_bool___std__allocator_A_bool_______pop_back(struct std__deque_A_bool___std__allocator_A_bool___* p0);
 void std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________pop(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0);
 _Bool std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________empty___const(struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Deque_iterator_A_bool___A_bool_____A_bool____* std___Deque_iterator_A_bool___A_bool____A_bool_____operator__(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0);
 struct A_bool_* std___Deque_iterator_A_bool___A_bool____A_bool_____operator____const(struct std___Deque_iterator_A_bool___A_bool_____A_bool____* p0);
@@ -1738,6 +1739,7 @@ bb867: ;
       char* c877 = (char*)_str_1;
       unsigned int c878 = 56;
       char* cast879 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast876, c877, c878, cast879);
     }
     struct A_bool_* r880 = std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________top(&first869);
@@ -1762,6 +1764,7 @@ bb867: ;
       char* c883 = (char*)_str_1;
       unsigned int c884 = 57;
       char* cast885 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast882, c883, c884, cast885);
     }
     unsigned long r886 = std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool_________size___const(&first869);
@@ -1780,6 +1783,7 @@ bb867: ;
       char* c890 = (char*)_str_1;
       unsigned int c891 = 58;
       char* cast892 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast889, c890, c891, cast892);
     }
     int c893 = 0;

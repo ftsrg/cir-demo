@@ -57,7 +57,7 @@ ESBMC_EVAL_SRC = REPO_ROOT / "backend" / "examples" / "esbmc-eval"
 RUNNER = REPO_ROOT / "cir2c" / "test" / "run-cir2c.sh"
 
 DEFAULT_JOBS = 16
-DEFAULT_TIMEOUT = 120
+DEFAULT_TIMEOUT = 300
 
 
 def parse_args() -> argparse.Namespace:

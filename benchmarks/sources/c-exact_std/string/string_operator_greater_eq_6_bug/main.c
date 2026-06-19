@@ -70,6 +70,7 @@ char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_ch
 int std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______S_compare(unsigned long p0, unsigned long p1);
 int std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____compare_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char____const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p1);
 struct std__strong_ordering decltype_____detail____char_traits_cmp_cat_std__char_traits_char_____0___std__operator____char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 void std____new_allocator_char_____new_allocator_2(struct std____new_allocator_char_* p0);
@@ -1456,6 +1457,7 @@ bb777: ;
           char* c806 = (char*)_str_2;
           unsigned int c807 = 18;
           char* cast808 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast805, c806, c807, cast808);
         }
       {

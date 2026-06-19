@@ -102,6 +102,7 @@ extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator__(struct std___Deque_iterator_int__int____int___* p0);
 int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* p0);
 int* std__deque_int__std__allocator_int_____back(struct std__deque_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool std__operator__(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1);
 _Bool std__deque_int__std__allocator_int_____empty___const(struct std__deque_int__std__allocator_int__* p0);
@@ -1910,6 +1911,7 @@ bb975: ;
       char* c990 = (char*)_str_1;
       unsigned int c991 = 19;
       char* cast992 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast989, c990, c991, cast992);
     }
     int c993 = 20;
@@ -1932,6 +1934,7 @@ bb975: ;
       char* c999 = (char*)_str_1;
       unsigned int c1000 = 21;
       char* cast1001 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast998, c999, c1000, cast1001);
     }
     int c1002 = 30;
@@ -1954,6 +1957,7 @@ bb975: ;
       char* c1008 = (char*)_str_1;
       unsigned int c1009 = 23;
       char* cast1010 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1007, c1008, c1009, cast1010);
     }
       while (1) {

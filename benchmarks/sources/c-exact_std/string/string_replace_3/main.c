@@ -73,6 +73,7 @@ extern int memcmp(void* p0, void* p1, unsigned long p2);
 int std__char_traits_char___compare(char* p0, char* p1, unsigned long p2);
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 _Bool bool_std__operator___char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std____throw_out_of_range_fmt(char* p0, ...);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______M_check_unsigned_long__char_const___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, unsigned long p1, char* p2);
@@ -1407,6 +1408,7 @@ bb788: ;
               char* c810 = (char*)_str_6;
               unsigned int c811 = 27;
               char* cast812 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast809, c810, c811, cast812);
             }
             unsigned long c813 = 19;
@@ -1422,6 +1424,7 @@ bb788: ;
               char* c821 = (char*)_str_6;
               unsigned int c822 = 30;
               char* cast823 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast820, c821, c822, cast823);
             }
             unsigned long c824 = 8;
@@ -1437,6 +1440,7 @@ bb788: ;
               char* c832 = (char*)_str_6;
               unsigned int c833 = 33;
               char* cast834 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast831, c832, c833, cast834);
             }
             struct std__basic_ostream_char__std__char_traits_char__* r835 = std__basic_ostream_char__std__char_traits_char_____std__operator____char__std__char_traits_char___std__allocator_char___(&_ZSt4cout, &str798);

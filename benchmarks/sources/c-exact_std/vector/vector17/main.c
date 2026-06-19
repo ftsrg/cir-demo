@@ -210,6 +210,7 @@ int* int__std__fill_n_int___unsigned_long__int_(int* p0, unsigned long p1, int* 
 void std__vector_int__std__allocator_int______M_fill_assign(struct std__vector_int__std__allocator_int__* p0, unsigned long p1, int* p2);
 void std__vector_int__std__allocator_int_____assign(struct std__vector_int__std__allocator_int__* p0, unsigned long p1, int* p2);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -3381,6 +3382,7 @@ bb1910: ;
           char* c1980 = (char*)_str_4;
           unsigned int c1981 = 38;
           char* cast1982 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast1979, c1980, c1981, cast1982);
         }
         char* cast1983 = (char*)&(_str_5);

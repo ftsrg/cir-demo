@@ -166,6 +166,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -2739,6 +2740,7 @@ bb1583: ;
           char* c1622 = (char*)_str_2;
           unsigned int c1623 = 31;
           char* cast1624 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast1621, c1622, c1623, cast1624);
         }
         char* cast1625 = (char*)&(_str_3);
@@ -2756,6 +2758,7 @@ bb1583: ;
           char* c1635 = (char*)_str_2;
           unsigned int c1636 = 33;
           char* cast1637 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast1634, c1635, c1636, cast1637);
         }
         char* cast1638 = (char*)&(_str_5);
@@ -2773,6 +2776,7 @@ bb1583: ;
           char* c1648 = (char*)_str_2;
           unsigned int c1649 = 35;
           char* cast1650 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast1647, c1648, c1649, cast1650);
         }
         int c1651 = 0;

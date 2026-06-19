@@ -95,6 +95,7 @@ void __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_in
 struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin___const(struct std__vector_int__std__allocator_int__* p0);
 struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____end___const(struct std__vector_int__std__allocator_int__* p0);
 _Bool std__vector_int__std__allocator_int_____empty___const(struct std__vector_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int std__operator__7(int p0, int p1);
 extern void std__ios_base__ios_base(struct std__ios_base* p0);
@@ -2330,6 +2331,7 @@ bb1216: ;
       char* c1225 = (char*)_str_1;
       unsigned int c1226 = 19;
       char* cast1227 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1224, c1225, c1226, cast1227);
     }
     char* cast1228 = (char*)&(_str_2);

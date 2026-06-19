@@ -76,6 +76,7 @@ char _str_16[15] = "!this->empty()";
 void std____cxx11__list_int__std__allocator_int_____list_3(struct std____cxx11__list_int__std__allocator_int__* p0);
 unsigned long std____cxx11___List_base_int__std__allocator_int______M_get_size___const(struct std____cxx11___List_base_int__std__allocator_int__* p0);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__allocator_int___allocator(struct std__allocator_int_* p0);
 void std____cxx11__list_int__std__allocator_int_____list_2(struct std____cxx11__list_int__std__allocator_int__* p0, unsigned long p1, int* p2, struct std__allocator_int_* p3);
@@ -889,6 +890,7 @@ bb394: ;
       char* c414 = (char*)_str_1;
       unsigned int c415 = 18;
       char* cast416 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast413, c414, c415, cast416);
     }
     unsigned long c417 = 4;
@@ -908,6 +910,7 @@ bb394: ;
         char* c423 = (char*)_str_1;
         unsigned int c424 = 20;
         char* cast425 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast422, c423, c424, cast425);
       }
       int* r426 = std____cxx11__list_int__std__allocator_int_____back(&second397);
@@ -920,6 +923,7 @@ bb394: ;
         char* c431 = (char*)_str_1;
         unsigned int c432 = 21;
         char* cast433 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast430, c431, c432, cast433);
       }
       struct std___List_iterator_int_ r434 = std____cxx11__list_int__std__allocator_int_____begin(&second397);
@@ -942,6 +946,7 @@ bb394: ;
           char* c442 = (char*)_str_1;
           unsigned int c443 = 23;
           char* cast444 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast441, c442, c443, cast444);
         }
         int* r445 = std____cxx11__list_int__std__allocator_int_____back(&third400);
@@ -955,6 +960,7 @@ bb394: ;
           char* c451 = (char*)_str_1;
           unsigned int c452 = 24;
           char* cast453 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast450, c451, c452, cast453);
         }
         std____cxx11__list_int__std__allocator_int_____list(&fourth404, &third400);
@@ -967,6 +973,7 @@ bb394: ;
             char* c458 = (char*)_str_1;
             unsigned int c459 = 26;
             char* cast460 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast457, c458, c459, cast460);
           }
           int* r461 = std____cxx11__list_int__std__allocator_int_____back(&fourth404);
@@ -979,6 +986,7 @@ bb394: ;
             char* c466 = (char*)_str_1;
             unsigned int c467 = 27;
             char* cast468 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast465, c466, c467, cast468);
           }
           // array copy
@@ -1003,6 +1011,7 @@ bb394: ;
               char* c479 = (char*)_str_1;
               unsigned int c480 = 32;
               char* cast481 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast478, c479, c480, cast481);
             }
             struct std___List_iterator_int_ r482 = std____cxx11__list_int__std__allocator_int_____begin(&fifth406);
@@ -1017,6 +1026,7 @@ bb394: ;
               char* c488 = (char*)_str_1;
               unsigned int c489 = 35;
               char* cast490 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast487, c488, c489, cast490);
             }
             struct std___List_iterator_int_* r491 = std___List_iterator_int___operator___3(&it408);
@@ -1030,6 +1040,7 @@ bb394: ;
               char* c497 = (char*)_str_1;
               unsigned int c498 = 36;
               char* cast499 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast496, c497, c498, cast499);
             }
             struct std___List_iterator_int_* r500 = std___List_iterator_int___operator___3(&it408);
@@ -1043,6 +1054,7 @@ bb394: ;
               char* c506 = (char*)_str_1;
               unsigned int c507 = 37;
               char* cast508 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast505, c506, c507, cast508);
             }
             struct std___List_iterator_int_* r509 = std___List_iterator_int___operator___3(&it408);
@@ -1056,6 +1068,7 @@ bb394: ;
               char* c515 = (char*)_str_1;
               unsigned int c516 = 38;
               char* cast517 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast514, c515, c516, cast517);
             }
             char* cast518 = (char*)&(_str_13);

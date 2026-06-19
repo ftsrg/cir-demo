@@ -83,6 +83,7 @@ unsigned long __gnu_cxx__char_traits_char___length(char* p0);
 extern unsigned long strlen(char* p0);
 unsigned long std__char_traits_char___length(char* p0);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
@@ -956,6 +957,7 @@ bb376: ;
           char* c450 = (char*)_str_2;
           unsigned int c451 = 36;
           char* cast452 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast449, c450, c451, cast452);
         }
       for_step435: ;

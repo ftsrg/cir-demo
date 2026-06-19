@@ -80,6 +80,7 @@ struct std___Rb_tree_const_iterator_int_ std__multiset_int__std__less_int___std_
 struct std___Rb_tree_const_iterator_int_* std___Rb_tree_const_iterator_int___operator_(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_const_iterator_int___operator__(struct std___Rb_tree_const_iterator_int_* p0, int p1);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool std__operator___2(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
@@ -1247,6 +1248,7 @@ bb513: ;
       char* c548 = (char*)_str_1;
       unsigned int c549 = 22;
       char* cast550 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast547, c548, c549, cast550);
     }
     agg_tmp1521 = it517; // copy
@@ -1276,6 +1278,7 @@ bb513: ;
       char* c562 = (char*)_str_1;
       unsigned int c563 = 26;
       char* cast564 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast561, c562, c563, cast564);
     }
     int c565 = 40;
@@ -1327,6 +1330,7 @@ bb513: ;
       char* c581 = (char*)_str_1;
       unsigned int c582 = 33;
       char* cast583 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast580, c581, c582, cast583);
     }
     int c584 = 0;
@@ -1342,6 +1346,7 @@ bb513: ;
       char* c591 = (char*)_str_1;
       unsigned int c592 = 35;
       char* cast593 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast590, c591, c592, cast593);
     }
     int c594 = 0;
@@ -1357,6 +1362,7 @@ bb513: ;
       char* c601 = (char*)_str_1;
       unsigned int c602 = 37;
       char* cast603 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast600, c601, c602, cast603);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r604 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);

@@ -72,6 +72,7 @@ char _str_6[2] = " ";
 void std__multiset_int__std__less_int___std__allocator_int_____multiset_int__(struct std__multiset_int__std__less_int___std__allocator_int__* p0, int* p1, int* p2);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(struct std___Rb_tree_const_iterator_int_* p0);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____size___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_node_base* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_lower_bound_std___Rb_tree_node_base___std___Rb_tree_node_base___int_const___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0, struct std___Rb_tree_node_base* p1, struct std___Rb_tree_node_base* p2, int* p3);
 struct std___Rb_tree_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____lower_bound(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0, int* p1);
@@ -1155,6 +1156,7 @@ bb478: ;
       char* c501 = (char*)_str_1;
       unsigned int c502 = 20;
       char* cast503 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast500, c501, c502, cast503);
     }
     int c504 = 30;
@@ -1179,6 +1181,7 @@ bb478: ;
       char* c512 = (char*)_str_1;
       unsigned int c513 = 22;
       char* cast514 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast511, c512, c513, cast514);
     }
     int c515 = 60;
@@ -1203,6 +1206,7 @@ bb478: ;
       char* c523 = (char*)_str_1;
       unsigned int c524 = 24;
       char* cast525 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast522, c523, c524, cast525);
     }
     agg_tmp0489 = itlow483; // copy
@@ -1227,6 +1231,7 @@ bb478: ;
       char* c533 = (char*)_str_1;
       unsigned int c534 = 26;
       char* cast535 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast532, c533, c534, cast535);
     }
     char* cast536 = (char*)&(_str_5);

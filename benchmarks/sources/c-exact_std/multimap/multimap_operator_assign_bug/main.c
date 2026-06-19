@@ -147,6 +147,7 @@ struct std___Rb_tree_const_iterator_std__pair_const_char__int__ std___Rb_tree_ch
 struct std___Rb_tree_const_iterator_std__pair_const_char__int__ std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______end___const(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0);
 _Bool std__operator___3(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0, struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p1);
 _Bool bool_std__operator___char__int__std__less_char___std__allocator_std__pair_char_const__int_____(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0, struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______clear(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 long std__ios_base__width___const(struct std__ios_base* p0);
@@ -2610,6 +2611,7 @@ bb1186: ;
         char* c1227 = (char*)_str_1;
         unsigned int c1228 = 24;
         char* cast1229 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1226, c1227, c1228, cast1229);
       }
       std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______clear(&foo1188);

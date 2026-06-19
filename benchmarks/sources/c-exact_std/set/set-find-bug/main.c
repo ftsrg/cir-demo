@@ -75,6 +75,7 @@ char _str_8[20] = "__position != end()";
 void std__set_int__std__less_int___std__allocator_int_____set_int__(struct std__set_int__std__less_int___std__allocator_int__* p0, int* p1, int* p2);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(struct std___Rb_tree_const_iterator_int_* p0);
 unsigned long std__set_int__std__less_int___std__allocator_int_____size___const(struct std__set_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_node_base* p1);
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____begin___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
@@ -1035,6 +1036,7 @@ bb415: ;
       char* c440 = (char*)_str_1;
       unsigned int c441 = 20;
       char* cast442 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast439, c440, c441, cast442);
     }
     int c443 = 10;
@@ -1061,6 +1063,7 @@ bb415: ;
             char* c458 = (char*)_str_1;
             unsigned int c459 = 23;
             char* cast460 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast457, c458, c459, cast460);
           }
           int c461 = 10;
@@ -1094,6 +1097,7 @@ bb415: ;
       char* c474 = (char*)_str_1;
       unsigned int c475 = 27;
       char* cast476 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast473, c474, c475, cast476);
     }
     agg_tmp1423 = it419; // copy
@@ -1147,6 +1151,7 @@ bb415: ;
       char* c494 = (char*)_str_1;
       unsigned int c495 = 32;
       char* cast496 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast493, c494, c495, cast496);
     }
     char* cast497 = (char*)&(_str_5);

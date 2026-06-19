@@ -91,6 +91,7 @@ void std__allocator_int___allocator_2(struct std__allocator_int_* p0);
 void std__vector_int__std__allocator_int_____vector(struct std__vector_int__std__allocator_int__* p0, unsigned long p1, struct std__allocator_int_* p2);
 void std__allocator_int____allocator(struct std__allocator_int_* p0);
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 unsigned long std__vector_int__std__allocator_int_____capacity___const(struct std__vector_int__std__allocator_int__* p0);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
@@ -2329,6 +2330,7 @@ bb1169: ;
       char* c1180 = (char*)_str_1;
       unsigned int c1181 = 17;
       char* cast1182 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1179, c1180, c1181, cast1182);
     }
     unsigned long r1183 = std__vector_int__std__allocator_int_____capacity___const(&vectorOne1171);
@@ -2340,6 +2342,7 @@ bb1169: ;
       char* c1187 = (char*)_str_1;
       unsigned int c1188 = 18;
       char* cast1189 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1186, c1187, c1188, cast1189);
     }
     char* cast1190 = (char*)&(_str_3);
@@ -2483,6 +2486,7 @@ bb1169: ;
             char* c1234 = (char*)_str_1;
             unsigned int c1235 = 24;
             char* cast1236 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1233, c1234, c1235, cast1236);
           }
           long t1237 = index1220;
@@ -2569,6 +2573,7 @@ bb1169: ;
       char* c1256 = (char*)_str_1;
       unsigned int c1257 = 30;
       char* cast1258 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1255, c1256, c1257, cast1258);
     }
     unsigned long r1259 = std__vector_int__std__allocator_int_____capacity___const(&vectorOne1171);
@@ -2580,6 +2585,7 @@ bb1169: ;
       char* c1263 = (char*)_str_1;
       unsigned int c1264 = 31;
       char* cast1265 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1262, c1263, c1264, cast1265);
     }
     char* cast1266 = (char*)&(_str_3);
@@ -2790,6 +2796,7 @@ bb1169: ;
       char* c1323 = (char*)_str_1;
       unsigned int c1324 = 42;
       char* cast1325 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1322, c1323, c1324, cast1325);
     }
     unsigned long r1326 = std__vector_int__std__allocator_int_____capacity___const(&vectorOne1171);
@@ -2801,6 +2808,7 @@ bb1169: ;
       char* c1330 = (char*)_str_1;
       unsigned int c1331 = 43;
       char* cast1332 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1329, c1330, c1331, cast1332);
     }
     char* cast1333 = (char*)&(_str_3);
@@ -3009,6 +3017,7 @@ bb1169: ;
       char* c1389 = (char*)_str_1;
       unsigned int c1390 = 54;
       char* cast1391 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1388, c1389, c1390, cast1391);
     }
     unsigned long r1392 = std__vector_int__std__allocator_int_____capacity___const(&vectorOne1171);
@@ -3020,6 +3029,7 @@ bb1169: ;
       char* c1396 = (char*)_str_1;
       unsigned int c1397 = 55;
       char* cast1398 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1395, c1396, c1397, cast1398);
     }
     char* cast1399 = (char*)&(_str_3);

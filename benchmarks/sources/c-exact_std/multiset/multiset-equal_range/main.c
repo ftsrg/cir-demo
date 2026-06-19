@@ -121,6 +121,7 @@ struct std__pair_std___Rb_tree_const_iterator_int___std___Rb_tree_const_iterator
 struct std___Rb_tree_const_iterator_int_* std___Rb_tree_const_iterator_int___operator_(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_const_iterator_int_* p1);
 struct std__pair_std___Rb_tree_const_iterator_int___std___Rb_tree_const_iterator_int__* _ZNSt4pairISt23_Rb_tree_const_iteratorIiES1_EaSEOS2_Qcl13_S_assignableIT_T0_EE(struct std__pair_std___Rb_tree_const_iterator_int___std___Rb_tree_const_iterator_int__* p0, struct std__pair_std___Rb_tree_const_iterator_int___std___Rb_tree_const_iterator_int__* p1);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -1708,6 +1709,7 @@ bb770: ;
       char* c799 = (char*)_str_1;
       unsigned int c800 = 20;
       char* cast801 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast798, c799, c800, cast801);
     }
     int* r802 = std___Rb_tree_const_iterator_int___operator____const(&ret773.second);
@@ -1720,6 +1722,7 @@ bb770: ;
       char* c807 = (char*)_str_1;
       unsigned int c808 = 21;
       char* cast809 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast806, c807, c808, cast809);
     }
     char* cast810 = (char*)&(_str_3);

@@ -160,6 +160,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator_std__pair_char_const__int_____operator___2(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, int p1);
 void std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int________map(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
@@ -2256,6 +2257,7 @@ bb963: ;
             char* c1030 = (char*)_str_3;
             unsigned int c1031 = 33;
             char* cast1032 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1029, c1030, c1031, cast1032);
           }
           struct std__pair_const_char__int_* r1033 = std___Rb_tree_iterator_std__pair_char_const__int_____operator____const(&it966);
@@ -2270,6 +2272,7 @@ bb963: ;
             char* c1040 = (char*)_str_3;
             unsigned int c1041 = 34;
             char* cast1042 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1039, c1040, c1041, cast1042);
           }
           int t1043 = i982;

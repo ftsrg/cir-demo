@@ -99,6 +99,7 @@ void void_std____advance_std___List_iterator_unsigned_int___long_(struct std___L
 struct std__bidirectional_iterator_tag std__iterator_traits_std___List_iterator_unsigned_int_____iterator_category_std____iterator_category_std___List_iterator_unsigned_int___(struct std___List_iterator_unsigned_int_* p0);
 void void_std__advance_std___List_iterator_unsigned_int___int_(struct std___List_iterator_unsigned_int_* p0, int p1);
 unsigned int* std___List_iterator_unsigned_int___operator____const(struct std___List_iterator_unsigned_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___List_iterator_unsigned_int_* std___List_iterator_unsigned_int___operator___2(struct std___List_iterator_unsigned_int_* p0);
 void std____cxx11___List_base_unsigned_int__std__allocator_unsigned_int______M_dec_size(struct std____cxx11___List_base_unsigned_int__std__allocator_unsigned_int__* p0, unsigned long p1);
@@ -1361,6 +1362,7 @@ bb686: ;
       char* c721 = (char*)_str_1;
       unsigned int c722 = 26;
       char* cast723 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast720, c721, c722, cast723);
     }
     struct std___List_iterator_unsigned_int_* r724 = std___List_iterator_unsigned_int___operator___2(&it1690);
@@ -1379,6 +1381,7 @@ bb686: ;
       char* c733 = (char*)_str_1;
       unsigned int c734 = 30;
       char* cast735 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast732, c733, c734, cast735);
     }
     unsigned long r736 = std____cxx11__list_unsigned_int__std__allocator_unsigned_int_____size___const(&mylist689);
@@ -1390,6 +1393,7 @@ bb686: ;
       char* c740 = (char*)_str_1;
       unsigned int c741 = 31;
       char* cast742 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast739, c740, c741, cast742);
     }
     std___List_const_iterator_unsigned_int____List_const_iterator(&agg_tmp1696, &it2691);
@@ -1407,6 +1411,7 @@ bb686: ;
       char* c751 = (char*)_str_1;
       unsigned int c752 = 36;
       char* cast753 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast750, c751, c752, cast753);
     }
     unsigned long r754 = std____cxx11__list_unsigned_int__std__allocator_unsigned_int_____size___const(&mylist689);
@@ -1418,6 +1423,7 @@ bb686: ;
       char* c758 = (char*)_str_1;
       unsigned int c759 = 37;
       char* cast760 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast757, c758, c759, cast760);
     }
     struct std___List_iterator_unsigned_int_* r761 = std___List_iterator_unsigned_int___operator___2(&it1690);
@@ -1437,6 +1443,7 @@ bb686: ;
       char* c770 = (char*)_str_1;
       unsigned int c771 = 44;
       char* cast772 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast769, c770, c771, cast772);
     }
     unsigned int* r773 = std___List_iterator_unsigned_int___operator____const(&it2691);
@@ -1449,6 +1456,7 @@ bb686: ;
       char* c778 = (char*)_str_1;
       unsigned int c779 = 46;
       char* cast780 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast777, c778, c779, cast780);
     }
     char* cast781 = (char*)&(_str_8);

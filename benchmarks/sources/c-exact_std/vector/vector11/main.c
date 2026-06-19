@@ -86,6 +86,7 @@ int* std__vector_int__std__allocator_int_____back(struct std__vector_int__std__a
 int* int__std__vector_int__std__allocator_int_____emplace_back_int_(struct std__vector_int__std__allocator_int__* p0, int* p1);
 void std__vector_int__std__allocator_int_____push_back(struct std__vector_int__std__allocator_int__* p0, int* p1);
 int* std__vector_int__std__allocator_int_____front(struct std__vector_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool _ZN9__gnu_cxxeqIPiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESA_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p1);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______std____niter_wrap___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int__(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p0, int* p1);
@@ -1951,6 +1952,7 @@ bb1100: ;
       char* c1140 = (char*)_str_1;
       unsigned int c1141 = 27;
       char* cast1142 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1139, c1140, c1141, cast1142);
     }
     struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r1143 = std__vector_int__std__allocator_int_____begin(&c1103);
@@ -1969,6 +1971,7 @@ bb1100: ;
       char* c1151 = (char*)_str_1;
       unsigned int c1152 = 29;
       char* cast1153 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1150, c1151, c1152, cast1153);
     }
     struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r1154 = std__vector_int__std__allocator_int_____begin(&c1103);

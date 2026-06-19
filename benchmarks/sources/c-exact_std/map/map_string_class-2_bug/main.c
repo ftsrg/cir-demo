@@ -106,6 +106,7 @@ void opposite__opposite(struct opposite* p0, char* p1);
 void _ZNSt4pairIK11StringClass8oppositeEC2IS0_S2_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_(struct std__pair_const_StringClass__opposite_* p0, struct StringClass* p1, struct opposite* p2);
 struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std__map_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______begin(struct std__map_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
 struct std__pair_const_StringClass__opposite_* std___Rb_tree_iterator_std__pair_StringClass_const__opposite_____operator_____const(struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 unsigned long std___Rb_tree_StringClass__std__pair_StringClass_const__opposite___std___Select1st_std__pair_StringClass_const__opposite_____std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
 unsigned long std__map_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(struct std__map_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* p0);
@@ -1436,6 +1437,7 @@ bb635: ;
       char* c658 = (char*)_str_3;
       unsigned int c659 = 76;
       char* cast660 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast657, c658, c659, cast660);
     }
     struct std__pair_const_StringClass__opposite_* r661 = std___Rb_tree_iterator_std__pair_StringClass_const__opposite_____operator_____const(&it642);
@@ -1465,6 +1467,7 @@ bb635: ;
       char* c667 = (char*)_str_3;
       unsigned int c668 = 77;
       char* cast669 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast666, c667, c668, cast669);
     }
     unsigned long r670 = std__map_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_StringClass_const__opposite_______size___const(&mapObject637);
@@ -1476,6 +1479,7 @@ bb635: ;
       char* c674 = (char*)_str_3;
       unsigned int c675 = 78;
       char* cast676 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast673, c674, c675, cast676);
     }
     int c677 = 0;

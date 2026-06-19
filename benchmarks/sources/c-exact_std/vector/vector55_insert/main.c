@@ -171,6 +171,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 void _ZN9__gnu_cxx17__normal_iteratorIPKiSt6vectorIiSaIiEEEC2IPiQsr3stdE16is_convertible_vITL0__T_EEERKNS0_ISA_S5_EE(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p1);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____end(struct std__vector_int__std__allocator_int__* p0);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______std____copy_move_a_false__int_____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(int* p0, int* p1, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p2);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int______std__copy_int_____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______(int* p0, int* p1, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p2);
@@ -4188,6 +4189,7 @@ bb2182: ;
         char* c2228 = (char*)_str_1;
         unsigned int c2229 = 32;
         char* cast2230 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast2227, c2228, c2229, cast2230);
       }
       // array copy
@@ -4223,6 +4225,7 @@ bb2182: ;
         char* c2244 = (char*)_str_1;
         unsigned int c2245 = 36;
         char* cast2246 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast2243, c2244, c2245, cast2246);
       }
         struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ ref_tmp102247;

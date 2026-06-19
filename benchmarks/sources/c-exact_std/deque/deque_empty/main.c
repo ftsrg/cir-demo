@@ -102,6 +102,7 @@ int* std__deque_int__std__allocator_int_____front(struct std__deque_int__std__al
 void void_std__allocator_traits_std__allocator_int_____destroy_int_(struct std__allocator_int_* p0, int* p1);
 void std__deque_int__std__allocator_int______M_pop_front_aux(struct std__deque_int__std__allocator_int__* p0);
 void std__deque_int__std__allocator_int_____pop_front(struct std__deque_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 long std__operator_(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1);
 unsigned long std__deque_int__std__allocator_int_____size___const(struct std__deque_int__std__allocator_int__* p0);
@@ -1874,6 +1875,7 @@ bb947: ;
       char* c969 = (char*)_str_1;
       unsigned int c970 = 26;
       char* cast971 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast968, c969, c970, cast971);
     }
     unsigned long r972 = std__deque_int__std__allocator_int_____size___const(&mydeque949);
@@ -1885,6 +1887,7 @@ bb947: ;
       char* c976 = (char*)_str_1;
       unsigned int c977 = 27;
       char* cast978 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast975, c976, c977, cast978);
     }
     char* cast979 = (char*)&(_str_3);

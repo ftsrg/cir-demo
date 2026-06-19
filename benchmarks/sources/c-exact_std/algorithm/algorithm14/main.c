@@ -161,6 +161,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______operator__long__const_2(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, long p1);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____end(struct std__vector_int__std__allocator_int__* p0);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -2681,6 +2682,7 @@ bb1517: ;
       char* c1557 = (char*)_str_1;
       unsigned int c1558 = 26;
       char* cast1559 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1556, c1557, c1558, cast1559);
     }
     unsigned long c1560 = 1;
@@ -2694,6 +2696,7 @@ bb1517: ;
       char* c1566 = (char*)_str_1;
       unsigned int c1567 = 27;
       char* cast1568 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1565, c1566, c1567, cast1568);
     }
     unsigned long c1569 = 2;
@@ -2707,6 +2710,7 @@ bb1517: ;
       char* c1575 = (char*)_str_1;
       unsigned int c1576 = 28;
       char* cast1577 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1574, c1575, c1576, cast1577);
     }
     unsigned long c1578 = 3;
@@ -2720,6 +2724,7 @@ bb1517: ;
       char* c1584 = (char*)_str_1;
       unsigned int c1585 = 29;
       char* cast1586 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1583, c1584, c1585, cast1586);
     }
     unsigned long c1587 = 4;
@@ -2733,6 +2738,7 @@ bb1517: ;
       char* c1593 = (char*)_str_1;
       unsigned int c1594 = 30;
       char* cast1595 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1592, c1593, c1594, cast1595);
     }
     unsigned long c1596 = 5;
@@ -2746,6 +2752,7 @@ bb1517: ;
       char* c1602 = (char*)_str_1;
       unsigned int c1603 = 31;
       char* cast1604 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1601, c1602, c1603, cast1604);
     }
     unsigned long c1605 = 6;
@@ -2759,6 +2766,7 @@ bb1517: ;
       char* c1611 = (char*)_str_1;
       unsigned int c1612 = 32;
       char* cast1613 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1610, c1611, c1612, cast1613);
     }
     unsigned long c1614 = 7;
@@ -2772,6 +2780,7 @@ bb1517: ;
       char* c1620 = (char*)_str_1;
       unsigned int c1621 = 33;
       char* cast1622 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1619, c1620, c1621, cast1622);
     }
     char* cast1623 = (char*)&(_str_9);

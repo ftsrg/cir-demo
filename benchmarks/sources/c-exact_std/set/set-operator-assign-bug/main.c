@@ -82,6 +82,7 @@ _Bool _ZNSt17integral_constantIbLb1EE5valueE;
 void std__set_int__std__less_int___std__allocator_int_____set_int__(struct std__set_int__std__less_int___std__allocator_int__* p0, int* p1, int* p2);
 void std__set_int__std__less_int___std__allocator_int_____set(struct std__set_int__std__less_int___std__allocator_int__* p0);
 unsigned long std__set_int__std__less_int___std__allocator_int_____size___const(struct std__set_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool __gnu_cxx____alloc_traits_std__allocator_std___Rb_tree_node_int_____std___Rb_tree_node_int______S_propagate_on_copy_assign();
 struct std__allocator_std___Rb_tree_node_int__* std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______M_get_Node_allocator___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
@@ -1962,6 +1963,7 @@ bb890: ;
         char* c907 = (char*)_str_1;
         unsigned int c908 = 18;
         char* cast909 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast906, c907, c908, cast909);
       }
       struct std__set_int__std__less_int___std__allocator_int__* r910 = std__set_int__std__less_int___std__allocator_int_____operator__2(&second894, &first893);
@@ -1984,6 +1986,7 @@ bb890: ;
         char* c915 = (char*)_str_1;
         unsigned int c916 = 20;
         char* cast917 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast914, c915, c916, cast917);
       }
       struct std___Rb_tree_const_iterator_int_ r918 = std__set_int__std__less_int___std__allocator_int_____begin___const(&second894);
@@ -1998,6 +2001,7 @@ bb890: ;
         char* c924 = (char*)_str_1;
         unsigned int c925 = 22;
         char* cast926 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast923, c924, c925, cast926);
       }
       struct std___Rb_tree_const_iterator_int_* r927 = std___Rb_tree_const_iterator_int___operator__(&it895);
@@ -2011,6 +2015,7 @@ bb890: ;
         char* c933 = (char*)_str_1;
         unsigned int c934 = 24;
         char* cast935 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast932, c933, c934, cast935);
       }
       struct std___Rb_tree_const_iterator_int_* r936 = std___Rb_tree_const_iterator_int___operator__(&it895);
@@ -2024,6 +2029,7 @@ bb890: ;
         char* c942 = (char*)_str_1;
         unsigned int c943 = 26;
         char* cast944 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast941, c942, c943, cast944);
       }
       struct std___Rb_tree_const_iterator_int_* r945 = std___Rb_tree_const_iterator_int___operator__(&it895);
@@ -2037,6 +2043,7 @@ bb890: ;
         char* c951 = (char*)_str_1;
         unsigned int c952 = 28;
         char* cast953 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast950, c951, c952, cast953);
       }
       struct std___Rb_tree_const_iterator_int_* r954 = std___Rb_tree_const_iterator_int___operator__(&it895);
@@ -2050,6 +2057,7 @@ bb890: ;
         char* c960 = (char*)_str_1;
         unsigned int c961 = 30;
         char* cast962 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast959, c960, c961, cast962);
       }
       ref_tmp0896 = *&__const_main_ref_tmp0; // copy
@@ -2069,6 +2077,7 @@ bb890: ;
         char* c969 = (char*)_str_1;
         unsigned int c970 = 32;
         char* cast971 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast968, c969, c970, cast971);
       }
       char* cast972 = (char*)&(_str_9);

@@ -103,6 +103,7 @@ _Bool std__deque_int__std__allocator_int_____empty___const(struct std__deque_int
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* p0);
 int* std__deque_int__std__allocator_int_____front(struct std__deque_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__deque_int__std__allocator_int______M_reserve_map_at_back(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
 void void_std__deque_int__std__allocator_int______M_push_back_aux_int_(struct std__deque_int__std__allocator_int__* p0, int* p1);
@@ -2041,6 +2042,7 @@ bb1053: ;
       char* c1065 = (char*)_str_1;
       unsigned int c1066 = 19;
       char* cast1067 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1064, c1065, c1066, cast1067);
     }
     int c1068 = 16;
@@ -2069,6 +2071,7 @@ bb1053: ;
       char* c1079 = (char*)_str_1;
       unsigned int c1080 = 23;
       char* cast1081 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1078, c1079, c1080, cast1081);
     }
     char* cast1082 = (char*)&(_str_3);

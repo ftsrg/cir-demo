@@ -129,6 +129,7 @@ int* std__map_char__int__std__less_char___std__allocator_std__pair_char_const__i
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______begin(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 struct std___Rb_tree_iterator_std__pair_const_char__int__* std___Rb_tree_iterator_std__pair_char_const__int_____operator_(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, struct std___Rb_tree_iterator_std__pair_const_char__int__* p1);
 struct std__pair_const_char__int_* std___Rb_tree_iterator_std__pair_char_const__int_____operator____const(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator_std__pair_char_const__int_____operator___2(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, int p1);
 _Bool std__operator__(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, struct std___Rb_tree_iterator_std__pair_const_char__int__* p1);
@@ -2012,6 +2013,7 @@ bb898: ;
       char* c926 = (char*)_str_1;
       unsigned int c927 = 24;
       char* cast928 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast925, c926, c927, cast928);
     }
     struct std__pair_const_char__int_* r929 = std___Rb_tree_iterator_std__pair_char_const__int_____operator____const(&it901);
@@ -2024,6 +2026,7 @@ bb898: ;
       char* c934 = (char*)_str_1;
       unsigned int c935 = 25;
       char* cast936 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast933, c934, c935, cast936);
     }
     int c937 = 0;
@@ -2040,6 +2043,7 @@ bb898: ;
       char* c945 = (char*)_str_1;
       unsigned int c946 = 27;
       char* cast947 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast944, c945, c946, cast947);
     }
     struct std__pair_const_char__int_* r948 = std___Rb_tree_iterator_std__pair_char_const__int_____operator____const(&it901);
@@ -2052,6 +2056,7 @@ bb898: ;
       char* c953 = (char*)_str_1;
       unsigned int c954 = 28;
       char* cast955 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast952, c953, c954, cast955);
     }
     int c956 = 0;
@@ -2068,6 +2073,7 @@ bb898: ;
       char* c964 = (char*)_str_1;
       unsigned int c965 = 30;
       char* cast966 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast963, c964, c965, cast966);
     }
     struct std__pair_const_char__int_* r967 = std___Rb_tree_iterator_std__pair_char_const__int_____operator____const(&it901);
@@ -2080,6 +2086,7 @@ bb898: ;
       char* c972 = (char*)_str_1;
       unsigned int c973 = 31;
       char* cast974 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast971, c972, c973, cast974);
     }
       struct std___Rb_tree_iterator_std__pair_const_char__int__ ref_tmp4975;

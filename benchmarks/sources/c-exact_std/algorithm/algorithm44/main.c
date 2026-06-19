@@ -180,6 +180,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____end(struct std__vector_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void __gnu_cxx____ops___Iter_comp_val_bool_____int__int_____Iter_comp_val___gnu_cxx____ops___Iter_comp_iter_bool____(struct __gnu_cxx____ops___Iter_comp_val_bool_____int__int__* p0, struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__* p1);
 _Bool bool___gnu_cxx____ops___Iter_comp_val_bool_____int__int____operator_____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int_(struct __gnu_cxx____ops___Iter_comp_val_bool_____int__int__* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1, int* p2);
@@ -4098,6 +4099,7 @@ bb2403: ;
       char* c2438 = (char*)_str_1;
       unsigned int c2439 = 28;
       char* cast2440 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2437, c2438, c2439, cast2440);
     }
     unsigned long c2441 = 1;
@@ -4111,6 +4113,7 @@ bb2403: ;
       char* c2447 = (char*)_str_1;
       unsigned int c2448 = 29;
       char* cast2449 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2446, c2447, c2448, cast2449);
     }
     unsigned long c2450 = 2;
@@ -4124,6 +4127,7 @@ bb2403: ;
       char* c2456 = (char*)_str_1;
       unsigned int c2457 = 30;
       char* cast2458 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2455, c2456, c2457, cast2458);
     }
     unsigned long c2459 = 3;
@@ -4137,6 +4141,7 @@ bb2403: ;
       char* c2465 = (char*)_str_1;
       unsigned int c2466 = 31;
       char* cast2467 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2464, c2465, c2466, cast2467);
     }
     unsigned long c2468 = 4;
@@ -4150,6 +4155,7 @@ bb2403: ;
       char* c2474 = (char*)_str_1;
       unsigned int c2475 = 32;
       char* cast2476 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2473, c2474, c2475, cast2476);
     }
     unsigned long c2477 = 5;
@@ -4163,6 +4169,7 @@ bb2403: ;
       char* c2483 = (char*)_str_1;
       unsigned int c2484 = 33;
       char* cast2485 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2482, c2483, c2484, cast2485);
     }
     unsigned long c2486 = 6;
@@ -4176,6 +4183,7 @@ bb2403: ;
       char* c2492 = (char*)_str_1;
       unsigned int c2493 = 34;
       char* cast2494 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2491, c2492, c2493, cast2494);
     }
     unsigned long c2495 = 7;
@@ -4189,6 +4197,7 @@ bb2403: ;
       char* c2501 = (char*)_str_1;
       unsigned int c2502 = 35;
       char* cast2503 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2500, c2501, c2502, cast2503);
     }
     unsigned long c2504 = 8;
@@ -4202,6 +4211,7 @@ bb2403: ;
       char* c2510 = (char*)_str_1;
       unsigned int c2511 = 36;
       char* cast2512 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast2509, c2510, c2511, cast2512);
     }
     struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r2513 = std__vector_int__std__allocator_int_____begin(&myvector2405);

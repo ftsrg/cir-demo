@@ -169,6 +169,7 @@ char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator_std__pair_char_const__int_____operator___2(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, int p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int________map(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 int main();
@@ -2496,6 +2497,7 @@ bb1053: ;
         char* c1134 = (char*)_str_4;
         unsigned int c1135 = 37;
         char* cast1136 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1133, c1134, c1135, cast1136);
       }
       char c1137 = 121;
@@ -2520,6 +2522,7 @@ bb1053: ;
         char* c1143 = (char*)_str_4;
         unsigned int c1144 = 38;
         char* cast1145 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1142, c1143, c1144, cast1145);
       }
       char c1146 = 97;
@@ -2544,6 +2547,7 @@ bb1053: ;
         char* c1152 = (char*)_str_4;
         unsigned int c1153 = 40;
         char* cast1154 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1151, c1152, c1153, cast1154);
       }
       char c1155 = 98;
@@ -2568,6 +2572,7 @@ bb1053: ;
         char* c1161 = (char*)_str_4;
         unsigned int c1162 = 41;
         char* cast1163 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1160, c1161, c1162, cast1163);
       }
       char c1164 = 99;
@@ -2592,6 +2597,7 @@ bb1053: ;
         char* c1170 = (char*)_str_4;
         unsigned int c1171 = 42;
         char* cast1172 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1169, c1170, c1171, cast1172);
       }
       int c1173 = 0;

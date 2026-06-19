@@ -48,6 +48,7 @@ struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_c
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char______basic_string(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 void std__allocator_char____allocator(struct std__allocator_char_* p0);
 unsigned long std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____length___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____basic_string(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p1, unsigned long p2, struct std__allocator_char_* p3);
 _Bool std__operator_(struct std__strong_ordering p0, struct std____cmp_cat____unspec p1);
@@ -879,6 +880,7 @@ bb419: ;
         char* c439 = (char*)_str_2;
         unsigned int c440 = 16;
         char* cast441 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast438, c439, c440, cast441);
       }
       unsigned long c442 = 2;
@@ -902,6 +904,7 @@ bb419: ;
         char* c449 = (char*)_str_2;
         unsigned int c450 = 18;
         char* cast451 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast448, c449, c450, cast451);
       }
       struct std__strong_ordering r452 = decltype_____detail____char_traits_cmp_cat_std__char_traits_char_____0___std__operator____char__std__char_traits_char___std__allocator_char___(&str1421, &str2422);
@@ -916,6 +919,7 @@ bb419: ;
         char* c457 = (char*)_str_2;
         unsigned int c458 = 19;
         char* cast459 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast456, c457, c458, cast459);
       }
     {

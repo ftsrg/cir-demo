@@ -140,6 +140,7 @@ int* std__map_char__int__std__less_char___std__allocator_std__pair_char_const__i
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______find(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0, char* p1);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______find(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0, char* p1);
 struct std__pair_const_char__int_* std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_iterator_std__pair_const_char__int__* std___Rb_tree_iterator_std__pair_char_const__int_____operator_(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, struct std___Rb_tree_iterator_std__pair_const_char__int__* p1);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
@@ -2167,6 +2168,7 @@ bb944: ;
       char* c1000 = (char*)_str_1;
       unsigned int c1001 = 24;
       char* cast1002 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast999, c1000, c1001, cast1002);
     }
     char c1003 = 97;
@@ -2190,6 +2192,7 @@ bb944: ;
       char* c1010 = (char*)_str_1;
       unsigned int c1011 = 25;
       char* cast1012 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1009, c1010, c1011, cast1012);
     }
     char c1013 = 98;
@@ -2214,6 +2217,7 @@ bb944: ;
       char* c1021 = (char*)_str_1;
       unsigned int c1022 = 27;
       char* cast1023 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1020, c1021, c1022, cast1023);
     }
     char c1024 = 98;
@@ -2237,6 +2241,7 @@ bb944: ;
       char* c1031 = (char*)_str_1;
       unsigned int c1032 = 28;
       char* cast1033 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1030, c1031, c1032, cast1033);
     }
     char c1034 = 99;
@@ -2261,6 +2266,7 @@ bb944: ;
       char* c1042 = (char*)_str_1;
       unsigned int c1043 = 30;
       char* cast1044 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1041, c1042, c1043, cast1044);
     }
     char c1045 = 99;
@@ -2284,6 +2290,7 @@ bb944: ;
       char* c1052 = (char*)_str_1;
       unsigned int c1053 = 31;
       char* cast1054 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1051, c1052, c1053, cast1054);
     }
     char c1055 = 100;
@@ -2308,6 +2315,7 @@ bb944: ;
       char* c1063 = (char*)_str_1;
       unsigned int c1064 = 33;
       char* cast1065 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1062, c1063, c1064, cast1065);
     }
     char c1066 = 100;
@@ -2331,6 +2339,7 @@ bb944: ;
       char* c1073 = (char*)_str_1;
       unsigned int c1074 = 34;
       char* cast1075 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1072, c1073, c1074, cast1075);
     }
     char c1076 = 98;

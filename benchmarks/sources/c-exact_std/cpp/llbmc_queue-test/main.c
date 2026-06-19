@@ -76,6 +76,7 @@ extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* p0);
 int* std__deque_int__std__allocator_int_____front(struct std__deque_int__std__allocator_int__* p0);
 int* std__queue_int__std__deque_int__std__allocator_int_______front(struct std__queue_int__std__deque_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void void_std__allocator_traits_std__allocator_int_____destroy_int_(struct std__allocator_int_* p0, int* p1);
 void std__deque_int__std__allocator_int______M_pop_front_aux(struct std__deque_int__std__allocator_int__* p0);
@@ -1556,6 +1557,7 @@ bb794: ;
             char* c817 = (char*)_str_1;
             unsigned int c818 = 20;
             char* cast819 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast816, c817, c818, cast819);
           }
           std__queue_int__std__deque_int__std__allocator_int_______pop(&s796);

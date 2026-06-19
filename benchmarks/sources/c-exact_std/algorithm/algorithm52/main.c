@@ -114,6 +114,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -1168,6 +1169,7 @@ bb589: ;
       char* c634 = (char*)_str_2;
       unsigned int c635 = 26;
       char* cast636 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast633, c634, c635, cast636);
     }
     unsigned long c637 = 1;
@@ -1181,6 +1183,7 @@ bb589: ;
       char* c643 = (char*)_str_2;
       unsigned int c644 = 27;
       char* cast645 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast642, c643, c644, cast645);
     }
     unsigned long c646 = 2;
@@ -1194,6 +1197,7 @@ bb589: ;
       char* c652 = (char*)_str_2;
       unsigned int c653 = 28;
       char* cast654 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast651, c652, c653, cast654);
     }
     unsigned long c655 = 3;
@@ -1207,6 +1211,7 @@ bb589: ;
       char* c661 = (char*)_str_2;
       unsigned int c662 = 29;
       char* cast663 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast660, c661, c662, cast663);
     }
     unsigned long c664 = 4;
@@ -1220,6 +1225,7 @@ bb589: ;
       char* c670 = (char*)_str_2;
       unsigned int c671 = 30;
       char* cast672 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast669, c670, c671, cast672);
     }
     unsigned long c673 = 5;
@@ -1233,6 +1239,7 @@ bb589: ;
       char* c679 = (char*)_str_2;
       unsigned int c680 = 31;
       char* cast681 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast678, c679, c680, cast681);
     }
     unsigned long c682 = 6;
@@ -1246,6 +1253,7 @@ bb589: ;
       char* c688 = (char*)_str_2;
       unsigned int c689 = 32;
       char* cast690 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast687, c688, c689, cast690);
     }
     unsigned long c691 = 7;
@@ -1259,6 +1267,7 @@ bb589: ;
       char* c697 = (char*)_str_2;
       unsigned int c698 = 33;
       char* cast699 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast696, c697, c698, cast699);
     }
     int c700 = 0;

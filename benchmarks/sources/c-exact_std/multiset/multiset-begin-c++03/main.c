@@ -70,6 +70,7 @@ char _str_3[2] = " ";
 char _str_4[23] = "*it == mySecondInts[i]";
 void std__multiset_int__std__less_int___std__allocator_int_____multiset_int__(struct std__multiset_int__std__less_int___std__allocator_int__* p0, int* p1, int* p2);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____size___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(struct std___Rb_tree_const_iterator_int_* p0);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
@@ -765,6 +766,7 @@ bb284: ;
       char* c300 = (char*)_str_1;
       unsigned int c301 = 19;
       char* cast302 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast299, c300, c301, cast302);
     }
     std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(&it290);
@@ -830,6 +832,7 @@ bb284: ;
             char* c328 = (char*)_str_1;
             unsigned int c329 = 25;
             char* cast330 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast327, c328, c329, cast330);
           }
       for_step312: ;

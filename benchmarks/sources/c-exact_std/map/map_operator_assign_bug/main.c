@@ -171,6 +171,7 @@ struct std___Rb_tree_node_base** std___Rb_tree_char__std__pair_char_const__int__
 void std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int________Reuse_or_alloc_node____Reuse_or_alloc_node(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int______Reuse_or_alloc_node* p0);
 struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______operator__2(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0, struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p1);
 struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______operator__2(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0, struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__binary_function_char__char__bool_* std__binary_function_char__char__bool___operator_(struct std__binary_function_char__char__bool_* p0, struct std__binary_function_char__char__bool_* p1);
 struct std__less_char_* std__less_char___operator_(struct std__less_char_* p0, struct std__less_char_* p1);
@@ -3151,6 +3152,7 @@ bb1462: ;
         char* c1491 = (char*)_str_1;
         unsigned int c1492 = 24;
         char* cast1493 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1490, c1491, c1492, cast1493);
       }
       char c1494 = 121;
@@ -3175,6 +3177,7 @@ bb1462: ;
         char* c1500 = (char*)_str_1;
         unsigned int c1501 = 25;
         char* cast1502 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1499, c1500, c1501, cast1502);
       }
       char c1503 = 122;
@@ -3199,6 +3202,7 @@ bb1462: ;
         char* c1509 = (char*)_str_1;
         unsigned int c1510 = 26;
         char* cast1511 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1508, c1509, c1510, cast1511);
       }
       ref_tmp61472 = *&__const_main_ref_tmp6; // copy
@@ -3218,6 +3222,7 @@ bb1462: ;
         char* c1518 = (char*)_str_1;
         unsigned int c1519 = 29;
         char* cast1520 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1517, c1518, c1519, cast1520);
       }
       char* cast1521 = (char*)&(_str_5);

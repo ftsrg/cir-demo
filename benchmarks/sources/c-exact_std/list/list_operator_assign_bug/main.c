@@ -110,6 +110,7 @@ struct std___List_const_iterator_int_ std____cxx11__list_int__std__allocator_int
 struct std___List_const_iterator_int_ std____cxx11__list_int__std__allocator_int_____end___const(struct std____cxx11__list_int__std__allocator_int__* p0);
 struct std____cxx11__list_int__std__allocator_int__* std____cxx11__list_int__std__allocator_int_____operator__2(struct std____cxx11__list_int__std__allocator_int__* p0, struct std____cxx11__list_int__std__allocator_int__* p1);
 _Bool bool_std__operator___int__std__allocator_int___(struct std____cxx11__list_int__std__allocator_int__* p0, struct std____cxx11__list_int__std__allocator_int__* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
 void std____cxx11__list_int__std__allocator_int_____list_2(struct std____cxx11__list_int__std__allocator_int__* p0);
@@ -1593,6 +1594,7 @@ bb800: ;
         char* c815 = (char*)_str_1;
         unsigned int c816 = 20;
         char* cast817 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast814, c815, c816, cast817);
       }
       unsigned long r818 = std____cxx11__list_int__std__allocator_int_____size___const(&second804);
@@ -1604,6 +1606,7 @@ bb800: ;
         char* c822 = (char*)_str_1;
         unsigned int c823 = 21;
         char* cast824 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast821, c822, c823, cast824);
       }
       ref_tmp2806 = *&__const_main_ref_tmp2; // copy

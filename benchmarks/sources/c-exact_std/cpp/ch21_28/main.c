@@ -111,6 +111,7 @@ void std__deque_int__std__allocator_int_____push_back(struct std__deque_int__std
 void std__queue_int__std__deque_int__std__allocator_int_______push(struct std__queue_int__std__deque_int__std__allocator_int___* p0, int* p1);
 _Bool std__queue_int__std__deque_int__std__allocator_int_______empty___const(struct std__queue_int__std__deque_int__std__allocator_int___* p0);
 int* std__queue_int__std__deque_int__std__allocator_int_______back(struct std__queue_int__std__deque_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int* std__deque_int__std__allocator_int_____front(struct std__deque_int__std__allocator_int__* p0);
 int* std__queue_int__std__deque_int__std__allocator_int_______front(struct std__queue_int__std__deque_int__std__allocator_int___* p0);
@@ -1931,6 +1932,7 @@ bb960: ;
       char* c974 = (char*)_str_1;
       unsigned int c975 = 22;
       char* cast976 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast973, c974, c975, cast976);
     }
     int* r977 = std__queue_int__std__deque_int__std__allocator_int_______front(&myqueue962);
@@ -1950,6 +1952,7 @@ bb960: ;
       char* c982 = (char*)_str_1;
       unsigned int c983 = 23;
       char* cast984 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast981, c982, c983, cast984);
     }
     int* r985 = std__queue_int__std__deque_int__std__allocator_int_______back(&myqueue962);
@@ -2007,6 +2010,7 @@ bb960: ;
       char* c999 = (char*)_str_1;
       unsigned int c1000 = 29;
       char* cast1001 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast998, c999, c1000, cast1001);
     }
     int c1002 = 0;

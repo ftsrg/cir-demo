@@ -91,6 +91,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* p0, int* p1);
 void void_std__allocator_traits_std__allocator_int_____construct_int__int_const__(struct std__allocator_int_* p0, int* p1, int* p2);
@@ -2151,6 +2152,7 @@ bb1228: ;
       char* c1242 = (char*)_str_2;
       unsigned int c1243 = 18;
       char* cast1244 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1241, c1242, c1243, cast1244);
     }
       int i1245;
@@ -2182,6 +2184,7 @@ bb1228: ;
       char* c1263 = (char*)_str_2;
       unsigned int c1264 = 21;
       char* cast1265 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1262, c1263, c1264, cast1265);
     }
     std__priority_queue_int__std__vector_int__std__allocator_int_____std__less_int_____pop(&myints1230);
@@ -2200,6 +2203,7 @@ bb1228: ;
       char* c1276 = (char*)_str_2;
       unsigned int c1277 = 24;
       char* cast1278 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1275, c1276, c1277, cast1278);
     }
     int c1279 = 0;

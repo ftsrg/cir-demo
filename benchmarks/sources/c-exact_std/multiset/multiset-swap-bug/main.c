@@ -82,6 +82,7 @@ char _str_14[18] = "\nsecond contains:";
 void std__multiset_int__std__less_int___std__allocator_int_____multiset_int__(struct std__multiset_int__std__less_int___std__allocator_int__* p0, int* p1, int* p2);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator_3(struct std___Rb_tree_const_iterator_int_* p0);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____size___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std___Rb_tree_const_iterator_int____Rb_tree_const_iterator(struct std___Rb_tree_const_iterator_int_* p0, struct std___Rb_tree_node_base* p1);
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____begin___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
@@ -1077,6 +1078,7 @@ bb439: ;
         char* c475 = (char*)_str_1;
         unsigned int c476 = 22;
         char* cast477 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast474, c475, c476, cast477);
       }
       struct std___Rb_tree_const_iterator_int_ r478 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&first443);
@@ -1092,6 +1094,7 @@ bb439: ;
         char* c485 = (char*)_str_1;
         unsigned int c486 = 24;
         char* cast487 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast484, c485, c486, cast487);
       }
       int c488 = 0;
@@ -1107,6 +1110,7 @@ bb439: ;
         char* c495 = (char*)_str_1;
         unsigned int c496 = 26;
         char* cast497 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast494, c495, c496, cast497);
       }
       int c498 = 0;
@@ -1122,6 +1126,7 @@ bb439: ;
         char* c505 = (char*)_str_1;
         unsigned int c506 = 28;
         char* cast507 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast504, c505, c506, cast507);
       }
       int c508 = 0;
@@ -1136,6 +1141,7 @@ bb439: ;
         char* c514 = (char*)_str_1;
         unsigned int c515 = 30;
         char* cast516 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast513, c514, c515, cast516);
       }
       struct std___Rb_tree_const_iterator_int_ r517 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&second444);
@@ -1151,6 +1157,7 @@ bb439: ;
         char* c524 = (char*)_str_1;
         unsigned int c525 = 32;
         char* cast526 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast523, c524, c525, cast526);
       }
       int c527 = 0;
@@ -1166,6 +1173,7 @@ bb439: ;
         char* c534 = (char*)_str_1;
         unsigned int c535 = 34;
         char* cast536 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast533, c534, c535, cast536);
       }
       int c537 = 0;
@@ -1181,6 +1189,7 @@ bb439: ;
         char* c544 = (char*)_str_1;
         unsigned int c545 = 36;
         char* cast546 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast543, c544, c545, cast546);
       }
       int c547 = 0;
@@ -1196,6 +1205,7 @@ bb439: ;
         char* c553 = (char*)_str_1;
         unsigned int c554 = 40;
         char* cast555 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast552, c553, c554, cast555);
       }
       struct std___Rb_tree_const_iterator_int_ r556 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&first443);
@@ -1211,6 +1221,7 @@ bb439: ;
         char* c563 = (char*)_str_1;
         unsigned int c564 = 42;
         char* cast565 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast562, c563, c564, cast565);
       }
       int c566 = 0;
@@ -1226,6 +1237,7 @@ bb439: ;
         char* c573 = (char*)_str_1;
         unsigned int c574 = 44;
         char* cast575 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast572, c573, c574, cast575);
       }
       int c576 = 0;
@@ -1241,6 +1253,7 @@ bb439: ;
         char* c583 = (char*)_str_1;
         unsigned int c584 = 46;
         char* cast585 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast582, c583, c584, cast585);
       }
       int c586 = 0;
@@ -1255,6 +1268,7 @@ bb439: ;
         char* c592 = (char*)_str_1;
         unsigned int c593 = 48;
         char* cast594 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast591, c592, c593, cast594);
       }
       struct std___Rb_tree_const_iterator_int_ r595 = std__multiset_int__std__less_int___std__allocator_int_____begin___const(&second444);
@@ -1270,6 +1284,7 @@ bb439: ;
         char* c602 = (char*)_str_1;
         unsigned int c603 = 50;
         char* cast604 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast601, c602, c603, cast604);
       }
       int c605 = 0;
@@ -1285,6 +1300,7 @@ bb439: ;
         char* c612 = (char*)_str_1;
         unsigned int c613 = 52;
         char* cast614 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast611, c612, c613, cast614);
       }
       int c615 = 0;
@@ -1300,6 +1316,7 @@ bb439: ;
         char* c622 = (char*)_str_1;
         unsigned int c623 = 54;
         char* cast624 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast621, c622, c623, cast624);
       }
       int c625 = 0;

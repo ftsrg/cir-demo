@@ -128,6 +128,7 @@ int* std__reverse_iterator_std___Deque_iterator_int__int___int______operator____
 struct std__reverse_iterator_std___Deque_iterator_int__int____int____* std__reverse_iterator_std___Deque_iterator_int__int___int______operator__(struct std__reverse_iterator_std___Deque_iterator_int__int____int____* p0);
 _Bool std__operator__(struct std___Deque_iterator_int__int____int___* p0, struct std___Deque_iterator_int__int____int___* p1);
 _Bool _ZSteqISt15_Deque_iteratorIiRiPiEEbRKSt16reverse_iteratorIT_ES8_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(struct std__reverse_iterator_std___Deque_iterator_int__int____int____* p0, struct std__reverse_iterator_std___Deque_iterator_int__int____int____* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__flush(struct std__basic_ostream_char__std__char_traits_char__* p0);
@@ -2144,6 +2145,7 @@ bb1069: ;
       char* c1105 = (char*)_str_3;
       unsigned int c1106 = 30;
       char* cast1107 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1104, c1105, c1106, cast1107);
     }
     struct std__basic_ostream_char__std__char_traits_char__* r1108 = std__ostream__operator___std__ostream_____(&_ZSt4cout, &std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___);

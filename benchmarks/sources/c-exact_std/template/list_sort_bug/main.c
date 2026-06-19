@@ -155,6 +155,7 @@ int std__char_traits_char___compare(char* p0, char* p1, unsigned long p2);
 char* std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____data___const(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0);
 _Bool bool_std__operator___char__std__char_traits_char___std__allocator_char___(struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* p0, char* p1);
 struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__* std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_______operator____const(struct std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___ std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_______operator__(struct std___List_iterator_std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char___* p0, int p1);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
@@ -3062,6 +3063,7 @@ bb1324: ;
       char* c1351 = (char*)_str_4;
       unsigned int c1352 = 40;
       char* cast1353 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1350, c1351, c1352, cast1353);
     }
     int c1354 = 0;
@@ -3084,6 +3086,7 @@ bb1324: ;
       char* c1361 = (char*)_str_4;
       unsigned int c1362 = 41;
       char* cast1363 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1360, c1361, c1362, cast1363);
     }
     int c1364 = 0;
@@ -3106,6 +3109,7 @@ bb1324: ;
       char* c1371 = (char*)_str_4;
       unsigned int c1372 = 42;
       char* cast1373 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1370, c1371, c1372, cast1373);
     }
     char* cast1374 = (char*)&(_str_7);
@@ -3185,6 +3189,7 @@ bb1324: ;
       char* c1397 = (char*)_str_4;
       unsigned int c1398 = 51;
       char* cast1399 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1396, c1397, c1398, cast1399);
     }
     int c1400 = 0;
@@ -3207,6 +3212,7 @@ bb1324: ;
       char* c1407 = (char*)_str_4;
       unsigned int c1408 = 52;
       char* cast1409 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1406, c1407, c1408, cast1409);
     }
     int c1410 = 0;
@@ -3229,6 +3235,7 @@ bb1324: ;
       char* c1417 = (char*)_str_4;
       unsigned int c1418 = 53;
       char* cast1419 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1416, c1417, c1418, cast1419);
     }
     char* cast1420 = (char*)&(_str_7);

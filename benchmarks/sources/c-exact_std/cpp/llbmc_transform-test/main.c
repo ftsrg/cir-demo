@@ -77,6 +77,7 @@ struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___
 struct std___Deque_iterator_int__int____int___ std__operator__2(struct std___Deque_iterator_int__int____int___* p0, long p1);
 int* std___Deque_iterator_int__int___int____operator___long__const(struct std___Deque_iterator_int__int____int___* p0, long p1);
 int* std__deque_int__std__allocator_int_____operator__(struct std__deque_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__deque_int__std__allocator_int______deque(struct std__deque_int__std__allocator_int__* p0);
 int main();
@@ -1653,6 +1654,7 @@ bb857: ;
               char* c898 = (char*)_str_1;
               unsigned int c899 = 26;
               char* cast900 = (char*)&(__PRETTY_FUNCTION___main);
+              reach_error();
               __assert_fail(cast897, c898, c899, cast900);
             }
         for_step883: ;

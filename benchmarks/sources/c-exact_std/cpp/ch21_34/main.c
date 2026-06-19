@@ -76,6 +76,7 @@ void std__deque_int__std__allocator_int_____push_back(struct std__deque_int__std
 void std__stack_int__std__deque_int__std__allocator_int_______push(struct std__stack_int__std__deque_int__std__allocator_int___* p0, int* p1);
 _Bool std__stack_int__std__deque_int__std__allocator_int_______empty___const(struct std__stack_int__std__deque_int__std__allocator_int___* p0);
 int* std__stack_int__std__deque_int__std__allocator_int_______top(struct std__stack_int__std__deque_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__stack_int__std__deque_int__std__allocator_int________stack(struct std__stack_int__std__deque_int__std__allocator_int___* p0);
 int main();
@@ -1471,6 +1472,7 @@ bb752: ;
       char* c765 = (char*)_str_1;
       unsigned int c766 = 21;
       char* cast767 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast764, c765, c766, cast767);
     }
     int c768 = 0;

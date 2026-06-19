@@ -124,6 +124,7 @@ void _ZNSt4pairISt23_Rb_tree_const_iteratorIiEbEC2IRSt17_Rb_tree_iteratorIiERbQa
 struct std__pair_std___Rb_tree_const_iterator_int___bool_ std__set_int__std__less_int___std__allocator_int_____insert(struct std__set_int__std__less_int___std__allocator_int__* p0, int* p1);
 unsigned long std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____size___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 unsigned long std__set_int__std__less_int___std__allocator_int_____size___const(struct std__set_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std__pair_std___Rb_tree_const_iterator_int___bool_* _ZNSt4pairISt23_Rb_tree_const_iteratorIiEbEaSEOS2_Qcl13_S_assignableIT_T0_EE(struct std__pair_std___Rb_tree_const_iterator_int___bool_* p0, struct std__pair_std___Rb_tree_const_iterator_int___bool_* p1);
 int* std___Rb_tree_const_iterator_int___operator____const(struct std___Rb_tree_const_iterator_int_* p0);
@@ -2302,6 +2303,7 @@ bb1072: ;
       char* c1118 = (char*)_str_1;
       unsigned int c1119 = 22;
       char* cast1120 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1117, c1118, c1119, cast1120);
     }
     int c1121 = 20;
@@ -2324,6 +2326,7 @@ bb1072: ;
       char* c1127 = (char*)_str_1;
       unsigned int c1128 = 25;
       char* cast1129 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1126, c1127, c1128, cast1129);
     }
     int* r1130 = std___Rb_tree_const_iterator_int___operator____const(&ret1076.first);
@@ -2336,6 +2339,7 @@ bb1072: ;
       char* c1135 = (char*)_str_1;
       unsigned int c1136 = 26;
       char* cast1137 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1134, c1135, c1136, cast1137);
     }
       _Bool t1138 = ret1076.second;
@@ -2408,6 +2412,7 @@ bb1072: ;
       char* c1161 = (char*)_str_1;
       unsigned int c1162 = 35;
       char* cast1163 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1160, c1161, c1162, cast1163);
     }
     char* cast1164 = (char*)&(_str_5);
@@ -2432,6 +2437,7 @@ bb1072: ;
       char* c1173 = (char*)_str_1;
       unsigned int c1174 = 39;
       char* cast1175 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1172, c1173, c1174, cast1175);
     }
     int c1176 = 0;
@@ -2447,6 +2453,7 @@ bb1072: ;
       char* c1183 = (char*)_str_1;
       unsigned int c1184 = 41;
       char* cast1185 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1182, c1183, c1184, cast1185);
     }
     int c1186 = 0;
@@ -2462,6 +2469,7 @@ bb1072: ;
       char* c1193 = (char*)_str_1;
       unsigned int c1194 = 43;
       char* cast1195 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1192, c1193, c1194, cast1195);
     }
     int c1196 = 0;
@@ -2477,6 +2485,7 @@ bb1072: ;
       char* c1203 = (char*)_str_1;
       unsigned int c1204 = 45;
       char* cast1205 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1202, c1203, c1204, cast1205);
     }
     int c1206 = 0;
@@ -2492,6 +2501,7 @@ bb1072: ;
       char* c1213 = (char*)_str_1;
       unsigned int c1214 = 47;
       char* cast1215 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1212, c1213, c1214, cast1215);
     }
     int c1216 = 0;
@@ -2507,6 +2517,7 @@ bb1072: ;
       char* c1223 = (char*)_str_1;
       unsigned int c1224 = 49;
       char* cast1225 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1222, c1223, c1224, cast1225);
     }
     int c1226 = 0;
@@ -2522,6 +2533,7 @@ bb1072: ;
       char* c1233 = (char*)_str_1;
       unsigned int c1234 = 51;
       char* cast1235 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1232, c1233, c1234, cast1235);
     }
     int c1236 = 0;
@@ -2537,6 +2549,7 @@ bb1072: ;
       char* c1243 = (char*)_str_1;
       unsigned int c1244 = 53;
       char* cast1245 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1242, c1243, c1244, cast1245);
     }
     int c1246 = 0;
@@ -2552,6 +2565,7 @@ bb1072: ;
       char* c1253 = (char*)_str_1;
       unsigned int c1254 = 55;
       char* cast1255 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1252, c1253, c1254, cast1255);
     }
     int c1256 = 0;
@@ -2567,6 +2581,7 @@ bb1072: ;
       char* c1263 = (char*)_str_1;
       unsigned int c1264 = 57;
       char* cast1265 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1262, c1263, c1264, cast1265);
     }
     int c1266 = 0;

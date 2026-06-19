@@ -92,6 +92,7 @@ struct std___Rb_tree_iterator_std__pair_const_char__int__ std__enable_if_is_cons
 void _ZNSt4pairIciEC2IciQaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS2_S3_EEEEOT_OT0_(struct std__pair_char__int_* p0, char* p1, int* p2);
 _Bool std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______empty___const(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0);
 _Bool std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______empty___const(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -1317,6 +1318,7 @@ bb577: ;
       char* c604 = (char*)_str_1;
       unsigned int c605 = 21;
       char* cast606 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast603, c604, c605, cast606);
     }
       while (1) {

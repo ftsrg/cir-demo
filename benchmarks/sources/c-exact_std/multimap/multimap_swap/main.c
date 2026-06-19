@@ -77,6 +77,7 @@ struct std__pair_char__int_ std__pair_std____strip_reference_wrapper_std__decay_
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______begin(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______begin(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 struct std__pair_const_char__int_* std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern struct std___Rb_tree_node_base* std___Rb_tree_increment(struct std___Rb_tree_node_base* p0);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator_std__pair_char_const__int_____operator__(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, int p1);
@@ -1315,6 +1316,7 @@ bb531: ;
         char* c593 = (char*)_str_1;
         unsigned int c594 = 26;
         char* cast595 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast592, c593, c594, cast595);
       }
       struct std__pair_const_char__int_* r596 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1327,6 +1329,7 @@ bb531: ;
         char* c601 = (char*)_str_1;
         unsigned int c602 = 27;
         char* cast603 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast600, c601, c602, cast603);
       }
       int c604 = 0;
@@ -1343,6 +1346,7 @@ bb531: ;
         char* c612 = (char*)_str_1;
         unsigned int c613 = 29;
         char* cast614 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast611, c612, c613, cast614);
       }
       struct std__pair_const_char__int_* r615 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1355,6 +1359,7 @@ bb531: ;
         char* c620 = (char*)_str_1;
         unsigned int c621 = 30;
         char* cast622 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast619, c620, c621, cast622);
       }
       struct std___Rb_tree_iterator_std__pair_const_char__int__ r623 = std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______begin(&bar534);
@@ -1371,6 +1376,7 @@ bb531: ;
         char* c631 = (char*)_str_1;
         unsigned int c632 = 33;
         char* cast633 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast630, c631, c632, cast633);
       }
       struct std__pair_const_char__int_* r634 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1383,6 +1389,7 @@ bb531: ;
         char* c639 = (char*)_str_1;
         unsigned int c640 = 34;
         char* cast641 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast638, c639, c640, cast641);
       }
       int c642 = 0;
@@ -1399,6 +1406,7 @@ bb531: ;
         char* c650 = (char*)_str_1;
         unsigned int c651 = 36;
         char* cast652 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast649, c650, c651, cast652);
       }
       struct std__pair_const_char__int_* r653 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1411,6 +1419,7 @@ bb531: ;
         char* c658 = (char*)_str_1;
         unsigned int c659 = 37;
         char* cast660 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast657, c658, c659, cast660);
       }
       int c661 = 0;
@@ -1427,6 +1436,7 @@ bb531: ;
         char* c669 = (char*)_str_1;
         unsigned int c670 = 39;
         char* cast671 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast668, c669, c670, cast671);
       }
       struct std__pair_const_char__int_* r672 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1439,6 +1449,7 @@ bb531: ;
         char* c677 = (char*)_str_1;
         unsigned int c678 = 40;
         char* cast679 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast676, c677, c678, cast679);
       }
       std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______swap(&foo533, &bar534);
@@ -1456,6 +1467,7 @@ bb531: ;
         char* c688 = (char*)_str_1;
         unsigned int c689 = 44;
         char* cast690 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast687, c688, c689, cast690);
       }
       struct std__pair_const_char__int_* r691 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1468,6 +1480,7 @@ bb531: ;
         char* c696 = (char*)_str_1;
         unsigned int c697 = 45;
         char* cast698 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast695, c696, c697, cast698);
       }
       int c699 = 0;
@@ -1484,6 +1497,7 @@ bb531: ;
         char* c707 = (char*)_str_1;
         unsigned int c708 = 47;
         char* cast709 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast706, c707, c708, cast709);
       }
       struct std__pair_const_char__int_* r710 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1496,6 +1510,7 @@ bb531: ;
         char* c715 = (char*)_str_1;
         unsigned int c716 = 48;
         char* cast717 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast714, c715, c716, cast717);
       }
       struct std___Rb_tree_iterator_std__pair_const_char__int__ r718 = std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______begin(&foo533);
@@ -1512,6 +1527,7 @@ bb531: ;
         char* c726 = (char*)_str_1;
         unsigned int c727 = 51;
         char* cast728 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast725, c726, c727, cast728);
       }
       struct std__pair_const_char__int_* r729 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1524,6 +1540,7 @@ bb531: ;
         char* c734 = (char*)_str_1;
         unsigned int c735 = 52;
         char* cast736 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast733, c734, c735, cast736);
       }
       int c737 = 0;
@@ -1540,6 +1557,7 @@ bb531: ;
         char* c745 = (char*)_str_1;
         unsigned int c746 = 54;
         char* cast747 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast744, c745, c746, cast747);
       }
       struct std__pair_const_char__int_* r748 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1552,6 +1570,7 @@ bb531: ;
         char* c753 = (char*)_str_1;
         unsigned int c754 = 55;
         char* cast755 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast752, c753, c754, cast755);
       }
       int c756 = 0;
@@ -1568,6 +1587,7 @@ bb531: ;
         char* c764 = (char*)_str_1;
         unsigned int c765 = 57;
         char* cast766 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast763, c764, c765, cast766);
       }
       struct std__pair_const_char__int_* r767 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it555);
@@ -1580,6 +1600,7 @@ bb531: ;
         char* c772 = (char*)_str_1;
         unsigned int c773 = 58;
         char* cast774 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast771, c772, c773, cast774);
       }
       int c775 = 0;

@@ -45,6 +45,7 @@ void std__multiset_int__std__less_int___std__allocator_int_____multiset_int__(st
 void std__multiset_int__std__less_int___std__allocator_int_____multiset(struct std__multiset_int__std__less_int___std__allocator_int__* p0, struct std__multiset_int__std__less_int___std__allocator_int__* p1);
 void std__multiset_int__std__less_int___std__allocator_int______multiset(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____size___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int______Rb_tree_2(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
@@ -293,6 +294,7 @@ bb43: ;
           char* c58 = (char*)_str_1;
           unsigned int c59 = 34;
           char* cast60 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast57, c58, c59, cast60);
         }
         unsigned long r61 = std__multiset_int__std__less_int___std__allocator_int_____size___const(&first45);
@@ -304,6 +306,7 @@ bb43: ;
           char* c65 = (char*)_str_1;
           unsigned int c66 = 35;
           char* cast67 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast64, c65, c66, cast67);
         }
         unsigned long r68 = std__multiset_int__std__less_int___std__allocator_int_____size___const(&first45);
@@ -315,6 +318,7 @@ bb43: ;
           char* c72 = (char*)_str_1;
           unsigned int c73 = 36;
           char* cast74 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast71, c72, c73, cast74);
         }
         int c75 = 0;

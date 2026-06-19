@@ -137,6 +137,7 @@ void std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator
 void std__multiset_int__std__less_int___std__allocator_int_____clear(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
 unsigned long std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____size___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____size___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_const_iterator_int_ std___Rb_tree_const_iterator_int___operator__(struct std___Rb_tree_const_iterator_int_* p0, int p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator___std__ostream_____(struct std__basic_ostream_char__std__char_traits_char__* p0, void* p1);
@@ -1645,6 +1646,7 @@ bb709: ;
       char* c752 = (char*)_str_3;
       unsigned int c753 = 27;
       char* cast754 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast751, c752, c753, cast754);
     }
     int c755 = 1101;
@@ -1671,6 +1673,7 @@ bb709: ;
       char* c764 = (char*)_str_3;
       unsigned int c765 = 30;
       char* cast766 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast763, c764, c765, cast766);
     }
     unsigned long r767 = std__multiset_int__std__less_int___std__allocator_int_____size___const(&myset711);
@@ -1682,6 +1685,7 @@ bb709: ;
       char* c771 = (char*)_str_3;
       unsigned int c772 = 31;
       char* cast773 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast770, c771, c772, cast773);
     }
     int c774 = 2202;
@@ -1704,6 +1708,7 @@ bb709: ;
       char* c780 = (char*)_str_3;
       unsigned int c781 = 33;
       char* cast782 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast779, c780, c781, cast782);
     }
     int* r783 = std___Rb_tree_const_iterator_int___operator____const(&it712);
@@ -1716,6 +1721,7 @@ bb709: ;
       char* c788 = (char*)_str_3;
       unsigned int c789 = 34;
       char* cast790 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast787, c788, c789, cast790);
     }
     int c791 = 0;
@@ -1731,6 +1737,7 @@ bb709: ;
       char* c798 = (char*)_str_3;
       unsigned int c799 = 36;
       char* cast800 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast797, c798, c799, cast800);
     }
     char* cast801 = (char*)&(_str_8);

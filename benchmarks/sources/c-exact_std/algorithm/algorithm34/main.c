@@ -125,6 +125,7 @@ void __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_____
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin(struct std__vector_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator_(int p0, int p1);
@@ -1950,6 +1951,7 @@ bb1091: ;
       char* c1113 = (char*)_str_1;
       unsigned int c1114 = 23;
       char* cast1115 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1112, c1113, c1114, cast1115);
     }
     unsigned long c1116 = 1;
@@ -1963,6 +1965,7 @@ bb1091: ;
       char* c1122 = (char*)_str_1;
       unsigned int c1123 = 24;
       char* cast1124 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1121, c1122, c1123, cast1124);
     }
     unsigned long c1125 = 2;
@@ -1976,6 +1979,7 @@ bb1091: ;
       char* c1131 = (char*)_str_1;
       unsigned int c1132 = 25;
       char* cast1133 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1130, c1131, c1132, cast1133);
     }
     unsigned long c1134 = 3;
@@ -1989,6 +1993,7 @@ bb1091: ;
       char* c1140 = (char*)_str_1;
       unsigned int c1141 = 26;
       char* cast1142 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1139, c1140, c1141, cast1142);
     }
     unsigned long c1143 = 4;
@@ -2002,6 +2007,7 @@ bb1091: ;
       char* c1149 = (char*)_str_1;
       unsigned int c1150 = 27;
       char* cast1151 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1148, c1149, c1150, cast1151);
     }
     char* cast1152 = (char*)&(_str_6);

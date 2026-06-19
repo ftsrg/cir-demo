@@ -144,6 +144,7 @@ unsigned long std__char_traits_char___length(char* p0);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1);
 _Bool std__priority_queue_int__std__vector_int__std__allocator_int_____std__less_int_____empty___const(struct std__priority_queue_int__std__vector_int__std__allocator_int____std__less_int__* p0);
 unsigned long std__priority_queue_int__std__vector_int__std__allocator_int_____std__less_int_____size___const(struct std__priority_queue_int__std__vector_int__std__allocator_int____std__less_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator__(struct std__basic_ostream_char__std__char_traits_char__* p0, int p1);
 int* __gnu_cxx____normal_iterator_int_const___std__vector_int__std__allocator_int_______operator____const(struct __gnu_cxx____normal_iterator_const_int____std__vector_int__std__allocator_int___* p0);
@@ -2253,6 +2254,7 @@ bb1268: ;
             char* c1292 = (char*)_str_2;
             unsigned int c1293 = 26;
             char* cast1294 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1291, c1292, c1293, cast1294);
           }
           char* cast1295 = (char*)&(_str_3);

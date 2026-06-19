@@ -131,6 +131,7 @@ double* __gnu_cxx____aligned_membuf_double____M_ptr___const(struct __gnu_cxx____
 double* std___List_node_double____M_valptr___const(struct std___List_node_double_* p0);
 double* std___List_const_iterator_double___operator____const(struct std___List_const_iterator_double_* p0);
 _Bool bool_std__operator___double__std__allocator_double___(struct std____cxx11__list_double__std__allocator_double__* p0, struct std____cxx11__list_double__std__allocator_double__* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std____cxx11__list_double__std__allocator_double______list(struct std____cxx11__list_double__std__allocator_double__* p0);
 int main();
@@ -2431,6 +2432,7 @@ bb1099: ;
           char* c1121 = (char*)_str_1;
           unsigned int c1122 = 35;
           char* cast1123 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast1120, c1121, c1122, cast1123);
         }
         int c1124 = 0;

@@ -108,6 +108,7 @@ struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___
 int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* p0);
 int* std__deque_int__std__allocator_int_____back(struct std__deque_int__std__allocator_int__* p0);
 int* std__stack_int__std__deque_int__std__allocator_int_______top(struct std__stack_int__std__deque_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
 int std__operator__2(int p0, int p1);
@@ -1969,6 +1970,7 @@ bb991: ;
             char* c1006 = (char*)_str_1;
             unsigned int c1007 = 20;
             char* cast1008 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1005, c1006, c1007, cast1008);
           }
       for_step997: ;

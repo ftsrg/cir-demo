@@ -102,6 +102,7 @@ struct std___Rb_tree_iterator_std__pair_const_char__int__ std__multimap_char__in
 void std___Rb_tree_const_iterator_std__pair_char_const__int______Rb_tree_const_iterator(struct std___Rb_tree_const_iterator_std__pair_const_char__int__* p0, struct std___Rb_tree_iterator_std__pair_const_char__int__* p1);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______end(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 unsigned long std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______size___const(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______begin(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 struct std__pair_const_char__int_* std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
@@ -1712,6 +1713,7 @@ bb723: ;
       char* c791 = (char*)_str_1;
       unsigned int c792 = 33;
       char* cast793 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast790, c791, c792, cast793);
     }
     struct std___Rb_tree_iterator_std__pair_const_char__int__ r794 = std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______begin(&mymultimap725);
@@ -1728,6 +1730,7 @@ bb723: ;
       char* c802 = (char*)_str_1;
       unsigned int c803 = 35;
       char* cast804 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast801, c802, c803, cast804);
     }
     struct std__pair_const_char__int_* r805 = std___Rb_tree_iterator_std__pair_char_const__int_____operator_____const(&it746);
@@ -1740,6 +1743,7 @@ bb723: ;
       char* c810 = (char*)_str_1;
       unsigned int c811 = 36;
       char* cast812 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast809, c810, c811, cast812);
     }
     int c813 = 0;

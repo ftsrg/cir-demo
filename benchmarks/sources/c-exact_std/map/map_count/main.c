@@ -103,6 +103,7 @@ void std___Rb_tree_const_iterator_std__pair_char_const__int______Rb_tree_const_i
 struct std___Rb_tree_const_iterator_std__pair_const_char__int__ std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______find_char_const___const(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0, char* p1);
 struct std___Rb_tree_const_iterator_std__pair_const_char__int__ std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______end___const(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0);
 unsigned long std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______count_char_const___const(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0, char* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int________map(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 int main();
@@ -1652,6 +1653,7 @@ bb728: ;
           char* c759 = (char*)_str_1;
           unsigned int c760 = 35;
           char* cast761 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast758, c759, c760, cast761);
         }
       for_step749: ;
@@ -1684,6 +1686,7 @@ bb728: ;
           char* c775 = (char*)_str_1;
           unsigned int c776 = 38;
           char* cast777 = (char*)&(__PRETTY_FUNCTION___main);
+          reach_error();
           __assert_fail(cast774, c775, c776, cast777);
         }
       for_step765: ;

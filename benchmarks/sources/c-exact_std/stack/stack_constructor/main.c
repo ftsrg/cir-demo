@@ -87,6 +87,7 @@ void std__stack_int__std__deque_int__std__allocator_int_______stack(struct std__
 void std__stack_int__std__vector_int__std__allocator_int_______stack_std__vector_int__std__allocator_int_____void_(struct std__stack_int__std__vector_int__std__allocator_int___* p0);
 void std__stack_int__std__vector_int__std__allocator_int_______stack(struct std__stack_int__std__vector_int__std__allocator_int___* p0, struct std__vector_int__std__allocator_int__* p1);
 unsigned long std__stack_int__std__deque_int__std__allocator_int_______size___const(struct std__stack_int__std__deque_int__std__allocator_int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 unsigned long std__stack_int__std__vector_int__std__allocator_int_______size___const(struct std__stack_int__std__vector_int__std__allocator_int___* p0);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
@@ -1003,6 +1004,7 @@ bb298: ;
                 char* c319 = (char*)_str_1;
                 unsigned int c320 = 27;
                 char* cast321 = (char*)&(__PRETTY_FUNCTION___main);
+                reach_error();
                 __assert_fail(cast318, c319, c320, cast321);
               }
               unsigned long r322 = std__stack_int__std__deque_int__std__allocator_int_______size___const(&second307);
@@ -1036,6 +1038,7 @@ bb298: ;
                 char* c326 = (char*)_str_1;
                 unsigned int c327 = 28;
                 char* cast328 = (char*)&(__PRETTY_FUNCTION___main);
+                reach_error();
                 __assert_fail(cast325, c326, c327, cast328);
               }
               unsigned long r329 = std__stack_int__std__vector_int__std__allocator_int_______size___const(&third308);
@@ -1069,6 +1072,7 @@ bb298: ;
                 char* c333 = (char*)_str_1;
                 unsigned int c334 = 29;
                 char* cast335 = (char*)&(__PRETTY_FUNCTION___main);
+                reach_error();
                 __assert_fail(cast332, c333, c334, cast335);
               }
               unsigned long r336 = std__stack_int__std__vector_int__std__allocator_int_______size___const(&fourth309);
@@ -1102,6 +1106,7 @@ bb298: ;
                 char* c340 = (char*)_str_1;
                 unsigned int c341 = 30;
                 char* cast342 = (char*)&(__PRETTY_FUNCTION___main);
+                reach_error();
                 __assert_fail(cast339, c340, c341, cast342);
               }
               char* cast343 = (char*)&(_str_5);

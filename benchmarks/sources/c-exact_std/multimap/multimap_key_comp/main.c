@@ -114,6 +114,7 @@ struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_char__st
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std__multimap_char__int__std__less_char___std__allocator_std__pair_char_const__int_______begin(struct std__multimap_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 _Bool std__less_char___operator___char_const___char_const___const(struct std__less_char_* p0, char* p1, char* p2);
 struct std__pair_const_char__int_* std___Rb_tree_iterator_std__pair_char_const__int_____operator____const(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 long std__ios_base__width___const(struct std__ios_base* p0);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__put(struct std__basic_ostream_char__std__char_traits_char__* p0, char p1);
@@ -1405,6 +1406,7 @@ bb564: ;
       char* c614 = (char*)_str_2;
       unsigned int c615 = 30;
       char* cast616 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast613, c614, c615, cast616);
     }
       struct std___Rb_tree_iterator_std__pair_const_char__int__ ref_tmp13617;

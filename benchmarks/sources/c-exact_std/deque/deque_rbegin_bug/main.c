@@ -119,6 +119,7 @@ void std___Deque_iterator_int__int___int_____Deque_iterator(struct std___Deque_i
 struct std___Deque_iterator_int__int____int___* std___Deque_iterator_int__int___int____operator__(struct std___Deque_iterator_int__int____int___* p0);
 int* std___Deque_iterator_int__int___int____operator____const(struct std___Deque_iterator_int__int____int___* p0);
 int* std__reverse_iterator_std___Deque_iterator_int__int___int______operator____const(struct std__reverse_iterator_std___Deque_iterator_int__int____int____* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 _Bool std__operator_(struct std__strong_ordering p0, struct std____cmp_cat____unspec p1);
 _Bool std__operator__(struct std__strong_ordering p0, struct std____cmp_cat____unspec p1);
@@ -2049,6 +2050,7 @@ bb1043: ;
       char* c1067 = (char*)_str_2;
       unsigned int c1068 = 23;
       char* cast1069 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1066, c1067, c1068, cast1069);
     }
     int c1070 = 5;
@@ -2116,6 +2118,7 @@ bb1043: ;
             char* c1089 = (char*)_str_2;
             unsigned int c1090 = 28;
             char* cast1091 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1088, c1089, c1090, cast1091);
           }
           struct std__reverse_iterator_std___Deque_iterator_int__int____int____* r1092 = std__reverse_iterator_std___Deque_iterator_int__int___int______operator__(&rit1046);

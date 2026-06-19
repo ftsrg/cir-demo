@@ -112,6 +112,7 @@ struct std___List_iterator_int_ std___List_iterator_int__std____cxx11__list_int_
 struct std___List_iterator_int_ std____cxx11__list_int__std__allocator_int_____insert(struct std____cxx11__list_int__std__allocator_int__* p0, struct std___List_const_iterator_int_ p1, int* p2);
 void std___List_const_iterator_int____List_const_iterator(struct std___List_const_iterator_int_* p0, struct std___List_iterator_int_* p1);
 int* std___List_iterator_int___operator____const(struct std___List_iterator_int_* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 unsigned long std____cxx11___List_base_int__std__allocator_int______M_get_size___const(struct std____cxx11___List_base_int__std__allocator_int__* p0);
 unsigned long std____cxx11__list_int__std__allocator_int_____size___const(struct std____cxx11__list_int__std__allocator_int__* p0);
@@ -1835,6 +1836,7 @@ bb915: ;
       char* c954 = (char*)_str_1;
       unsigned int c955 = 27;
       char* cast956 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast953, c954, c955, cast956);
     }
     unsigned long r957 = std____cxx11__list_int__std__allocator_int_____size___const(&mylist917);
@@ -1846,6 +1848,7 @@ bb915: ;
       char* c961 = (char*)_str_1;
       unsigned int c962 = 28;
       char* cast963 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast960, c961, c962, cast963);
     }
     std___List_const_iterator_int____List_const_iterator(&agg_tmp2923, &it918);
@@ -1866,6 +1869,7 @@ bb915: ;
       char* c974 = (char*)_str_1;
       unsigned int c975 = 34;
       char* cast976 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast973, c974, c975, cast976);
     }
     unsigned long r977 = std____cxx11__list_int__std__allocator_int_____size___const(&mylist917);
@@ -1877,6 +1881,7 @@ bb915: ;
       char* c981 = (char*)_str_1;
       unsigned int c982 = 35;
       char* cast983 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast980, c981, c982, cast983);
     }
     unsigned long c984 = 2;
@@ -1909,6 +1914,7 @@ bb915: ;
         char* c998 = (char*)_str_1;
         unsigned int c999 = 42;
         char* cast1000 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast997, c998, c999, cast1000);
       }
       int* r1001 = std___List_iterator_int___operator____const(&it918);
@@ -1921,6 +1927,7 @@ bb915: ;
         char* c1006 = (char*)_str_1;
         unsigned int c1007 = 43;
         char* cast1008 = (char*)&(__PRETTY_FUNCTION___main);
+        reach_error();
         __assert_fail(cast1005, c1006, c1007, cast1008);
       }
       char* cast1009 = (char*)&(_str_7);

@@ -97,6 +97,7 @@ extern void std__ctype_char____M_widen_init___const(struct std__ctype_char_* p0)
 char std__ctype_char___widen_char__const(struct std__ctype_char_* p0, char p1);
 char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std__basic_ios_char__std__char_traits_char__* p0, char p1);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int* _ZSt12construct_atIiJRKiEQaant20is_unbounded_array_vIT_ErqXgsnwcvPvLi0E_S2_pispclsr3stdE7declvalIT0_EEEEEPS2_S5_DpOS4_(int* p0, int* p1);
 void void_std__allocator_traits_std__allocator_int_____construct_int__int_const__(struct std__allocator_int_* p0, int* p1, int* p2);
@@ -1899,6 +1900,7 @@ bb946: ;
       char* c960 = (char*)_str_2;
       unsigned int c961 = 18;
       char* cast962 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast959, c960, c961, cast962);
     }
       int i963;
@@ -1972,6 +1974,7 @@ bb946: ;
       char* c981 = (char*)_str_2;
       unsigned int c982 = 21;
       char* cast983 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast980, c981, c982, cast983);
     }
     std__stack_int__std__deque_int__std__allocator_int_______pop(&myints948);
@@ -2032,6 +2035,7 @@ bb946: ;
       char* c994 = (char*)_str_2;
       unsigned int c995 = 24;
       char* cast996 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast993, c994, c995, cast996);
     }
     int c997 = 0;

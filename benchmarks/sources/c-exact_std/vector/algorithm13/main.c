@@ -121,6 +121,7 @@ struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int__
 void __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________normal_iterator(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, int** p1);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ std__vector_int__std__allocator_int_____begin(struct std__vector_int__std__allocator_int__* p0);
 unsigned long std__vector_int__std__allocator_int_____size___const(struct std__vector_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std__vector_int__std__allocator_int_____operator__(struct std__vector_int__std__allocator_int__* p0, unsigned long p1);
@@ -1968,6 +1969,7 @@ bb1104: ;
       char* c1124 = (char*)_str_1;
       unsigned int c1125 = 36;
       char* cast1126 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1123, c1124, c1125, cast1126);
     }
     unsigned long c1127 = 3;
@@ -1981,6 +1983,7 @@ bb1104: ;
       char* c1133 = (char*)_str_1;
       unsigned int c1134 = 37;
       char* cast1135 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1132, c1133, c1134, cast1135);
     }
     char* cast1136 = (char*)&(_str_3);

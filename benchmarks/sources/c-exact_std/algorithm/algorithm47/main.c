@@ -100,6 +100,7 @@ struct __gnu_cxx____ops___Val_comp_iter_bool_____int__int__ __gnu_cxx____ops___V
 struct std__pair___gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int_______gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int____ std__pair___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int________std__equal_range___gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int__bool_____int__int_____gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_________gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______int_const___bool____(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ p1, int* p2, void* p3);
 _Bool _ZN9__gnu_cxxeqIPiSt6vectorIiSaIiEEEEbRKNS_17__normal_iteratorIT_T0_EESA_QrqXeqcldtfp_4baseEcldtfp0_4baseERSt14convertible_toIbEE(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p1);
 struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ __gnu_cxx____normal_iterator_int___std__vector_int__std__allocator_int_______operator__long__const(struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___* p0, long p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__vector_int__std__allocator_int______vector(struct std__vector_int__std__allocator_int__* p0);
 int main();
@@ -2014,6 +2015,7 @@ bb1138: ;
       char* c1190 = (char*)_str_1;
       unsigned int c1191 = 31;
       char* cast1192 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1189, c1190, c1191, cast1192);
     }
     struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ r1193 = std__vector_int__std__allocator_int_____begin(&v1143);
@@ -2028,6 +2030,7 @@ bb1138: ;
       char* c1198 = (char*)_str_1;
       unsigned int c1199 = 32;
       char* cast1200 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1197, c1198, c1199, cast1200);
     }
     int c1201 = 0;

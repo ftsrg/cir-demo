@@ -155,6 +155,7 @@ char std__basic_ios_char__std__char_traits_char_____widen_char__const(struct std
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__endl_char__std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_iterator_std__pair_char_const__int_____operator___2(struct std___Rb_tree_iterator_std__pair_const_char__int__* p0, int p1);
 unsigned long std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______size___const(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______clear(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0);
 void std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______clear(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
@@ -2112,6 +2113,7 @@ bb915: ;
       char* c960 = (char*)_str_3;
       unsigned int c961 = 26;
       char* cast962 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast959, c960, c961, cast962);
     }
     std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______clear(&mymap917);
@@ -2124,6 +2126,7 @@ bb915: ;
       char* c967 = (char*)_str_3;
       unsigned int c968 = 28;
       char* cast969 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast966, c967, c968, cast969);
     }
     int c970 = 1101;
@@ -2159,6 +2162,7 @@ bb915: ;
       char* c980 = (char*)_str_3;
       unsigned int c981 = 31;
       char* cast982 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast979, c980, c981, cast982);
     }
     char* cast983 = (char*)&(_str);

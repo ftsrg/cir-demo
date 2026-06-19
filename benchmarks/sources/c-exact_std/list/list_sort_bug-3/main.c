@@ -92,6 +92,7 @@ void std____list___Scratch_list_std____detail___List_node_base____M_put_all(stru
 void std____cxx11__list_int__std__allocator_int_____sort(struct std____cxx11__list_int__std__allocator_int__* p0);
 extern void std____glibcxx_assert_fail(char* p0, int p1, char* p2, char* p3);
 int* std____cxx11__list_int__std__allocator_int_____front(struct std____cxx11__list_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 struct std___List_iterator_int_* std___List_iterator_int___operator__(struct std___List_iterator_int_* p0);
 int* std____cxx11__list_int__std__allocator_int_____back(struct std____cxx11__list_int__std__allocator_int__* p0);
@@ -1405,6 +1406,7 @@ bb609: ;
       char* c626 = (char*)_str_1;
       unsigned int c627 = 24;
       char* cast628 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast625, c626, c627, cast628);
     }
     int* r629 = std____cxx11__list_int__std__allocator_int_____back(&mylist611);
@@ -1417,6 +1419,7 @@ bb609: ;
       char* c634 = (char*)_str_1;
       unsigned int c635 = 25;
       char* cast636 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast633, c634, c635, cast636);
     }
     unsigned long r637 = std____cxx11__list_int__std__allocator_int_____size___const(&mylist611);
@@ -1428,6 +1431,7 @@ bb609: ;
       char* c641 = (char*)_str_1;
       unsigned int c642 = 26;
       char* cast643 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast640, c641, c642, cast643);
     }
     int c644 = 0;

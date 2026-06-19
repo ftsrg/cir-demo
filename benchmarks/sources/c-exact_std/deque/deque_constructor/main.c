@@ -93,6 +93,7 @@ struct std___Deque_iterator_int_int___int___ std___Deque_iterator_int__int_const
 _Bool bool_std____equal_aux_std___Deque_iterator_int__int_const___int_const____std___Deque_iterator_int__int_const___int_const____(struct std___Deque_iterator_int_int___int___ p0, struct std___Deque_iterator_int_int___int___ p1, struct std___Deque_iterator_int_int___int___ p2);
 _Bool bool_std__equal_std___Deque_iterator_int__int_const___int_const____std___Deque_iterator_int__int_const___int_const____(struct std___Deque_iterator_int_int___int___ p0, struct std___Deque_iterator_int_int___int___ p1, struct std___Deque_iterator_int_int___int___ p2);
 _Bool bool_std__operator___int__std__allocator_int___(struct std__deque_int__std__allocator_int__* p0, struct std__deque_int__std__allocator_int__* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 unsigned long std__deque_int__std__allocator_int_____max_size___const(struct std__deque_int__std__allocator_int__* p0);
 unsigned long std__deque_int__std__allocator_int_____size___const(struct std__deque_int__std__allocator_int__* p0);
@@ -1660,6 +1661,7 @@ bb745: ;
             char* c769 = (char*)_str_1;
             unsigned int c770 = 24;
             char* cast771 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast768, c769, c770, cast771);
           }
           unsigned long r772 = std__deque_int__std__allocator_int_____size___const(&first748);
@@ -1671,6 +1673,7 @@ bb745: ;
             char* c776 = (char*)_str_1;
             unsigned int c777 = 25;
             char* cast778 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast775, c776, c777, cast778);
           }
           unsigned long r779 = std__deque_int__std__allocator_int_____size___const(&second749);
@@ -1682,6 +1685,7 @@ bb745: ;
             char* c783 = (char*)_str_1;
             unsigned int c784 = 26;
             char* cast785 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast782, c783, c784, cast785);
           }
           unsigned long c786 = 2;
@@ -1695,6 +1699,7 @@ bb745: ;
             char* c792 = (char*)_str_1;
             unsigned int c793 = 27;
             char* cast794 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast791, c792, c793, cast794);
           }
           unsigned long c795 = 0;
@@ -1708,6 +1713,7 @@ bb745: ;
             char* c801 = (char*)_str_1;
             unsigned int c802 = 28;
             char* cast803 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast800, c801, c802, cast803);
           }
           // array copy
@@ -1785,6 +1791,7 @@ bb745: ;
                   char* c827 = (char*)_str_1;
                   unsigned int c828 = 36;
                   char* cast829 = (char*)&(__PRETTY_FUNCTION___main);
+                  reach_error();
                   __assert_fail(cast826, c827, c828, cast829);
                 }
               for_step813: ;

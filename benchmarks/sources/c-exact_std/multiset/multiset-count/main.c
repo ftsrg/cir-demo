@@ -117,6 +117,7 @@ struct std__bidirectional_iterator_tag std__iterator_traits_std___Rb_tree_const_
 long std__iterator_traits_std___Rb_tree_const_iterator_int_____difference_type_std__distance_std___Rb_tree_const_iterator_int___(struct std___Rb_tree_const_iterator_int_ p0, struct std___Rb_tree_const_iterator_int_ p1);
 unsigned long std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____count_int_const___const(struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* p0, int* p1);
 unsigned long std__multiset_int__std__less_int___std__allocator_int_____count_int_const___const(struct std__multiset_int__std__less_int___std__allocator_int__* p0, int* p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator__(struct std__basic_ostream_char__std__char_traits_char__* p0, int p1);
 extern void std__basic_ios_char__std__char_traits_char_____clear(struct std__basic_ios_char__std__char_traits_char__* p0, int p1);
@@ -1604,6 +1605,7 @@ bb728: ;
       char* c762 = (char*)_str_1;
       unsigned int c763 = 20;
       char* cast764 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast761, c762, c763, cast764);
     }
     int c765 = 6;
@@ -1624,6 +1626,7 @@ bb728: ;
       char* c770 = (char*)_str_1;
       unsigned int c771 = 21;
       char* cast772 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast769, c770, c771, cast772);
     }
     int c773 = 9;
@@ -1644,6 +1647,7 @@ bb728: ;
       char* c778 = (char*)_str_1;
       unsigned int c779 = 22;
       char* cast780 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast777, c778, c779, cast780);
     }
     int c781 = 12;
@@ -1664,6 +1668,7 @@ bb728: ;
       char* c786 = (char*)_str_1;
       unsigned int c787 = 23;
       char* cast788 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast785, c786, c787, cast788);
     }
     int c789 = 3;
@@ -1717,6 +1722,7 @@ bb728: ;
       char* c800 = (char*)_str_1;
       unsigned int c801 = 27;
       char* cast802 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast799, c800, c801, cast802);
     }
       int c803 = 0;

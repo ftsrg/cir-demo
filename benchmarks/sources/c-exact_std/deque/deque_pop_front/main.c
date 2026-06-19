@@ -116,6 +116,7 @@ _Bool std__operator__(struct std___Deque_iterator_int__int____int___* p0, struct
 _Bool std__deque_int__std__allocator_int_____empty___const(struct std__deque_int__std__allocator_int__* p0);
 extern struct std__basic_ostream_char__std__char_traits_char__* std__ostream__operator__(struct std__basic_ostream_char__std__char_traits_char__* p0, int p1);
 int* std__deque_int__std__allocator_int_____front(struct std__deque_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void void_std__allocator_traits_std__allocator_int_____destroy_int_(struct std__allocator_int_* p0, int* p1);
 void std__deque_int__std__allocator_int______M_pop_front_aux(struct std__deque_int__std__allocator_int__* p0);
@@ -2004,6 +2005,7 @@ bb990: ;
             char* c1022 = (char*)_str_3;
             unsigned int c1023 = 27;
             char* cast1024 = (char*)&(__PRETTY_FUNCTION___main);
+            reach_error();
             __assert_fail(cast1021, c1022, c1023, cast1024);
           }
           std__deque_int__std__allocator_int_____pop_front(&mydeque992);

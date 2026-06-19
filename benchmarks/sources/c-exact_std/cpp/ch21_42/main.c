@@ -114,6 +114,7 @@ extern unsigned long strlen(char* p0);
 unsigned long std__char_traits_char___length(char* p0);
 struct std__basic_ostream_char__std__char_traits_char__* std__basic_ostream_char__std__char_traits_char_____std__operator____std__char_traits_char___(struct std__basic_ostream_char__std__char_traits_char__* p0, char* p1);
 int* std__deque_int__std__allocator_int_____front(struct std__deque_int__std__allocator_int__* p0);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void void_std__allocator_traits_std__allocator_int_____destroy_int_(struct std__allocator_int_* p0, int* p1);
 void std__deque_int__std__allocator_int______M_pop_front_aux(struct std__deque_int__std__allocator_int__* p0);
@@ -1969,6 +1970,7 @@ bb990: ;
       char* c1009 = (char*)_str_2;
       unsigned int c1010 = 27;
       char* cast1011 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1008, c1009, c1010, cast1011);
     }
     std__deque_int__std__allocator_int_____pop_front(&mydeque992);
@@ -2009,6 +2011,7 @@ bb990: ;
       char* c1023 = (char*)_str_2;
       unsigned int c1024 = 32;
       char* cast1025 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1022, c1023, c1024, cast1025);
     }
     int c1026 = 0;

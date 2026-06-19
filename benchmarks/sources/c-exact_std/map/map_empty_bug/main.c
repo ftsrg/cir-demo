@@ -161,6 +161,7 @@ struct std___Rb_tree_node_base* std____rb_tree___Node_traits_std__pair_char_cons
 void std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int________M_erase_aux(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0, struct std___Rb_tree_const_iterator_std__pair_const_char__int__ p1);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std___Rb_tree_char__std__pair_char_const__int___std___Select1st_std__pair_char_const__int_____std__less_char___std__allocator_std__pair_char_const__int_______erase_abi_cxx11_(struct std___Rb_tree_char__std__pair_const_char__int___std___Select1st_std__pair_const_char__int____std__less_char___std__allocator_std__pair_const_char__int___* p0, struct std___Rb_tree_iterator_std__pair_const_char__int__ p1);
 struct std___Rb_tree_iterator_std__pair_const_char__int__ std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int_______erase_abi_cxx11_(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0, struct std___Rb_tree_iterator_std__pair_const_char__int__ p1);
+extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void std__map_char__int__std__less_char___std__allocator_std__pair_char_const__int________map(struct std__map_char__int__std__less_char___std__allocator_std__pair_const_char__int___* p0);
 int main();
@@ -2188,6 +2189,7 @@ bb965: ;
       char* c1004 = (char*)_str_2;
       unsigned int c1005 = 28;
       char* cast1006 = (char*)&(__PRETTY_FUNCTION___main);
+      reach_error();
       __assert_fail(cast1003, c1004, c1005, cast1006);
     }
     int c1007 = 0;
