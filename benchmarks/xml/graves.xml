@@ -7,29 +7,42 @@
            memlimit="15 GB"
            cpuCores="8">
 
-  <rundefinition name="esbmc-eval-mapped">
+  <rundefinition name="c-havoc_std">
     <option name="-svcomp23-graves"/>
     <option name="-heap"/>
     <option name="10000M"/>
     <option name="-benchmark"/>
     <option name="-timelimit"/>
     <option name="900 s"/>
-    <tasks name="esbmc-eval-mapped">
-      <includesfile>../sets/esbmc-eval-mapped.set</includesfile>
-      <propertyfile>../sources/esbmc-eval-mapped/unreach-call.prp</propertyfile>
+    <tasks name="c-havoc_std">
+      <includesfile>../sets/c-havoc_std.set</includesfile>
+      <propertyfile>../sources/c-havoc_std/unreach-call.prp</propertyfile>
     </tasks>
   </rundefinition>
 
-  <rundefinition name="esbmc-eval-mapped-nostd">
+  <rundefinition name="c-exact_std">
     <option name="-svcomp23-graves"/>
     <option name="-heap"/>
     <option name="10000M"/>
     <option name="-benchmark"/>
     <option name="-timelimit"/>
     <option name="900 s"/>
-    <tasks name="esbmc-eval-mapped-nostd">
-      <includesfile>../sets/esbmc-eval-mapped-nostd.set</includesfile>
-      <propertyfile>../sources/esbmc-eval-mapped-nostd/unreach-call.prp</propertyfile>
+    <tasks name="c-exact_std">
+      <includesfile>../sets/c-exact_std.set</includesfile>
+      <propertyfile>../sources/c-exact_std/unreach-call.prp</propertyfile>
+    </tasks>
+  </rundefinition>
+
+  <rundefinition name="c-nohavoc_std">
+    <option name="-svcomp23-graves"/>
+    <option name="-heap"/>
+    <option name="10000M"/>
+    <option name="-benchmark"/>
+    <option name="-timelimit"/>
+    <option name="900 s"/>
+    <tasks name="c-nohavoc_std">
+      <includesfile>../sets/c-nohavoc_std.set</includesfile>
+      <propertyfile>../sources/c-nohavoc_std/unreach-call.prp</propertyfile>
     </tasks>
   </rundefinition>
 

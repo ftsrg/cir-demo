@@ -18,10 +18,20 @@
 Populate benchmarks/sources/ with the ESBMC evaluation suite and its
 cir2c-mapped variants.
 
-Three subdirectories are created under sources/:
-  esbmc-eval/            — original C++ benchmarks (copied from backend/examples/esbmc-eval)
-  esbmc-eval-mapped/     — cir2c output with --externalize-std (default)
-  esbmc-eval-mapped-nostd/ — cir2c output with --no-externalize-std
+Four subdirectories are created under sources/:
+  cpp-baseline/   — original C++ benchmarks (copied from backend/examples/esbmc-eval)
+  c-havoc_std/    — cir2c output with --externalize-std: std calls are abstracted
+                    away (havoced) uniformly for every case
+  c-exact_std/    — cir2c output with --no-externalize-std: cir2c tries to map std
+                    exactly; cases where some std symbol still leaks through as an
+                    unresolved `extern ... std_...` declaration are kept here too
+  c-nohavoc_std/  — the subset of c-exact_std with no leftover std extern at all,
+                    i.e. cases where the exact mapping is fully resolved
+
+A case is dropped from the baseline (and hence every variant) only if its mapped
+output has no __assert_fail call at all, making it useless as an unreach-call
+benchmark. Leftover std externs in c-exact_std do not remove a case from the
+baseline or from c-exact_std itself — they only exclude it from c-nohavoc_std.
 
 Each mapped task directory gets a <name>.yml BenchExec task file that references
 the generated main.c with expected_verdict: true and the appropriate property file.
@@ -59,15 +69,45 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
-def copy_esbmc_eval(dry_run: bool) -> None:
-    dest = SOURCES_DIR / "esbmc-eval"
+def copy_cpp_baseline(dry_run: bool) -> None:
+    dest = SOURCES_DIR / "cpp-baseline"
     if dest.exists():
         print(f"  [skip] {dest} already exists")
         retag_properties(dest, dry_run)
+        rename_case_ymls(dest, dry_run)
         return
     print(f"  Copying {ESBMC_EVAL_SRC} → {dest}")
     if not dry_run:
         shutil.copytree(ESBMC_EVAL_SRC, dest)
+    rename_case_ymls(dest, dry_run)
+
+
+def rename_case_ymls(root: Path, dry_run: bool) -> None:
+    """Rename each case's <case>.yml to <category>_<case>.yml in place.
+
+    The upstream suite names a case's task file after just the case (e.g.
+    algorithm0.yml), but map_one() names the generated mapped-variant task file
+    <category>_<case>.yml (e.g. algorithm_algorithm0.yml) to disambiguate cases
+    that share a name across categories. normalize-results.py lines up tasks
+    across cpp-baseline/c-havoc_std/c-exact_std/c-nohavoc_std by stripping the
+    "../sources/<variant>/" prefix from BenchExec result paths, so the original
+    suite needs the same filename to match up post-stripping.
+    """
+    if not root.exists():
+        return
+    renamed = 0
+    for category_dir in sorted(p for p in root.iterdir() if p.is_dir()):
+        category = category_dir.name
+        for case_dir in sorted(p for p in category_dir.iterdir() if p.is_dir()):
+            case_name = case_dir.name
+            old = case_dir / f"{case_name}.yml"
+            new = case_dir / f"{category}_{case_name}.yml"
+            if old.exists() and not new.exists():
+                if not dry_run:
+                    old.rename(new)
+                renamed += 1
+    if renamed:
+        print(f"  Renamed {renamed} .yml file(s) under {root} to <category>_<case>.yml naming")
 
 
 def retag_properties(root: Path, dry_run: bool) -> None:
@@ -133,33 +173,37 @@ def make_mapped_yml(data_model: str, expected_verdict: str) -> str:
         """)
 
 
+def has_std_extern(text: str) -> bool:
+    """True if a top-level `extern ... std_...` declaration leaked into the output.
+
+    Only meaningful for the --no-externalize-std mapping: it means cir2c could not
+    resolve some libstdc++ symbol's body and fell back to an extern declaration, so
+    the case is not a fully-exact std mapping (it may be unsound).
+    """
+    return any(line.startswith("extern") and "std_" in line for line in text.splitlines())
+
+
 def postprocess_output(out_c: Path, externalize_std: bool) -> str:
     """Post-process a freshly mapped main.c in place (idempotent).
 
-    Three transformations:
+    Two transformations:
       * Before every call to __assert_fail, insert a call to an externally
         declared reach_error() (and emit that declaration). Lets a reachability
         verifier flag the assertion site without touching cir2c.
-      * For the --no-externalize-std variant, a top-level `extern ... std_ ...`
-        declaration means a libstdc++ symbol was left unmapped, so the case is
-        unsound; delete the file to exclude it from consideration.
       * If the mapped output has no __assert_fail call at all, there is no
         assertion site for unreach-call to find, so the case is useless as a
         benchmark; delete the file to exclude it.
 
-    Returns "ok" if the file was processed in place, or "excluded:std" /
-    "excluded:noassert" if it was deleted for one of the reasons above. Callers
-    are responsible for removing the sibling .yml (mapped) and the original
-    esbmc-eval case (source + .yml) when a non-"ok" status comes back.
+    A leftover std extern (see has_std_extern) does NOT exclude the case here —
+    it is kept in c-exact_std and only filtered out when curating c-nohavoc_std
+    (see build_nohavoc_variant). Returns "ok", "ok:std_extern" (processed, but
+    flagged for nohavoc curation), or "excluded:noassert" if deleted. Callers are
+    responsible for removing the sibling .yml and the original baseline case
+    (source + .yml) when "excluded:..." comes back.
     """
     text = out_c.read_text(encoding="utf-8")
     lines = text.splitlines(keepends=True)
-
-    if not externalize_std:
-        for line in lines:
-            if line.startswith("extern") and "std_" in line:
-                out_c.unlink()
-                return "excluded:std"
+    std_extern = not externalize_std and has_std_extern(text)
 
     if "__assert_fail" not in text:
         out_c.unlink()
@@ -187,15 +231,15 @@ def postprocess_output(out_c: Path, externalize_std: bool) -> str:
         out_lines.insert(0, "extern void reach_error();\n")
 
     out_c.write_text("".join(out_lines), encoding="utf-8")
-    return "ok"
+    return "ok:std_extern" if std_extern else "ok"
 
 
 def exclude_original(yml_path: Path, src_file: Path) -> None:
-    """Remove the original esbmc-eval case (source + .yml).
+    """Remove the original cpp-baseline case (source + .yml).
 
-    Called once a case has been excluded from a mapped variant, so re-runs and
-    the sibling variant's pass over the same yml_files list skip it too, and it
-    drops out of sets-full/esbmc-eval.set.
+    Called once a case is found useless for every variant (no __assert_fail in
+    its mapped output), so re-runs and the sibling variant's pass over the same
+    yml_files list skip it too, and it drops out of sets-full/cpp-baseline.set.
     """
     if src_file.exists():
         src_file.unlink()
@@ -237,13 +281,14 @@ def map_one(
             return {"case": str(rel), "status": "skipped"}
         if not dry_run:
             status = postprocess_output(out_c, externalize_std)
-            if status != "ok":
+            if status.startswith("excluded"):
                 if out_yml.exists():
                     out_yml.unlink()
                 exclude_original(yml_path, src_file)
                 return {"case": str(rel), "status": status}
             out_yml.write_text(make_mapped_yml(data_model, expected_verdict), encoding="utf-8")
-        return {"case": str(rel), "status": "dry-run" if dry_run else "ok"}
+            return {"case": str(rel), "status": status}
+        return {"case": str(rel), "status": "dry-run"}
 
     if out_yml.exists() and out_c.exists():
         return {"case": str(rel), "status": "skipped"}
@@ -267,12 +312,12 @@ def map_one(
         return {"case": str(rel), "status": f"failed:{stage}"}
 
     status = postprocess_output(out_c, externalize_std)
-    if status != "ok":
+    if status.startswith("excluded"):
         exclude_original(yml_path, src_file)
         return {"case": str(rel), "status": status}
 
     out_yml.write_text(make_mapped_yml(data_model, expected_verdict), encoding="utf-8")
-    return {"case": str(rel), "status": "ok"}
+    return {"case": str(rel), "status": status}
 
 
 def copy_property_file(dest_root: Path, dry_run: bool) -> None:
@@ -324,6 +369,35 @@ def run_variant(
     print("  Results:", ", ".join(f"{k}={v}" for k, v in sorted(counts.items())))
 
 
+def build_nohavoc_variant(exact_root: Path, nohavoc_root: Path, dry_run: bool) -> None:
+    """Curate c-nohavoc_std as the subset of c-exact_std with no leftover std extern.
+
+    c-exact_std keeps every case that has an assertion site, even ones where some
+    std symbol leaked through as an unresolved extern (see has_std_extern). This
+    copies over only the cases without that leak, so c-nohavoc_std is the
+    fully-resolved-std subset of c-exact_std.
+    """
+    print(f"\n=== c-nohavoc_std (curated from {exact_root.name}) ===")
+    copy_property_file(nohavoc_root, dry_run)
+
+    kept = 0
+    skipped = 0
+    for yml in sorted(exact_root.rglob("*.yml")):
+        case_dir = yml.parent
+        main_c = case_dir / "main.c"
+        if not main_c.exists() or has_std_extern(main_c.read_text(encoding="utf-8")):
+            skipped += 1
+            continue
+        rel = case_dir.relative_to(exact_root)
+        dest_dir = nohavoc_root / rel
+        if not dry_run:
+            dest_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(main_c, dest_dir / "main.c")
+            shutil.copy2(yml, dest_dir / yml.name)
+        kept += 1
+    print(f"  Results: ok={kept}, excluded:std={skipped}")
+
+
 def main() -> int:
     args = parse_args()
 
@@ -333,16 +407,16 @@ def main() -> int:
 
     SOURCES_DIR.mkdir(exist_ok=True)
 
-    print("Step 1: Copy original esbmc-eval")
-    copy_esbmc_eval(args.dry_run)
+    print("Step 1: Copy original cpp-baseline")
+    copy_cpp_baseline(args.dry_run)
 
-    src_root = SOURCES_DIR / "esbmc-eval"
+    src_root = SOURCES_DIR / "cpp-baseline"
     yml_files = find_yml_files(src_root)
     print(f"  Found {len(yml_files)} task .yml files")
 
     run_variant(
-        "esbmc-eval-mapped (externalize-std)",
-        SOURCES_DIR / "esbmc-eval-mapped",
+        "c-havoc_std (externalize-std)",
+        SOURCES_DIR / "c-havoc_std",
         src_root,
         yml_files,
         externalize_std=True,
@@ -352,8 +426,8 @@ def main() -> int:
     )
 
     run_variant(
-        "esbmc-eval-mapped-nostd (no-externalize-std)",
-        SOURCES_DIR / "esbmc-eval-mapped-nostd",
+        "c-exact_std (no-externalize-std)",
+        SOURCES_DIR / "c-exact_std",
         src_root,
         yml_files,
         externalize_std=False,
@@ -362,7 +436,10 @@ def main() -> int:
         yaml_only=args.yaml_only,
     )
 
+    build_nohavoc_variant(SOURCES_DIR / "c-exact_std", SOURCES_DIR / "c-nohavoc_std", args.dry_run)
+
     write_set_files(args.dry_run)
+    update_smoke_sets(args.dry_run)
     return 0
 
 
@@ -371,11 +448,13 @@ def write_set_files(dry_run: bool) -> None:
 
     The live `sets/` directory is a symlink to either sets-full/ or sets-smoke/
     (selected via the SETS env var in the Makefile), so we always write the full
-    enumeration to sets-full/ and leave the curated sets-smoke/ untouched.
+    enumeration to sets-full/ here; sets-smoke/ is regenerated separately by
+    update_smoke_sets(), which keeps the hand-curated case *selection* but
+    re-derives each variant's file list from it.
     """
     sets_dir = BENCHMARKS_DIR / "sets-full"
     sets_dir.mkdir(exist_ok=True)
-    for variant in ("esbmc-eval", "esbmc-eval-mapped", "esbmc-eval-mapped-nostd"):
+    for variant in ("cpp-baseline", "c-havoc_std", "c-exact_std", "c-nohavoc_std"):
         variant_root = SOURCES_DIR / variant
         ymls = sorted(variant_root.rglob("*.yml"))
         lines = [f"../sources/{variant}/{p.relative_to(variant_root)}\n" for p in ymls]
@@ -383,6 +462,57 @@ def write_set_files(dry_run: bool) -> None:
         print(f"  Writing {dest.name} ({len(lines)} entries)")
         if not dry_run:
             dest.write_text("".join(lines), encoding="utf-8")
+
+
+SMOKE_HEADER = textwrap.dedent("""\
+    #
+    # Copyright 2025 Budapest University of Technology and Economics
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    #
+    # Smoke-test subset: a handful of tasks for validating the pipeline
+    # end-to-end quickly. The case *selection* is curated by hand (edit any
+    # one of these files to add/drop a case); update_smoke_sets() in
+    # setup-sources.py re-derives every variant's file list from the union of
+    # what's currently selected, dropping a case from a variant's file if it
+    # no longer exists there. Don't hand-edit the per-variant path lines.
+    #
+    """)
+
+
+def update_smoke_sets(dry_run: bool) -> None:
+    """Re-derive each variant's sets-smoke/<variant>.set from the curated case selection.
+
+    The case *selection* (which ~10 tasks) is curated by hand and lives implicitly
+    in whatever sets-smoke/*.set files already exist; this only re-derives, for
+    every variant directory under sources/, which of those curated cases still
+    exist there, and rewrites that variant's .set file accordingly. This keeps
+    sets-smoke/ in sync after suite renames or after a case drops out of one
+    variant (e.g. excluded for having no __assert_fail), and automatically picks
+    up any new variant directory (e.g. a future 5th suite) with no code change.
+    """
+    smoke_dir = BENCHMARKS_DIR / "sets-smoke"
+    if not smoke_dir.exists():
+        return
+
+    case_paths: set[str] = set()
+    for set_file in smoke_dir.glob("*.set"):
+        for line in set_file.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            # ../sources/<variant>/<category>/<case>/<file>.yml -> <category>/<case>/<file>.yml
+            case_paths.add("/".join(Path(line).parts[3:]))
+
+    for variant_root in sorted(p for p in SOURCES_DIR.iterdir() if p.is_dir()):
+        variant = variant_root.name
+        lines = [f"../sources/{variant}/{case}\n" for case in sorted(case_paths)
+                  if (variant_root / case).exists()]
+        dest = smoke_dir / f"{variant}.set"
+        print(f"  Writing {dest.name} ({len(lines)}/{len(case_paths)} curated cases present)")
+        if not dry_run:
+            dest.write_text(SMOKE_HEADER + "".join(lines), encoding="utf-8")
 
 
 if __name__ == "__main__":

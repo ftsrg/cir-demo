@@ -25,9 +25,9 @@ of fm-tools data, not hand-edited XML.
 
 Rundefinitions per tool:
   * esbmc-kind, cbmc, divine -- these verify the original C++ directly, so they
-    run all three configs: the original suite (esbmc-eval) plus both cir2c-mapped
-    C variants (esbmc-eval-mapped, esbmc-eval-mapped-nostd).
-  * every other tool is C-only, so it runs just the two mapped variants and is
+    run all four configs: the original suite (cpp-baseline) plus all three
+    cir2c-mapped C variants (c-havoc_std, c-exact_std, c-nohavoc_std).
+  * every other tool is C-only, so it runs just the three mapped variants and is
     compared against the ESBMC baseline at table-generation time.
 
 This three-tools-get-the-original-suite split is the ONE hardcoded fact in the
@@ -51,11 +51,11 @@ import _fmtools
 
 XML_DIR = _fmtools.BENCHMARKS_DIR / "xml"
 
-# Tools able to verify the original C++ suite, hence the full three-config run.
-THREE_CONFIG_IDS = {"esbmc-kind", "cbmc", "divine"}
+# Tools able to verify the original C++ suite, hence the full four-config run.
+CPP_CAPABLE_IDS = {"esbmc-kind", "cbmc", "divine"}
 
-CONFIGS_THREE = ["esbmc-eval", "esbmc-eval-mapped", "esbmc-eval-mapped-nostd"]
-CONFIGS_TWO = ["esbmc-eval-mapped", "esbmc-eval-mapped-nostd"]
+CONFIGS_WITH_CPP = ["cpp-baseline", "c-havoc_std", "c-exact_std", "c-nohavoc_std"]
+CONFIGS_C_ONLY = ["c-havoc_std", "c-exact_std", "c-nohavoc_std"]
 
 # Per-run resource budget: the standard SV-COMP limits (15 GB RAM, 8 processing
 # units; the 900 s CPU-time limit is applied by the Makefile via --timelimit).
@@ -84,7 +84,7 @@ def rundefinition(name: str, options: list[str]) -> str:
 
 
 def build_xml(info: dict) -> str:
-    configs = CONFIGS_THREE if info["id"] in THREE_CONFIG_IDS else CONFIGS_TWO
+    configs = CONFIGS_WITH_CPP if info["id"] in CPP_CAPABLE_IDS else CONFIGS_C_ONLY
     body = "\n".join(rundefinition(c, info["options"]) for c in configs)
     return (
         '<?xml version="1.0"?>\n'

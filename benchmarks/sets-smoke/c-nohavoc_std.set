@@ -1,0 +1,23 @@
+#
+# Copyright 2025 Budapest University of Technology and Economics
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+#
+# Smoke-test subset: a handful of tasks for validating the pipeline
+# end-to-end quickly. The case *selection* is curated by hand (edit any
+# one of these files to add/drop a case); update_smoke_sets() in
+# setup-sources.py re-derives every variant's file list from the union of
+# what's currently selected, dropping a case from a variant's file if it
+# no longer exists there. Don't hand-edit the per-variant path lines.
+#
+../sources/c-nohavoc_std/algorithm/algorithm51/algorithm_algorithm51.yml
+../sources/c-nohavoc_std/cbmc/Templates1/cbmc_Templates1.yml
+../sources/c-nohavoc_std/cbmc/Templates10/cbmc_Templates10.yml
+../sources/c-nohavoc_std/cpp/Method_qualifier1/cpp_Method_qualifier1.yml
+../sources/c-nohavoc_std/cpp/cpp_sum_class/cpp_cpp_sum_class.yml
+../sources/c-nohavoc_std/gcc-template-tests/anon3/gcc-template-tests_anon3.yml
+../sources/c-nohavoc_std/gcc-template-tests/arg6/gcc-template-tests_arg6.yml
+../sources/c-nohavoc_std/inheritance_bringup/inheritance01/inheritance_bringup_inheritance01.yml
+../sources/c-nohavoc_std/polymorphism_bringup/1_SI_virtual_ntvalCtor/polymorphism_bringup_1_SI_virtual_ntvalCtor.yml
+../sources/c-nohavoc_std/try_catch/try-catch_order_01/try_catch_try-catch_order_01.yml

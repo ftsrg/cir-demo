@@ -17,7 +17,7 @@
 """
 Strip the ../sources/<variant>/ path prefix from BenchExec result .xml.bz2 files
 so that the same benchmark appears under the same name regardless of which source
-set (esbmc-eval, esbmc-eval-mapped, esbmc-eval-mapped-nostd) it came from.
+set (cpp-baseline, c-havoc_std, c-exact_std, c-nohavoc_std) it came from.
 
 Usage:
     python3 normalize-results.py result1.xml.bz2 result2.xml.bz2 ...
