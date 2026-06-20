@@ -53,6 +53,8 @@ public:
     m.registerTypedHandler<cir::MemSetOp>(handleMemSet);
     // Compile-time constant probe
     m.registerTypedHandler<cir::IsConstantOp>(handleIsConstant);
+    // Optimizer hint, no runtime semantics
+    m.registerTypedHandler<cir::AssumeOp>(handleAssume);
   }
 
 private:
@@ -325,6 +327,17 @@ private:
     std::string tmp = m.freshName("isconst");
     out << "  " << ctype << " " << tmp << " = 0;\n";
     m.setName(op->getResult(0), tmp);
+    return true;
+  }
+
+  // cir.assume: tells the optimizer a boolean predicate always holds
+  // (__builtin_assume, and the dereferenceable/align/separate_storage bundle
+  // variants). It has no results and the predicate operand is computed by an
+  // earlier op that is mapped on its own regardless of this op's presence, so
+  // dropping cir.assume changes nothing observable — a sound no-op. libc++'s
+  // _LIBCPP_ASSUME macro (include/__assert) uses this pervasively across
+  // algorithm/iterator/container headers.
+  static bool handleAssume(cir::AssumeOp, Mapper &, std::ostream &) {
     return true;
   }
 };
