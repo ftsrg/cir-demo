@@ -16,6 +16,12 @@
 
 # Central CIR pipeline: source file → CIR → preprocess → [flatten] → cir2c → C
 #
+# C++ input is always compiled against libc++ (-stdlib=libc++), not the
+# system's libstdc++: libstdc++ keeps some container internals (e.g.
+# std::list's node-splice helpers) as out-of-line symbols ClangIR never sees a
+# body for, while libc++ keeps list/map/set/deque fully header-templated. Built
+# by docker/build-llvm.sh into backend/bin alongside clang; there is no flag to
+# opt out.
 #
 # Exit codes: 0 success, 2 clang failed, 3 cir-opt failed, 4 cir2c failed
 #
@@ -36,6 +42,13 @@ CLANG="$SCRIPT_DIR/../../backend/bin/bin/clang"
 CLANGPP="$SCRIPT_DIR/../../backend/bin/bin/clang++"
 CIR_OPT="$SCRIPT_DIR/../../backend/bin/bin/cir-opt"
 CIR2C="$SCRIPT_DIR/../build/cir2c"
+
+# libc++ (built alongside clang by docker/build-llvm.sh) is the default C++
+# standard library for CIR generation: unlike libstdc++, it keeps list/map/
+# set/deque entirely header-templated, so ClangIR sees real bodies instead of
+# bodiless externs for container internals (e.g. std::list's node-splice
+# helpers) — see the no-externalize-std limitation notes in cir2c.
+LIBCXX_INCLUDE="$SCRIPT_DIR/../../backend/bin/include/c++/v1"
 
 LANG=""
 STD=""
@@ -85,13 +98,18 @@ fi
 [[ -z "$STD" ]] && { [[ "$LANG" == "c++" ]] && STD="c++23" || STD="c23"; }
 
 CLANG_BIN="$CLANG"
-[[ "$LANG" == "c++" ]] && CLANG_BIN="$CLANGPP"
+STDLIB_FLAGS=()
+if [[ "$LANG" == "c++" ]]; then
+    CLANG_BIN="$CLANGPP"
+    STDLIB_FLAGS=(-stdlib=libc++ -nostdinc++ -isystem "$LIBCXX_INCLUDE")
+fi
 
 # Validate tools
 for tool in "$CLANG_BIN" "$CIR2C"; do
     [[ -x "$tool" ]] || { echo "Error: tool not found: $tool" >&2; exit 1; }
 done
 [[ "$FLATTEN" == true ]] && { [[ -x "$CIR_OPT" ]] || { echo "Error: cir-opt not found: $CIR_OPT" >&2; exit 1; }; }
+[[ "$LANG" == "c++" ]] && { [[ -d "$LIBCXX_INCLUDE" ]] || { echo "Error: libc++ headers not found: $LIBCXX_INCLUDE (run docker/build-llvm.sh)" >&2; exit 1; }; }
 
 # Temp file management
 _TEMPS=()
@@ -110,6 +128,7 @@ mkdir -p "$(dirname "$OUTPUT_C")"
 # knows the test-suite layout for shared utility headers).
 CIR_FILE=$(_tmpmlir "$MLIR_OUT")
 "$CLANG_BIN" -x "$LANG" "-std=$STD" -S -emit-cir "$INPUT_FILE" -o "$CIR_FILE" \
+    ${STDLIB_FLAGS[@]+"${STDLIB_FLAGS[@]}"} \
     ${INCLUDE_FLAGS[@]+"${INCLUDE_FLAGS[@]}"} || exit 2
 
 # Step 2: Preprocess — strip alloca qualifiers the tablegen AllocaOp parser

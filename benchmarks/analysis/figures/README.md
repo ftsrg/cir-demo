@@ -30,9 +30,9 @@ Suite names are discovered at runtime, so renames flow through automatically.
 
 | file | label | description |
 |------|-------|-------------|
-| `dual_majority_c-exact_std_heatmap.{tex,pdf}` | `fig:dual-majority-c-exact_std` | Distribution of (C++, `c-exact_std`) majority-verdict combinations over the 546 shared tasks. |
-| `dual_majority_c-havoc_std_heatmap.{tex,pdf}` | `fig:dual-majority-c-havoc_std` | Distribution of (C++, `c-havoc_std`) majority-verdict combinations over the 1011 shared tasks. |
-| `dual_majority_c-nohavoc_std_heatmap.{tex,pdf}` | `fig:dual-majority-c-nohavoc_std` | Distribution of (C++, `c-nohavoc_std`) majority-verdict combinations over the 178 shared tasks. |
+| `dual_majority_c-exact_std_heatmap.{tex,pdf}` | `fig:dual-majority-c-exact_std` | Distribution of (C++, `c-exact_std`) majority-verdict combinations (left) and (ground-truth label, `c-exact_std`) majority-verdict combinations (right), over the 983 shared tasks. |
+| `dual_majority_c-havoc_std_heatmap.{tex,pdf}` | `fig:dual-majority-c-havoc_std` | Distribution of (C++, `c-havoc_std`) majority-verdict combinations (left) and (ground-truth label, `c-havoc_std`) majority-verdict combinations (right), over the 1011 shared tasks. |
+| `dual_majority_c-nohavoc_std_heatmap.{tex,pdf}` | `fig:dual-majority-c-nohavoc_std` | Distribution of (C++, `c-nohavoc_std`) majority-verdict combinations (left) and (ground-truth label, `c-nohavoc_std`) majority-verdict combinations (right), over the 178 shared tasks. |
 | `pattern_c-exact_std.{tex,pdf}` | `fig:pattern-c-exact_std` | Distribution of verifier-agreement patterns on `c-exact_std`, faceted by ground-truth label; bars sorted by task count. |
 | `pattern_c-havoc_std.{tex,pdf}` | `fig:pattern-c-havoc_std` | Distribution of verifier-agreement patterns on `c-havoc_std`, faceted by ground-truth label; bars sorted by task count. |
 | `pattern_c-nohavoc_std.{tex,pdf}` | `fig:pattern-c-nohavoc_std` | Distribution of verifier-agreement patterns on `c-nohavoc_std`, faceted by ground-truth label; bars sorted by task count. |
@@ -43,18 +43,21 @@ Suite names are discovered at runtime, so renames flow through automatically.
 
 | file | label | description |
 |------|-------|-------------|
-| `dual_majority_c-exact_std.tex` | `tab:dual-majority-c-exact_std` | Majority verdict on the original C++ suite (rows) vs. on `c-exact_std` (columns), over the 546 shared tasks. |
+| `dual_majority_c-exact_std.tex` | `tab:dual-majority-c-exact_std` | Majority verdict on the original C++ suite (rows) vs. on `c-exact_std` (columns), over the 983 shared tasks. |
 | `dual_majority_c-havoc_std.tex` | `tab:dual-majority-c-havoc_std` | Majority verdict on the original C++ suite (rows) vs. on `c-havoc_std` (columns), over the 1011 shared tasks. |
 | `dual_majority_c-nohavoc_std.tex` | `tab:dual-majority-c-nohavoc_std` | Majority verdict on the original C++ suite (rows) vs. on `c-nohavoc_std` (columns), over the 178 shared tasks. |
+| `label_majority_c-exact_std.tex` | `tab:label-majority-c-exact_std` | Ground-truth label (rows) vs. majority verdict on `c-exact_std` (columns), over the same 983 shared tasks. |
+| `label_majority_c-havoc_std.tex` | `tab:label-majority-c-havoc_std` | Ground-truth label (rows) vs. majority verdict on `c-havoc_std` (columns), over the same 1011 shared tasks. |
+| `label_majority_c-nohavoc_std.tex` | `tab:label-majority-c-nohavoc_std` | Ground-truth label (rows) vs. majority verdict on `c-nohavoc_std` (columns), over the same 178 shared tasks. |
 | `majority_c-exact_std.tex` | `tab:majority-c-exact_std` | Per-task majority verdict vs. ground-truth label on `c-exact_std` (true vs. false; unknowns ignored). |
 | `majority_c-havoc_std.tex` | `tab:majority-c-havoc_std` | Per-task majority verdict vs. ground-truth label on `c-havoc_std` (true vs. false; unknowns ignored). |
 | `majority_c-nohavoc_std.tex` | `tab:majority-c-nohavoc_std` | Per-task majority verdict vs. ground-truth label on `c-nohavoc_std` (true vs. false; unknowns ignored). |
 | `majority_cpp-baseline.tex` | `tab:majority-cpp-baseline` | Per-task majority verdict vs. ground-truth label on the original C++ suite `cpp-baseline`. |
 | `majority_strength.tex` | `tab:majority-strength` | How lopsided the per-task majority is on the mapped-C suites: over tasks with a strict majority, the number of verifiers voting against it (*against_**; unknowns ignored), with the median number of deciding verifiers for context. *unanimous_pct* is the share of those tasks with zero dissent; *share_mean* is the mean dissent as a percentage of deciding verifiers. |
-| `selfpair_divine_c-exact_std.tex` | `tab:selfpair-divine-c-exact_std` | Self-consistency of `divine`: verdict on the C++ original (rows) vs. on `c-exact_std` (columns), over 546 shared tasks. |
+| `selfpair_divine_c-exact_std.tex` | `tab:selfpair-divine-c-exact_std` | Self-consistency of `divine`: verdict on the C++ original (rows) vs. on `c-exact_std` (columns), over 983 shared tasks. |
 | `selfpair_divine_c-havoc_std.tex` | `tab:selfpair-divine-c-havoc_std` | Self-consistency of `divine`: verdict on the C++ original (rows) vs. on `c-havoc_std` (columns), over 1011 shared tasks. |
 | `selfpair_divine_c-nohavoc_std.tex` | `tab:selfpair-divine-c-nohavoc_std` | Self-consistency of `divine`: verdict on the C++ original (rows) vs. on `c-nohavoc_std` (columns), over 178 shared tasks. |
-| `selfpair_esbmc-kind_c-exact_std.tex` | `tab:selfpair-esbmc-kind-c-exact_std` | Self-consistency of `esbmc-kind`: verdict on the C++ original (rows) vs. on `c-exact_std` (columns), over 546 shared tasks. |
+| `selfpair_esbmc-kind_c-exact_std.tex` | `tab:selfpair-esbmc-kind-c-exact_std` | Self-consistency of `esbmc-kind`: verdict on the C++ original (rows) vs. on `c-exact_std` (columns), over 983 shared tasks. |
 | `selfpair_esbmc-kind_c-havoc_std.tex` | `tab:selfpair-esbmc-kind-c-havoc_std` | Self-consistency of `esbmc-kind`: verdict on the C++ original (rows) vs. on `c-havoc_std` (columns), over 1011 shared tasks. |
 | `selfpair_esbmc-kind_c-nohavoc_std.tex` | `tab:selfpair-esbmc-kind-c-nohavoc_std` | Self-consistency of `esbmc-kind`: verdict on the C++ original (rows) vs. on `c-nohavoc_std` (columns), over 178 shared tasks. |
 | `selfpair_summary.tex` | `tab:selfpair-summary` | Per-tool self-consistency between the C++ original and each mapped suite: shared tasks, identical-verdict count and rate, true/false conflicts, and number of distinct (C++, mapped) verdict pairs. |
@@ -73,7 +76,7 @@ Suite names are discovered at runtime, so renames flow through automatically.
 | `quantile_c-havoc_std.{tex,pdf}` | `fig:quantile-c-havoc_std` | Quantile (cactus) plot of CPU time for correctly solved tasks on `c-havoc_std`; one curve per verifier. |
 | `quantile_c-nohavoc_std.{tex,pdf}` | `fig:quantile-c-nohavoc_std` | Quantile (cactus) plot of CPU time for correctly solved tasks on `c-nohavoc_std`; one curve per verifier. |
 | `quantile_cpp-baseline.{tex,pdf}` | `fig:quantile-cpp-baseline` | Quantile (cactus) plot of CPU time for correctly solved tasks on `cpp-baseline`; one curve per verifier. |
-| `quantile_shared_c-exact_std.{tex,pdf}` | `fig:quantile-shared-c-exact_std` | Quantile (cactus) plot over the 546 tasks shared by the C++ suite `cpp-baseline` and `c-exact_std`. Native-C++ verifiers appear twice: dashed = C++ input, solid = mapped-C input (same colour). |
+| `quantile_shared_c-exact_std.{tex,pdf}` | `fig:quantile-shared-c-exact_std` | Quantile (cactus) plot over the 983 tasks shared by the C++ suite `cpp-baseline` and `c-exact_std`. Native-C++ verifiers appear twice: dashed = C++ input, solid = mapped-C input (same colour). |
 | `quantile_shared_c-havoc_std.{tex,pdf}` | `fig:quantile-shared-c-havoc_std` | Quantile (cactus) plot over the 1011 tasks shared by the C++ suite `cpp-baseline` and `c-havoc_std`. Native-C++ verifiers appear twice: dashed = C++ input, solid = mapped-C input (same colour). |
 | `quantile_shared_c-nohavoc_std.{tex,pdf}` | `fig:quantile-shared-c-nohavoc_std` | Quantile (cactus) plot over the 178 tasks shared by the C++ suite `cpp-baseline` and `c-nohavoc_std`. Native-C++ verifiers appear twice: dashed = C++ input, solid = mapped-C input (same colour). |
 | `resource_boxplots.{tex,pdf}` | `fig:resource-box` | CPU time and memory distributions per task suite (log scale; whiskers at the 5th/95th percentile). |

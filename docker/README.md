@@ -72,6 +72,17 @@ Notes:
 - Building LLVM is resource- and time-intensive. Building it once locally and pushing it to ghcr is usually faster overall.
 - The `docker/llvm.Dockerfile` builds LLVM **statically** (`BUILD_SHARED_LIBS=OFF`) and installs it into `/opt/cir` — this is what the backend copies into its final image and what the released binaries link against. clang, cir-opt and cir2c are therefore all statically linked against LLVM; only libc remains a dynamic dependency.
 - The image ships only the installed `/opt/cir` tree: the LLVM source checkout and build directory are removed inside the same layer that builds them, so the multi-GB intermediates are not baked into the image.
+- The same image also builds libc++/libc++abi/libunwind (static archives only) against the clang it just built, and installs them into the same `/opt/cir` prefix — so `/opt/cir/include/c++/v1` and `/opt/cir/lib/libc++*.a` are available everywhere `/opt/cir` is used (backend, CI), no separate export needed there. This exists so `clang++ -stdlib=libc++` can be used to avoid a cir2c limitation: libstdc++ keeps a few container internals (`std::list`'s node-splice helpers, etc.) in out-of-line `.so`-only symbols that ClangIR never sees a body for, while libc++ keeps `list`/`map`/`set`/`deque` fully header-templated.
+
+### Building without Docker
+
+The actual build steps live in [`docker/build-llvm.sh`](build-llvm.sh) (the Dockerfile just calls it), so you can run the same build on a bare machine — requires `cmake`, `ninja`, `clang`, `lld`, `git`, and static zlib (`libz.a`, e.g. Debian's `zlib1g-dev`):
+
+```sh
+./docker/build-llvm.sh --prefix ./opt-cir
+```
+
+Reuses `./llvm-project` if it already exists (clones it otherwise), and installs to `--prefix` (default `/opt/cir`). Pass `--clean` to delete the build directories afterward (skip it to allow incremental rebuilds); see `--help` for all options.
 
 Building static binaries
 ------------------------
@@ -93,7 +104,9 @@ docker build -f docker/static-build.Dockerfile \
     --target export --output . .
 ```
 
-The output directory will contain: `clang`, `clang++`, `cir-opt`, `cir2c`, an `include/` tree with the Clang resource headers, and `LICENSE.LLVM`.
+The output directory will contain: `clang`, `clang++`, `cir-opt`, `cir2c`, an `include/` tree with the Clang resource headers, a `libcxx/` tree with the libc++/libc++abi/libunwind headers and static archives, and `LICENSE.LLVM`.
+
+To compile against libc++ instead of the system's libstdc++ (e.g. to sidestep the cir2c limitation above), pass `-stdlib=libc++ -nostdinc++ -isystem ./libcxx/include/c++/v1`; add `-L./libcxx/lib` if also linking.
 
 To run a quick smoke-test instead of exporting, use `--target runtime`:
 
