@@ -5,8 +5,8 @@
 //   __VERIFIER_nondet_memory havoc (results are nondeterministic).
 
 // Struct definitions (auto-parsed)
-struct __gnu_cxx____ops___Iter_comp_iter_bool_____int__int__ { void* _M_comp; };
-struct __gnu_cxx____ops___Iter_less_iter { unsigned char __field0; };
+struct std____1____identity { unsigned char __field0; };
+struct std____1____less_void__void_ { unsigned char __field0; };
 
 int __const_main_continent[4] = {10, 20, 30, 40};
 int __const_main_container[10] = {5, 10, 15, 20, 25, 30, 35, 40, 45, 50};

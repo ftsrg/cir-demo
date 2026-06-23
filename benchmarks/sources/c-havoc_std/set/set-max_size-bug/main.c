@@ -4,18 +4,19 @@
 // Over-approximated (may be unsound): library/std:: calls replaced by
 //   __VERIFIER_nondet_memory havoc (results are nondeterministic).
 
-extern void abort(void);
 // Struct definitions (auto-parsed)
-struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
-struct std___Rb_tree_key_compare_std__less_int__ { unsigned char __field0; };
-struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
-struct std____new_allocator_std___Rb_tree_node_int__;
-struct std__allocator_std___Rb_tree_node_int__;
-struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
-struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_ { struct std___Rb_tree_key_compare_std__less_int__ __field0; struct std___Rb_tree_header __field1; };
-struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_ _M_impl; };
-struct std__set_int__std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ _M_t; };
+struct anon_1 { unsigned long __size_; };
+union anon_2 { int __value_; };
+struct std____1____less_void__void_ { unsigned char __field0; };
+struct std____1____tree_end_node_std____1____tree_node_base_void______ { struct std____1____tree_node_base_void___* __left_; };
+struct std____1____tree_int__std____1__less_int___std____1__allocator_int______tree_deleter { struct std____1__allocator_std____1____tree_node_int__void____* __alloc_; };
+struct std____1____tree_node_base_void___ { struct std____1____tree_end_node_std____1____tree_node_base_void______ __field0; struct std____1____tree_node_base_void___* __right_; struct std____1____tree_end_node_std____1____tree_node_base_void______* __field2; _Bool __field3; unsigned char __field4[7]; } __attribute__((packed));
+struct std____1____tree_node_int__void___ { struct std____1____tree_node_base_void___ __field0; union anon_2 field1; };
+struct std____1__allocator_std____1____tree_node_int__void____;
+struct std____1__less_int_ { unsigned char __field0; };
+struct anon_0 { struct std____1____tree_end_node_std____1____tree_node_base_void______ __end_node_; };
+struct std____1____tree_int__std____1__less_int___std____1__allocator_int__ { struct std____1____tree_end_node_std____1____tree_node_base_void______* __begin_node_; struct anon_0 field1; struct anon_1 field2; };
+struct std____1__set_int__std____1__less_int___std____1__allocator_int__ { struct std____1____tree_int__std____1__less_int___std____1__allocator_int__ __tree_; };
 
 // WARNING: this output relies on non-ISO ABI attribute(s) below.
 // A verifier/compiler that ignores them produces UNSOUND results:
@@ -24,6 +25,8 @@ struct std__set_int__std__less_int___std__allocator_int__ { struct std___Rb_tree
 char _str[24] = "myset.max_size() < 1000";
 char _str_1[110] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/set/set-max_size-bug/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
+unsigned long _ZNSt3__123__libcpp_numeric_limitsImLb1EE5__maxE __attribute__((aligned(8))) = -1;
+long _ZNSt3__123__libcpp_numeric_limitsIlLb1EE5__maxE __attribute__((aligned(8))) = 9223372036854775807;
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
@@ -35,10 +38,10 @@ int main() {
 bb0: ;
   int __retval1;
   int i2;
-  struct std__set_int__std__less_int___std__allocator_int__ myset3;
+  struct std____1__set_int__std____1__less_int___std____1__allocator_int__ myset3;
   int c4 = 0;
   __retval1 = c4;
-  // externalized std:: op: std::set<int, std::less<int>, std::allocator<int> >::set()
+  // externalized std:: op: std::__1::set<int, std::__1::less<int>, std::__1::allocator<int>>::set[abi:nqe230000]()
   __VERIFIER_nondet_memory(&myset3, sizeof(myset3));
     unsigned long std5 = __VERIFIER_nondet_unsigned_long();
     unsigned long c6 = 1000;
@@ -57,7 +60,7 @@ bb0: ;
     int t13 = __retval1;
     int ret_val14 = t13;
     {
-      // externalized std:: op: std::set<int, std::less<int>, std::allocator<int> >::~set()
+      // externalized std:: op: std::__1::set<int, std::__1::less<int>, std::__1::allocator<int>>::~set[abi:nqe230000]()
       __VERIFIER_nondet_memory(&myset3, sizeof(myset3));
     }
     return ret_val14;

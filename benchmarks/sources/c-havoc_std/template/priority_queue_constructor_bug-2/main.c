@@ -4,25 +4,18 @@
 // Over-approximated (may be unsound): library/std:: calls replaced by
 //   __VERIFIER_nondet_memory havoc (results are nondeterministic).
 
-extern void abort(void);
 // Struct definitions (auto-parsed)
-struct __gnu_cxx____normal_iterator_int____std__vector_int__std__allocator_int___ { int* _M_current; };
+struct anon_0 { int* __cap_; };
 struct mycomparison { _Bool reverse; };
-struct std___Vector_base_int__std__allocator_int_____Vector_impl_data { int* _M_start; int* _M_finish; int* _M_end_of_storage; };
-struct std____new_allocator_int_;
-struct std__allocator_int_;
-struct __gnu_cxx____ops___Iter_comp_iter_mycomparison_ { struct mycomparison _M_comp; };
-struct __gnu_cxx____ops___Iter_comp_val_mycomparison_ { struct mycomparison _M_comp; };
-struct std___Vector_base_int__std__allocator_int_____Vector_impl { struct std___Vector_base_int__std__allocator_int_____Vector_impl_data __field0; };
-struct std___Vector_base_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int_____Vector_impl _M_impl; };
-struct std__vector_int__std__allocator_int__ { struct std___Vector_base_int__std__allocator_int__ __field0; };
-struct std__priority_queue_int__std__vector_int__std__allocator_int____mycomparison_ { struct std__vector_int__std__allocator_int__ c; struct mycomparison comp; unsigned char __field2[7]; } __attribute__((packed));
+struct std____1__allocator_int_;
+struct std____1__vector_int__std____1__allocator_int__ { int* __begin_; int* __end_; struct anon_0 field2; };
+struct std____1__vector_int__std____1__allocator_int______destroy_vector { struct std____1__vector_int__std____1__allocator_int__* __vec_; };
+struct std____1__priority_queue_int__std____1__vector_int__std____1__allocator_int____mycomparison_ { struct std____1__vector_int__std____1__allocator_int__ c; struct mycomparison comp; unsigned char __field2[7]; } __attribute__((packed));
 
 // WARNING: this output relies on non-ISO ABI attribute(s) below.
 // A verifier/compiler that ignores them produces UNSOUND results:
 //   __attribute__((packed))     - exact struct byte layout (no padding)
 
-struct std__vector_int__std__allocator_int__ __const_main_ref_tmp2;
 char _str[19] = "fourth.size() != 0";
 char _str_1[131] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/template/priority_queue_constructor_bug-2/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
@@ -51,55 +44,46 @@ bb2: ;
 int main() {
 bb8: ;
   int __retval9;
-  struct std__priority_queue_int__std__vector_int__std__allocator_int____mycomparison_ fourth10;
-  struct std__priority_queue_int__std__vector_int__std__allocator_int____mycomparison_ sixth11;
+  struct std____1__priority_queue_int__std____1__vector_int__std____1__allocator_int____mycomparison_ fourth10;
+  struct std____1__priority_queue_int__std____1__vector_int__std____1__allocator_int____mycomparison_ sixth11;
   struct mycomparison ref_tmp012;
   _Bool ref_tmp113;
-  struct std__vector_int__std__allocator_int__ ref_tmp214;
-  int c15 = 0;
-  __retval9 = c15;
-  // externalized std:: op: std::priority_queue<int, std::vector<int, std::allocator<int> >, mycomparison>::priority_queue<std::vector<int, std::allocator<int> >, void>()
+  int c14 = 0;
+  __retval9 = c14;
+  // externalized std:: op: std::__1::priority_queue<int, std::__1::vector<int, std::__1::allocator<int>>, mycomparison>::priority_queue[abi:nqe230000]()
   __VERIFIER_nondet_memory(&fourth10, sizeof(fourth10));
-    unsigned long std16 = __VERIFIER_nondet_unsigned_long();
-    unsigned long c17 = 0;
-    _Bool c18 = ((std16 != c17)) ? 1 : 0;
-    if (c18) {
+    unsigned long std15 = __VERIFIER_nondet_unsigned_long();
+    unsigned long c16 = 0;
+    _Bool c17 = ((std15 != c16)) ? 1 : 0;
+    if (c17) {
     } else {
-      char* cast19 = (char*)&(_str);
-      char* c20 = (char*)_str_1;
-      unsigned int c21 = 30;
-      char* cast22 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast18 = (char*)&(_str);
+      char* c19 = (char*)_str_1;
+      unsigned int c20 = 30;
+      char* cast21 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast19, c20, c21, cast22);
+      __assert_fail(cast18, c19, c20, cast21);
     }
-    _Bool c23 = 1;
-    ref_tmp113 = c23;
+    _Bool c22 = 1;
+    ref_tmp113 = c22;
     mycomparison__mycomparison(&ref_tmp012, &ref_tmp113);
-    ref_tmp214 = *&__const_main_ref_tmp2; // copy
-    // externalized std:: op: std::vector<int, std::allocator<int> >::vector()
-    __VERIFIER_nondet_memory(&ref_tmp214, sizeof(ref_tmp214));
-      // externalized std:: op: std::priority_queue<int, std::vector<int, std::allocator<int> >, mycomparison>::priority_queue(mycomparison const&, std::vector<int, std::allocator<int> >&&)
-      __VERIFIER_nondet_memory(&sixth11, sizeof(sixth11));
-      __VERIFIER_nondet_memory(&ref_tmp012, sizeof(ref_tmp012));
-      __VERIFIER_nondet_memory(&ref_tmp214, sizeof(ref_tmp214));
-    {
-      // externalized std:: op: std::vector<int, std::allocator<int> >::~vector()
-      __VERIFIER_nondet_memory(&ref_tmp214, sizeof(ref_tmp214));
-    }
-      int c24 = 0;
-      __retval9 = c24;
-      int t25 = __retval9;
-      int ret_val26 = t25;
+    // externalized std:: op: std::__1::priority_queue<int, std::__1::vector<int, std::__1::allocator<int>>, mycomparison>::priority_queue[abi:nqe230000](mycomparison const&)
+    __VERIFIER_nondet_memory(&sixth11, sizeof(sixth11));
+    __VERIFIER_nondet_memory(&ref_tmp012, sizeof(ref_tmp012));
+      int c23 = 0;
+      __retval9 = c23;
+      int t24 = __retval9;
+      int ret_val25 = t24;
       {
-        // externalized std:: op: std::priority_queue<int, std::vector<int, std::allocator<int> >, mycomparison>::~priority_queue()
+        // externalized std:: op: std::__1::priority_queue<int, std::__1::vector<int, std::__1::allocator<int>>, mycomparison>::~priority_queue()
         __VERIFIER_nondet_memory(&sixth11, sizeof(sixth11));
       }
       {
-        // externalized std:: op: std::priority_queue<int, std::vector<int, std::allocator<int> >, mycomparison>::~priority_queue()
+        // externalized std:: op: std::__1::priority_queue<int, std::__1::vector<int, std::__1::allocator<int>>, mycomparison>::~priority_queue()
         __VERIFIER_nondet_memory(&fourth10, sizeof(fourth10));
       }
-      return ret_val26;
-  int t27 = __retval9;
-  return t27;
+      return ret_val25;
+  int t26 = __retval9;
+  return t26;
 }
 

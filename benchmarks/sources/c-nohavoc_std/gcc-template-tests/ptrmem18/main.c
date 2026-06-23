@@ -25,12 +25,12 @@ char __PRETTY_FUNCTION___main[11] = "int main()";
 extern void *_ZTVN10__cxxabiv117__class_type_infoE[];
 char _ZTS1S[3] = "1S";
 void T__T(struct T* p0);
-void void_test1__S__f1_(struct T* p0);
+void void_test1__S__f1___(struct T* p0);
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
-void void_test1__S__f2_(struct T* p0);
-void void_test2__S__f1_(struct T* p0);
-void void_test2__S__f2_(struct T* p0);
+void void_test1__S__f2___(struct T* p0);
+void void_test2__S__f1___(struct T* p0);
+void void_test2__S__f2___(struct T* p0);
 int main();
 void S__S(struct S* p0);
 void S__f1(struct S* p0);
@@ -49,7 +49,7 @@ bb1: ;
 }
 
 // function: _Z5test1IXadL_ZN1S2f1EvEEEvP1T
-__attribute__((aligned(2))) void void_test1__S__f1_(struct T* v4) {
+__attribute__((aligned(2))) void void_test1__S__f1___(struct T* v4) {
 bb5: ;
   struct T* t6;
   t6 = v4;
@@ -80,7 +80,7 @@ bb5: ;
 }
 
 // function: _Z5test1IXadL_ZN1S2f2EvEEEvP1T
-__attribute__((aligned(2))) void void_test1__S__f2_(struct T* v24) {
+__attribute__((aligned(2))) void void_test1__S__f2___(struct T* v24) {
 bb25: ;
   struct T* t26;
   t26 = v24;
@@ -111,7 +111,7 @@ bb25: ;
 }
 
 // function: _Z5test2IXadL_ZN1S2f1EvEEEvP1T
-__attribute__((aligned(2))) void void_test2__S__f1_(struct T* v44) {
+__attribute__((aligned(2))) void void_test2__S__f1___(struct T* v44) {
 bb45: ;
   struct T* t46;
   struct S* s47;
@@ -145,7 +145,7 @@ bb45: ;
 }
 
 // function: _Z5test2IXadL_ZN1S2f2EvEEEvP1T
-__attribute__((aligned(2))) void void_test2__S__f2_(struct T* v66) {
+__attribute__((aligned(2))) void void_test2__S__f2___(struct T* v66) {
 bb67: ;
   struct T* t68;
   struct S* s69;
@@ -186,7 +186,7 @@ bb88: ;
   int c91 = 0;
   __retval89 = c91;
   T__T(&t90);
-  void_test1__S__f1_(&t90);
+  void_test1__S__f1___(&t90);
     int t92 = t90.s.c;
     int c93 = 1;
     _Bool c94 = ((t92 != c93)) ? 1 : 0;
@@ -198,7 +198,7 @@ bb88: ;
       reach_error();
       __assert_fail(cast95, c96, c97, cast98);
     }
-  void_test1__S__f2_(&t90);
+  void_test1__S__f2___(&t90);
     int t99 = t90.s.c;
     int c100 = 17;
     _Bool c101 = ((t99 != c100)) ? 1 : 0;
@@ -210,7 +210,7 @@ bb88: ;
       reach_error();
       __assert_fail(cast102, c103, c104, cast105);
     }
-  void_test2__S__f1_(&t90);
+  void_test2__S__f1___(&t90);
     int t106 = t90.s.c;
     int c107 = 18;
     _Bool c108 = ((t106 != c107)) ? 1 : 0;
@@ -222,7 +222,7 @@ bb88: ;
       reach_error();
       __assert_fail(cast109, c110, c111, cast112);
     }
-  void_test2__S__f2_(&t90);
+  void_test2__S__f2___(&t90);
     int t113 = t90.s.c;
     int c114 = 34;
     _Bool c115 = ((t113 != c114)) ? 1 : 0;

@@ -11,53 +11,104 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTISt12length_error[] = "_ZTISt12length_error";
+static const char __cir_eh_type__ZTISt20bad_array_new_length[] = "_ZTISt20bad_array_new_length";
 
 // Struct definitions (auto-parsed)
 struct _IO_FILE { int __field0; char* __field1; char* __field2; char* __field3; char* __field4; char* __field5; char* __field6; char* __field7; char* __field8; char* __field9; char* __field10; char* __field11; struct _IO_marker* __field12; struct _IO_FILE* __field13; int __field14; unsigned char __field15[3]; char __field16[1]; long __field17; unsigned short __field18; char __field19; char __field20[1]; void* __field21; long __field22; struct _IO_codecvt* __field23; struct _IO_wide_data* __field24; struct _IO_FILE* __field25; void* __field26; struct _IO_FILE** __field27; int __field28; int __field29; unsigned long __field30; char __field31[8]; };
 struct _IO_codecvt { unsigned char __placeholder; };
 struct _IO_marker { unsigned char __placeholder; };
 struct _IO_wide_data { unsigned char __placeholder; };
-struct __locale_data { unsigned char __placeholder; };
-struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
-struct __pthread_internal_list { struct __pthread_internal_list* __field0; struct __pthread_internal_list* __field1; };
-struct __pthread_mutex_s { int __field0; unsigned int __field1; int __field2; unsigned int __field3; int __field4; short __field5; short __field6; struct __pthread_internal_list __field7; };
 union anon_0 { unsigned int __field0; char __field1[4]; };
+struct anon_3 { unsigned char __size_; };
+struct anon_4 { unsigned long __is_long_; };
 struct anon_struct_0 { unsigned char* __field0[5]; unsigned char* __field1[5]; };
 struct anon_struct_1 { unsigned char* __field0[4]; };
-union pthread_mutex_t { struct __pthread_mutex_s __field0; char __field1[40]; long __field2; };
-struct std____basic_file_char_ { struct _IO_FILE* __field0; _Bool __field1; unsigned char __field2[7]; } __attribute__((packed));
-struct std__ios_base___Words { void* __field0; long __field1; };
-struct std__locale { struct std__locale___Impl* __field0; };
-struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___;
-struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___;
+struct anon_struct_2 { unsigned char* __field0[5]; };
+struct std____1___SentinelValueFill_std____1__char_traits_char__ { int __fill_val_; };
+struct std____1____allocation_result_char____unsigned_long_ { char* ptr; unsigned long count; };
+struct std____1____copy_impl { unsigned char __field0; };
+struct std____1____private_constructor_tag { unsigned char __field0; };
+struct std____1____specialized_algorithm_std____1___Algorithm____copy__std____1____iterator_pair_const_char___char_____std____1____single_iterator_std____1__ostreambuf_iterator_char__std____1__char_traits_char____ { unsigned char __field0; };
+struct std____1____uninitialized_tag { unsigned char __field0; };
+struct std____1__allocation_result_char____unsigned_long_ { char* ptr; unsigned long count; };
+struct std____1__allocator_char_ { unsigned char __field0; };
+struct std____1__basic_ostream_char__std____1__char_traits_char____sentry { _Bool __ok_; struct std____1__ostream* __field1; };
+struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______long { struct anon_4 field0; unsigned long __size_; char* __data_; };
+struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______short { struct anon_3 field0; char __data_[23]; };
+struct std____1__iterator_std____1__output_iterator_tag__void__void__void__void_;
+struct std____1__locale { struct std____1__locale____imp* __locale_; };
+struct std____1__locale____imp;
+struct std____1__locale__facet;
+struct std____1__once_flag { unsigned long __field0; };
+struct std____1__ostreambuf_iterator_char__std____1__char_traits_char__ { struct std____1__streambuf* __sbuf_; };
+struct std____1__pair_const_char___char___ { char* first; char* second; };
+struct std____1__streambuf { void* __field0; struct std____1__locale __field1; char* __field2; char* __field3; char* __field4; char* __field5; char* __field6; char* __field7; };
+struct std__logic_error;
 struct __mbstate_t { int __field0; union anon_0 __field1; };
-struct std__basic_streambuf_char__std__char_traits_char__ { void* __field0; char* __field1; char* __field2; char* __field3; char* __field4; char* __field5; char* __field6; struct std__locale _M_buf_locale; };
-struct std__ctype_char_;
-struct std__ios_base { void* __field0; long __field1; long _M_width; int __field3; int __field4; int __field5; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
-struct std__basic_filebuf_char__std__char_traits_char__ { struct std__basic_streambuf_char__std__char_traits_char__ __field0; union pthread_mutex_t __field1; struct std____basic_file_char_ _M_file; int __field3; struct __mbstate_t __field4; struct __mbstate_t __field5; struct __mbstate_t __field6; char* __field7; unsigned long __field8; _Bool __field9; _Bool __field10; _Bool __field11; char __field12; char* __field13; char* __field14; _Bool __field15; struct std__codecvt_char__char____mbstate_t_* __field16; char* __field17; long __field18; char* __field19; char* __field20; };
-struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* _M_tie; char _M_fill; _Bool _M_fill_init; struct std__basic_streambuf_char__std__char_traits_char__* _M_streambuf; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* _M_num_put; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* _M_num_get; };
-struct std__basic_istream_char__std__char_traits_char__ { void* __field0; long _M_gcount; struct std__basic_ios_char__std__char_traits_char__ __field2; };
-struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
+union anon_1 { struct std____1__locale __loc_; };
+struct std____1____in_out_result_const_char____std____1__ostreambuf_iterator_char__std____1__char_traits_char___ { char* __in_; struct std____1__ostreambuf_iterator_char__std____1__char_traits_char__ __out_; };
+union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep { struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______short __s; struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______long __l; };
+struct std____1__ctype_char_;
+struct std____1__filebuf { struct std____1__streambuf __field0; char* __field1; char* __field2; char* __field3; char __field4[8]; unsigned long __field5; char* __field6; unsigned long __field7; struct _IO_FILE* __file_; struct std____1__codecvt_char__char____mbstate_t_* __field9; struct __mbstate_t __field10; struct __mbstate_t __field11; unsigned int __field12; unsigned int __field13; _Bool __field14; _Bool __field15; _Bool __field16; unsigned char __field17[5]; } __attribute__((packed));
+struct std____1__ios_base { void* __field0; unsigned int __fmtflags_; long __field2; long __width_; unsigned int __rdstate_; unsigned int __field5; void* __rdbuf_; union anon_1 field7; void** __field8; int* __field9; unsigned long __field10; unsigned long __field11; long* __field12; unsigned long __field13; unsigned long __field14; void** __field15; unsigned long __field16; unsigned long __field17; };
+struct std____1__locale__id { struct std____1__once_flag __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__bad_array_new_length;
+struct std__length_error;
+struct anon_2 { union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep __rep_; };
+struct std____1__ios { struct std____1__ios_base __field0; struct std____1__ostream* __tie_; struct std____1___SentinelValueFill_std____1__char_traits_char__ __fill_; unsigned char __field3[4]; } __attribute__((packed));
+struct std____1__istream { void* __field0; long __gc_; struct std____1__ios __field2; };
+struct std____1__ostream { void* __field0; struct std____1__ios __field1; };
+struct std____1__string { struct anon_2 field0; };
 
 // WARNING: this output relies on non-ISO ABI attribute(s) below.
 // A verifier/compiler that ignores them produces UNSOUND results:
 //   __attribute__((packed))     - exact struct byte layout (no padding)
 
-extern void *_ZTVSi[];
-extern void *_ZTVSt9basic_iosIcSt11char_traitsIcEE[];
-int _ZNSt8ios_base2inE_const __attribute__((aligned(4))) = 8;
+// Virtual dispatch: default implementations.
+// __VERIFIER_virtual_call_<sig>(obj, slot, args): obj's vtable
+// pointer is at offset 0; the function is vtable[slot].
+char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((char(*)(void*, char))__fn)(__obj, __a0);
+}
+long __VERIFIER_virtual_call_long_char_ptr_long(void* __obj, int __slot, char* __a0, long __a1) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((long(*)(void*, char*, long))__fn)(__obj, __a0, __a1);
+}
+
+extern void *_ZTVNSt3__113basic_istreamIcNS_11char_traitsIcEEEE[];
+extern void *_ZTVNSt3__19basic_iosIcNS_11char_traitsIcEEEE[];
+extern void *_ZTVNSt3__18ios_baseE[];
+extern void *_ZTVSt12length_error[];
+union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep __const__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE22__init_internal_bufferB9nqe230000Em_ref_tmp0;
+unsigned long _ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE15__endian_factorE_const __attribute__((aligned(8))) = 2;
+unsigned int _ZNSt3__18ios_base7failbitE_const __attribute__((aligned(4))) = 4;
+unsigned int _ZNSt3__18ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+unsigned int _ZNSt3__18ios_base4leftE_const __attribute__((aligned(4))) = 32;
+unsigned int _ZNSt3__18ios_base11adjustfieldE_const __attribute__((aligned(4))) = 176;
+unsigned int _ZNSt3__18ios_base2inE_const __attribute__((aligned(4))) = 8;
 char _str[5] = "test";
 char _str_1[14] = "!fb.is_open()";
 char _str_2[122] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/stream/istream_constructor_2_bug/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
-extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
-extern void *_ZTVSi[];
-extern void *_ZTVSt9basic_iosIcSt11char_traitsIcEE[];
+extern struct std____1__ostream _ZNSt3__14coutE __attribute__((aligned(8)));
+extern void *_ZTVNSt3__113basic_istreamIcNS_11char_traitsIcEEEE[];
+extern void *_ZTVNSt3__19basic_iosIcNS_11char_traitsIcEEEE[];
+extern void *_ZTVNSt3__18ios_baseE[];
+unsigned long _ZNSt3__123__libcpp_numeric_limitsImLb1EE5__maxE __attribute__((aligned(8))) = -1;
+char _str_3[13] = "basic_string";
+static const char _ZTISt12length_error__n_[] = "_ZTISt12length_error";
+static void* _ZTISt12length_error[2] = {(void*)0, (void*)_ZTISt12length_error__n_};
+extern void *_ZTVSt12length_error[];
+static const char _ZTISt20bad_array_new_length__n_[] = "_ZTISt20bad_array_new_length";
+static void* _ZTISt20bad_array_new_length[2] = {(void*)0, (void*)_ZTISt20bad_array_new_length__n_};
+extern struct std____1__locale__id _ZNSt3__15ctypeIcE2idE __attribute__((aligned(8)));
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
-
-extern unsigned char* _ZTTSi[2] __attribute__((aligned(8)));
 
 extern void __VERIFIER_nondet_memory(void*, unsigned long);
 extern int __VERIFIER_nondet_int(void);
@@ -65,15 +116,15 @@ extern int __VERIFIER_nondet_int(void);
 int main() {
 bb0: ;
   int __retval1;
-  struct std__basic_filebuf_char__std__char_traits_char__ fb2;
-  struct std__basic_istream_char__std__char_traits_char__ is3;
+  struct std____1__filebuf fb2;
+  struct std____1__istream is3;
   int c4 = 0;
   __retval1 = c4;
-  // externalized std:: op: std::basic_filebuf<char, std::char_traits<char> >::basic_filebuf()
+  // externalized std:: op: std::__1::basic_filebuf<char, std::__1::char_traits<char>>::basic_filebuf()
   __VERIFIER_nondet_memory(&fb2, sizeof(fb2));
     char* cast5 = (char*)&(_str);
-    int t6 = _ZNSt8ios_base2inE_const;
-    struct std__basic_filebuf_char__std__char_traits_char__* std7;
+    unsigned int t6 = _ZNSt3__18ios_base2inE_const;
+    struct std____1__filebuf* std7;
     __VERIFIER_nondet_memory(&std7, sizeof(std7));
     _Bool std8;
     __VERIFIER_nondet_memory(&std8, sizeof(std8));
@@ -87,26 +138,26 @@ bb0: ;
       reach_error();
       __assert_fail(cast10, c11, c12, cast13);
     }
-    struct std__basic_streambuf_char__std__char_traits_char__* base14 = (struct std__basic_streambuf_char__std__char_traits_char__*)((char *)&(fb2) + 0);
-    // externalized std:: op: std::basic_istream<char, std::char_traits<char> >::basic_istream(std::basic_streambuf<char, std::char_traits<char> >*)
+    struct std____1__streambuf* base14 = (struct std____1__streambuf*)((char *)&(fb2) + 0);
+    // externalized std:: op: std::__1::basic_istream<char, std::__1::char_traits<char>>::basic_istream[abi:nqe230000](std::__1::basic_streambuf<char, std::__1::char_traits<char>>*)
     __VERIFIER_nondet_memory(&is3, sizeof(is3));
     __VERIFIER_nondet_memory(base14, sizeof(*base14));
       int std15 = __VERIFIER_nondet_int();
       char cast16 = (char)std15;
-      struct std__basic_ostream_char__std__char_traits_char__* std17;
+      struct std____1__ostream* std17;
       __VERIFIER_nondet_memory(&std17, sizeof(std17));
-      struct std__basic_filebuf_char__std__char_traits_char__* std18;
+      struct std____1__filebuf* std18;
       __VERIFIER_nondet_memory(&std18, sizeof(std18));
       int c19 = 0;
       __retval1 = c19;
       int t20 = __retval1;
       int ret_val21 = t20;
       {
-        // externalized std:: op: std::basic_istream<char, std::char_traits<char> >::~basic_istream()
+        // externalized std:: op: std::__1::basic_istream<char, std::__1::char_traits<char>>::~basic_istream()
         __VERIFIER_nondet_memory(&is3, sizeof(is3));
       }
       {
-        // externalized std:: op: std::basic_filebuf<char, std::char_traits<char> >::~basic_filebuf()
+        // externalized std:: op: std::__1::basic_filebuf<char, std::__1::char_traits<char>>::~basic_filebuf()
         __VERIFIER_nondet_memory(&fb2, sizeof(fb2));
       }
       return ret_val21;

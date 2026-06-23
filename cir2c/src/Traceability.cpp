@@ -147,17 +147,30 @@ static std::vector<std::string> splitLines(const std::string &s) {
   return lines;
 }
 
-static int findLineByNormalized(const std::vector<std::string> &lines,
+// normalizeWs is hot: the search helpers below scan the same line range
+// repeatedly (once per trace entry, from the cursor onward), and re-running
+// the whitespace-collapse loop on every visit makes the whole pass scale with
+// (entries x lines) instead of just (lines) for the normalization itself.
+// Callers normalize each line array once up front and pass the cached result
+// to every search below.
+static std::vector<std::string> normalizeLines(const std::vector<std::string> &lines) {
+  std::vector<std::string> out;
+  out.reserve(lines.size());
+  for (const auto &line : lines) out.push_back(normalizeWs(line));
+  return out;
+}
+
+// normLines must already be normalized (see normalizeLines).
+static int findLineByNormalized(const std::vector<std::string> &normLines,
                                 const std::string &targetNorm,
                                 int startIdx) {
   if (targetNorm.empty()) return 0;
-  for (int i = startIdx; i < static_cast<int>(lines.size()); ++i) {
-    if (normalizeWs(lines[i]) == targetNorm) return i + 1;
+  for (int i = startIdx; i < static_cast<int>(normLines.size()); ++i) {
+    if (normLines[i] == targetNorm) return i + 1;
   }
-  for (int i = startIdx; i < static_cast<int>(lines.size()); ++i) {
-    std::string lineNorm = normalizeWs(lines[i]);
-    if (lineNorm.empty()) continue;
-    if (lineNorm.find(targetNorm) != std::string::npos) {
+  for (int i = startIdx; i < static_cast<int>(normLines.size()); ++i) {
+    if (normLines[i].empty()) continue;
+    if (normLines[i].find(targetNorm) != std::string::npos) {
       return i + 1;
     }
   }
@@ -218,15 +231,17 @@ static int findLineByOpName(const std::vector<std::string> &lines,
                             const std::string &opName,
                             int startIdx);
 
+// lines/normLines must correspond 1:1 (normLines = normalizeLines(lines)).
 static int findMlirLineForEntry(const std::vector<std::string> &lines,
+                                const std::vector<std::string> &normLines,
                                 const OperationTraceEntry &entry,
                                 int startIdx) {
   std::string signatureNorm = extractMlirSignature(entry.inputText);
 
   if (entry.opName == "cir.func") {
     std::string symbol = extractFunctionSymbol(entry.inputText);
-    for (int i = startIdx; i < static_cast<int>(lines.size()); ++i) {
-      std::string lineNorm = normalizeWs(lines[i]);
+    for (int i = startIdx; i < static_cast<int>(normLines.size()); ++i) {
+      const std::string &lineNorm = normLines[i];
       if (lineNorm.find("cir.func") != std::string::npos &&
           (symbol.empty() || lineNorm.find(symbol) != std::string::npos)) {
         return i + 1;
@@ -236,8 +251,8 @@ static int findMlirLineForEntry(const std::vector<std::string> &lines,
 
   std::string resultToken = extractResultToken(entry.inputText);
   if (!resultToken.empty()) {
-    for (int i = startIdx; i < static_cast<int>(lines.size()); ++i) {
-      std::string lineNorm = normalizeWs(lines[i]);
+    for (int i = startIdx; i < static_cast<int>(normLines.size()); ++i) {
+      const std::string &lineNorm = normLines[i];
       if (lineNorm.find(resultToken) != std::string::npos &&
           lineNorm.find(entry.opName) != std::string::npos) {
         return i + 1;
@@ -245,11 +260,11 @@ static int findMlirLineForEntry(const std::vector<std::string> &lines,
     }
   }
 
-  int mlirLine = findLineByNormalized(lines, signatureNorm, startIdx);
+  int mlirLine = findLineByNormalized(normLines, signatureNorm, startIdx);
   if (mlirLine) return mlirLine;
 
   std::string inputNorm = normalizeWs(entry.inputText);
-  mlirLine = findLineByNormalized(lines, inputNorm, startIdx);
+  mlirLine = findLineByNormalized(normLines, inputNorm, startIdx);
   if (mlirLine) return mlirLine;
 
   return findLineByOpName(lines, entry.opName, startIdx);
@@ -267,7 +282,9 @@ static int findLineByOpName(const std::vector<std::string> &lines,
   return 0;
 }
 
-static std::pair<int, int> findOutputRange(const std::vector<std::string> &lines,
+// normLines must be normalizeLines(<the lines searched>); outputText is the
+// (typically short, per-entry) emitted-C snippet being located within them.
+static std::pair<int, int> findOutputRange(const std::vector<std::string> &normLines,
                                            const std::string &outputText,
                                            int startIdx) {
   std::vector<std::string> outLines = splitLines(outputText);
@@ -282,7 +299,7 @@ static std::pair<int, int> findOutputRange(const std::vector<std::string> &lines
   int last = 0;
   int cursor = startIdx;
   for (const auto &needle : normOut) {
-    int found = findLineByNormalized(lines, needle, cursor);
+    int found = findLineByNormalized(normLines, needle, cursor);
     if (!found) return {0, 0};
     if (!first) first = found;
     last = found;
@@ -294,18 +311,22 @@ static std::pair<int, int> findOutputRange(const std::vector<std::string> &lines
 void TraceabilityTracker::computeLineMappings(llvm::StringRef mlirText, llvm::StringRef cText) {
   std::vector<std::string> mlirLines = splitLines(mlirText.str());
   std::vector<std::string> cLines = splitLines(cText.str());
+  // Normalize each line array exactly once; every search below reuses these
+  // instead of re-normalizing the same lines on every entry's scan.
+  std::vector<std::string> normMlirLines = normalizeLines(mlirLines);
+  std::vector<std::string> normCLines = normalizeLines(cLines);
 
   int mlirCursor = 0;
   int cCursor = 0;
   for (auto &entry : operationTrace) {
-    int mlirLine = findMlirLineForEntry(mlirLines, entry, mlirCursor);
+    int mlirLine = findMlirLineForEntry(mlirLines, normMlirLines, entry, mlirCursor);
     if (mlirLine) {
       entry.mlirStartLine = mlirLine;
       entry.mlirEndLine = mlirLine;
       mlirCursor = mlirLine;
     }
 
-    auto cRange = findOutputRange(cLines, entry.outputText, cCursor);
+    auto cRange = findOutputRange(normCLines, entry.outputText, cCursor);
     if (cRange.first > 0) {
       entry.cStartLine = cRange.first;
       entry.cEndLine = cRange.second;

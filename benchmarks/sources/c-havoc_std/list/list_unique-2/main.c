@@ -11,29 +11,27 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTISt20bad_array_new_length[] = "_ZTISt20bad_array_new_length";
 
 // Struct definitions (auto-parsed)
-struct __gnu_cxx____aligned_membuf_double_ { unsigned char _M_storage[8]; };
-struct std___List_const_iterator_double_ { struct std____detail___List_node_base* _M_node; };
-struct std___List_iterator_double_ { struct std____detail___List_node_base* _M_node; };
-struct std____allocated_ptr_std__allocator_std___List_node_double___ { struct std__allocator_std___List_node_double__* _M_alloc; struct std___List_node_double_* _M_ptr; };
-struct std____detail___List_node_base { struct std____detail___List_node_base* _M_next; struct std____detail___List_node_base* _M_prev; };
-struct std____detail___List_size { unsigned long _M_size; };
-struct std____false_type { unsigned char __field0; };
-struct std____list___Scratch_list_std____detail___List_node_base_ { struct std____detail___List_node_base __field0; };
-struct std____list___Scratch_list_std____detail___List_node_base____Ptr_cmp_std___List_iterator_double___void_ { unsigned char __field0; };
-struct std____new_allocator_double_;
-struct std____new_allocator_std___List_node_double__;
-struct std__allocator_double_ { unsigned char __field0; };
-struct std__allocator_std___List_node_double__ { unsigned char __field0; };
-struct std___List_node_double_ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_double_ _M_storage; };
-struct std____allocated_obj_std__allocator_std___List_node_double___ { struct std____allocated_ptr_std__allocator_std___List_node_double___ __field0; };
-struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
-struct std____cxx11___List_base_double__std__allocator_double_____List_impl { struct std____detail___List_node_header _M_node; };
-struct std____cxx11___List_base_double__std__allocator_double__ { struct std____cxx11___List_base_double__std__allocator_double_____List_impl _M_impl; };
-struct std____cxx11__list_double__std__allocator_double__ { struct std____cxx11___List_base_double__std__allocator_double__ __field0; };
+struct anon_0 { unsigned long __size_; };
+union anon_1 { double __value_; };
+struct std____1____allocation_guard_std____1__allocator_std____1____list_node_double__void_____ { unsigned char __field0[8]; unsigned long __n_; struct std____1____list_node_double__void___* __ptr_; };
+struct std____1____equal_to { unsigned char __field0; };
+struct std____1____less_void__void_ { unsigned char __field0; };
+struct std____1____list_const_iterator_double__void___ { struct std____1____list_node_base_double__void___* __ptr_; };
+struct std____1____list_iterator_double__void___ { struct std____1____list_node_base_double__void___* __ptr_; };
+struct std____1____list_node_base_double__void___ { struct std____1____list_node_base_double__void___* __prev_; struct std____1____list_node_base_double__void___* __next_; };
+struct std____1____list_node_double__void___ { struct std____1____list_node_base_double__void___ __field0; union anon_1 field1; };
+struct std____1__allocator_double_ { unsigned char __field0; };
+struct std____1__allocator_std____1____list_node_double__void____ { unsigned char __field0; };
+struct std____1__bidirectional_iterator_tag { unsigned char __field0; };
+struct std____1____list_imp_double__std____1__allocator_double__ { struct std____1____list_node_base_double__void___ __end_; struct anon_0 field1; };
+struct std____1__list_double__std____1__allocator_double__ { struct std____1____list_imp_double__std____1__allocator_double__ __field0; };
+struct std__bad_array_new_length;
 
-struct std____detail___List_size __const__ZNSt8__detail17_List_node_header7_M_initEv_ref_tmp0;
 double __const_main_mydoubles[10] = {0x1.84ccccccccccdp3, 0x1.5c28f5c28f5c3p1, 0x1.24p6, 0x1.98a3d70a3d70ap3, 0x1.91eb851eb851fp1, 0x1.98a3d70a3d70ap3, 0x1.2566666666666p6, 0x1.21p6, 0x1.e99999999999ap3, 0x1.21p6};
 char _str[19] = "mylist.size() == 8";
 char _str_1[108] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/list/list_unique-2/main.cpp";
@@ -46,9 +44,9 @@ char _str_6[12] = "*it == 15.3";
 char _str_7[13] = "*it == 72.25";
 char _str_8[12] = "*it == 73.0";
 char _str_9[13] = "*it == 73.35";
-char _str_10[89] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_list.h";
-char __PRETTY_FUNCTION____ZNSt7__cxx114listIdSaIdEE4backEv[84] = "reference std::list<double>::back() [_Tp = double, _Alloc = std::allocator<double>]";
-char _str_11[15] = "!this->empty()";
+unsigned long _ZNSt3__123__libcpp_numeric_limitsImLb1EE5__maxE __attribute__((aligned(8))) = -1;
+static const char _ZTISt20bad_array_new_length__n_[] = "_ZTISt20bad_array_new_length";
+static void* _ZTISt20bad_array_new_length[2] = {(void*)0, (void*)_ZTISt20bad_array_new_length__n_};
 _Bool same_integral_part(double p0, double p1);
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
@@ -80,324 +78,316 @@ int main() {
 bb12: ;
   int __retval13;
   double mydoubles14[10];
-  struct std____cxx11__list_double__std__allocator_double__ mylist15;
-  struct std__allocator_double_ ref_tmp016;
-  struct std___List_iterator_double_ it17;
-  struct std___List_iterator_double_ agg_tmp018;
-  struct std___List_iterator_double_ agg_tmp119;
-  struct std___List_iterator_double_ agg_tmp220;
-  struct std___List_iterator_double_ agg_tmp321;
-  struct std___List_iterator_double_ agg_tmp422;
-  struct std___List_iterator_double_ agg_tmp523;
-  struct std___List_iterator_double_ agg_tmp624;
-  struct std___List_iterator_double_ ref_tmp125;
-  struct std___List_iterator_double_ agg_tmp726;
-  struct std___List_iterator_double_ agg_tmp827;
-  struct std___List_iterator_double_ agg_tmp928;
-  struct std___List_iterator_double_ agg_tmp1029;
-  struct std___List_iterator_double_ agg_tmp1130;
-  struct std___List_iterator_double_ agg_tmp1231;
-  int c32 = 0;
-  __retval13 = c32;
+  struct std____1__list_double__std____1__allocator_double__ mylist15;
+  struct std____1____list_iterator_double__void___ it16;
+  struct std____1____list_iterator_double__void___ agg_tmp017;
+  struct std____1____list_iterator_double__void___ agg_tmp118;
+  struct std____1____list_iterator_double__void___ agg_tmp219;
+  struct std____1____list_iterator_double__void___ agg_tmp320;
+  struct std____1____list_iterator_double__void___ agg_tmp421;
+  struct std____1____list_iterator_double__void___ agg_tmp522;
+  struct std____1____list_iterator_double__void___ agg_tmp623;
+  struct std____1____list_iterator_double__void___ ref_tmp024;
+  struct std____1____list_iterator_double__void___ agg_tmp725;
+  struct std____1____list_iterator_double__void___ agg_tmp826;
+  struct std____1____list_iterator_double__void___ agg_tmp927;
+  struct std____1____list_iterator_double__void___ agg_tmp1028;
+  struct std____1____list_iterator_double__void___ agg_tmp1129;
+  struct std____1____list_iterator_double__void___ agg_tmp1230;
+  int c31 = 0;
+  __retval13 = c31;
   // array copy
   memcpy(mydoubles14, __const_main_mydoubles, (unsigned long)10 * sizeof(__const_main_mydoubles[0]));
+  double* cast32 = (double*)&(mydoubles14);
   double* cast33 = (double*)&(mydoubles14);
-  double* cast34 = (double*)&(mydoubles14);
-  int c35 = 10;
-  double* ptr36 = &(cast34)[c35];
-  // externalized std:: op: std::allocator<double>::allocator()
-  __VERIFIER_nondet_memory(&ref_tmp016, sizeof(ref_tmp016));
-    // externalized std:: op: std::__cxx11::list<double, std::allocator<double> >::list<double*, void>(double*, double*, std::allocator<double> const&)
+  int c34 = 10;
+  double* ptr35 = &(cast33)[c34];
+  // externalized std:: op: std::__1::list<double, std::__1::allocator<double>>::list[abi:nqe230000]<double*, 0>(double*, double*)
+  __VERIFIER_nondet_memory(&mylist15, sizeof(mylist15));
+  __VERIFIER_nondet_memory(cast32, sizeof(*cast32));
+  __VERIFIER_nondet_memory(ptr35, sizeof(*ptr35));
+    // externalized std:: op: std::__1::list<double, std::__1::allocator<double>>::sort[abi:nqe230000]()
     __VERIFIER_nondet_memory(&mylist15, sizeof(mylist15));
-    __VERIFIER_nondet_memory(cast33, sizeof(*cast33));
-    __VERIFIER_nondet_memory(ptr36, sizeof(*ptr36));
-    __VERIFIER_nondet_memory(&ref_tmp016, sizeof(ref_tmp016));
-  {
-    // externalized std:: op: std::allocator<double>::~allocator()
-    __VERIFIER_nondet_memory(&ref_tmp016, sizeof(ref_tmp016));
-  }
-    // externalized std:: op: std::__cxx11::list<double, std::allocator<double> >::sort()
-    __VERIFIER_nondet_memory(&mylist15, sizeof(mylist15));
+    unsigned long std36 = __VERIFIER_nondet_unsigned_long();
     unsigned long std37 = __VERIFIER_nondet_unsigned_long();
-    unsigned long std38 = __VERIFIER_nondet_unsigned_long();
-    unsigned long c39 = 8;
-    _Bool c40 = ((std38 == c39)) ? 1 : 0;
-    if (c40) {
+    unsigned long c38 = 8;
+    _Bool c39 = ((std37 == c38)) ? 1 : 0;
+    if (c39) {
     } else {
-      char* cast41 = (char*)&(_str);
-      char* c42 = (char*)_str_1;
-      unsigned int c43 = 38;
-      char* cast44 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast40 = (char*)&(_str);
+      char* c41 = (char*)_str_1;
+      unsigned int c42 = 38;
+      char* cast43 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast41, c42, c43, cast44);
+      __assert_fail(cast40, c41, c42, cast43);
     }
-    struct std___List_iterator_double_ std45;
+    struct std____1____list_iterator_double__void___ std44;
+    __VERIFIER_nondet_memory(&std44, sizeof(std44));
+    it16 = std44;
+    double* std45;
     __VERIFIER_nondet_memory(&std45, sizeof(std45));
-    it17 = std45;
-    double* std46;
-    __VERIFIER_nondet_memory(&std46, sizeof(std46));
-    double t47 = *std46;
-    double c48 = 0x1.5c28f5c28f5c3p1;
-    _Bool c49 = ((t47 == c48)) ? 1 : 0;
-    if (c49) {
+    double t46 = *std45;
+    double c47 = 0x1.5c28f5c28f5c3p1;
+    _Bool c48 = ((t46 == c47)) ? 1 : 0;
+    if (c48) {
     } else {
-      char* cast50 = (char*)&(_str_2);
-      char* c51 = (char*)_str_1;
-      unsigned int c52 = 40;
-      char* cast53 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast49 = (char*)&(_str_2);
+      char* c50 = (char*)_str_1;
+      unsigned int c51 = 40;
+      char* cast52 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast50, c51, c52, cast53);
+      __assert_fail(cast49, c50, c51, cast52);
     }
-    int c54 = 0;
-    struct std___List_iterator_double_ std55;
+    int c53 = 0;
+    struct std____1____list_iterator_double__void___ std54;
+    __VERIFIER_nondet_memory(&std54, sizeof(std54));
+    agg_tmp017 = std54;
+    double* std55;
     __VERIFIER_nondet_memory(&std55, sizeof(std55));
-    agg_tmp018 = std55;
-    double* std56;
-    __VERIFIER_nondet_memory(&std56, sizeof(std56));
-    double t57 = *std56;
-    double c58 = 0x1.91eb851eb851fp1;
-    _Bool c59 = ((t57 == c58)) ? 1 : 0;
-    if (c59) {
+    double t56 = *std55;
+    double c57 = 0x1.91eb851eb851fp1;
+    _Bool c58 = ((t56 == c57)) ? 1 : 0;
+    if (c58) {
     } else {
-      char* cast60 = (char*)&(_str_3);
-      char* c61 = (char*)_str_1;
-      unsigned int c62 = 41;
-      char* cast63 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast59 = (char*)&(_str_3);
+      char* c60 = (char*)_str_1;
+      unsigned int c61 = 41;
+      char* cast62 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast60, c61, c62, cast63);
+      __assert_fail(cast59, c60, c61, cast62);
     }
-    int c64 = 0;
-    struct std___List_iterator_double_ std65;
+    int c63 = 0;
+    struct std____1____list_iterator_double__void___ std64;
+    __VERIFIER_nondet_memory(&std64, sizeof(std64));
+    agg_tmp118 = std64;
+    double* std65;
     __VERIFIER_nondet_memory(&std65, sizeof(std65));
-    agg_tmp119 = std65;
-    double* std66;
-    __VERIFIER_nondet_memory(&std66, sizeof(std66));
-    double t67 = *std66;
-    double c68 = 0x1.84ccccccccccdp3;
-    _Bool c69 = ((t67 == c68)) ? 1 : 0;
-    if (c69) {
+    double t66 = *std65;
+    double c67 = 0x1.84ccccccccccdp3;
+    _Bool c68 = ((t66 == c67)) ? 1 : 0;
+    if (c68) {
     } else {
-      char* cast70 = (char*)&(_str_4);
-      char* c71 = (char*)_str_1;
-      unsigned int c72 = 42;
-      char* cast73 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast69 = (char*)&(_str_4);
+      char* c70 = (char*)_str_1;
+      unsigned int c71 = 42;
+      char* cast72 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast70, c71, c72, cast73);
+      __assert_fail(cast69, c70, c71, cast72);
     }
-    int c74 = 0;
-    struct std___List_iterator_double_ std75;
+    int c73 = 0;
+    struct std____1____list_iterator_double__void___ std74;
+    __VERIFIER_nondet_memory(&std74, sizeof(std74));
+    agg_tmp219 = std74;
+    double* std75;
     __VERIFIER_nondet_memory(&std75, sizeof(std75));
-    agg_tmp220 = std75;
-    double* std76;
-    __VERIFIER_nondet_memory(&std76, sizeof(std76));
-    double t77 = *std76;
-    double c78 = 0x1.98a3d70a3d70ap3;
-    _Bool c79 = ((t77 == c78)) ? 1 : 0;
-    if (c79) {
+    double t76 = *std75;
+    double c77 = 0x1.98a3d70a3d70ap3;
+    _Bool c78 = ((t76 == c77)) ? 1 : 0;
+    if (c78) {
     } else {
-      char* cast80 = (char*)&(_str_5);
-      char* c81 = (char*)_str_1;
-      unsigned int c82 = 43;
-      char* cast83 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast79 = (char*)&(_str_5);
+      char* c80 = (char*)_str_1;
+      unsigned int c81 = 43;
+      char* cast82 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast80, c81, c82, cast83);
+      __assert_fail(cast79, c80, c81, cast82);
     }
-    int c84 = 0;
-    struct std___List_iterator_double_ std85;
+    int c83 = 0;
+    struct std____1____list_iterator_double__void___ std84;
+    __VERIFIER_nondet_memory(&std84, sizeof(std84));
+    agg_tmp320 = std84;
+    double* std85;
     __VERIFIER_nondet_memory(&std85, sizeof(std85));
-    agg_tmp321 = std85;
-    double* std86;
-    __VERIFIER_nondet_memory(&std86, sizeof(std86));
-    double t87 = *std86;
-    double c88 = 0x1.e99999999999ap3;
-    _Bool c89 = ((t87 == c88)) ? 1 : 0;
-    if (c89) {
+    double t86 = *std85;
+    double c87 = 0x1.e99999999999ap3;
+    _Bool c88 = ((t86 == c87)) ? 1 : 0;
+    if (c88) {
     } else {
-      char* cast90 = (char*)&(_str_6);
-      char* c91 = (char*)_str_1;
-      unsigned int c92 = 44;
-      char* cast93 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast89 = (char*)&(_str_6);
+      char* c90 = (char*)_str_1;
+      unsigned int c91 = 44;
+      char* cast92 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast90, c91, c92, cast93);
+      __assert_fail(cast89, c90, c91, cast92);
     }
-    int c94 = 0;
-    struct std___List_iterator_double_ std95;
+    int c93 = 0;
+    struct std____1____list_iterator_double__void___ std94;
+    __VERIFIER_nondet_memory(&std94, sizeof(std94));
+    agg_tmp421 = std94;
+    double* std95;
     __VERIFIER_nondet_memory(&std95, sizeof(std95));
-    agg_tmp422 = std95;
-    double* std96;
-    __VERIFIER_nondet_memory(&std96, sizeof(std96));
-    double t97 = *std96;
-    double c98 = 0x1.21p6;
-    _Bool c99 = ((t97 == c98)) ? 1 : 0;
-    if (c99) {
+    double t96 = *std95;
+    double c97 = 0x1.21p6;
+    _Bool c98 = ((t96 == c97)) ? 1 : 0;
+    if (c98) {
     } else {
-      char* cast100 = (char*)&(_str_7);
-      char* c101 = (char*)_str_1;
-      unsigned int c102 = 45;
-      char* cast103 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast99 = (char*)&(_str_7);
+      char* c100 = (char*)_str_1;
+      unsigned int c101 = 45;
+      char* cast102 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast100, c101, c102, cast103);
+      __assert_fail(cast99, c100, c101, cast102);
     }
-    int c104 = 0;
-    struct std___List_iterator_double_ std105;
+    int c103 = 0;
+    struct std____1____list_iterator_double__void___ std104;
+    __VERIFIER_nondet_memory(&std104, sizeof(std104));
+    agg_tmp522 = std104;
+    double* std105;
     __VERIFIER_nondet_memory(&std105, sizeof(std105));
-    agg_tmp523 = std105;
-    double* std106;
-    __VERIFIER_nondet_memory(&std106, sizeof(std106));
-    double t107 = *std106;
-    double c108 = 0x1.24p6;
-    _Bool c109 = ((t107 == c108)) ? 1 : 0;
-    if (c109) {
+    double t106 = *std105;
+    double c107 = 0x1.24p6;
+    _Bool c108 = ((t106 == c107)) ? 1 : 0;
+    if (c108) {
     } else {
-      char* cast110 = (char*)&(_str_8);
-      char* c111 = (char*)_str_1;
-      unsigned int c112 = 46;
-      char* cast113 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast109 = (char*)&(_str_8);
+      char* c110 = (char*)_str_1;
+      unsigned int c111 = 46;
+      char* cast112 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast110, c111, c112, cast113);
+      __assert_fail(cast109, c110, c111, cast112);
     }
-    int c114 = 0;
-    struct std___List_iterator_double_ std115;
+    int c113 = 0;
+    struct std____1____list_iterator_double__void___ std114;
+    __VERIFIER_nondet_memory(&std114, sizeof(std114));
+    agg_tmp623 = std114;
+    double* std115;
     __VERIFIER_nondet_memory(&std115, sizeof(std115));
-    agg_tmp624 = std115;
-    double* std116;
-    __VERIFIER_nondet_memory(&std116, sizeof(std116));
-    double t117 = *std116;
-    double c118 = 0x1.2566666666666p6;
-    _Bool c119 = ((t117 == c118)) ? 1 : 0;
-    if (c119) {
+    double t116 = *std115;
+    double c117 = 0x1.2566666666666p6;
+    _Bool c118 = ((t116 == c117)) ? 1 : 0;
+    if (c118) {
     } else {
-      char* cast120 = (char*)&(_str_9);
-      char* c121 = (char*)_str_1;
-      unsigned int c122 = 47;
-      char* cast123 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast119 = (char*)&(_str_9);
+      char* c120 = (char*)_str_1;
+      unsigned int c121 = 47;
+      char* cast122 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast120, c121, c122, cast123);
+      __assert_fail(cast119, c120, c121, cast122);
     }
-    unsigned long std124 = __VERIFIER_nondet_unsigned_long();
-    struct std___List_iterator_double_ std125;
+    unsigned long std123 = __VERIFIER_nondet_unsigned_long();
+    struct std____1____list_iterator_double__void___ std124;
+    __VERIFIER_nondet_memory(&std124, sizeof(std124));
+    ref_tmp024 = std124;
+    struct std____1____list_iterator_double__void___* std125;
     __VERIFIER_nondet_memory(&std125, sizeof(std125));
-    ref_tmp125 = std125;
-    struct std___List_iterator_double_* std126;
+    double* std126;
     __VERIFIER_nondet_memory(&std126, sizeof(std126));
-    double* std127;
-    __VERIFIER_nondet_memory(&std127, sizeof(std127));
-    double t128 = *std127;
-    double c129 = 0x1.5c28f5c28f5c3p1;
-    _Bool c130 = ((t128 == c129)) ? 1 : 0;
-    if (c130) {
+    double t127 = *std126;
+    double c128 = 0x1.5c28f5c28f5c3p1;
+    _Bool c129 = ((t127 == c128)) ? 1 : 0;
+    if (c129) {
     } else {
-      char* cast131 = (char*)&(_str_2);
-      char* c132 = (char*)_str_1;
-      unsigned int c133 = 52;
-      char* cast134 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast130 = (char*)&(_str_2);
+      char* c131 = (char*)_str_1;
+      unsigned int c132 = 52;
+      char* cast133 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast131, c132, c133, cast134);
+      __assert_fail(cast130, c131, c132, cast133);
     }
-    int c135 = 0;
-    struct std___List_iterator_double_ std136;
+    int c134 = 0;
+    struct std____1____list_iterator_double__void___ std135;
+    __VERIFIER_nondet_memory(&std135, sizeof(std135));
+    agg_tmp725 = std135;
+    double* std136;
     __VERIFIER_nondet_memory(&std136, sizeof(std136));
-    agg_tmp726 = std136;
-    double* std137;
-    __VERIFIER_nondet_memory(&std137, sizeof(std137));
-    double t138 = *std137;
-    double c139 = 0x1.91eb851eb851fp1;
-    _Bool c140 = ((t138 == c139)) ? 1 : 0;
-    if (c140) {
+    double t137 = *std136;
+    double c138 = 0x1.91eb851eb851fp1;
+    _Bool c139 = ((t137 == c138)) ? 1 : 0;
+    if (c139) {
     } else {
-      char* cast141 = (char*)&(_str_3);
-      char* c142 = (char*)_str_1;
-      unsigned int c143 = 53;
-      char* cast144 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast140 = (char*)&(_str_3);
+      char* c141 = (char*)_str_1;
+      unsigned int c142 = 53;
+      char* cast143 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast141, c142, c143, cast144);
+      __assert_fail(cast140, c141, c142, cast143);
     }
-    int c145 = 0;
-    struct std___List_iterator_double_ std146;
+    int c144 = 0;
+    struct std____1____list_iterator_double__void___ std145;
+    __VERIFIER_nondet_memory(&std145, sizeof(std145));
+    agg_tmp826 = std145;
+    double* std146;
     __VERIFIER_nondet_memory(&std146, sizeof(std146));
-    agg_tmp827 = std146;
-    double* std147;
-    __VERIFIER_nondet_memory(&std147, sizeof(std147));
-    double t148 = *std147;
-    double c149 = 0x1.84ccccccccccdp3;
-    _Bool c150 = ((t148 == c149)) ? 1 : 0;
-    if (c150) {
+    double t147 = *std146;
+    double c148 = 0x1.84ccccccccccdp3;
+    _Bool c149 = ((t147 == c148)) ? 1 : 0;
+    if (c149) {
     } else {
-      char* cast151 = (char*)&(_str_4);
-      char* c152 = (char*)_str_1;
-      unsigned int c153 = 54;
-      char* cast154 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast150 = (char*)&(_str_4);
+      char* c151 = (char*)_str_1;
+      unsigned int c152 = 54;
+      char* cast153 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast151, c152, c153, cast154);
+      __assert_fail(cast150, c151, c152, cast153);
     }
-    int c155 = 0;
-    struct std___List_iterator_double_ std156;
+    int c154 = 0;
+    struct std____1____list_iterator_double__void___ std155;
+    __VERIFIER_nondet_memory(&std155, sizeof(std155));
+    agg_tmp927 = std155;
+    double* std156;
     __VERIFIER_nondet_memory(&std156, sizeof(std156));
-    agg_tmp928 = std156;
-    double* std157;
-    __VERIFIER_nondet_memory(&std157, sizeof(std157));
-    double t158 = *std157;
-    double c159 = 0x1.e99999999999ap3;
-    _Bool c160 = ((t158 == c159)) ? 1 : 0;
-    if (c160) {
+    double t157 = *std156;
+    double c158 = 0x1.e99999999999ap3;
+    _Bool c159 = ((t157 == c158)) ? 1 : 0;
+    if (c159) {
     } else {
-      char* cast161 = (char*)&(_str_6);
-      char* c162 = (char*)_str_1;
-      unsigned int c163 = 55;
-      char* cast164 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast160 = (char*)&(_str_6);
+      char* c161 = (char*)_str_1;
+      unsigned int c162 = 55;
+      char* cast163 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast161, c162, c163, cast164);
+      __assert_fail(cast160, c161, c162, cast163);
     }
-    int c165 = 0;
-    struct std___List_iterator_double_ std166;
+    int c164 = 0;
+    struct std____1____list_iterator_double__void___ std165;
+    __VERIFIER_nondet_memory(&std165, sizeof(std165));
+    agg_tmp1028 = std165;
+    double* std166;
     __VERIFIER_nondet_memory(&std166, sizeof(std166));
-    agg_tmp1029 = std166;
-    double* std167;
-    __VERIFIER_nondet_memory(&std167, sizeof(std167));
-    double t168 = *std167;
-    double c169 = 0x1.21p6;
-    _Bool c170 = ((t168 == c169)) ? 1 : 0;
-    if (c170) {
+    double t167 = *std166;
+    double c168 = 0x1.21p6;
+    _Bool c169 = ((t167 == c168)) ? 1 : 0;
+    if (c169) {
     } else {
-      char* cast171 = (char*)&(_str_7);
-      char* c172 = (char*)_str_1;
-      unsigned int c173 = 56;
-      char* cast174 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast170 = (char*)&(_str_7);
+      char* c171 = (char*)_str_1;
+      unsigned int c172 = 56;
+      char* cast173 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast171, c172, c173, cast174);
+      __assert_fail(cast170, c171, c172, cast173);
     }
-    int c175 = 0;
-    struct std___List_iterator_double_ std176;
+    int c174 = 0;
+    struct std____1____list_iterator_double__void___ std175;
+    __VERIFIER_nondet_memory(&std175, sizeof(std175));
+    agg_tmp1129 = std175;
+    double* std176;
     __VERIFIER_nondet_memory(&std176, sizeof(std176));
-    agg_tmp1130 = std176;
-    double* std177;
-    __VERIFIER_nondet_memory(&std177, sizeof(std177));
-    double t178 = *std177;
-    double c179 = 0x1.24p6;
-    _Bool c180 = ((t178 == c179)) ? 1 : 0;
-    if (c180) {
+    double t177 = *std176;
+    double c178 = 0x1.24p6;
+    _Bool c179 = ((t177 == c178)) ? 1 : 0;
+    if (c179) {
     } else {
-      char* cast181 = (char*)&(_str_8);
-      char* c182 = (char*)_str_1;
-      unsigned int c183 = 57;
-      char* cast184 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast180 = (char*)&(_str_8);
+      char* c181 = (char*)_str_1;
+      unsigned int c182 = 57;
+      char* cast183 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast181, c182, c183, cast184);
+      __assert_fail(cast180, c181, c182, cast183);
     }
-    int c185 = 0;
-    struct std___List_iterator_double_ std186;
-    __VERIFIER_nondet_memory(&std186, sizeof(std186));
-    agg_tmp1231 = std186;
-    int c187 = 0;
-    __retval13 = c187;
-    int t188 = __retval13;
-    int ret_val189 = t188;
+    int c184 = 0;
+    struct std____1____list_iterator_double__void___ std185;
+    __VERIFIER_nondet_memory(&std185, sizeof(std185));
+    agg_tmp1230 = std185;
+    int c186 = 0;
+    __retval13 = c186;
+    int t187 = __retval13;
+    int ret_val188 = t187;
     {
-      // externalized std:: op: std::__cxx11::list<double, std::allocator<double> >::~list()
+      // externalized std:: op: std::__1::list<double, std::__1::allocator<double>>::~list()
       __VERIFIER_nondet_memory(&mylist15, sizeof(mylist15));
     }
-    return ret_val189;
-  int t190 = __retval13;
-  return t190;
+    return ret_val188;
+  int t189 = __retval13;
+  return t189;
 }
 

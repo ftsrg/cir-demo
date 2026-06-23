@@ -10,7 +10,7 @@ char _str[2] = "0";
 char _str_1[115] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/gcc-template-tests/const1/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 void bar();
-void void_Foo__operator___void_____void___const__(struct Foo* p0, void* p1);
+void void_Foo__operator___void_____void__const___(struct Foo* p0, void* p1);
 void void_Foo__operator___void________void____const__(struct Foo* p0, void** p1);
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
@@ -26,7 +26,7 @@ bb0: ;
 }
 
 // function: _ZN3FooclIFvvEEEvRKT_
-void void_Foo__operator___void_____void___const__(struct Foo* v3, void* v4) {
+void void_Foo__operator___void_____void__const___(struct Foo* v3, void* v4) {
 bb5: ;
   struct Foo* this6;
   void* fcn7;
@@ -60,7 +60,7 @@ bb18: ;
   void* ref_tmp021;
   int c22 = 0;
   __retval19 = c22;
-  void_Foo__operator___void_____void___const__(&myFoo20, &bar);
+  void_Foo__operator___void_____void__const___(&myFoo20, &bar);
   ref_tmp021 = &bar;
   void_Foo__operator___void________void____const__(&myFoo20, &ref_tmp021);
     int t23 = barcnt;

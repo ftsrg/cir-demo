@@ -48,7 +48,7 @@ bb0: ;
     void* unnamed1;
       static char exc_buf3[8] = {0};
       struct std__exception* exc4 = (struct std__exception*)exc_buf3;
-      // externalized std:: op: std::exception::exception()
+      // externalized std:: op: std::exception::exception[abi:nqe230000]()
       __cir_exc_ptr = (void*)exc4;
       __cir_exc_dtor = (void*)&std__exception___exception;
       __cir_exc_type = (const void*)__cir_eh_type__ZTISt9exception;

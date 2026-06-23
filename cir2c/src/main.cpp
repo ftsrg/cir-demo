@@ -141,9 +141,11 @@ int main(int argc, char **argv) {
       generatedC.assign((std::istreambuf_iterator<char>(cifs)), std::istreambuf_iterator<char>());
     }
   }
-  mapper.computeTraceLineMappings(input, generatedC);
-
   if (monitorJsonFile) {
+    // Only needed to populate the line-mapping fields written below; computing
+    // it unconditionally was pure wasted work on every run (this is the only
+    // consumer), and its cost scales with operation count x output line count.
+    mapper.computeTraceLineMappings(input, generatedC);
     std::ofstream mofs(monitorJsonFile);
     if (!mofs) {
       llvm::errs() << "Unable to open monitor json file: " << monitorJsonFile << "\n";

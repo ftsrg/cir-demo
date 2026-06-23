@@ -11,30 +11,44 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTISt20bad_array_new_length[] = "_ZTISt20bad_array_new_length";
 
 // Struct definitions (auto-parsed)
 struct StringClass { char str[20]; };
-struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__ { unsigned char _M_storage[40]; };
+struct anon_1 { unsigned long __size_; };
+struct anon_3 { struct std____1____tree_std____1____value_type_StringClass__opposite___std____1____map_value_compare_StringClass__std____1__pair_const_StringClass__opposite___std____1__less_StringClass____std____1__allocator_std____1__pair_const_StringClass__opposite___* this; };
+struct anon_4 { struct std____1____tree_std____1____value_type_StringClass__opposite___std____1____map_value_compare_StringClass__std____1__pair_const_StringClass__opposite___std____1__less_StringClass____std____1__allocator_std____1__pair_const_StringClass__opposite___* this; };
 struct opposite { char str[20]; };
-struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Alloc_node { struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___* _M_t; };
-struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ { struct std___Rb_tree_node_base* _M_node; };
-struct std___Rb_tree_key_compare_std__less_StringClass__ { unsigned char __field0; };
-struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_std__pair_const_StringClass__opposite__ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_std__pair_const_StringClass__opposite__ _M_storage; };
-struct std___Select1st_std__pair_const_StringClass__opposite__ { unsigned char __field0; };
-struct std____new_allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___;
-struct std____pair_base_const_StringClass__opposite_;
-struct std____pair_base_std___Rb_tree_iterator_std__pair_const_StringClass__opposite____bool_;
-struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
-struct std__allocator_std___Rb_tree_node_std__pair_const_StringClass__opposite___;
-struct std__less_StringClass_;
-struct std__pair_const_StringClass__opposite_ { struct StringClass first; struct opposite second; };
-struct std__pair_std___Rb_tree_iterator_std__pair_const_StringClass__opposite____bool_ { struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ first; _Bool second; unsigned char __field2[7]; } __attribute__((packed));
-struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
-struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
-struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_ { struct std___Rb_tree_key_compare_std__less_StringClass__ __field0; struct std___Rb_tree_header __field1; };
-struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ { struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite______Rb_tree_impl_std__less_StringClass___true_ _M_impl; };
-struct std__map_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ { struct std___Rb_tree_StringClass__std__pair_const_StringClass__opposite___std___Select1st_std__pair_const_StringClass__opposite____std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ _M_t; };
+struct std____1____compressed_pair_padding_std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_std____1____value_type_StringClass__opposite___void_______false_ { char __padding_[7]; };
+struct std____1____lazy_compare_result_std____1__less_void___StringClass__StringClass_ { struct std____1__less_void_* __comp_; struct StringClass* __lhs_; struct StringClass* __rhs_; };
+struct std____1____lazy_synth_three_way_comparator_std____1__less_void___StringClass__StringClass__void_ { struct std____1__less_void_* __comp_; };
+struct std____1____map_value_compare_StringClass__std____1__pair_const_StringClass__opposite___std____1__less_StringClass__ { unsigned char __field0; };
+struct std____1____map_value_compare_StringClass__std____1__pair_const_StringClass__opposite___std____1__less_void__ { unsigned char __field0; };
+struct std____1____priority_tag_1UL_ { unsigned char __field0; };
+struct std____1____tree_end_node_std____1____tree_node_base_void______ { struct std____1____tree_node_base_void___* __left_; };
+struct std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long_ { struct std____1____tree_end_node_std____1____tree_node_base_void______* __ptr_; };
+struct std____1____tree_node_base_void___ { struct std____1____tree_end_node_std____1____tree_node_base_void______ __field0; struct std____1____tree_node_base_void___* __right_; struct std____1____tree_end_node_std____1____tree_node_base_void______* __parent_; _Bool __is_black_; unsigned char __field4[7]; } __attribute__((packed));
+struct std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_std____1____value_type_StringClass__opposite___void_____ { struct std____1__allocator_std____1____tree_node_std____1____value_type_StringClass__opposite___void____* __na_; _Bool __value_constructed; unsigned char __field2[7]; } __attribute__((packed));
+struct std____1____tree_std____1____value_type_StringClass__opposite___std____1____map_value_compare_StringClass__std____1__pair_const_StringClass__opposite___std____1__less_StringClass____std____1__allocator_std____1__pair_const_StringClass__opposite_______tree_deleter { struct std____1__allocator_std____1____tree_node_std____1____value_type_StringClass__opposite___void____* __alloc_; };
+struct std____1__allocator_std____1____tree_node_std____1____value_type_StringClass__opposite___void____;
+struct std____1__less_StringClass_ { unsigned char __field0; };
+struct std____1__less_void_;
+struct std____1__pair_const_StringClass__opposite_ { struct StringClass first; struct opposite second; };
+struct std____1__pair_std____1____tree_end_node_std____1____tree_node_base_void__________std____1____tree_node_base_void_______ { struct std____1____tree_end_node_std____1____tree_node_base_void______* first; struct std____1____tree_node_base_void___** second; };
+struct std____1__pair_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long___bool_ { struct std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long_ first; _Bool second; unsigned char __field2[7]; } __attribute__((packed));
+struct anon_0 { struct std____1____tree_end_node_std____1____tree_node_base_void______ __end_node_; };
+union anon_2 { struct std____1__pair_const_StringClass__opposite_ __value_; };
+struct anon_5 { struct std____1____tree_node_std____1____value_type_StringClass__opposite___void___* __ptr_; struct std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_std____1____value_type_StringClass__opposite___void_____ __deleter_; struct std____1____compressed_pair_padding_std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_std____1____value_type_StringClass__opposite___void_______false_ __padding2_130_; };
+struct std____1____lazy_synth_three_way_comparator_std____1____map_value_compare_StringClass__std____1__pair_const_StringClass__opposite___std____1__less_void____StringClass__std____1__pair_const_StringClass__opposite___void_ { struct std____1____lazy_synth_three_way_comparator_std____1__less_void___StringClass__StringClass__void_ __comp_; };
+struct std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long__ { struct std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long_ __i_; };
+struct std____1____tree_node_std____1____value_type_StringClass__opposite___void___ { struct std____1____tree_node_base_void___ __field0; union anon_2 field1; unsigned char __field2[7]; };
+struct std____1____tree_std____1____value_type_StringClass__opposite___std____1____map_value_compare_StringClass__std____1__pair_const_StringClass__opposite___std____1__less_StringClass____std____1__allocator_std____1__pair_const_StringClass__opposite___ { struct std____1____tree_end_node_std____1____tree_node_base_void______* __begin_node_; struct anon_0 field1; struct anon_1 field2; };
+struct std____1__map_StringClass__opposite__std____1__less_StringClass___std____1__allocator_std____1__pair_const_StringClass__opposite___ { struct std____1____tree_std____1____value_type_StringClass__opposite___std____1____map_value_compare_StringClass__std____1__pair_const_StringClass__opposite___std____1__less_StringClass____std____1__allocator_std____1__pair_const_StringClass__opposite___ __tree_; };
+struct std____1__pair_std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long____bool_ { struct std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long__ first; _Bool second; unsigned char __field2[7]; } __attribute__((packed));
+struct std____1__unique_ptr_std____1____tree_node_std____1____value_type_StringClass__opposite___void_____std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_std____1____value_type_StringClass__opposite___void______ { struct anon_5 field0; };
+struct std__bad_array_new_length;
 
 // WARNING: this output relies on non-ISO ABI attribute(s) below.
 // A verifier/compiler that ignores them produces UNSOUND results:
@@ -51,6 +65,9 @@ char _str_7[116] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_8[28] = "it->second == opposite(\"b\")";
 char _str_9[22] = "mapObject.size() == 3";
+unsigned long _ZNSt3__123__libcpp_numeric_limitsImLb1EE5__maxE __attribute__((aligned(8))) = -1;
+static const char _ZTISt20bad_array_new_length__n_[] = "_ZTISt20bad_array_new_length";
+static void* _ZTISt20bad_array_new_length[2] = {(void*)0, (void*)_ZTISt20bad_array_new_length__n_};
 extern int strcmp(char* p0, char* p1);
 char* StringClass__get(struct StringClass* p0);
 _Bool operator_(struct StringClass p0, struct StringClass p1);
@@ -283,33 +300,33 @@ bb97: ;
 int main() {
 bb104: ;
   int __retval105;
-  struct std__map_StringClass__opposite__std__less_StringClass___std__allocator_std__pair_const_StringClass__opposite___ mapObject106;
-  struct std__pair_const_StringClass__opposite_ ref_tmp0107;
+  struct std____1__map_StringClass__opposite__std____1__less_StringClass___std____1__allocator_std____1__pair_const_StringClass__opposite___ mapObject106;
+  struct std____1__pair_const_StringClass__opposite_ ref_tmp0107;
   struct StringClass ref_tmp1108;
   struct opposite ref_tmp2109;
-  struct std__pair_std___Rb_tree_iterator_std__pair_const_StringClass__opposite____bool_ agg_tmp0110;
-  struct std__pair_const_StringClass__opposite_ ref_tmp3111;
+  struct std____1__pair_std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long____bool_ agg_tmp0110;
+  struct std____1__pair_const_StringClass__opposite_ ref_tmp3111;
   struct StringClass ref_tmp4112;
   struct opposite ref_tmp5113;
-  struct std__pair_std___Rb_tree_iterator_std__pair_const_StringClass__opposite____bool_ agg_tmp1114;
-  struct std__pair_const_StringClass__opposite_ ref_tmp6115;
+  struct std____1__pair_std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long____bool_ agg_tmp1114;
+  struct std____1__pair_const_StringClass__opposite_ ref_tmp6115;
   struct StringClass ref_tmp7116;
   struct opposite ref_tmp8117;
-  struct std__pair_std___Rb_tree_iterator_std__pair_const_StringClass__opposite____bool_ agg_tmp2118;
-  struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ it119;
+  struct std____1__pair_std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long____bool_ agg_tmp2118;
+  struct std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long__ it119;
   struct StringClass agg_tmp3120;
   struct StringClass agg_tmp4121;
   struct opposite agg_tmp5122;
   struct opposite agg_tmp6123;
   int c124 = 0;
   __retval105 = c124;
-  // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::map()
+  // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::map[abi:nqe230000]()
   __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
     char* cast125 = (char*)&(_str);
     StringClass__StringClass(&ref_tmp1108, cast125);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
@@ -319,24 +336,24 @@ bb104: ;
     opposite__opposite(&ref_tmp2109, cast126);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
       return __cir_eh_ret;
     }
-    // externalized std:: op: _ZNSt4pairIK11StringClass8oppositeEC2IS0_S2_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_
+    // externalized std:: op: std::__1::pair<StringClass const, opposite>::pair[abi:nqe230000]<StringClass, opposite, 0>(StringClass&&, opposite&&)
     __VERIFIER_nondet_memory(&ref_tmp0107, sizeof(ref_tmp0107));
     __VERIFIER_nondet_memory(&ref_tmp1108, sizeof(ref_tmp1108));
     __VERIFIER_nondet_memory(&ref_tmp2109, sizeof(ref_tmp2109));
-    struct std__pair_std___Rb_tree_iterator_std__pair_const_StringClass__opposite____bool_ std127;
+    struct std____1__pair_std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long____bool_ std127;
     __VERIFIER_nondet_memory(&std127, sizeof(std127));
     agg_tmp0110 = std127;
     char* cast128 = (char*)&(_str_2);
     StringClass__StringClass(&ref_tmp4112, cast128);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
@@ -346,24 +363,24 @@ bb104: ;
     opposite__opposite(&ref_tmp5113, cast129);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
       return __cir_eh_ret;
     }
-    // externalized std:: op: _ZNSt4pairIK11StringClass8oppositeEC2IS0_S2_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_
+    // externalized std:: op: std::__1::pair<StringClass const, opposite>::pair[abi:nqe230000]<StringClass, opposite, 0>(StringClass&&, opposite&&)
     __VERIFIER_nondet_memory(&ref_tmp3111, sizeof(ref_tmp3111));
     __VERIFIER_nondet_memory(&ref_tmp4112, sizeof(ref_tmp4112));
     __VERIFIER_nondet_memory(&ref_tmp5113, sizeof(ref_tmp5113));
-    struct std__pair_std___Rb_tree_iterator_std__pair_const_StringClass__opposite____bool_ std130;
+    struct std____1__pair_std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long____bool_ std130;
     __VERIFIER_nondet_memory(&std130, sizeof(std130));
     agg_tmp1114 = std130;
     char* cast131 = (char*)&(_str_4);
     StringClass__StringClass(&ref_tmp7116, cast131);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
@@ -373,30 +390,30 @@ bb104: ;
     opposite__opposite(&ref_tmp8117, cast132);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
       return __cir_eh_ret;
     }
-    // externalized std:: op: _ZNSt4pairIK11StringClass8oppositeEC2IS0_S2_Qaacl16_S_constructibleITL0__TL0_0_EEntcl10_S_danglesIS5_S6_EEEEOT_OT0_
+    // externalized std:: op: std::__1::pair<StringClass const, opposite>::pair[abi:nqe230000]<StringClass, opposite, 0>(StringClass&&, opposite&&)
     __VERIFIER_nondet_memory(&ref_tmp6115, sizeof(ref_tmp6115));
     __VERIFIER_nondet_memory(&ref_tmp7116, sizeof(ref_tmp7116));
     __VERIFIER_nondet_memory(&ref_tmp8117, sizeof(ref_tmp8117));
-    struct std__pair_std___Rb_tree_iterator_std__pair_const_StringClass__opposite____bool_ std133;
+    struct std____1__pair_std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long____bool_ std133;
     __VERIFIER_nondet_memory(&std133, sizeof(std133));
     agg_tmp2118 = std133;
-    struct std___Rb_tree_iterator_std__pair_const_StringClass__opposite__ std134;
+    struct std____1____map_iterator_std____1____tree_iterator_std____1____value_type_StringClass__opposite___std____1____tree_node_std____1____value_type_StringClass__opposite___void_______long__ std134;
     __VERIFIER_nondet_memory(&std134, sizeof(std134));
     it119 = std134;
-    struct std__pair_const_StringClass__opposite_* std135;
+    struct std____1__pair_const_StringClass__opposite_* std135;
     __VERIFIER_nondet_memory(&std135, sizeof(std135));
     agg_tmp3120 = std135->first; // copy
     char* cast136 = (char*)&(_str_4);
     StringClass__StringClass(&agg_tmp4121, cast136);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
@@ -407,7 +424,7 @@ bb104: ;
     _Bool r139 = operator__(t137, t138);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
@@ -422,14 +439,14 @@ bb104: ;
       reach_error();
       __assert_fail(cast140, c141, c142, cast143);
     }
-    struct std__pair_const_StringClass__opposite_* std144;
+    struct std____1__pair_const_StringClass__opposite_* std144;
     __VERIFIER_nondet_memory(&std144, sizeof(std144));
     agg_tmp5122 = std144->second; // copy
     char* cast145 = (char*)&(_str_3);
     opposite__opposite(&agg_tmp6123, cast145);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
@@ -440,7 +457,7 @@ bb104: ;
     _Bool r148 = operator___2(t146, t147);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+        // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
         __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
       }
       int __cir_eh_ret = (int)0;
@@ -472,7 +489,7 @@ bb104: ;
     int t161 = __retval105;
     int ret_val162 = t161;
     {
-      // externalized std:: op: std::map<StringClass, opposite, std::less<StringClass>, std::allocator<std::pair<StringClass const, opposite> > >::~map()
+      // externalized std:: op: std::__1::map<StringClass, opposite, std::__1::less<StringClass>, std::__1::allocator<std::__1::pair<StringClass const, opposite>>>::~map[abi:nqe230000]()
       __VERIFIER_nondet_memory(&mapObject106, sizeof(mapObject106));
     }
     return ret_val162;

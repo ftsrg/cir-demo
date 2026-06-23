@@ -11,27 +11,72 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTISt12length_error[] = "_ZTISt12length_error";
+static const char __cir_eh_type__ZTISt20bad_array_new_length[] = "_ZTISt20bad_array_new_length";
 
 // Struct definitions (auto-parsed)
-struct __locale_data { unsigned char __placeholder; };
-struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
-struct std___Deque_iterator_int__int____int___ { int* _M_cur; int* _M_first; int* _M_last; int** _M_node; };
-struct std___UninitDestroyGuard_int____void_ { int* _M_first; int** _M_cur; };
-struct std____new_allocator_int_;
-struct std____new_allocator_int___;
-struct std__allocator_int_ { unsigned char __field0; };
-struct std__allocator_int___ { unsigned char __field0; };
-struct std__ios_base___Words { void* __field0; long __field1; };
-struct std__locale { struct std__locale___Impl* __field0; };
-struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
-struct std___Deque_base_int__std__allocator_int_____Deque_impl_data { int** _M_map; unsigned long _M_map_size; struct std___Deque_iterator_int__int____int___ _M_start; struct std___Deque_iterator_int__int____int___ _M_finish; };
-struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
-struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
-struct std___Deque_base_int__std__allocator_int_____Deque_impl { struct std___Deque_base_int__std__allocator_int_____Deque_impl_data __field0; };
-struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
-struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
-struct std___Deque_base_int__std__allocator_int__ { struct std___Deque_base_int__std__allocator_int_____Deque_impl _M_impl; };
-struct std__deque_int__std__allocator_int__ { struct std___Deque_base_int__std__allocator_int__ __field0; };
+struct anon_0 { int** __back_cap_; };
+struct anon_1 { unsigned long __size_; };
+struct anon_3 { struct std____1__deque_int__std____1__allocator_int__* this; struct std____1____split_buffer_int____std____1__allocator_int_____std____1____split_buffer_pointer_layout_* __buf; struct std____1__allocator_int_* __a; };
+struct anon_5 { unsigned char __size_; };
+struct anon_6 { unsigned long __is_long_; };
+struct anon_struct_0 { unsigned char* __field0[5]; };
+struct std____1___SentinelValueFill_std____1__char_traits_char__ { int __fill_val_; };
+struct std____1____allocation_result_char____unsigned_long_ { char* ptr; unsigned long count; };
+struct std____1____allocation_result_int_____unsigned_long_ { int** ptr; unsigned long count; };
+struct std____1____copy_impl { unsigned char __field0; };
+struct std____1____deque_iterator_int__int____int____int_____long__1024L_ { int** __m_iter_; int* __ptr_; };
+struct std____1____exception_guard_exceptions__lambda_at__home_levente_Documents_University_cir_cir_demo_cir2c_test_______backend_bin_include_c___v1_deque_2174_48__ { struct anon_3 __rollback_; _Bool __completed_; unsigned char __field2[7]; } __attribute__((packed));
+struct std____1____in_out_result_int_____int____ { int** __in_; int** __out_; };
+struct std____1____less_void__void_ { unsigned char __field0; };
+struct std____1____move_backward_impl_std____1___ClassicAlgPolicy_ { unsigned char __field0; };
+struct std____1____move_impl_std____1___ClassicAlgPolicy_ { unsigned char __field0; };
+struct std____1____move_iter_category_base_int_____void_;
+struct std____1____specialized_algorithm_std____1___Algorithm____copy__std____1____iterator_pair_const_char___char_____std____1____single_iterator_std____1__ostreambuf_iterator_char__std____1__char_traits_char____ { unsigned char __field0; };
+struct std____1____split_buffer_int____std____1__allocator_int_____std____1____split_buffer_pointer_layout____ConstructTransaction { int** __pos_; int** __end_; struct std____1____split_buffer_int____std____1__allocator_int_____std____1____split_buffer_pointer_layout_* __parent_; };
+struct std____1____split_buffer_pointer_layout_std____1____split_buffer_int____std____1__allocator_int_____std____1____split_buffer_pointer_layout___int____std____1__allocator_int____ { int** __front_cap_; int** __begin_; int** __end_; struct anon_0 field3; };
+struct std____1____uninitialized_tag { unsigned char __field0; };
+struct std____1__allocation_result_char____unsigned_long_ { char* ptr; unsigned long count; };
+struct std____1__allocation_result_int_____unsigned_long_ { int** ptr; unsigned long count; };
+struct std____1__allocator_char_ { unsigned char __field0; };
+struct std____1__allocator_int_;
+struct std____1__allocator_int___;
+struct std____1__basic_ostream_char__std____1__char_traits_char____sentry { _Bool __ok_; struct std____1__ostream* __field1; };
+struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______long { struct anon_6 field0; unsigned long __size_; char* __data_; };
+struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______short { struct anon_5 field0; char __data_[23]; };
+struct std____1__deque_int__std____1__allocator_int_____ConstructTransaction { int* __pos_; int* __end_; int* __begin_; struct std____1__deque_int__std____1__allocator_int__* __base_; };
+struct std____1__deque_int__std____1__allocator_int______deque_block_range { int* __begin_; int* __end_; };
+struct std____1__deque_int__std____1__allocator_int______deque_range { struct std____1____deque_iterator_int__int____int____int_____long__1024L_ __pos_; struct std____1____deque_iterator_int__int____int____int_____long__1024L_ __end_; };
+struct std____1__integral_constant_bool__false_ { unsigned char __field0; };
+struct std____1__integral_constant_bool__true_ { unsigned char __field0; };
+struct std____1__is_trivially_destructible_int___ { unsigned char __field0; };
+struct std____1__iterator_std____1__output_iterator_tag__void__void__void__void_;
+struct std____1__locale { struct std____1__locale____imp* __field0; };
+struct std____1__locale__facet;
+struct std____1__move_iterator_int____ { int** __current_; };
+struct std____1__once_flag { unsigned long __field0; };
+struct std____1__ostreambuf_iterator_char__std____1__char_traits_char__ { struct std____1__streambuf* __sbuf_; };
+struct std____1__pair_const_char___char___ { char* first; char* second; };
+struct std____1__pair_int_____int____ { int** first; int** second; };
+struct std____1__ranges____iter_move____fn { unsigned char __field0; };
+struct std____1__streambuf;
+struct std__logic_error;
+union anon_2 { struct std____1__locale __field0; };
+struct std____1____in_out_result_const_char____std____1__ostreambuf_iterator_char__std____1__char_traits_char___ { char* __in_; struct std____1__ostreambuf_iterator_char__std____1__char_traits_char__ __out_; };
+struct std____1____split_buffer_int____std____1__allocator_int_____std____1____split_buffer_pointer_layout_ { struct std____1____split_buffer_pointer_layout_std____1____split_buffer_int____std____1__allocator_int_____std____1____split_buffer_pointer_layout___int____std____1__allocator_int____ __field0; };
+union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep { struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______short __s; struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______long __l; };
+struct std____1__ctype_char_;
+struct std____1__deque_int__std____1__allocator_int__ { struct std____1____split_buffer_int____std____1__allocator_int_____std____1____split_buffer_pointer_layout_ __map_; unsigned long __start_; struct anon_1 field2; };
+struct std____1__ios_base { void* __field0; unsigned int __fmtflags_; long __field2; long __width_; unsigned int __rdstate_; unsigned int __field5; void* __rdbuf_; union anon_2 __field7; void** __field8; int* __field9; unsigned long __field10; unsigned long __field11; long* __field12; unsigned long __field13; unsigned long __field14; void** __field15; unsigned long __field16; unsigned long __field17; };
+struct std____1__locale__id { struct std____1__once_flag __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__bad_array_new_length;
+struct std__length_error;
+struct anon_4 { union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep __rep_; };
+struct std____1__ios { struct std____1__ios_base __field0; struct std____1__ostream* __field1; struct std____1___SentinelValueFill_std____1__char_traits_char__ __fill_; } __attribute__((packed));
+struct std____1__ostream { void* __field0; struct std____1__ios __field1; };
+struct std____1__string { struct anon_4 field0; };
 
 // WARNING: this output relies on non-ISO ABI attribute(s) below.
 // A verifier/compiler that ignores them produces UNSOUND results:
@@ -44,25 +89,39 @@ char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
   void* __fn = ((void**)*(void**)__obj)[__slot];
   return ((char(*)(void*, char))__fn)(__obj, __a0);
 }
+long __VERIFIER_virtual_call_long_char_ptr_long(void* __obj, int __slot, char* __a0, long __a1) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((long(*)(void*, char*, long))__fn)(__obj, __a0, __a1);
+}
 
-int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern void *_ZTVSt12length_error[];
+union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep __const__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE22__init_internal_bufferB9nqe230000Em_ref_tmp0;
+unsigned long _ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE15__endian_factorE_const __attribute__((aligned(8))) = 2;
+unsigned int _ZNSt3__18ios_base7failbitE_const __attribute__((aligned(4))) = 4;
+unsigned int _ZNSt3__18ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+unsigned int _ZNSt3__18ios_base4leftE_const __attribute__((aligned(4))) = 32;
+unsigned int _ZNSt3__18ios_base11adjustfieldE_const __attribute__((aligned(4))) = 176;
 char _str[16] = "first[2] == 100";
 char _str_1[110] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/deque/deque_swap_bug/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[17] = "second[4] == 200";
 char _str_3[16] = "first[4] != 200";
 char _str_4[17] = "second[2] != 100";
-extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+extern struct std____1__ostream _ZNSt3__14coutE __attribute__((aligned(8)));
 char _str_5[16] = "first contains:";
 char _str_6[2] = " ";
 char _str_7[18] = "\nsecond contains:";
-char _str_8[48] = "cannot create std::deque larger than max_size()";
-char _str_9[90] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_deque.h";
-char __PRETTY_FUNCTION____ZNSt5dequeIiSaIiEEixEm[91] = "reference std::deque<int>::operator[](size_type) [_Tp = int, _Alloc = std::allocator<int>]";
-char _str_10[19] = "__n < this->size()";
-_Bool _ZNSt17integral_constantIbLb0EE5valueE;
-char __PRETTY_FUNCTION____ZNSt5dequeIiSaIiEE4swapERS1_[91] = "void std::deque<int>::swap(deque<_Tp, _Alloc> &) [_Tp = int, _Alloc = std::allocator<int>]";
-char _str_11[104] = "_Alloc_traits::propagate_on_container_swap::value || _M_get_Tp_allocator() == __x._M_get_Tp_allocator()";
+long _ZNSt3__15dequeIiNS_9allocatorIiEEE12__block_sizeE __attribute__((aligned(8))) = 1024;
+struct std____1__ranges____iter_move____fn _ZNSt3__16ranges5__cpo9iter_moveE;
+unsigned long _ZNSt3__123__libcpp_numeric_limitsImLb1EE5__maxE __attribute__((aligned(8))) = -1;
+static const char _ZTISt20bad_array_new_length__n_[] = "_ZTISt20bad_array_new_length";
+static void* _ZTISt20bad_array_new_length[2] = {(void*)0, (void*)_ZTISt20bad_array_new_length__n_};
+long _ZNSt3__116__deque_iteratorIiPiRiPS1_lLl1024EE12__block_sizeE __attribute__((aligned(8))) = 1024;
+char _str_8[13] = "basic_string";
+static const char _ZTISt12length_error__n_[] = "_ZTISt12length_error";
+static void* _ZTISt12length_error[2] = {(void*)0, (void*)_ZTISt12length_error__n_};
+extern void *_ZTVSt12length_error[];
+extern struct std____1__locale__id _ZNSt3__15ctypeIcE2idE __attribute__((aligned(8)));
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
@@ -74,171 +133,155 @@ int main() {
 bb0: ;
   int __retval1;
   unsigned int i2;
-  struct std__deque_int__std__allocator_int__ first3;
+  struct std____1__deque_int__std____1__allocator_int__ first3;
   int ref_tmp04;
-  struct std__allocator_int_ ref_tmp15;
-  struct std__deque_int__std__allocator_int__ second6;
-  int ref_tmp27;
-  struct std__allocator_int_ ref_tmp38;
-  int c9 = 0;
-  __retval1 = c9;
-  unsigned long c10 = 3;
-  int c11 = 100;
-  ref_tmp04 = c11;
-  // externalized std:: op: std::allocator<int>::allocator()
-  __VERIFIER_nondet_memory(&ref_tmp15, sizeof(ref_tmp15));
-    // externalized std:: op: std::deque<int, std::allocator<int> >::deque(unsigned long, int const&, std::allocator<int> const&)
-    __VERIFIER_nondet_memory(&first3, sizeof(first3));
-    __VERIFIER_nondet_memory(&ref_tmp04, sizeof(ref_tmp04));
-    __VERIFIER_nondet_memory(&ref_tmp15, sizeof(ref_tmp15));
-  {
-    // externalized std:: op: std::allocator<int>::~allocator()
-    __VERIFIER_nondet_memory(&ref_tmp15, sizeof(ref_tmp15));
-  }
-    unsigned long c12 = 5;
-    int c13 = 200;
-    ref_tmp27 = c13;
-    // externalized std:: op: std::allocator<int>::allocator()
-    __VERIFIER_nondet_memory(&ref_tmp38, sizeof(ref_tmp38));
-      // externalized std:: op: std::deque<int, std::allocator<int> >::deque(unsigned long, int const&, std::allocator<int> const&)
-      __VERIFIER_nondet_memory(&second6, sizeof(second6));
-      __VERIFIER_nondet_memory(&ref_tmp27, sizeof(ref_tmp27));
-      __VERIFIER_nondet_memory(&ref_tmp38, sizeof(ref_tmp38));
-    {
-      // externalized std:: op: std::allocator<int>::~allocator()
-      __VERIFIER_nondet_memory(&ref_tmp38, sizeof(ref_tmp38));
-    }
-      unsigned long c14 = 2;
-      int* std15;
-      __VERIFIER_nondet_memory(&std15, sizeof(std15));
-      int t16 = *std15;
-      int c17 = 100;
-      _Bool c18 = ((t16 == c17)) ? 1 : 0;
-      if (c18) {
+  struct std____1__deque_int__std____1__allocator_int__ second5;
+  int ref_tmp16;
+  int c7 = 0;
+  __retval1 = c7;
+  unsigned long c8 = 3;
+  int c9 = 100;
+  ref_tmp04 = c9;
+  // externalized std:: op: std::__1::deque<int, std::__1::allocator<int>>::deque[abi:nqe230000](unsigned long, int const&)
+  __VERIFIER_nondet_memory(&first3, sizeof(first3));
+  __VERIFIER_nondet_memory(&ref_tmp04, sizeof(ref_tmp04));
+    unsigned long c10 = 5;
+    int c11 = 200;
+    ref_tmp16 = c11;
+    // externalized std:: op: std::__1::deque<int, std::__1::allocator<int>>::deque[abi:nqe230000](unsigned long, int const&)
+    __VERIFIER_nondet_memory(&second5, sizeof(second5));
+    __VERIFIER_nondet_memory(&ref_tmp16, sizeof(ref_tmp16));
+      unsigned long c12 = 2;
+      int* std13;
+      __VERIFIER_nondet_memory(&std13, sizeof(std13));
+      int t14 = *std13;
+      int c15 = 100;
+      _Bool c16 = ((t14 == c15)) ? 1 : 0;
+      if (c16) {
       } else {
-        char* cast19 = (char*)&(_str);
-        char* c20 = (char*)_str_1;
-        unsigned int c21 = 20;
-        char* cast22 = (char*)&(__PRETTY_FUNCTION___main);
+        char* cast17 = (char*)&(_str);
+        char* c18 = (char*)_str_1;
+        unsigned int c19 = 20;
+        char* cast20 = (char*)&(__PRETTY_FUNCTION___main);
         reach_error();
-        __assert_fail(cast19, c20, c21, cast22);
+        __assert_fail(cast17, c18, c19, cast20);
       }
-      unsigned long c23 = 4;
-      int* std24;
-      __VERIFIER_nondet_memory(&std24, sizeof(std24));
-      int t25 = *std24;
-      int c26 = 200;
-      _Bool c27 = ((t25 == c26)) ? 1 : 0;
-      if (c27) {
+      unsigned long c21 = 4;
+      int* std22;
+      __VERIFIER_nondet_memory(&std22, sizeof(std22));
+      int t23 = *std22;
+      int c24 = 200;
+      _Bool c25 = ((t23 == c24)) ? 1 : 0;
+      if (c25) {
       } else {
-        char* cast28 = (char*)&(_str_2);
-        char* c29 = (char*)_str_1;
-        unsigned int c30 = 21;
-        char* cast31 = (char*)&(__PRETTY_FUNCTION___main);
+        char* cast26 = (char*)&(_str_2);
+        char* c27 = (char*)_str_1;
+        unsigned int c28 = 21;
+        char* cast29 = (char*)&(__PRETTY_FUNCTION___main);
         reach_error();
-        __assert_fail(cast28, c29, c30, cast31);
+        __assert_fail(cast26, c27, c28, cast29);
       }
-      // externalized std:: op: std::deque<int, std::allocator<int> >::swap(std::deque<int, std::allocator<int> >&)
+      // externalized std:: op: std::__1::deque<int, std::__1::allocator<int>>::swap[abi:nqe230000](std::__1::deque<int, std::__1::allocator<int>>&)
       __VERIFIER_nondet_memory(&first3, sizeof(first3));
-      __VERIFIER_nondet_memory(&second6, sizeof(second6));
-      unsigned long c32 = 4;
-      int* std33;
-      __VERIFIER_nondet_memory(&std33, sizeof(std33));
-      int t34 = *std33;
-      int c35 = 200;
-      _Bool c36 = ((t34 != c35)) ? 1 : 0;
-      if (c36) {
+      __VERIFIER_nondet_memory(&second5, sizeof(second5));
+      unsigned long c30 = 4;
+      int* std31;
+      __VERIFIER_nondet_memory(&std31, sizeof(std31));
+      int t32 = *std31;
+      int c33 = 200;
+      _Bool c34 = ((t32 != c33)) ? 1 : 0;
+      if (c34) {
       } else {
-        char* cast37 = (char*)&(_str_3);
-        char* c38 = (char*)_str_1;
-        unsigned int c39 = 25;
-        char* cast40 = (char*)&(__PRETTY_FUNCTION___main);
+        char* cast35 = (char*)&(_str_3);
+        char* c36 = (char*)_str_1;
+        unsigned int c37 = 25;
+        char* cast38 = (char*)&(__PRETTY_FUNCTION___main);
         reach_error();
-        __assert_fail(cast37, c38, c39, cast40);
+        __assert_fail(cast35, c36, c37, cast38);
       }
-      unsigned long c41 = 2;
-      int* std42;
-      __VERIFIER_nondet_memory(&std42, sizeof(std42));
-      int t43 = *std42;
-      int c44 = 100;
-      _Bool c45 = ((t43 != c44)) ? 1 : 0;
-      if (c45) {
+      unsigned long c39 = 2;
+      int* std40;
+      __VERIFIER_nondet_memory(&std40, sizeof(std40));
+      int t41 = *std40;
+      int c42 = 100;
+      _Bool c43 = ((t41 != c42)) ? 1 : 0;
+      if (c43) {
       } else {
-        char* cast46 = (char*)&(_str_4);
-        char* c47 = (char*)_str_1;
-        unsigned int c48 = 26;
-        char* cast49 = (char*)&(__PRETTY_FUNCTION___main);
+        char* cast44 = (char*)&(_str_4);
+        char* c45 = (char*)_str_1;
+        unsigned int c46 = 26;
+        char* cast47 = (char*)&(__PRETTY_FUNCTION___main);
         reach_error();
-        __assert_fail(cast46, c47, c48, cast49);
+        __assert_fail(cast44, c45, c46, cast47);
       }
-      char* cast50 = (char*)&(_str_5);
-      struct std__basic_ostream_char__std__char_traits_char__* std51;
-      __VERIFIER_nondet_memory(&std51, sizeof(std51));
-        unsigned int c52 = 0;
-        i2 = c52;
+      char* cast48 = (char*)&(_str_5);
+      struct std____1__ostream* std49;
+      __VERIFIER_nondet_memory(&std49, sizeof(std49));
+        unsigned int c50 = 0;
+        i2 = c50;
         while (1) {
-          unsigned int t54 = i2;
-          unsigned long cast55 = (unsigned long)t54;
-          unsigned long std56 = __VERIFIER_nondet_unsigned_long();
-          _Bool c57 = ((cast55 < std56)) ? 1 : 0;
-          if (!c57) break;
-          char* cast58 = (char*)&(_str_6);
-          struct std__basic_ostream_char__std__char_traits_char__* std59;
-          __VERIFIER_nondet_memory(&std59, sizeof(std59));
-          unsigned int t60 = i2;
-          unsigned long cast61 = (unsigned long)t60;
-          int* std62;
+          unsigned int t52 = i2;
+          unsigned long cast53 = (unsigned long)t52;
+          unsigned long std54 = __VERIFIER_nondet_unsigned_long();
+          _Bool c55 = ((cast53 < std54)) ? 1 : 0;
+          if (!c55) break;
+          char* cast56 = (char*)&(_str_6);
+          struct std____1__ostream* std57;
+          __VERIFIER_nondet_memory(&std57, sizeof(std57));
+          unsigned int t58 = i2;
+          unsigned long cast59 = (unsigned long)t58;
+          int* std60;
+          __VERIFIER_nondet_memory(&std60, sizeof(std60));
+          int t61 = *std60;
+          struct std____1__ostream* std62;
           __VERIFIER_nondet_memory(&std62, sizeof(std62));
-          int t63 = *std62;
-          struct std__basic_ostream_char__std__char_traits_char__* std64;
-          __VERIFIER_nondet_memory(&std64, sizeof(std64));
-        for_step53: ;
-          unsigned int t65 = i2;
-          unsigned int u66 = t65 + 1;
-          i2 = u66;
+        for_step51: ;
+          unsigned int t63 = i2;
+          unsigned int u64 = t63 + 1;
+          i2 = u64;
         }
-      char* cast67 = (char*)&(_str_7);
-      struct std__basic_ostream_char__std__char_traits_char__* std68;
-      __VERIFIER_nondet_memory(&std68, sizeof(std68));
-        unsigned int c69 = 0;
-        i2 = c69;
+      char* cast65 = (char*)&(_str_7);
+      struct std____1__ostream* std66;
+      __VERIFIER_nondet_memory(&std66, sizeof(std66));
+        unsigned int c67 = 0;
+        i2 = c67;
         while (1) {
-          unsigned int t71 = i2;
-          unsigned long cast72 = (unsigned long)t71;
-          unsigned long std73 = __VERIFIER_nondet_unsigned_long();
-          _Bool c74 = ((cast72 < std73)) ? 1 : 0;
-          if (!c74) break;
-          char* cast75 = (char*)&(_str_6);
-          struct std__basic_ostream_char__std__char_traits_char__* std76;
-          __VERIFIER_nondet_memory(&std76, sizeof(std76));
-          unsigned int t77 = i2;
-          unsigned long cast78 = (unsigned long)t77;
-          int* std79;
+          unsigned int t69 = i2;
+          unsigned long cast70 = (unsigned long)t69;
+          unsigned long std71 = __VERIFIER_nondet_unsigned_long();
+          _Bool c72 = ((cast70 < std71)) ? 1 : 0;
+          if (!c72) break;
+          char* cast73 = (char*)&(_str_6);
+          struct std____1__ostream* std74;
+          __VERIFIER_nondet_memory(&std74, sizeof(std74));
+          unsigned int t75 = i2;
+          unsigned long cast76 = (unsigned long)t75;
+          int* std77;
+          __VERIFIER_nondet_memory(&std77, sizeof(std77));
+          int t78 = *std77;
+          struct std____1__ostream* std79;
           __VERIFIER_nondet_memory(&std79, sizeof(std79));
-          int t80 = *std79;
-          struct std__basic_ostream_char__std__char_traits_char__* std81;
-          __VERIFIER_nondet_memory(&std81, sizeof(std81));
-        for_step70: ;
-          unsigned int t82 = i2;
-          unsigned int u83 = t82 + 1;
-          i2 = u83;
+        for_step68: ;
+          unsigned int t80 = i2;
+          unsigned int u81 = t80 + 1;
+          i2 = u81;
         }
-      struct std__basic_ostream_char__std__char_traits_char__* std84;
-      __VERIFIER_nondet_memory(&std84, sizeof(std84));
-      int c85 = 0;
-      __retval1 = c85;
-      int t86 = __retval1;
-      int ret_val87 = t86;
+      struct std____1__ostream* std82;
+      __VERIFIER_nondet_memory(&std82, sizeof(std82));
+      int c83 = 0;
+      __retval1 = c83;
+      int t84 = __retval1;
+      int ret_val85 = t84;
       {
-        // externalized std:: op: std::deque<int, std::allocator<int> >::~deque()
-        __VERIFIER_nondet_memory(&second6, sizeof(second6));
+        // externalized std:: op: std::__1::deque<int, std::__1::allocator<int>>::~deque[abi:nqe230000]()
+        __VERIFIER_nondet_memory(&second5, sizeof(second5));
       }
       {
-        // externalized std:: op: std::deque<int, std::allocator<int> >::~deque()
+        // externalized std:: op: std::__1::deque<int, std::__1::allocator<int>>::~deque[abi:nqe230000]()
         __VERIFIER_nondet_memory(&first3, sizeof(first3));
       }
-      return ret_val87;
-  int t88 = __retval1;
-  return t88;
+      return ret_val85;
+  int t86 = __retval1;
+  return t86;
 }
 

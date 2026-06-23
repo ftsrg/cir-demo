@@ -11,34 +11,60 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTISt12length_error[] = "_ZTISt12length_error";
+static const char __cir_eh_type__ZTISt20bad_array_new_length[] = "_ZTISt20bad_array_new_length";
 
 // Struct definitions (auto-parsed)
-struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
-struct __locale_data { unsigned char __placeholder; };
-struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
-struct std___List_const_iterator_int_ { struct std____detail___List_node_base* _M_node; };
-struct std___List_iterator_int_ { struct std____detail___List_node_base* _M_node; };
-struct std____allocated_ptr_std__allocator_std___List_node_int___ { struct std__allocator_std___List_node_int__* _M_alloc; struct std___List_node_int_* _M_ptr; };
-struct std____detail___List_node_base { struct std____detail___List_node_base* _M_next; struct std____detail___List_node_base* _M_prev; };
-struct std____detail___List_size { unsigned long _M_size; };
-struct std____new_allocator_int_;
-struct std____new_allocator_std___List_node_int__;
-struct std__allocator_int_ { unsigned char __field0; };
-struct std__allocator_std___List_node_int__ { unsigned char __field0; };
-struct std__bidirectional_iterator_tag { unsigned char __field0; };
-struct std__ios_base___Words { void* __field0; long __field1; };
-struct std__locale { struct std__locale___Impl* __field0; };
-struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
-struct std___List_node_int_ { struct std____detail___List_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
-struct std____allocated_obj_std__allocator_std___List_node_int___ { struct std____allocated_ptr_std__allocator_std___List_node_int___ __field0; };
-struct std____detail___List_node_header { struct std____detail___List_node_base __field0; struct std____detail___List_size __field1; };
-struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
-struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int _M_streambuf_state; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
-struct std____cxx11___List_base_int__std__allocator_int_____List_impl { struct std____detail___List_node_header _M_node; };
-struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
-struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
-struct std____cxx11___List_base_int__std__allocator_int__ { struct std____cxx11___List_base_int__std__allocator_int_____List_impl _M_impl; };
-struct std____cxx11__list_int__std__allocator_int__ { struct std____cxx11___List_base_int__std__allocator_int__ __field0; };
+struct anon_0 { unsigned long __size_; };
+union anon_2 { int __value_; };
+struct anon_3 { struct std____1____list_iterator_int__void___* __e; struct std____1__list_int__std____1__allocator_int__* this; };
+struct anon_4 { struct std____1____list_iterator_int__void___* __e; struct std____1__list_int__std____1__allocator_int__* this; };
+struct anon_6 { unsigned char __size_; };
+struct anon_7 { unsigned long __is_long_; };
+struct anon_struct_0 { unsigned char* __field0[5]; };
+struct std____1___SentinelValueFill_std____1__char_traits_char__ { int __fill_val_; };
+struct std____1____allocation_guard_std____1__allocator_std____1____list_node_int__void_____ { unsigned char __field0[8]; unsigned long __n_; struct std____1____list_node_int__void___* __ptr_; };
+struct std____1____allocation_result_char____unsigned_long_ { char* ptr; unsigned long count; };
+struct std____1____copy_impl { unsigned char __field0; };
+struct std____1____exception_guard_exceptions__lambda_at__home_levente_Documents_University_cir_cir_demo_cir2c_test_______backend_bin_include_c___v1_list_1447_48__ { struct anon_3 __rollback_; _Bool __completed_; unsigned char __field2[7]; } __attribute__((packed));
+struct std____1____exception_guard_exceptions__lambda_at__home_levente_Documents_University_cir_cir_demo_cir2c_test_______backend_bin_include_c___v1_list_1478_55__ { struct anon_4 __rollback_; _Bool __completed_; unsigned char __field2[7]; } __attribute__((packed));
+struct std____1____list_const_iterator_int__void___ { struct std____1____list_node_base_int__void___* __ptr_; };
+struct std____1____list_iterator_int__void___ { struct std____1____list_node_base_int__void___* __ptr_; };
+struct std____1____list_node_base_int__void___ { struct std____1____list_node_base_int__void___* __prev_; struct std____1____list_node_base_int__void___* __next_; };
+struct std____1____list_node_int__void___ { struct std____1____list_node_base_int__void___ __field0; union anon_2 field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std____1____specialized_algorithm_std____1___Algorithm____copy__std____1____iterator_pair_const_char___char_____std____1____single_iterator_std____1__ostreambuf_iterator_char__std____1__char_traits_char____ { unsigned char __field0; };
+struct std____1____uninitialized_tag { unsigned char __field0; };
+struct std____1__allocation_result_char____unsigned_long_ { char* ptr; unsigned long count; };
+struct std____1__allocator_char_ { unsigned char __field0; };
+struct std____1__allocator_std____1____list_node_int__void____ { unsigned char __field0; };
+struct std____1__basic_ostream_char__std____1__char_traits_char____sentry { _Bool __ok_; struct std____1__ostream* __field1; };
+struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______long { struct anon_7 field0; unsigned long __size_; char* __data_; };
+struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______short { struct anon_6 field0; char __data_[23]; };
+struct std____1__bidirectional_iterator_tag { unsigned char __field0; };
+struct std____1__iterator_std____1__output_iterator_tag__void__void__void__void_;
+struct std____1__locale { struct std____1__locale____imp* __field0; };
+struct std____1__locale__facet;
+struct std____1__once_flag { unsigned long __field0; };
+struct std____1__ostreambuf_iterator_char__std____1__char_traits_char__ { struct std____1__streambuf* __sbuf_; };
+struct std____1__pair_const_char___char___ { char* first; char* second; };
+struct std____1__streambuf;
+struct std__logic_error;
+union anon_1 { struct std____1__locale __field0; };
+struct std____1____in_out_result_const_char____std____1__ostreambuf_iterator_char__std____1__char_traits_char___ { char* __in_; struct std____1__ostreambuf_iterator_char__std____1__char_traits_char__ __out_; };
+struct std____1____list_imp_int__std____1__allocator_int__ { struct std____1____list_node_base_int__void___ __end_; struct anon_0 field1; };
+union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep { struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______short __s; struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______long __l; };
+struct std____1__ctype_char_;
+struct std____1__ios_base { void* __field0; unsigned int __fmtflags_; long __field2; long __width_; unsigned int __rdstate_; unsigned int __field5; void* __rdbuf_; union anon_1 __field7; void** __field8; int* __field9; unsigned long __field10; unsigned long __field11; long* __field12; unsigned long __field13; unsigned long __field14; void** __field15; unsigned long __field16; unsigned long __field17; };
+struct std____1__list_int__std____1__allocator_int__ { struct std____1____list_imp_int__std____1__allocator_int__ __field0; };
+struct std____1__locale__id { struct std____1__once_flag __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std__bad_array_new_length;
+struct std__length_error;
+struct anon_5 { union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep __rep_; };
+struct std____1__ios { struct std____1__ios_base __field0; struct std____1__ostream* __field1; struct std____1___SentinelValueFill_std____1__char_traits_char__ __fill_; } __attribute__((packed));
+struct std____1__ostream { void* __field0; struct std____1__ios __field1; };
+struct std____1__string { struct anon_5 field0; };
 
 // WARNING: this output relies on non-ISO ABI attribute(s) below.
 // A verifier/compiler that ignores them produces UNSOUND results:
@@ -51,9 +77,18 @@ char __VERIFIER_virtual_call_char_char(void* __obj, int __slot, char __a0) {
   void* __fn = ((void**)*(void**)__obj)[__slot];
   return ((char(*)(void*, char))__fn)(__obj, __a0);
 }
+long __VERIFIER_virtual_call_long_char_ptr_long(void* __obj, int __slot, char* __a0, long __a1) {
+  void* __fn = ((void**)*(void**)__obj)[__slot];
+  return ((long(*)(void*, char*, long))__fn)(__obj, __a0, __a1);
+}
 
-struct std____detail___List_size __const__ZNSt8__detail17_List_node_header7_M_initEv_ref_tmp0;
-int _ZNSt8ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+extern void *_ZTVSt12length_error[];
+union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep __const__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE22__init_internal_bufferB9nqe230000Em_ref_tmp0;
+unsigned long _ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE15__endian_factorE_const __attribute__((aligned(8))) = 2;
+unsigned int _ZNSt3__18ios_base7failbitE_const __attribute__((aligned(4))) = 4;
+unsigned int _ZNSt3__18ios_base6badbitE_const __attribute__((aligned(4))) = 1;
+unsigned int _ZNSt3__18ios_base4leftE_const __attribute__((aligned(4))) = 32;
+unsigned int _ZNSt3__18ios_base11adjustfieldE_const __attribute__((aligned(4))) = 176;
 char _str[19] = "mylist.size() == 9";
 char _str_1[106] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/list/list_resize/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
@@ -62,13 +97,17 @@ char _str_3[19] = "mylist.size() == 8";
 char _str_4[21] = "mylist.back() == 100";
 char _str_5[20] = "mylist.size() == 12";
 char _str_6[19] = "mylist.back() == 0";
-extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+extern struct std____1__ostream _ZNSt3__14coutE __attribute__((aligned(8)));
 char _str_7[17] = "mylist contains:";
 char _str_8[2] = " ";
-char _str_9[89] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_list.h";
-char __PRETTY_FUNCTION____ZNSt7__cxx114listIiSaIiEE8pop_backEv[74] = "void std::list<int>::pop_back() [_Tp = int, _Alloc = std::allocator<int>]";
-char _str_10[15] = "!this->empty()";
-char __PRETTY_FUNCTION____ZNSt7__cxx114listIiSaIiEE4backEv[75] = "reference std::list<int>::back() [_Tp = int, _Alloc = std::allocator<int>]";
+unsigned long _ZNSt3__123__libcpp_numeric_limitsImLb1EE5__maxE __attribute__((aligned(8))) = -1;
+static const char _ZTISt20bad_array_new_length__n_[] = "_ZTISt20bad_array_new_length";
+static void* _ZTISt20bad_array_new_length[2] = {(void*)0, (void*)_ZTISt20bad_array_new_length__n_};
+char _str_9[13] = "basic_string";
+static const char _ZTISt12length_error__n_[] = "_ZTISt12length_error";
+static void* _ZTISt12length_error[2] = {(void*)0, (void*)_ZTISt12length_error__n_};
+extern void *_ZTVSt12length_error[];
+extern struct std____1__locale__id _ZNSt3__15ctypeIcE2idE __attribute__((aligned(8)));
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
@@ -79,12 +118,12 @@ extern unsigned long __VERIFIER_nondet_unsigned_long(void);
 int main() {
 bb0: ;
   int __retval1;
-  struct std____cxx11__list_int__std__allocator_int__ mylist2;
+  struct std____1__list_int__std____1__allocator_int__ mylist2;
   unsigned int i3;
   int ref_tmp14;
   int c5 = 0;
   __retval1 = c5;
-  // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::list()
+  // externalized std:: op: std::__1::list<int, std::__1::allocator<int>>::list[abi:nqe230000]()
   __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
       int ref_tmp06;
       unsigned int c7 = 1;
@@ -97,7 +136,7 @@ bb0: ;
         unsigned int t12 = i3;
         int cast13 = (int)t12;
         ref_tmp06 = cast13;
-        // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::push_back(int&&)
+        // externalized std:: op: std::__1::list<int, std::__1::allocator<int>>::push_back[abi:nqe230000](int&&)
         __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
         __VERIFIER_nondet_memory(&ref_tmp06, sizeof(ref_tmp06));
       for_step8: ;
@@ -118,7 +157,7 @@ bb0: ;
       __assert_fail(cast19, c20, c21, cast22);
     }
     unsigned long c23 = 5;
-    // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::resize(unsigned long)
+    // externalized std:: op: std::__1::list<int, std::__1::allocator<int>>::resize[abi:nqe230000](unsigned long)
     __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
     unsigned long std24 = __VERIFIER_nondet_unsigned_long();
     unsigned long c25 = 5;
@@ -135,7 +174,7 @@ bb0: ;
     unsigned long c31 = 8;
     int c32 = 100;
     ref_tmp14 = c32;
-    // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::resize(unsigned long, int const&)
+    // externalized std:: op: std::__1::list<int, std::__1::allocator<int>>::resize[abi:nqe230000](unsigned long, int const&)
     __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
     __VERIFIER_nondet_memory(&ref_tmp14, sizeof(ref_tmp14));
     unsigned long std33 = __VERIFIER_nondet_unsigned_long();
@@ -165,7 +204,7 @@ bb0: ;
       __assert_fail(cast44, c45, c46, cast47);
     }
     unsigned long c48 = 12;
-    // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::resize(unsigned long)
+    // externalized std:: op: std::__1::list<int, std::__1::allocator<int>>::resize[abi:nqe230000](unsigned long)
     __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
     unsigned long std49 = __VERIFIER_nondet_unsigned_long();
     unsigned long c50 = 12;
@@ -194,45 +233,44 @@ bb0: ;
       __assert_fail(cast60, c61, c62, cast63);
     }
     char* cast64 = (char*)&(_str_7);
-    struct std__basic_ostream_char__std__char_traits_char__* std65;
+    struct std____1__ostream* std65;
     __VERIFIER_nondet_memory(&std65, sizeof(std65));
-      struct std___List_iterator_int_ it66;
-      struct std___List_iterator_int_ ref_tmp267;
-      struct std___List_iterator_int_ std68;
+      struct std____1____list_iterator_int__void___ it66;
+      struct std____1____list_iterator_int__void___ ref_tmp267;
+      struct std____1____list_iterator_int__void___ std68;
       __VERIFIER_nondet_memory(&std68, sizeof(std68));
       it66 = std68;
       while (1) {
-        struct std___List_iterator_int_ std70;
+        struct std____1____list_iterator_int__void___ std70;
         __VERIFIER_nondet_memory(&std70, sizeof(std70));
         ref_tmp267 = std70;
         _Bool std71;
         __VERIFIER_nondet_memory(&std71, sizeof(std71));
-        _Bool u72 = !std71;
-        if (!u72) break;
-        char* cast73 = (char*)&(_str_8);
-        struct std__basic_ostream_char__std__char_traits_char__* std74;
+        if (!std71) break;
+        char* cast72 = (char*)&(_str_8);
+        struct std____1__ostream* std73;
+        __VERIFIER_nondet_memory(&std73, sizeof(std73));
+        int* std74;
         __VERIFIER_nondet_memory(&std74, sizeof(std74));
-        int* std75;
-        __VERIFIER_nondet_memory(&std75, sizeof(std75));
-        int t76 = *std75;
-        struct std__basic_ostream_char__std__char_traits_char__* std77;
-        __VERIFIER_nondet_memory(&std77, sizeof(std77));
+        int t75 = *std74;
+        struct std____1__ostream* std76;
+        __VERIFIER_nondet_memory(&std76, sizeof(std76));
       for_step69: ;
-        struct std___List_iterator_int_* std78;
-        __VERIFIER_nondet_memory(&std78, sizeof(std78));
+        struct std____1____list_iterator_int__void___* std77;
+        __VERIFIER_nondet_memory(&std77, sizeof(std77));
       }
-    struct std__basic_ostream_char__std__char_traits_char__* std79;
-    __VERIFIER_nondet_memory(&std79, sizeof(std79));
-    int c80 = 0;
-    __retval1 = c80;
-    int t81 = __retval1;
-    int ret_val82 = t81;
+    struct std____1__ostream* std78;
+    __VERIFIER_nondet_memory(&std78, sizeof(std78));
+    int c79 = 0;
+    __retval1 = c79;
+    int t80 = __retval1;
+    int ret_val81 = t80;
     {
-      // externalized std:: op: std::__cxx11::list<int, std::allocator<int> >::~list()
+      // externalized std:: op: std::__1::list<int, std::__1::allocator<int>>::~list()
       __VERIFIER_nondet_memory(&mylist2, sizeof(mylist2));
     }
-    return ret_val82;
-  int t83 = __retval1;
-  return t83;
+    return ret_val81;
+  int t82 = __retval1;
+  return t82;
 }
 

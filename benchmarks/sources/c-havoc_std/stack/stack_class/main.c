@@ -11,34 +11,51 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTISt20bad_array_new_length[] = "_ZTISt20bad_array_new_length";
 
 // Struct definitions (auto-parsed)
 struct A_bool_ { _Bool a; };
-struct std___Deque_iterator_A_bool___A_bool_____A_bool____ { struct A_bool_* _M_cur; struct A_bool_* _M_first; struct A_bool_* _M_last; struct A_bool_** _M_node; };
-struct std____new_allocator_A_bool__;
-struct std____new_allocator_A_bool____;
-struct std__allocator_A_bool__;
-struct std__allocator_A_bool____ { unsigned char __field0; };
-struct std__random_access_iterator_tag { unsigned char __field0; };
-struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data { struct A_bool_** _M_map; unsigned long _M_map_size; struct std___Deque_iterator_A_bool___A_bool_____A_bool____ _M_start; struct std___Deque_iterator_A_bool___A_bool_____A_bool____ _M_finish; };
-struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl { struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl_data __field0; };
-struct std___Deque_base_A_bool___std__allocator_A_bool___ { struct std___Deque_base_A_bool___std__allocator_A_bool______Deque_impl _M_impl; };
-struct std__deque_A_bool___std__allocator_A_bool___ { struct std___Deque_base_A_bool___std__allocator_A_bool___ __field0; };
-struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____ { struct std__deque_A_bool___std__allocator_A_bool___ c; };
+struct anon_0 { struct A_bool_** __back_cap_; };
+struct anon_1 { unsigned long __size_; };
+struct std____1____allocation_result_A_bool______unsigned_long_ { struct A_bool_** ptr; unsigned long count; };
+struct std____1____allocator_destructor_std____1__allocator_A_bool___ { struct std____1__allocator_A_bool__* __alloc_; unsigned long __s_; };
+struct std____1____deque_iterator_A_bool___A_bool_____A_bool_____A_bool______long__4096L_ { struct A_bool_** __m_iter_; struct A_bool_* __ptr_; };
+struct std____1____in_out_result_A_bool______A_bool_____ { struct A_bool_** __in_; struct A_bool_** __out_; };
+struct std____1____less_void__void_ { unsigned char __field0; };
+struct std____1____move_backward_impl_std____1___ClassicAlgPolicy_ { unsigned char __field0; };
+struct std____1____move_impl_std____1___ClassicAlgPolicy_ { unsigned char __field0; };
+struct std____1____move_iter_category_base_A_bool______void_;
+struct std____1____split_buffer_A_bool_____std____1__allocator_A_bool______std____1____split_buffer_pointer_layout____ConstructTransaction { struct A_bool_** __pos_; struct A_bool_** __end_; struct std____1____split_buffer_A_bool_____std____1__allocator_A_bool______std____1____split_buffer_pointer_layout_* __parent_; };
+struct std____1____split_buffer_pointer_layout_std____1____split_buffer_A_bool_____std____1__allocator_A_bool______std____1____split_buffer_pointer_layout___A_bool_____std____1__allocator_A_bool_____ { struct A_bool_** __front_cap_; struct A_bool_** __begin_; struct A_bool_** __end_; struct anon_0 field3; };
+struct std____1__allocation_result_A_bool______unsigned_long_ { struct A_bool_** ptr; unsigned long count; };
+struct std____1__allocator_A_bool__;
+struct std____1__allocator_A_bool____;
+struct std____1__integral_constant_bool__false_ { unsigned char __field0; };
+struct std____1__integral_constant_bool__true_ { unsigned char __field0; };
+struct std____1__is_trivially_destructible_A_bool____ { unsigned char __field0; };
+struct std____1__move_iterator_A_bool_____ { struct A_bool_** __current_; };
+struct std____1__pair_A_bool______A_bool_____ { struct A_bool_** first; struct A_bool_** second; };
+struct std____1__ranges____iter_move____fn { unsigned char __field0; };
+struct anon_2 { struct A_bool_* __ptr_; struct std____1____allocator_destructor_std____1__allocator_A_bool___ __deleter_; };
+struct std____1____split_buffer_A_bool_____std____1__allocator_A_bool______std____1____split_buffer_pointer_layout_ { struct std____1____split_buffer_pointer_layout_std____1____split_buffer_A_bool_____std____1__allocator_A_bool______std____1____split_buffer_pointer_layout___A_bool_____std____1__allocator_A_bool_____ __field0; };
+struct std____1__deque_A_bool___std____1__allocator_A_bool___ { struct std____1____split_buffer_A_bool_____std____1__allocator_A_bool______std____1____split_buffer_pointer_layout_ __map_; unsigned long __start_; struct anon_1 field2; };
+struct std____1__stack_A_bool___std____1__deque_A_bool___std____1__allocator_A_bool____ { struct std____1__deque_A_bool___std____1__allocator_A_bool___ c; };
+struct std____1__unique_ptr_A_bool_____std____1____allocator_destructor_std____1__allocator_A_bool____ { struct anon_2 field0; };
+struct std__bad_array_new_length;
 
 char _str[17] = "!(first.empty())";
 char _str_1[107] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/stack/stack_class/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
 char _str_2[20] = "(first.top()).get()";
 char _str_3[18] = "first.size() == 2";
-char _str_4[48] = "cannot create std::deque larger than max_size()";
-char _str_5[90] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_stack.h";
-char __PRETTY_FUNCTION____ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3popEv[81] = "void std::stack<A<bool>>::pop() [_Tp = A<bool>, _Sequence = std::deque<A<bool>>]";
-char _str_6[15] = "!this->empty()";
-char _str_7[90] = "/usr/lib64/gcc/x86_64-pc-linux-gnu/15.2.1/../../../../include/c++/15.2.1/bits/stl_deque.h";
-char __PRETTY_FUNCTION____ZNSt5dequeI1AIbESaIS1_EE8pop_backEv[87] = "void std::deque<A<bool>>::pop_back() [_Tp = A<bool>, _Alloc = std::allocator<A<bool>>]";
-char __PRETTY_FUNCTION____ZNSt5stackI1AIbESt5dequeIS1_SaIS1_EEE3topEv[86] = "reference std::stack<A<bool>>::top() [_Tp = A<bool>, _Sequence = std::deque<A<bool>>]";
-char __PRETTY_FUNCTION____ZNSt5dequeI1AIbESaIS1_EE4backEv[88] = "reference std::deque<A<bool>>::back() [_Tp = A<bool>, _Alloc = std::allocator<A<bool>>]";
+long _ZNSt3__15dequeI1AIbENS_9allocatorIS2_EEE12__block_sizeE __attribute__((aligned(8))) = 4096;
+long _ZNSt3__116__deque_iteratorI1AIbEPS2_RS2_PS3_lLl4096EE12__block_sizeE __attribute__((aligned(8))) = 4096;
+struct std____1__ranges____iter_move____fn _ZNSt3__16ranges5__cpo9iter_moveE;
+unsigned long _ZNSt3__123__libcpp_numeric_limitsImLb1EE5__maxE __attribute__((aligned(8))) = -1;
+static const char _ZTISt20bad_array_new_length__n_[] = "_ZTISt20bad_array_new_length";
+static void* _ZTISt20bad_array_new_length[2] = {(void*)0, (void*)_ZTISt20bad_array_new_length__n_};
 _Bool A_bool___get(struct A_bool_* p0);
 _Bool operator___2(struct A_bool_ p0, struct A_bool_ p1);
 _Bool operator__(struct A_bool_ p0, struct A_bool_ p1);
@@ -158,18 +175,18 @@ bb46: ;
 int main() {
 bb50: ;
   int __retval51;
-  struct std__stack_A_bool___std__deque_A_bool___std__allocator_A_bool____ first52;
+  struct std____1__stack_A_bool___std____1__deque_A_bool___std____1__allocator_A_bool____ first52;
   struct A_bool_ x53;
   struct A_bool_ y54;
   struct A_bool_ z55;
   int c56 = 0;
   __retval51 = c56;
-  // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::stack<std::deque<A<bool>, std::allocator<A<bool> > >, void>()
+  // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::stack[abi:nqe230000]()
   __VERIFIER_nondet_memory(&first52, sizeof(first52));
     A_bool___A(&x53);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::~stack()
+        // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::~stack()
         __VERIFIER_nondet_memory(&first52, sizeof(first52));
       }
       int __cir_eh_ret = (int)0;
@@ -178,7 +195,7 @@ bb50: ;
     A_bool___A(&y54);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::~stack()
+        // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::~stack()
         __VERIFIER_nondet_memory(&first52, sizeof(first52));
       }
       int __cir_eh_ret = (int)0;
@@ -187,22 +204,22 @@ bb50: ;
     A_bool___A(&z55);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::~stack()
+        // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::~stack()
         __VERIFIER_nondet_memory(&first52, sizeof(first52));
       }
       int __cir_eh_ret = (int)0;
       return __cir_eh_ret;
     }
-    // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::push(A<bool> const&)
+    // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::push[abi:nqe230000](A<bool> const&)
     __VERIFIER_nondet_memory(&first52, sizeof(first52));
     __VERIFIER_nondet_memory(&x53, sizeof(x53));
-    // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::push(A<bool> const&)
+    // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::push[abi:nqe230000](A<bool> const&)
     __VERIFIER_nondet_memory(&first52, sizeof(first52));
     __VERIFIER_nondet_memory(&y54, sizeof(y54));
-    // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::push(A<bool> const&)
+    // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::push[abi:nqe230000](A<bool> const&)
     __VERIFIER_nondet_memory(&first52, sizeof(first52));
     __VERIFIER_nondet_memory(&z55, sizeof(z55));
-    // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::pop()
+    // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::pop[abi:nqe230000]()
     __VERIFIER_nondet_memory(&first52, sizeof(first52));
     _Bool std57;
     __VERIFIER_nondet_memory(&std57, sizeof(std57));
@@ -221,7 +238,7 @@ bb50: ;
     _Bool r64 = A_bool___get(std63);
     if (__cir_exc_active) {
       {
-        // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::~stack()
+        // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::~stack()
         __VERIFIER_nondet_memory(&first52, sizeof(first52));
       }
       int __cir_eh_ret = (int)0;
@@ -253,7 +270,7 @@ bb50: ;
     int t77 = __retval51;
     int ret_val78 = t77;
     {
-      // externalized std:: op: std::stack<A<bool>, std::deque<A<bool>, std::allocator<A<bool> > > >::~stack()
+      // externalized std:: op: std::__1::stack<A<bool>, std::__1::deque<A<bool>, std::__1::allocator<A<bool>>>>::~stack()
       __VERIFIER_nondet_memory(&first52, sizeof(first52));
     }
     return ret_val78;

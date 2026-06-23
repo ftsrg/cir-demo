@@ -25,15 +25,15 @@ char _str_1[123] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/s
 char __PRETTY_FUNCTION____Z14throwExceptionv[22] = "void throwException()";
 extern void *_ZTVSt9exception[];
 extern int __gxx_personality_v0();
-void std__exception__exception(struct std__exception* p0);
+void std__exception__exception_abi_nqe230000_(struct std__exception* p0);
 void std__exception___exception(struct std__exception* p0) {}
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 void throwException();
 int main();
 
-// function: _ZNSt9exceptionC2Ev
-void std__exception__exception(struct std__exception* v0) {
+// function: _ZNSt9exceptionC2B9nqe230000Ev
+void std__exception__exception_abi_nqe230000_(struct std__exception* v0) {
 bb1: ;
   struct std__exception* this2;
   this2 = v0;
@@ -51,7 +51,7 @@ bb6: ;
     int a8;
       static char exc_buf10[8] = {0};
       struct std__exception* exc11 = (struct std__exception*)exc_buf10;
-      std__exception__exception(exc11);
+      std__exception__exception_abi_nqe230000_(exc11);
       __cir_exc_ptr = (void*)exc11;
       __cir_exc_dtor = (void*)&std__exception___exception;
       __cir_exc_type = (const void*)__cir_eh_type__ZTISt9exception;

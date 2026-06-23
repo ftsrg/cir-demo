@@ -8,14 +8,14 @@ struct Add_HoldInt_1___HoldInt__2__ { unsigned char __field0; };
 char _str[2] = "0";
 char _str_1[117] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/gcc-template-tests/partial1/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
-int Add_HoldInt_1___HoldInt__1_____f(struct Add_HoldInt_1___HoldInt__1__* p0);
-int Add_HoldInt_1___HoldInt__2_____f(struct Add_HoldInt_1___HoldInt__2__* p0);
+int Add_HoldInt_1___HoldInt__1____f(struct Add_HoldInt_1___HoldInt__1__* p0);
+int Add_HoldInt_1___HoldInt__2____f(struct Add_HoldInt_1___HoldInt__2__* p0);
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
 
 // function: _ZN3AddI7HoldIntILi1EES0_ILin1EEE1fEv
-int Add_HoldInt_1___HoldInt__1_____f(struct Add_HoldInt_1___HoldInt__1__* v0) {
+int Add_HoldInt_1___HoldInt__1____f(struct Add_HoldInt_1___HoldInt__1__* v0) {
 bb1: ;
   struct Add_HoldInt_1___HoldInt__1__* this2;
   int __retval3;
@@ -28,7 +28,7 @@ bb1: ;
 }
 
 // function: _ZN3AddI7HoldIntILi1EES0_ILin2EEE1fEv
-int Add_HoldInt_1___HoldInt__2_____f(struct Add_HoldInt_1___HoldInt__2__* v7) {
+int Add_HoldInt_1___HoldInt__2____f(struct Add_HoldInt_1___HoldInt__2__* v7) {
 bb8: ;
   struct Add_HoldInt_1___HoldInt__2__* this9;
   int __retval10;
@@ -48,7 +48,7 @@ bb14: ;
   struct Add_HoldInt_1___HoldInt__2__ b17;
   int c18 = 0;
   __retval15 = c18;
-    int r19 = Add_HoldInt_1___HoldInt__1_____f(&a16);
+    int r19 = Add_HoldInt_1___HoldInt__1____f(&a16);
     int c20 = 0;
     _Bool c21 = ((r19 != c20)) ? 1 : 0;
     _Bool ternary22;
@@ -56,7 +56,7 @@ bb14: ;
       _Bool c23 = 1;
       ternary22 = (_Bool)c23;
     } else {
-      int r24 = Add_HoldInt_1___HoldInt__2_____f(&b17);
+      int r24 = Add_HoldInt_1___HoldInt__2____f(&b17);
       int c25 = 1;
       _Bool c26 = ((r24 != c25)) ? 1 : 0;
       ternary22 = (_Bool)c26;

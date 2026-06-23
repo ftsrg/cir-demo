@@ -25,13 +25,26 @@ Four subdirectories are created under sources/:
   c-exact_std/    — cir2c output with --no-externalize-std: cir2c tries to map std
                     exactly; cases where some std symbol still leaks through as an
                     unresolved `extern ... std_...` declaration are kept here too
-  c-nohavoc_std/  — the subset of c-exact_std with no leftover std extern at all,
-                    i.e. cases where the exact mapping is fully resolved
+  c-nohavoc_std/  — the subset of c-exact_std with no leftover *risky* extern (see
+                    RISKY_EXTERN_PATTERNS / has_risky_extern): a no-op'd extern is
+                    only excluded here if it's a mutator/identity call empirically
+                    found to bias the majority vote (real file I/O, in-place sort,
+                    or RTTI identity comparison) — most other leftover std externs
+                    (e.g. iostream-printing helpers never on the assert path) are
+                    harmless and stay in c-nohavoc_std.
 
-A case is dropped from the baseline (and hence every variant) only if its mapped
+A case is dropped from the baseline (and hence every variant) if its mapped
 output has no __assert_fail call at all, making it useless as an unreach-call
-benchmark. Leftover std externs in c-exact_std do not remove a case from the
-baseline or from c-exact_std itself — they only exclude it from c-nohavoc_std.
+benchmark. A leftover *non-risky* std extern in c-exact_std does not remove a
+case from the baseline, from c-exact_std, or even from c-nohavoc_std.
+
+A case is also dropped immediately at copy time if its main source file depends
+on a sibling class/function that's *defined* in another .c/.cc/.cpp/.cxx file the
+task's .yml never lists in input_files (and so is never fed to anything).
+BenchExec passes a tool literally just input_files, so every verifier — mapped-C
+and native C++ alike — would be missing that translation unit's definitions,
+making any verdict on the case, and its comparison against ground truth, unsound
+no matter which tool or suite runs it (see exclude_missing_tu_cases).
 
 Each mapped task directory gets a <name>.yml BenchExec task file that references
 the generated main.c with expected_verdict: true and the appropriate property file.
@@ -75,11 +88,13 @@ def copy_cpp_baseline(dry_run: bool) -> None:
         print(f"  [skip] {dest} already exists")
         retag_properties(dest, dry_run)
         rename_case_ymls(dest, dry_run)
+        exclude_missing_tu_cases(dest, dry_run)
         return
     print(f"  Copying {ESBMC_EVAL_SRC} → {dest}")
     if not dry_run:
         shutil.copytree(ESBMC_EVAL_SRC, dest)
     rename_case_ymls(dest, dry_run)
+    exclude_missing_tu_cases(dest, dry_run)
 
 
 def rename_case_ymls(root: Path, dry_run: bool) -> None:
@@ -132,6 +147,44 @@ def retag_properties(root: Path, dry_run: bool) -> None:
         print(f"  Retagged {fixed} .yml file(s) under {root} to unreach-call.prp")
 
 
+def exclude_missing_tu_cases(root: Path, dry_run: bool) -> None:
+    """Delete cpp-baseline cases with a missing translation unit, and purge any
+    stale mapped output an earlier run already produced for them.
+
+    A case is affected if its directory has a .c/.cc/.cpp/.cxx file beyond the
+    single one named in its .yml `input_files` (e.g. main.cpp declares a class
+    via a sibling header but the class is *defined* in a sibling .cpp that's
+    never fed to anything). See the module docstring for why this is unsound for
+    every verifier, not just cir2c's mapped output. Idempotent: once a case is
+    gone, later runs simply no longer find its .yml.
+    """
+    if not root.exists():
+        return
+    removed = []
+    for yml in sorted(root.rglob("*.yml")):
+        case_dir = yml.parent
+        input_file = parse_input_file(yml)
+        srcs = {f.name for f in case_dir.iterdir()
+                if f.suffix.lower() in (".c", ".cc", ".cpp", ".cxx")}
+        if not (srcs - {input_file}):
+            continue
+        rel = case_dir.relative_to(root)
+        removed.append(rel)
+        if dry_run:
+            continue
+        shutil.rmtree(case_dir)
+        # Purge stale output an earlier run may have mapped for this case before
+        # this exclusion existed — write_set_files() globs variant dirs directly,
+        # so a leftover case there would otherwise still leak into sets-full/.
+        for variant in ("c-havoc_std", "c-exact_std", "c-nohavoc_std"):
+            stale = SOURCES_DIR / variant / rel
+            if stale.exists():
+                shutil.rmtree(stale)
+    if removed:
+        print(f"  Removed {len(removed)} case(s) missing a translation unit "
+              f"(+ any stale mapped output): {[str(r) for r in removed]}")
+
+
 def find_yml_files(root: Path) -> list[Path]:
     return sorted(root.rglob("*.yml"))
 
@@ -178,9 +231,36 @@ def has_std_extern(text: str) -> bool:
 
     Only meaningful for the --no-externalize-std mapping: it means cir2c could not
     resolve some libstdc++ symbol's body and fell back to an extern declaration, so
-    the case is not a fully-exact std mapping (it may be unsound).
+    the case is not a fully-exact std mapping. Purely informational (drives the
+    "ok:std_extern" status count) — it is NOT what decides c-nohavoc_std membership;
+    see has_risky_extern for that. Most leftover std externs caught by this check
+    are harmless (e.g. iostream-printing helpers never reached on the assert path).
     """
     return any(line.startswith("extern") and "std_" in line for line in text.splitlines())
+
+
+# Mutator/identity extern calls empirically found to bias the majority vote when
+# cir2c has no body to map them: basic_filebuf (real file I/O -- open/close/ctor
+# never actually happens, so e.g. is_open() can't reflect reality), _sort_
+# (in-place sort never actually reorders the data), and __dynamic_cast (RTTI
+# identity comparison can spuriously succeed or fail). Found by testing in
+# analysis.ipynb: excluding cases with one of these from c-exact_std's results
+# cut false negatives and false positives roughly 2:1 against correctly-handled
+# cases dropped, unlike the old "any std_ extern" rule (too broad: caught many
+# harmless externs; too narrow: missed __dynamic_cast, which has no "std_" in
+# its name).
+RISKY_EXTERN_PATTERNS = ("basic_filebuf", "_sort_", "__dynamic_cast")
+
+
+def has_risky_extern(text: str) -> bool:
+    """True if a top-level extern declaration matches RISKY_EXTERN_PATTERNS.
+
+    This is what decides c-nohavoc_std membership (see build_nohavoc_variant) —
+    a deliberately narrow, evidence-based replacement for the old "any std_
+    extern" rule.
+    """
+    return any(line.startswith("extern") and any(p in line for p in RISKY_EXTERN_PATTERNS)
+               for line in text.splitlines())
 
 
 def postprocess_output(out_c: Path, externalize_std: bool) -> str:
@@ -370,12 +450,12 @@ def run_variant(
 
 
 def build_nohavoc_variant(exact_root: Path, nohavoc_root: Path, dry_run: bool) -> None:
-    """Curate c-nohavoc_std as the subset of c-exact_std with no leftover std extern.
+    """Curate c-nohavoc_std as the subset of c-exact_std with no leftover *risky* extern.
 
     c-exact_std keeps every case that has an assertion site, even ones where some
-    std symbol leaked through as an unresolved extern (see has_std_extern). This
-    copies over only the cases without that leak, so c-nohavoc_std is the
-    fully-resolved-std subset of c-exact_std.
+    std symbol leaked through as an unresolved extern. This copies over only the
+    cases without a RISKY_EXTERN_PATTERNS leak (see has_risky_extern) — most other
+    leftover std externs are harmless and stay in c-nohavoc_std too.
     """
     print(f"\n=== c-nohavoc_std (curated from {exact_root.name}) ===")
     copy_property_file(nohavoc_root, dry_run)
@@ -385,7 +465,7 @@ def build_nohavoc_variant(exact_root: Path, nohavoc_root: Path, dry_run: bool) -
     for yml in sorted(exact_root.rglob("*.yml")):
         case_dir = yml.parent
         main_c = case_dir / "main.c"
-        if not main_c.exists() or has_std_extern(main_c.read_text(encoding="utf-8")):
+        if not main_c.exists() or has_risky_extern(main_c.read_text(encoding="utf-8")):
             skipped += 1
             continue
         rel = case_dir.relative_to(exact_root)
@@ -395,7 +475,7 @@ def build_nohavoc_variant(exact_root: Path, nohavoc_root: Path, dry_run: bool) -
             shutil.copy2(main_c, dest_dir / "main.c")
             shutil.copy2(yml, dest_dir / yml.name)
         kept += 1
-    print(f"  Results: ok={kept}, excluded:std={skipped}")
+    print(f"  Results: ok={kept}, excluded:risky_extern={skipped}")
 
 
 def main() -> int:

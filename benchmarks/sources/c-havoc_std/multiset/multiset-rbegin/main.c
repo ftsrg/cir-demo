@@ -12,36 +12,41 @@ static const void *__cir_exc_type;
 static unsigned long __cir_exc_type_id;
 static int __cir_exc_active;
 static void *__cir_exc_dtor;
+// Per-RTTI address tags: each thrown/caught type symbol gets a
+// distinct storage location so catch dispatch is a pointer compare.
+static const char __cir_eh_type__ZTISt20bad_array_new_length[] = "_ZTISt20bad_array_new_length";
 
 // Struct definitions (auto-parsed)
-struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
-struct __locale_data { unsigned char __placeholder; };
-struct __locale_struct { struct __locale_data* __field0[13]; unsigned short* __field1; int* __field2; int* __field3; char* __field4[13]; };
-struct std___Identity_int_ { unsigned char __field0; };
-struct std___Rb_tree_const_iterator_int_ { struct std___Rb_tree_node_base* _M_node; };
-struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Alloc_node { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__* _M_t; };
-struct std___Rb_tree_iterator_int_ { struct std___Rb_tree_node_base* _M_node; };
-struct std___Rb_tree_key_compare_std__less_int__ { unsigned char __field0; };
-struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
-struct std____new_allocator_std___Rb_tree_node_int__;
-struct std____pair_base_std___Rb_tree_node_base____std___Rb_tree_node_base___;
-struct std__allocator_std___Rb_tree_node_int__;
-struct std__ios_base___Words { void* __field0; long __field1; };
-struct std__iterator_std__bidirectional_iterator_tag__int__long_int___int___;
-struct std__less_int_;
-struct std__locale { struct std__locale___Impl* __field0; };
-struct std__locale__facet { void* __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
-struct std__pair_std___Rb_tree_node_base____std___Rb_tree_node_base___ { struct std___Rb_tree_node_base* first; struct std___Rb_tree_node_base* second; };
-struct std__reverse_iterator_std___Rb_tree_const_iterator_int__ { struct std___Rb_tree_const_iterator_int_ current; };
-struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
-struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_ { struct std___Rb_tree_key_compare_std__less_int__ __field0; struct std___Rb_tree_header __field1; };
-struct std__ctype_char_ { struct std__locale__facet __field0; unsigned char __field1[4]; struct __locale_struct* __field2; _Bool __field3; unsigned char __field4[7]; int* __field5; int* __field6; unsigned short* __field7; char _M_widen_ok; char _M_widen[256]; char __field10[256]; char __field11; unsigned char __field12[6]; } __attribute__((packed));
-struct std__ios_base { void* __field0; long __field1; long __field2; int __field3; int __field4; int __field5; struct std__ios_base___Callback_list* __field6; struct std__ios_base___Words __field7; struct std__ios_base___Words __field8[8]; int __field9; struct std__ios_base___Words* __field10; struct std__locale __field11; };
-struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int_____Rb_tree_impl_std__less_int___true_ _M_impl; };
-struct std__basic_ios_char__std__char_traits_char__ { struct std__ios_base __field0; struct std__basic_ostream_char__std__char_traits_char__* __field1; char __field2; _Bool __field3; struct std__basic_streambuf_char__std__char_traits_char__* __field4; struct std__ctype_char_* _M_ctype; struct std__num_put_char__std__ostreambuf_iterator_char__std__char_traits_char___* __field6; struct std__num_get_char__std__istreambuf_iterator_char__std__char_traits_char___* __field7; };
-struct std__basic_ostream_char__std__char_traits_char__ { void* __field0; struct std__basic_ios_char__std__char_traits_char__ __field1; };
-struct std__multiset_int__std__less_int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___std__less_int___std__allocator_int__ _M_t; };
+struct anon_1 { unsigned long __size_; };
+union anon_3 { int __value_; };
+struct std____1___SentinelValueFill_std____1__char_traits_char__ { int __field0; };
+struct std____1____compressed_pair_padding_std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_int__void_______false_ { char __padding_[7]; };
+struct std____1____tree_const_iterator_int__std____1____tree_node_int__void_______long_ { struct std____1____tree_end_node_std____1____tree_node_base_void______* __ptr_; };
+struct std____1____tree_end_node_std____1____tree_node_base_void______ { struct std____1____tree_node_base_void___* __left_; };
+struct std____1____tree_int__std____1__less_int___std____1__allocator_int______tree_deleter { struct std____1__allocator_std____1____tree_node_int__void____* __alloc_; };
+struct std____1____tree_iterator_int__std____1____tree_node_int__void_______long_ { struct std____1____tree_end_node_std____1____tree_node_base_void______* __ptr_; };
+struct std____1____tree_node_base_void___ { struct std____1____tree_end_node_std____1____tree_node_base_void______ __field0; struct std____1____tree_node_base_void___* __right_; struct std____1____tree_end_node_std____1____tree_node_base_void______* __parent_; _Bool __is_black_; unsigned char __field4[7]; } __attribute__((packed));
+struct std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_int__void_____ { struct std____1__allocator_std____1____tree_node_int__void____* __na_; _Bool __value_constructed; unsigned char __field2[7]; } __attribute__((packed));
+struct std____1____tree_node_int__void___ { struct std____1____tree_node_base_void___ __field0; union anon_3 field1; };
+struct std____1__allocator_std____1____tree_node_int__void____;
+struct std____1__iterator_std____1__bidirectional_iterator_tag__int__long_int___int___;
+struct std____1__less_int_ { unsigned char __field0; };
+struct std____1__locale { struct std____1__locale____imp* __field0; };
+struct std____1__locale__facet;
+struct std____1__once_flag { unsigned long __field0; };
+struct std____1__reverse_iterator_std____1____tree_const_iterator_int__std____1____tree_node_int__void_______long__ { struct std____1____tree_const_iterator_int__std____1____tree_node_int__void_______long_ __t_; struct std____1____tree_const_iterator_int__std____1____tree_node_int__void_______long_ current; };
+struct anon_0 { struct std____1____tree_end_node_std____1____tree_node_base_void______ __end_node_; };
+union anon_2 { struct std____1__locale __field0; };
+struct anon_4 { struct std____1____tree_node_int__void___* __ptr_; struct std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_int__void_____ __deleter_; struct std____1____compressed_pair_padding_std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_int__void_______false_ __padding2_130_; };
+struct std____1____tree_int__std____1__less_int___std____1__allocator_int__ { struct std____1____tree_end_node_std____1____tree_node_base_void______* __begin_node_; struct anon_0 field1; struct anon_1 field2; };
+struct std____1__ctype_char_;
+struct std____1__ios_base { void* __field0; unsigned int __field1; long __field2; long __field3; unsigned int __field4; unsigned int __field5; void* __field6; union anon_2 __field7; void** __field8; int* __field9; unsigned long __field10; unsigned long __field11; long* __field12; unsigned long __field13; unsigned long __field14; void** __field15; unsigned long __field16; unsigned long __field17; };
+struct std____1__locale__id { struct std____1__once_flag __field0; int __field1; unsigned char __field2[4]; } __attribute__((packed));
+struct std____1__multiset_int__std____1__less_int___std____1__allocator_int__ { struct std____1____tree_int__std____1__less_int___std____1__allocator_int__ __tree_; };
+struct std____1__unique_ptr_std____1____tree_node_int__void_____std____1____tree_node_destructor_std____1__allocator_std____1____tree_node_int__void______ { struct anon_4 field0; };
+struct std__bad_array_new_length;
+struct std____1__ios { struct std____1__ios_base __field0; struct std____1__ostream* __field1; struct std____1___SentinelValueFill_std____1__char_traits_char__ __field2; } __attribute__((packed));
+struct std____1__ostream { void* __field0; struct std____1__ios __field1; };
 
 // WARNING: this output relies on non-ISO ABI attribute(s) below.
 // A verifier/compiler that ignores them produces UNSOUND results:
@@ -59,7 +64,11 @@ int __const_main_myints[5] = {21, 64, 17, 78, 49};
 char _str[11] = "*rit == 78";
 char _str_1[114] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/multiset/multiset-rbegin/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
-extern struct std__basic_ostream_char__std__char_traits_char__ _ZSt4cout __attribute__((aligned(8)));
+extern struct std____1__ostream _ZNSt3__14coutE __attribute__((aligned(8)));
+unsigned long _ZNSt3__123__libcpp_numeric_limitsImLb1EE5__maxE __attribute__((aligned(8))) = -1;
+static const char _ZTISt20bad_array_new_length__n_[] = "_ZTISt20bad_array_new_length";
+static void* _ZTISt20bad_array_new_length[2] = {(void*)0, (void*)_ZTISt20bad_array_new_length__n_};
+extern struct std____1__locale__id _ZNSt3__15ctypeIcE2idE __attribute__((aligned(8)));
 extern void reach_error();
 extern void __assert_fail(char* p0, char* p1, unsigned int p2, char* p3);
 int main();
@@ -71,54 +80,56 @@ int main() {
 bb0: ;
   int __retval1;
   int myints2[5];
-  struct std__multiset_int__std__less_int___std__allocator_int__ myset3;
-  struct std__reverse_iterator_std___Rb_tree_const_iterator_int__ rit4;
-  struct std__reverse_iterator_std___Rb_tree_const_iterator_int__ ref_tmp05;
-  int c6 = 0;
-  __retval1 = c6;
+  struct std____1__multiset_int__std____1__less_int___std____1__allocator_int__ myset3;
+  struct std____1__less_int_ ref_tmp04;
+  struct std____1__reverse_iterator_std____1____tree_const_iterator_int__std____1____tree_node_int__void_______long__ rit5;
+  struct std____1__reverse_iterator_std____1____tree_const_iterator_int__std____1____tree_node_int__void_______long__ ref_tmp16;
+  int c7 = 0;
+  __retval1 = c7;
   // array copy
   memcpy(myints2, __const_main_myints, (unsigned long)5 * sizeof(__const_main_myints[0]));
-  int* cast7 = (int*)&(myints2);
   int* cast8 = (int*)&(myints2);
-  int c9 = 5;
-  int* ptr10 = &(cast8)[c9];
-  // externalized std:: op: std::multiset<int, std::less<int>, std::allocator<int> >::multiset<int*>(int*, int*)
+  int* cast9 = (int*)&(myints2);
+  int c10 = 5;
+  int* ptr11 = &(cast9)[c10];
+  // externalized std:: op: std::__1::multiset<int, std::__1::less<int>, std::__1::allocator<int>>::multiset[abi:nqe230000]<int*>(int*, int*, std::__1::less<int> const&)
   __VERIFIER_nondet_memory(&myset3, sizeof(myset3));
-  __VERIFIER_nondet_memory(cast7, sizeof(*cast7));
-  __VERIFIER_nondet_memory(ptr10, sizeof(*ptr10));
-    // externalized std:: op: std::reverse_iterator<std::_Rb_tree_const_iterator<int> >::reverse_iterator()
-    __VERIFIER_nondet_memory(&rit4, sizeof(rit4));
-    struct std__reverse_iterator_std___Rb_tree_const_iterator_int__ std11;
-    __VERIFIER_nondet_memory(&std11, sizeof(std11));
-    ref_tmp05 = std11;
-    struct std__reverse_iterator_std___Rb_tree_const_iterator_int__* std12;
+  __VERIFIER_nondet_memory(cast8, sizeof(*cast8));
+  __VERIFIER_nondet_memory(ptr11, sizeof(*ptr11));
+  __VERIFIER_nondet_memory(&ref_tmp04, sizeof(ref_tmp04));
+    // externalized std:: op: std::__1::reverse_iterator<std::__1::__tree_const_iterator<int, std::__1::__tree_node<int, void*>*, long>>::reverse_iterator[abi:nqe230000]()
+    __VERIFIER_nondet_memory(&rit5, sizeof(rit5));
+    struct std____1__reverse_iterator_std____1____tree_const_iterator_int__std____1____tree_node_int__void_______long__ std12;
     __VERIFIER_nondet_memory(&std12, sizeof(std12));
-    int* std13;
+    ref_tmp16 = std12;
+    struct std____1__reverse_iterator_std____1____tree_const_iterator_int__std____1____tree_node_int__void_______long__* std13;
     __VERIFIER_nondet_memory(&std13, sizeof(std13));
-    int t14 = *std13;
-    int c15 = 78;
-    _Bool c16 = ((t14 == c15)) ? 1 : 0;
-    if (c16) {
+    int* std14;
+    __VERIFIER_nondet_memory(&std14, sizeof(std14));
+    int t15 = *std14;
+    int c16 = 78;
+    _Bool c17 = ((t15 == c16)) ? 1 : 0;
+    if (c17) {
     } else {
-      char* cast17 = (char*)&(_str);
-      char* c18 = (char*)_str_1;
-      unsigned int c19 = 20;
-      char* cast20 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast18 = (char*)&(_str);
+      char* c19 = (char*)_str_1;
+      unsigned int c20 = 20;
+      char* cast21 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast17, c18, c19, cast20);
+      __assert_fail(cast18, c19, c20, cast21);
     }
-    struct std__basic_ostream_char__std__char_traits_char__* std21;
-    __VERIFIER_nondet_memory(&std21, sizeof(std21));
-    int c22 = 0;
-    __retval1 = c22;
-    int t23 = __retval1;
-    int ret_val24 = t23;
+    struct std____1__ostream* std22;
+    __VERIFIER_nondet_memory(&std22, sizeof(std22));
+    int c23 = 0;
+    __retval1 = c23;
+    int t24 = __retval1;
+    int ret_val25 = t24;
     {
-      // externalized std:: op: std::multiset<int, std::less<int>, std::allocator<int> >::~multiset()
+      // externalized std:: op: std::__1::multiset<int, std::__1::less<int>, std::__1::allocator<int>>::~multiset[abi:nqe230000]()
       __VERIFIER_nondet_memory(&myset3, sizeof(myset3));
     }
-    return ret_val24;
-  int t25 = __retval1;
-  return t25;
+    return ret_val25;
+  int t26 = __retval1;
+  return t26;
 }
 

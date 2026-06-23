@@ -5,12 +5,17 @@
 
 extern void abort(void);
 // Struct definitions (auto-parsed)
-union anon_0 { char _M_local_buf[16]; unsigned long _M_allocated_capacity; };
-struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider { char* _M_p; };
-struct std____new_allocator_char_;
-struct std__allocator_char_ { unsigned char __field0; };
-struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ { struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char_____Alloc_hider _M_dataplus; unsigned long _M_string_length; union anon_0 field2; };
+struct anon_1 { unsigned char __size_; };
+struct anon_2 { unsigned long __is_long_; };
+struct std____1____uninitialized_tag { unsigned char __field0; };
+struct std____1__allocator_char_;
+struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______long { struct anon_2 field0; unsigned long __size_; char* __data_; };
+struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______short { struct anon_1 field0; char __data_[23]; };
+union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep { struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______short __s; struct std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______long __l; };
+struct anon_0 { union std____1__basic_string_char__std____1__char_traits_char___std____1__allocator_char______rep __rep_; };
+struct std____1__string { struct anon_0 field0; };
 
+unsigned long _ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE15__endian_factorE_const __attribute__((aligned(8))) = 2;
 char _str[7] = "T == S";
 char _str_1[117] = "/home/levente/Documents/University/cir/cir-demo/benchmarks/sources/cpp-baseline/string/string_constructor_2/main.cpp";
 char __PRETTY_FUNCTION___main[11] = "int main()";
@@ -23,13 +28,13 @@ extern void __VERIFIER_nondet_memory(void*, unsigned long);
 int main() {
 bb0: ;
   int __retval1;
-  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ S2;
-  struct std____cxx11__basic_string_char__std__char_traits_char___std__allocator_char__ T3;
+  struct std____1__string S2;
+  struct std____1__string T3;
   int c4 = 0;
   __retval1 = c4;
-  // externalized std:: op: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC2EvQ26is_default_constructible_vIT1_E
+  // externalized std:: op: std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::basic_string[abi:nqe230000]()
   __VERIFIER_nondet_memory(&S2, sizeof(S2));
-    // externalized std:: op: _ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC2EvQ26is_default_constructible_vIT1_E
+    // externalized std:: op: std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::basic_string[abi:nqe230000]()
     __VERIFIER_nondet_memory(&T3, sizeof(T3));
       _Bool std5;
       __VERIFIER_nondet_memory(&std5, sizeof(std5));
@@ -43,11 +48,11 @@ bb0: ;
         __assert_fail(cast6, c7, c8, cast9);
       }
     {
-      // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+      // externalized std:: op: std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::~basic_string()
       __VERIFIER_nondet_memory(&T3, sizeof(T3));
     }
   {
-    // externalized std:: op: std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+    // externalized std:: op: std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::~basic_string()
     __VERIFIER_nondet_memory(&S2, sizeof(S2));
   }
   int t10 = __retval1;

@@ -4,24 +4,23 @@
 // Over-approximated (may be unsound): library/std:: calls replaced by
 //   __VERIFIER_nondet_memory havoc (results are nondeterministic).
 
-extern void abort(void);
 // Struct definitions (auto-parsed)
-struct __gnu_cxx____aligned_membuf_int_ { unsigned char _M_storage[4]; };
-struct std___Rb_tree_key_compare_bool_____int__int__ { void* _M_key_compare; };
-struct std___Rb_tree_key_compare_classcomp_ { unsigned char __field0; };
-struct std___Rb_tree_node_base { unsigned int _M_color; struct std___Rb_tree_node_base* _M_parent; struct std___Rb_tree_node_base* _M_left; struct std___Rb_tree_node_base* _M_right; };
-struct std___Rb_tree_node_int_ { struct std___Rb_tree_node_base __field0; struct __gnu_cxx____aligned_membuf_int_ _M_storage; unsigned char __field2[4]; } __attribute__((packed));
-struct std____new_allocator_int_;
-struct std____new_allocator_std___Rb_tree_node_int__;
-struct std__allocator_int_ { unsigned char __field0; };
-struct std__allocator_std___Rb_tree_node_int__ { unsigned char __field0; };
-struct std___Rb_tree_header { struct std___Rb_tree_node_base _M_header; unsigned long _M_node_count; };
-struct std___Rb_tree_int__int__std___Identity_int___bool_____int__int___std__allocator_int_____Rb_tree_impl_bool_____int__int___true_ { struct std___Rb_tree_key_compare_bool_____int__int__ __field0; struct std___Rb_tree_header __field1; };
-struct std___Rb_tree_int__int__std___Identity_int___classcomp__std__allocator_int_____Rb_tree_impl_classcomp__true_ { struct std___Rb_tree_key_compare_classcomp_ __field0; struct std___Rb_tree_header __field1; };
-struct std___Rb_tree_int__int__std___Identity_int___bool_____int__int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___bool_____int__int___std__allocator_int_____Rb_tree_impl_bool_____int__int___true_ _M_impl; };
-struct std___Rb_tree_int__int__std___Identity_int___classcomp__std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___classcomp__std__allocator_int_____Rb_tree_impl_classcomp__true_ _M_impl; };
-struct std__set_int__bool_____int__int___std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___bool_____int__int___std__allocator_int__ _M_t; };
-struct std__set_int__classcomp__std__allocator_int__ { struct std___Rb_tree_int__int__std___Identity_int___classcomp__std__allocator_int__ _M_t; };
+struct anon_1 { unsigned long __size_; };
+struct anon_3 { unsigned long __size_; void* __value_comp_; };
+union anon_4 { int __value_; };
+struct classcomp { unsigned char __field0; };
+struct std____1____tree_end_node_std____1____tree_node_base_void______ { struct std____1____tree_node_base_void___* __left_; };
+struct std____1____tree_int__bool_____int__int___std____1__allocator_int______tree_deleter { struct std____1__allocator_std____1____tree_node_int__void____* __alloc_; };
+struct std____1____tree_int__classcomp__std____1__allocator_int______tree_deleter { struct std____1__allocator_std____1____tree_node_int__void____* __alloc_; };
+struct std____1____tree_node_base_void___ { struct std____1____tree_end_node_std____1____tree_node_base_void______ __field0; struct std____1____tree_node_base_void___* __right_; struct std____1____tree_end_node_std____1____tree_node_base_void______* __field2; _Bool __field3; unsigned char __field4[7]; } __attribute__((packed));
+struct std____1____tree_node_int__void___ { struct std____1____tree_node_base_void___ __field0; union anon_4 field1; };
+struct std____1__allocator_std____1____tree_node_int__void____;
+struct anon_0 { struct std____1____tree_end_node_std____1____tree_node_base_void______ __end_node_; };
+struct anon_2 { struct std____1____tree_end_node_std____1____tree_node_base_void______ __end_node_; };
+struct std____1____tree_int__bool_____int__int___std____1__allocator_int__ { struct std____1____tree_end_node_std____1____tree_node_base_void______* __begin_node_; struct anon_2 field1; struct anon_3 field2; };
+struct std____1____tree_int__classcomp__std____1__allocator_int__ { struct std____1____tree_end_node_std____1____tree_node_base_void______* __begin_node_; struct anon_0 field1; struct anon_1 field2; };
+struct std____1__set_int__bool_____int__int___std____1__allocator_int__ { struct std____1____tree_int__bool_____int__int___std____1__allocator_int__ __tree_; };
+struct std____1__set_int__classcomp__std____1__allocator_int__ { struct std____1____tree_int__classcomp__std____1__allocator_int__ __tree_; };
 
 // WARNING: this output relies on non-ISO ABI attribute(s) below.
 // A verifier/compiler that ignores them produces UNSOUND results:
@@ -57,51 +56,43 @@ bb2: ;
 int main() {
 bb10: ;
   int __retval11;
-  struct std__set_int__classcomp__std__allocator_int__ fifth12;
+  struct std____1__set_int__classcomp__std____1__allocator_int__ fifth12;
   void* fn_pt13;
-  struct std__set_int__bool_____int__int___std__allocator_int__ sixth14;
-  struct std__allocator_int_ ref_tmp015;
-  int c16 = 0;
-  __retval11 = c16;
-  // externalized std:: op: std::set<int, classcomp, std::allocator<int> >::set()
+  struct std____1__set_int__bool_____int__int___std____1__allocator_int__ sixth14;
+  int c15 = 0;
+  __retval11 = c15;
+  // externalized std:: op: std::__1::set<int, classcomp, std::__1::allocator<int>>::set[abi:nqe230000]()
   __VERIFIER_nondet_memory(&fifth12, sizeof(fifth12));
-    unsigned long std17 = __VERIFIER_nondet_unsigned_long();
-    unsigned long c18 = 0;
-    _Bool c19 = ((std17 == c18)) ? 1 : 0;
-    if (c19) {
+    unsigned long std16 = __VERIFIER_nondet_unsigned_long();
+    unsigned long c17 = 0;
+    _Bool c18 = ((std16 == c17)) ? 1 : 0;
+    if (c18) {
     } else {
-      char* cast20 = (char*)&(_str);
-      char* c21 = (char*)_str_1;
-      unsigned int c22 = 25;
-      char* cast23 = (char*)&(__PRETTY_FUNCTION___main);
+      char* cast19 = (char*)&(_str);
+      char* c20 = (char*)_str_1;
+      unsigned int c21 = 25;
+      char* cast22 = (char*)&(__PRETTY_FUNCTION___main);
       reach_error();
-      __assert_fail(cast20, c21, c22, cast23);
+      __assert_fail(cast19, c20, c21, cast22);
     }
     fn_pt13 = &fncomp;
-    // externalized std:: op: std::allocator<int>::allocator()
-    __VERIFIER_nondet_memory(&ref_tmp015, sizeof(ref_tmp015));
-      // externalized std:: op: std::set<int, bool (*)(int, int), std::allocator<int> >::set(bool (* const&)(int, int), std::allocator<int> const&)
-      __VERIFIER_nondet_memory(&sixth14, sizeof(sixth14));
-      __VERIFIER_nondet_memory(&fn_pt13, sizeof(fn_pt13));
-      __VERIFIER_nondet_memory(&ref_tmp015, sizeof(ref_tmp015));
-    {
-      // externalized std:: op: std::allocator<int>::~allocator()
-      __VERIFIER_nondet_memory(&ref_tmp015, sizeof(ref_tmp015));
-    }
-      int c24 = 0;
-      __retval11 = c24;
-      int t25 = __retval11;
-      int ret_val26 = t25;
+    // externalized std:: op: std::__1::set<int, bool (*)(int, int), std::__1::allocator<int>>::set[abi:nqe230000](bool (* const&)(int, int))
+    __VERIFIER_nondet_memory(&sixth14, sizeof(sixth14));
+    __VERIFIER_nondet_memory(&fn_pt13, sizeof(fn_pt13));
+      int c23 = 0;
+      __retval11 = c23;
+      int t24 = __retval11;
+      int ret_val25 = t24;
       {
-        // externalized std:: op: std::set<int, bool (*)(int, int), std::allocator<int> >::~set()
+        // externalized std:: op: std::__1::set<int, bool (*)(int, int), std::__1::allocator<int>>::~set[abi:nqe230000]()
         __VERIFIER_nondet_memory(&sixth14, sizeof(sixth14));
       }
       {
-        // externalized std:: op: std::set<int, classcomp, std::allocator<int> >::~set()
+        // externalized std:: op: std::__1::set<int, classcomp, std::__1::allocator<int>>::~set[abi:nqe230000]()
         __VERIFIER_nondet_memory(&fifth12, sizeof(fifth12));
       }
-      return ret_val26;
-  int t27 = __retval11;
-  return t27;
+      return ret_val25;
+  int t26 = __retval11;
+  return t26;
 }
 

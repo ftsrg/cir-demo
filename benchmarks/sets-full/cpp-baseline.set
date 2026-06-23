@@ -56,6 +56,7 @@
 ../sources/cpp-baseline/algorithm/algorithm34/algorithm_algorithm34.yml
 ../sources/cpp-baseline/algorithm/algorithm35/algorithm_algorithm35.yml
 ../sources/cpp-baseline/algorithm/algorithm36/algorithm_algorithm36.yml
+../sources/cpp-baseline/algorithm/algorithm37/algorithm_algorithm37.yml
 ../sources/cpp-baseline/algorithm/algorithm38/algorithm_algorithm38.yml
 ../sources/cpp-baseline/algorithm/algorithm39/algorithm_algorithm39.yml
 ../sources/cpp-baseline/algorithm/algorithm4/algorithm_algorithm4.yml
@@ -115,6 +116,7 @@
 ../sources/cpp-baseline/algorithm/algorithm87_fill_n/algorithm_algorithm87_fill_n.yml
 ../sources/cpp-baseline/algorithm/algorithm88/algorithm_algorithm88.yml
 ../sources/cpp-baseline/algorithm/algorithm89/algorithm_algorithm89.yml
+../sources/cpp-baseline/algorithm/algorithm9/algorithm_algorithm9.yml
 ../sources/cpp-baseline/algorithm/algorithm90/algorithm_algorithm90.yml
 ../sources/cpp-baseline/algorithm/algorithm90_unique/algorithm_algorithm90_unique.yml
 ../sources/cpp-baseline/algorithm/algorithm91/algorithm_algorithm91.yml
@@ -166,10 +168,9 @@
 ../sources/cpp-baseline/cpp/Method_qualifier1/cpp_Method_qualifier1.yml
 ../sources/cpp-baseline/cpp/algorithm8_operator++_issue/cpp_algorithm8_operator++_issue.yml
 ../sources/cpp-baseline/cpp/cast_pointer_to_int/cpp_cast_pointer_to_int.yml
-../sources/cpp-baseline/cpp/ch10_2/cpp_ch10_2.yml
-../sources/cpp-baseline/cpp/ch10_3/cpp_ch10_3.yml
 ../sources/cpp-baseline/cpp/ch11_4/cpp_ch11_4.yml
 ../sources/cpp-baseline/cpp/ch13_10/cpp_ch13_10.yml
+../sources/cpp-baseline/cpp/ch13_7/cpp_ch13_7.yml
 ../sources/cpp-baseline/cpp/ch15_13/cpp_ch15_13.yml
 ../sources/cpp-baseline/cpp/ch17_2/cpp_ch17_2.yml
 ../sources/cpp-baseline/cpp/ch17_4/cpp_ch17_4.yml
@@ -191,7 +192,6 @@
 ../sources/cpp-baseline/cpp/ch21_41/cpp_ch21_41.yml
 ../sources/cpp-baseline/cpp/ch21_42/cpp_ch21_42.yml
 ../sources/cpp-baseline/cpp/ch22_12/cpp_ch22_12.yml
-../sources/cpp-baseline/cpp/ch22_3/cpp_ch22_3.yml
 ../sources/cpp-baseline/cpp/ch22_5/cpp_ch22_5.yml
 ../sources/cpp-baseline/cpp/ch2_21/cpp_ch2_21.yml
 ../sources/cpp-baseline/cpp/ch3_19/cpp_ch3_19.yml
@@ -202,12 +202,6 @@
 ../sources/cpp-baseline/cpp/ch5_11/cpp_ch5_11.yml
 ../sources/cpp-baseline/cpp/ch5_21/cpp_ch5_21.yml
 ../sources/cpp-baseline/cpp/ch5_9/cpp_ch5_9.yml
-../sources/cpp-baseline/cpp/ch6_5/cpp_ch6_5.yml
-../sources/cpp-baseline/cpp/ch7_1/cpp_ch7_1.yml
-../sources/cpp-baseline/cpp/ch8_11/cpp_ch8_11.yml
-../sources/cpp-baseline/cpp/ch8_12/cpp_ch8_12.yml
-../sources/cpp-baseline/cpp/ch9_8/cpp_ch9_8.yml
-../sources/cpp-baseline/cpp/ch9_9/cpp_ch9_9.yml
 ../sources/cpp-baseline/cpp/cpp_queue_front_bug/cpp_cpp_queue_front_bug.yml
 ../sources/cpp-baseline/cpp/cpp_queue_pop_bug/cpp_cpp_queue_pop_bug.yml
 ../sources/cpp-baseline/cpp/cpp_stack_empty_bug/cpp_cpp_stack_empty_bug.yml
@@ -961,6 +955,7 @@
 ../sources/cpp-baseline/try_catch/ch13_1/try_catch_ch13_1.yml
 ../sources/cpp-baseline/try_catch/ch13_2/try_catch_ch13_2.yml
 ../sources/cpp-baseline/try_catch/ch13_3/try_catch_ch13_3.yml
+../sources/cpp-baseline/try_catch/nec_ex6-std-uncaught-dtor/try_catch_nec_ex6-std-uncaught-dtor.yml
 ../sources/cpp-baseline/try_catch/try-catch_decl_01_bug/try_catch_try-catch_decl_01_bug.yml
 ../sources/cpp-baseline/try_catch/try-catch_decl_02/try_catch_try-catch_decl_02.yml
 ../sources/cpp-baseline/try_catch/try-catch_decl_03/try_catch_try-catch_decl_03.yml
@@ -1041,7 +1036,9 @@
 ../sources/cpp-baseline/vector/algorithm62/vector_algorithm62.yml
 ../sources/cpp-baseline/vector/algorithm7/vector_algorithm7.yml
 ../sources/cpp-baseline/vector/algorithm8/vector_algorithm8.yml
-../sources/cpp-baseline/vector/ch10_7/vector_ch10_7.yml
+../sources/cpp-baseline/vector/ch21_14/vector_ch21_14.yml
+../sources/cpp-baseline/vector/ch21_17/vector_ch21_17.yml
+../sources/cpp-baseline/vector/ch21_27/vector_ch21_27.yml
 ../sources/cpp-baseline/vector/vector10/vector_vector10.yml
 ../sources/cpp-baseline/vector/vector11/vector_vector11.yml
 ../sources/cpp-baseline/vector/vector12/vector_vector12.yml

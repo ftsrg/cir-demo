@@ -17,7 +17,7 @@ static const char __cir_eh_type__ZTISt10bad_typeid[] = "_ZTISt10bad_typeid";
 
 // Struct definitions (auto-parsed)
 struct Polymorphic { void* __field0; };
-struct std__type_info { void* __field0; char* __name; };
+struct std__type_info { void* __field0; char* __type_name; };
 struct std__bad_typeid;
 
 static const char _ZTISt10bad_typeid__n_[] = "_ZTISt10bad_typeid";
