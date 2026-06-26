@@ -1,0 +1,84 @@
+!s32i = !cir.int<s, 32>
+!s8i = !cir.int<s, 8>
+!u32i = !cir.int<u, 32>
+!u8i = !cir.int<u, 8>
+!void = !cir.void
+#loc9 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":11:3)
+module @"/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp" attributes {cir.lang = #cir.lang<cxx>, cir.module_asm = [], cir.triple = "x86_64-unknown-linux-gnu", dlti.dl_spec = #dlti.dl_spec<!llvm.ptr<270> = dense<32> : vector<4xi64>, !llvm.ptr<271> = dense<32> : vector<4xi64>, !llvm.ptr<272> = dense<64> : vector<4xi64>, i64 = dense<64> : vector<2xi64>, i128 = dense<128> : vector<2xi64>, f80 = dense<128> : vector<2xi64>, !llvm.ptr = dense<64> : vector<4xi64>, i1 = dense<8> : vector<2xi64>, i8 = dense<8> : vector<2xi64>, i16 = dense<16> : vector<2xi64>, i32 = dense<32> : vector<2xi64>, f16 = dense<16> : vector<2xi64>, f64 = dense<64> : vector<2xi64>, f128 = dense<128> : vector<2xi64>, "dlti.endianness" = "little", "dlti.mangling_mode" = "e", "dlti.legal_int_widths" = array<i32: 8, 16, 32, 64>, "dlti.stack_alignment" = 128 : i64>} {
+  cir.global "private" constant external @_ZTIi : !cir.ptr<!u8i> loc(#loc1)
+  cir.global "private" constant cir_private dso_local @".str" = #cir.const_array<"0" : !cir.array<!s8i x 1>, trailing_zeros> : !cir.array<!s8i x 2> {alignment = 1 : i64} loc(#loc2)
+  cir.global "private" constant cir_private dso_local @".str.1" = #cir.const_array<"/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp" : !cir.array<!s8i x 138>, trailing_zeros> : !cir.array<!s8i x 139> {alignment = 1 : i64} loc(#loc3)
+  cir.global "private" constant cir_private dso_local @__PRETTY_FUNCTION__.main = #cir.const_array<"int main()" : !cir.array<!s8i x 10>, trailing_zeros> : !cir.array<!s8i x 11> {alignment = 1 : i64} loc(#loc2)
+  cir.func private dso_local @__gxx_personality_v0(...) -> i32 loc(#loc)
+  cir.func private @__assert_fail(!cir.ptr<!s8i> {llvm.noundef}, !cir.ptr<!s8i> {llvm.noundef}, !u32i {llvm.noundef}, !cir.ptr<!s8i> {llvm.noundef}) attributes {cold, noreturn, nothrow} loc(#loc20)
+  cir.func no_inline dso_local @main() -> (!s32i {llvm.noundef}) personality(@__gxx_personality_v0) attributes {"cir.target-cpu" = "x86-64", "cir.target-features" = "+cmov,+cx8,+fxsr,+mmx,+sse,+sse2,+x87", "cir.tune-cpu" = "generic"} {
+    %0 = cir.alloca "__retval" align(4) : !cir.ptr<!s32i> loc(#loc7)
+    %1 = cir.const #cir.int<0> : !s32i loc(#loc8)
+    cir.store %1, %0 : !s32i, !cir.ptr<!s32i> loc(#loc8)
+    cir.scope {
+      %4 = cir.alloca "" align(4) : !cir.ptr<!s32i> loc(#loc11)
+      cir.try {
+        %5 = cir.alloc.exception 4 -> !cir.ptr<!s32i> loc(#loc1)
+        %6 = cir.const #cir.int<5> : !s32i loc(#loc1)
+        cir.store align(16) %6, %5 : !s32i, !cir.ptr<!s32i> loc(#loc12)
+        cir.throw %5 : !cir.ptr<!s32i>, @_ZTIi loc(#loc23)
+        cir.unreachable loc(#loc23)
+      ^bb1:  // no predecessors
+        cir.goto "ab" loc(#loc24)
+      ^bb2:  // no predecessors
+        cir.yield loc(#loc9)
+      } catch [type #cir.global_view<@_ZTIi> : !cir.ptr<!u8i>] (%arg0: !cir.eh_token loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":11:3)) {
+        %catch_token, %exn_ptr = cir.begin_catch %arg0 : !cir.eh_token -> (!cir.catch_token, !cir.ptr<!void>) loc(#loc3)
+        cir.cleanup.scope {
+          cir.init_catch_param scalar %exn_ptr to %4 : !cir.ptr<!void>, !cir.ptr<!s32i> loc(#loc16)
+          %5 = cir.get_global @".str" : !cir.ptr<!cir.array<!s8i x 2>> loc(#loc2)
+          %6 = cir.cast array_to_ptrdecay %5 : !cir.ptr<!cir.array<!s8i x 2>> -> !cir.ptr<!s8i> loc(#loc2)
+          %7 = cir.const #cir.global_view<@".str.1"> : !cir.ptr<!s8i> loc(#loc2)
+          %8 = cir.const #cir.int<15> : !u32i loc(#loc2)
+          %9 = cir.get_global @__PRETTY_FUNCTION__.main : !cir.ptr<!cir.array<!s8i x 11>> loc(#loc2)
+          %10 = cir.cast array_to_ptrdecay %9 : !cir.ptr<!cir.array<!s8i x 11>> -> !cir.ptr<!s8i> loc(#loc2)
+          cir.call @__assert_fail(%6, %7, %8, %10) nothrow {cold, noreturn} : (!cir.ptr<!s8i> {llvm.noundef}, !cir.ptr<!s8i> {llvm.noundef}, !u32i {llvm.noundef}, !cir.ptr<!s8i> {llvm.noundef}) -> () loc(#loc2)
+          cir.yield loc(#loc3)
+        } cleanup all {
+          cir.end_catch %catch_token : !cir.catch_token loc(#loc12)
+          cir.yield loc(#loc12)
+        } loc(#loc3)
+        cir.yield loc(#loc16)
+      } unwind (%arg0: !cir.eh_token loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":11:3)) {
+        cir.resume %arg0 : !cir.eh_token loc(#loc9)
+      } loc(#loc9)
+    } loc(#loc22)
+    cir.br ^bb1 loc(#loc17)
+  ^bb1:  // pred: ^bb0
+    cir.label "ab" loc(#loc17)
+    %2 = cir.const #cir.int<0> : !s32i loc(#loc18)
+    cir.store %2, %0 : !s32i, !cir.ptr<!s32i> loc(#loc25)
+    %3 = cir.load %0 : !cir.ptr<!s32i>, !s32i loc(#loc25)
+    cir.return %3 : !s32i loc(#loc25)
+  } loc(#loc21)
+} loc(#loc)
+#loc = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":0:0)
+#loc1 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":12:11)
+#loc2 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":15:17)
+#loc3 = loc(unknown)
+#loc4 = loc("/usr/include/assert.h":95:1)
+#loc5 = loc("/usr/include/assert.h":97:45)
+#loc6 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":10:1)
+#loc7 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":18:1)
+#loc8 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":10:17)
+#loc10 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":15:28)
+#loc11 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":15:10)
+#loc12 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":10:5)
+#loc13 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":12:5)
+#loc14 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":13:5)
+#loc15 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":13:10)
+#loc16 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":15:3)
+#loc17 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":17:1)
+#loc18 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":17:12)
+#loc19 = loc("/home/solarowl/Repositories/writing/paper-icse2027-cir/cir-demo/benchmarks/sources/cpp-baseline/try_catch/try-catch_simple_11_bug/main.cpp":17:5)
+#loc20 = loc(fused[#loc4, #loc5])
+#loc21 = loc(fused[#loc6, #loc7])
+#loc22 = loc(fused[#loc9, #loc10])
+#loc23 = loc(fused[#loc13, #loc1])
+#loc24 = loc(fused[#loc14, #loc15])
+#loc25 = loc(fused[#loc19, #loc18])
