@@ -1,0 +1,69 @@
+% Dual-majority data macros: C++ majority vs.\ c-nohavoc_std majority (980 shared tasks).
+% Needs \usepackage[table]{xcolor} and \usepackage{pgfplotstable}.
+% Regenerated from analysis.ipynb -- do not edit. \input once, then cite \dualCNohavocStd... inline.
+\newcommand{\dualCNohavocStdTrueTrue}{202}
+\newcommand{\dualCNohavocStdTrueFalse}{37}
+\newcommand{\dualCNohavocStdTrueTie}{0}
+\newcommand{\dualCNohavocStdTrueUnknown}{308}
+\newcommand{\dualCNohavocStdTrueTotal}{547}
+\newcommand{\dualCNohavocStdFalseTrue}{7}
+\newcommand{\dualCNohavocStdFalseFalse}{258}
+\newcommand{\dualCNohavocStdFalseTie}{2}
+\newcommand{\dualCNohavocStdFalseUnknown}{126}
+\newcommand{\dualCNohavocStdFalseTotal}{393}
+\newcommand{\dualCNohavocStdTieTrue}{9}
+\newcommand{\dualCNohavocStdTieFalse}{2}
+\newcommand{\dualCNohavocStdTieTie}{0}
+\newcommand{\dualCNohavocStdTieUnknown}{16}
+\newcommand{\dualCNohavocStdTieTotal}{27}
+\newcommand{\dualCNohavocStdUnknownTrue}{0}
+\newcommand{\dualCNohavocStdUnknownFalse}{7}
+\newcommand{\dualCNohavocStdUnknownTie}{0}
+\newcommand{\dualCNohavocStdUnknownUnknown}{6}
+\newcommand{\dualCNohavocStdUnknownTotal}{13}
+\newcommand{\dualCNohavocStdTotalTrue}{218}
+\newcommand{\dualCNohavocStdTotalFalse}{304}
+\newcommand{\dualCNohavocStdTotalTie}{2}
+\newcommand{\dualCNohavocStdTotalUnknown}{456}
+\newcommand{\dualCNohavocStdTotal}{980}
+\newcommand{\dualCNohavocStdAgree}{466}
+\newcommand{\dualCNohavocStdDisagree}{514}
+
+\ifdefined\dualcolorcells\else\let\dualcolorcells\relax
+  % Square data cells: each cell is an explicit \colorbox of side \dualcellw -- a
+  % fixed-width \makebox with a strut of the same height, no \fboxsep and no column
+  % padding (@{}c@{}), so the shaded boxes are equal squares and tile contiguously.
+  % \dualcellw auto-sizes to the widest header so nothing wraps.
+  \newlength{\dualcellw}\settowidth{\dualcellw}{unknown}\addtolength{\dualcellw}{0.9em}%
+  \newcommand{\dualbox}[2]{{\setlength{\fboxsep}{0pt}%
+    \colorbox{black!#1}{\makebox[\dualcellw][c]{%
+      \rule[-0.5\dualcellw]{0pt}{\dualcellw}\ifnum#1>50 \color{white}\fi #2}}}}%
+  \pgfplotstableset{
+    color cells/.style={
+      col sep=comma, string type, column type={@{}c@{}},
+      % Shade each count on the black! scale, normalised to the per-table max \heatVmax
+      % (so the printed value is the raw count but the colour is 0..100). The shade is
+      % computed here, at parse time, and baked into \dualbox as a literal.
+      postproc cell content/.code={%
+        \pgfmathtruncatemacro\dualshade{round(100*(##1/\heatVmax))}%
+        \pgfkeysalso{@cell content/.expanded={\noexpand\dualbox{\dualshade}{\noexpand##1}}}%
+      },
+      columns/x/.style={column name={}, column type={r@{\hskip 0.6em}}, postproc cell content/.code={}},
+    },
+  }
+\fi
+
+\begin{table}[t]
+  \centering
+  \caption{Dual majority over the 980 tasks shared by the original C++ suite and \texttt{c-nohavoc_std}: rows are the C++ majority verdict, columns the \texttt{c-nohavoc_std} majority verdict; cell shading is the count relative to the table maximum.}
+  \label{tab:dual-majority-c-nohavoc_std-macros}
+  \def\heatVmax{308}%
+  \setlength{\extrarowheight}{0pt}\renewcommand{\arraystretch}{0}% rows tile: each \dualbox sets its own square height
+  \pgfplotstabletypeset[color cells]{
+x,true,false,tie,unknown
+true,\dualCNohavocStdTrueTrue,\dualCNohavocStdTrueFalse,\dualCNohavocStdTrueTie,\dualCNohavocStdTrueUnknown
+false,\dualCNohavocStdFalseTrue,\dualCNohavocStdFalseFalse,\dualCNohavocStdFalseTie,\dualCNohavocStdFalseUnknown
+tie,\dualCNohavocStdTieTrue,\dualCNohavocStdTieFalse,\dualCNohavocStdTieTie,\dualCNohavocStdTieUnknown
+unknown,\dualCNohavocStdUnknownTrue,\dualCNohavocStdUnknownFalse,\dualCNohavocStdUnknownTie,\dualCNohavocStdUnknownUnknown
+  }
+\end{table}
