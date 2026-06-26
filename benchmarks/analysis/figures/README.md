@@ -19,10 +19,8 @@ standard library. By task name they nest:
   functions are filtered out (every called function has a definition).
 - **`c-havoc_std`** — std library functions (and other unmodelled calls) are *havoc'd*: they
   may return anything. An over-approximation, which shows up in the results (e.g. spurious
-  property violations / wrong verdicts). It is the largest mapped set because havoc'ing maps
-  tasks an accurate std mapping cannot.
-
-Suite names are discovered at runtime, so renames flow through automatically.
+  property violations / wrong verdicts). It is the most permissive mapping, so it covers
+  at least as many tasks as `c-exact_std` (the same tasks in the current data).
 
 ## RQ2 — Soundness / verdict agreement (`rq2/`)
 
