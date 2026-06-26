@@ -41,6 +41,7 @@ standard library. By task name they nest:
 
 | file | label | description |
 |------|-------|-------------|
+| `cpp_wrong_recovery.tex` | `tab:cpp-wrong-recovery` | What the C verifiers do on each native-C++ verifier's *wrong* C++ verdicts. Over its wrong tasks present in `c-nohavoc_std` (*wrong_in_C*): how many have at least one C verifier correct (*c_any_correct*), more C verifiers correct than wrong (*c_majority_correct*), at least one C verifier also wrong (*c_any_wrong*), or no C verifier deciding (*c_all_unknown*). |
 | `dual_majority_c-exact_std.tex` | `tab:dual-majority-c-exact_std` | Majority verdict on the original C++ suite (rows) vs. on `c-exact_std` (columns), over the 1010 shared tasks. |
 | `dual_majority_c-havoc_std.tex` | `tab:dual-majority-c-havoc_std` | Majority verdict on the original C++ suite (rows) vs. on `c-havoc_std` (columns), over the 1010 shared tasks. |
 | `dual_majority_c-nohavoc_std.tex` | `tab:dual-majority-c-nohavoc_std` | Majority verdict on the original C++ suite (rows) vs. on `c-nohavoc_std` (columns), over the 980 shared tasks. |
@@ -86,3 +87,6 @@ standard library. By task name they nest:
 | `cpu_median_by_tool.tex` | `tab:cpu-median-by-tool` | Median CPU time (s) per verifier and task suite. |
 | `mem_median_by_tool.tex` | `tab:mem-median-by-tool` | Median memory (GB) per verifier and task suite. |
 | `perf_summary.tex` | `tab:perf-summary` | CPU time and memory per task suite (all retained verifiers, all runs). Times in seconds, memory in GB. |
+| `unique_c_breakdown.tex` | `tab:unique-c-breakdown` | For the 64 `c-nohavoc_std` tasks (shared with `cpp-baseline`) that no native-C++ verifier solved, how many each C verifier correctly solves (*solves*), how many it alone among C verifiers solves (*exclusive*), and that as a percentage of the 64. |
+| `unique_cpp_breakdown.tex` | `tab:unique-cpp-breakdown` | For the 99 shared tasks that no verifier on `c-nohavoc_std` solved, how many each native-C++ verifier correctly solves on the C++ baseline. |
+| `unique_solves.tex` | `tab:unique-solves` | Unique solves over the tasks `c-nohavoc_std` shares with the C++ baseline (`cpp-baseline`). *Solved* = a correct verdict from at least one verifier (BenchExec `correct`). *c_only* tasks are solved via the cir2c mapping but by no native-C++ verifier; *cpp_only* tasks are solved natively in C++ but by no verifier on the mapped-C input. |
