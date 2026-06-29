@@ -66,10 +66,10 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 BENCHMARKS_DIR = Path(__file__).resolve().parent.parent
 SOURCES_DIR = BENCHMARKS_DIR / "sources"
-ESBMC_EVAL_SRC = REPO_ROOT / "backend" / "examples" / "esbmc-eval"
-RUNNER = REPO_ROOT / "cir2c" / "test" / "run-cir2c.sh"
+ESBMC_EVAL_SRC = SOURCES_DIR / "esbmc-eval"
+RUNNER = REPO_ROOT / "cir2c" /  "run-cir2c.sh"
 
-DEFAULT_JOBS = 16
+DEFAULT_JOBS = 4
 DEFAULT_TIMEOUT = 300
 
 

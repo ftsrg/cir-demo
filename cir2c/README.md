@@ -26,95 +26,68 @@ Using ClangIR as the intermediate representation preserves higher-level structur
 
 ## Build
 
-Prerequisites: an LLVM/Clang build with ClangIR support. By default, CMake looks for LLVM and MLIR cmake packages under `../backend/bin/lib/cmake` relative to the `cir2c` source directory (i.e. `<repo>/backend/bin/lib/cmake/llvm` and `.../mlir`). The prebuilt tools (`clang`, `clang++`, `cir-opt`) are expected in `../backend/bin/bin/`. Override by passing `-DLLVM_DIR=` and `-DMLIR_DIR=` to CMake.
+**Prerequisites.** An LLVM/Clang build with ClangIR support (provides `clang`, `clang++`, `cir-opt`, the MLIR/LLVM CMake packages, and the bundled libc++ headers), plus CMake ≥ 3.13 and a C++17 compiler. 
+
+By default, CMake looks for the LLVM and MLIR CMake packages under `../llvm-install/lib/cmake` relative to the `cir2c` source directory (i.e. `<repo>/llvm-install/lib/cmake/llvm` and `.../mlir`). If your toolchain is elsewhere, override the locations:
 
 ```bash
-cmake -S cir2c -B cir2c/build && cmake --build cir2c/build --target cir2c
+# Default layout (toolchain in <repo>/backend/bin):
+cmake -B build
+cmake --build build --target cir2c
+
+# Custom LLVM/MLIR location:
+cmake -B build \
+  -DLLVM_DIR=/path/to/lib/cmake/llvm \
+  -DMLIR_DIR=/path/to/lib/cmake/mlir
+cmake --build build --target cir2c
 ```
 
-The binary is written to `cir2c/build/cir2c`.
+The binary is written to `build/cir2c`.
 
 ## Usage
+
+The recommended way to run the tool is the convenience wrapper **`run-cir2c.sh`**. It drives the full pipeline — `clang -emit-cir` → preprocessing → optional flattening → `cir2c` — so you can hand it a `.c` / `.cpp` source file and get verifier-friendly C back. Invoking the `cir2c` binary directly requires you to generate and preprocess the CIR yourself; the wrapper handles all of that (including the alloca-qualifier preprocessing workaround and selecting libc++ for C++ inputs).
+
+### Basic usage
+
+```bash
+# C input
+./run-cir2c.sh input.c output.c
+
+# C++ input (language is inferred from the .cpp/.cxx/.cc/.C extension)
+./run-cir2c.sh input.cpp output.c
+```
+
+That is all most uses need: the first argument is the source file, the second is the path for the generated C file. The wrapper creates the output directory if necessary.
+
+### Common options
+
+```
+run-cir2c.sh [OPTIONS] <input-file> <output.c>
+```
+
+| Option | Purpose |
+|---|---|
+| `--lang c\|c++` | Force the input language instead of inferring it from the file extension. |
+| `--std STD` | Language standard (default `c23` for C, `c++23` for C++). |
+| `--flatten` | Run `cir-opt -cir-flatten-cfg` before `cir2c` to emit flat (goto-based) C instead of structured C. |
+| `--mlir FILE` | Also save the intermediate CIR MLIR to `FILE` (useful for debugging). |
+| `--flat-mlir FILE` | Save the flattened MLIR to `FILE` (implies `--flatten`). |
+| `--include DIR` | Add `-I DIR` to the CIR-generation step (repeatable) for extra header search paths. |
+| `--[no-]externalize-std` | Externalize (default) or keep `std::` calls. See the notes in the source on why keeping libstdc++/STL bodies can be unsound. |
+
+**Exit codes:** `0` success, `2` `clang` failed (bad source / unsupported construct), `3` `cir-opt` (flatten) failed, `4` `cir2c` failed (e.g. an unsupported CIR op — see the hard-fail policy below).
+
+### Calling the binary directly
+
+If you already have a CIR MLIR module, you can invoke the binary, but you are then responsible for CIR generation and preprocessing yourself:
 
 ```
 cir2c [--monitor-json <trace.json>] <input.mlir> <output.c>
 cir2c --version
 ```
 
-- `<input.mlir>` — a CIR MLIR module (produced by `clang -S -emit-cir` or by `cir-opt -cir-flatten-cfg`)
+- `<input.mlir>` — a CIR MLIR module (from `clang -S -emit-cir`, optionally `cir-opt -cir-flatten-cfg`)
 - `<output.c>` — path for the generated verifier-friendly C file
 - `--version` — print the tool version (git commit hash) and exit
 - `--monitor-json <trace.json>` — write a JSON trace of per-operation MLIR-to-C line mappings for traceability
-
-In practice, use the provided shell script (see [Testing / Single-file pipeline](#single-file-pipeline)) rather than invoking `cir2c` directly, since it handles CIR generation and the alloca-qualifier preprocessing workaround.
-
-## Architecture
-
-### Core (`cir2c/src/`)
-
-**`Mapper` (`Mapper.h` / `Mapper.cpp` / `ModuleEmitter.cpp`)**
-
-The central mapping context. It owns:
-- The **handler registry**: a map from CIR operation name to `OpHandler`. Populated at startup by `registerBuiltinHandlers(mapper)`, which iterates over every self-registered handler family.
-- **Value/label naming**: SSA value → C identifier (`getOrCreateName`, `setName`, `freshName`), block → label, collision avoidance.
-- **Direct-access tracking**: alloca results that are C lvalue names rather than pointer SSA values (no explicit dereference needed at use sites).
-- **Type/constant/module services**: forwarded to the sub-components below.
-- **State for advanced features**: atomic/volatile qualifier sets, vtable-dispatch chain tracking (for `__VERIFIER_virtual_call_<sig>`), exception-handling state (landing-pad stack, cleanup-scope stack, RTTI symbol set), member-function-pointer alignment flag, for-loop step label stack.
-- `mapModule` / `mapFunc` / `mapGlobal` / `mapOperation` — the top-level emission entry points.
-
-Module-level emission (top-level global/function/prototype scanning, pre-scans, C preamble) lives in `ModuleEmitter.cpp` to keep `Mapper.cpp` manageable.
-
-**`TypeMapper` (`TypeMapper.h` / `TypeMapper.cpp`)**
-
-CIR type → C type string. Handles integer widths, floats, pointers, arrays, records (structs/unions), and anonymous record naming. Entry points: `mapTypeToC`, `arrayBaseTypeAndDims`, `anonRecordCName`.
-
-**`ConstantEmitter` (`ConstantEmitter.h` / `ConstantEmitter.cpp`)**
-
-CIR constant attribute → C initializer string. Handles integer, floating-point, string, pointer, array, struct/union, and member-function-pointer constants. Entry point: `formatConstInit`.
-
-**`Traceability` (`Traceability.h` / `Traceability.cpp`)**
-
-Computes per-entry MLIR-line / C-line mappings for `--monitor-json` output.
-
-### Handler families (`cir2c/src/handlers/`)
-
-The ~146 CIR op handlers are organised into **~14 self-contained, self-registering handler family classes** (one `.cpp` file each). Each family:
-
-1. Inherits from `HandlerModule` (`HandlerModule.h`).
-2. Implements `registerHandlers(Mapper &m)`, which calls `m.registerTypedHandler<cir::XxxOp>(handleXxx)` for each op it owns.
-3. Carries its op handlers as `private static` methods.
-4. Ends the `.cpp` file with `REGISTER_HANDLER_MODULE(XxxHandlers)`, which adds a singleton instance to a global registry at static-init time — no central wiring is needed.
-
-The current families are:
-
-| Family | CIR ops covered |
-|---|---|
-| `ArithmeticHandlers` | Integer/FP arithmetic, bitwise, shift ops |
-| `MemoryHandlers` | `alloca`, `load`, `store`, `ptr_stride`, `ptr_diff`, `get_element` |
-| `ControlFlowHandlers` | `if`, `for`, `while`, `do`, `switch`, `break`, `continue`, `goto`, `return`, `yield`, `br`, `brcond` |
-| `CallHandlers` | `call`, `try_call`, `indirect_call` |
-| `RecordHandlers` | `get_member`, struct/union emission |
-| `GlobalHandlers` | `global`, `get_global` |
-| `VTableHandlers` | `vtable.get_vptr`, `vtable.get_virtual_fn_addr`, vtable global emission |
-| `ExceptionHandlers` | `try`, `throw`, `catch`, `resume`, `eh.*` |
-| `CastHandlers` | `cast` (all sub-kinds: int_to_bool, bitcast, int_to_ptr, …) |
-| `VariadicHandlers` | `va_start`, `va_end`, `va_arg`, `va_copy` |
-| `ConstantHandlers` | `const` (int, fp, null, bool, …) |
-| `ComplexHandlers` | `complex.*` ops |
-| `FloatMathHandlers` | `sqrt`, `sin`, `cos`, `pow`, `fabs`, `fmod`, … (maps to `__builtin_*`) |
-| `BuiltinHandlers` | Clang `__builtin_*` intrinsics, `trap`, `prefetch`, … |
-
-Shared handler infrastructure lives in `HandlerSupport.h` / `HandlerSupport.cpp`: `emitRegionBody` (region walker), `extractName`, `pointerOperandExpr`, `LambdaOpHandler`, and similar helpers used across families.
-
-### Hard-fail policy
-
-An unrecognised CIR op causes `cir2c` to exit non-zero rather than silently emit unsound C. This ensures that incomplete coverage is always visible.
-
-### How to add a handler for a new CIR op
-
-1. Pick (or create) the appropriate `*Handlers.cpp` family file.
-2. Add a `static bool handleXxx(cir::XxxOp op, Mapper &m, std::ostream &out)` method with the mapping logic.
-3. Register it in that family's `registerHandlers` via `m.registerTypedHandler<cir::XxxOp>(handleXxx)`.
-4. If you created a new family file:
-   - Add `REGISTER_HANDLER_MODULE(NewHandlers)` at file scope in the new `.cpp`.
-   - Add the new `.cpp` to the `add_executable(cir2c ...)` list in `cir2c/CMakeLists.txt`.

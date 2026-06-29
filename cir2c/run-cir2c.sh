@@ -38,17 +38,17 @@ set -euo pipefail
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 
-CLANG="$SCRIPT_DIR/../../backend/bin/bin/clang"
-CLANGPP="$SCRIPT_DIR/../../backend/bin/bin/clang++"
-CIR_OPT="$SCRIPT_DIR/../../backend/bin/bin/cir-opt"
-CIR2C="$SCRIPT_DIR/../build/cir2c"
+CLANG="$SCRIPT_DIR/../llvm-install/bin/clang"
+CLANGPP="$SCRIPT_DIR/../llvm-install/bin/clang++"
+CIR_OPT="$SCRIPT_DIR/../llvm-install/bin/cir-opt"
+CIR2C="$SCRIPT_DIR/build/cir2c"
 
 # libc++ (built alongside clang by docker/build-llvm.sh) is the default C++
 # standard library for CIR generation: unlike libstdc++, it keeps list/map/
 # set/deque entirely header-templated, so ClangIR sees real bodies instead of
 # bodiless externs for container internals (e.g. std::list's node-splice
 # helpers) — see the no-externalize-std limitation notes in cir2c.
-LIBCXX_INCLUDE="$SCRIPT_DIR/../../backend/bin/include/c++/v1"
+LIBCXX_INCLUDE="$SCRIPT_DIR/../llvm-install/include/c++/v1"
 
 LANG=""
 STD=""

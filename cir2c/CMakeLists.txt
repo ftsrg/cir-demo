@@ -21,10 +21,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Allow the user to pass LLVM/MLIR install dirs (default to parent backend/bin/lib)
 if(NOT DEFINED LLVM_DIR)
-  set(LLVM_DIR "${CMAKE_SOURCE_DIR}/../backend/bin/lib/cmake/llvm")
+  set(LLVM_DIR "${CMAKE_SOURCE_DIR}/../llvm-install/lib/cmake/llvm")
 endif()
 if(NOT DEFINED MLIR_DIR)
-  set(MLIR_DIR "${CMAKE_SOURCE_DIR}/../backend/bin/lib/cmake/mlir")
+  set(MLIR_DIR "${CMAKE_SOURCE_DIR}/../llvm-install/lib/cmake/mlir")
 endif()
 
 find_package(LLVM REQUIRED CONFIG PATHS ${LLVM_DIR} NO_DEFAULT_PATH)
@@ -86,7 +86,7 @@ target_include_directories(cir2c PRIVATE
   ${LLVM_INCLUDE_DIRS}
   ${MLIR_INCLUDE_DIRS}
   # Some local trees put headers under backend/bin/include
-  ${CMAKE_SOURCE_DIR}/../backend/bin/include
+  ${CMAKE_SOURCE_DIR}/../llvm-install/include
   ${CMAKE_SOURCE_DIR}/src
   # Generated version header
   ${CMAKE_BINARY_DIR}
@@ -113,7 +113,7 @@ if(DEFINED LLVM_DIR)
   get_filename_component(LLVM_LIB_DIR "${LLVM_DIR}/../../" ABSOLUTE)
 else()
   # Fall back to the default backend location
-  set(LLVM_LIB_DIR "${CMAKE_SOURCE_DIR}/../backend/bin/lib")
+  set(LLVM_LIB_DIR "${CMAKE_SOURCE_DIR}/../llvm-install/lib")
 endif()
 
 message(STATUS "Looking for MLIRCIR libraries in: ${LLVM_LIB_DIR}")
