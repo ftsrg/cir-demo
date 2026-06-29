@@ -34,9 +34,9 @@ INTEGRATION_OUTPUT_DIR="$INTEGRATION_TEST_DIR/output"
 
 # Tools
 CIR2C="$BUILD_DIR/cir2c"
-CLANGPP="$PROJECT_DIR/../backend/bin/bin/clang++"
-GCC="$PROJECT_DIR/../backend/bin/bin/clang"  # Use same clang for compilation checks
-RUNNER="$SCRIPT_DIR/run-cir2c.sh"
+CLANGPP="$PROJECT_DIR/../llvm-install/bin/clang++"
+GCC="$PROJECT_DIR/../llvm-install/bin/clang"  # Use same clang for compilation checks
+RUNNER="$SCRIPT_DIR/../run-cir2c.sh"
 TIMEOUT=60
 JOBS=${JOBS:-$(nproc)}
 

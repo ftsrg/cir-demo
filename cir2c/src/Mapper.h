@@ -278,6 +278,14 @@ private:
   // explicitly at the top of main() instead of relying on the constructor
   // attribute, which SV-COMP verifiers ignore. Holds raw (mangled) symbols.
   std::vector<std::string> globalCtorSymbols_;
+  // Explicit `__attribute__((destructor))` functions (marked global_dtor in
+  // CIR), sorted in constructor order (priority ascending, then module order).
+  // Destructors run in the REVERSE of this order, emitted at each return site
+  // in main() (see emitGlobalDtorsAtMainReturn). Holds raw (mangled) symbols.
+  std::vector<std::string> globalDtorSymbols_;
+  // Set while the body of main() is being emitted, so handleReturn knows to
+  // inject the global destructor calls before each return.
+  bool emittingMainBody_ = false;
   std::unordered_map<std::string, std::unique_ptr<OpHandler>> handlers;
   TraceabilityTracker traceability;
   llvm::DenseMap<mlir::Value, std::string> valueNames;
@@ -546,6 +554,14 @@ public:
   bool isCleanupConsumed(mlir::Region *r) const {
     return consumedCleanups_.count(r) > 0;
   }
+  /// Emit explicit calls to the module's global destructors
+  /// (`__attribute__((destructor))` functions) at a return site in main().
+  /// No-op unless the body of main() is currently being emitted. Destructors
+  /// run in the reverse of constructor order. Mirrors the explicit constructor
+  /// calls injected at the top of main(); see mapFunc and handleReturn.
+  void emitGlobalDtorsAtMainReturn(std::ostream &out);
+  /// Mark whether the body of main() is currently being emitted.
+  void setEmittingMainBody(bool v) { emittingMainBody_ = v; }
   /// Returns the current loop nesting depth.
   int getLoopDepth() const { return loopDepth_; }
   /// Returns true when the cleanup stack is empty (no pending RAII dtors).

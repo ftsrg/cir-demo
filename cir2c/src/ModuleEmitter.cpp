@@ -880,12 +880,15 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   // emitted as ordinary functions and called explicitly at the top of main()
   // (collected in mapModule, injected below).
   //
-  // KNOWN LIMITATION: explicit __attribute__((destructor)) functions (global_dtor
-  // in CIR) are likewise emitted as plain functions but are NOT re-invoked. A
-  // sound replacement would have to run them on every exit path from main(),
-  // including exit()/abort(), which have no single textual site. None occur in
-  // the current workload (C++ static-object destructors register via
-  // __cxa_atexit inside __cxx_global_var_init, not via this attribute).
+  // Explicit __attribute__((destructor)) functions (global_dtor in CIR) are
+  // likewise emitted as plain functions and called explicitly at each return
+  // from main() (collected in mapModule, injected by handleReturn via
+  // emitGlobalDtorsAtMainReturn), in the reverse of constructor order.
+  // KNOWN LIMITATION: this only covers normal exits from main(). Destructors
+  // are NOT run on exit()/abort() or _exit paths, which have no single textual
+  // site; nor for programs that never reach a return in main(). C++
+  // static-object destructors are unaffected — they register via __cxa_atexit
+  // inside __cxx_global_var_init, not via this attribute.
   std::string ctorAttr;
   // Force even function addresses when the module uses pointer-to-member
   // functions, so the Itanium `ptr & 1` virtual/non-virtual discriminator works
@@ -952,11 +955,15 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
   // constructor attribute (SV-COMP verifiers ignore it), so call the collected
   // constructors explicitly here, in the order the loader would. This assumes
   // main() is the program entry point.
-  if (sym.getValue().str() == "main" && !globalCtorSymbols_.empty()) {
+  bool isMain = sym.getValue().str() == "main";
+  if (isMain && !globalCtorSymbols_.empty()) {
     out << "  // global constructors (C++ static init), normally run before main\n";
     for (const std::string &ctorSym : globalCtorSymbols_)
       out << "  " << getFunctionOutputName(ctorSym) << "();\n";
   }
+  // While emitting main()'s body, handleReturn injects the global destructor
+  // calls before each return (mirror of the constructor calls above).
+  setEmittingMainBody(isMain);
 
   Region &r = fop->getRegion(0);
 
@@ -987,8 +994,17 @@ bool Mapper::mapFunc(mlir::Operation *fop, std::ostream &out) {
     }
   }
 
+  setEmittingMainBody(false);
   out << "}\n\n";
   return true;
+}
+
+void Mapper::emitGlobalDtorsAtMainReturn(std::ostream &out) {
+  if (!emittingMainBody_ || globalDtorSymbols_.empty()) return;
+  out << "  // global destructors (__attribute__((destructor))), normally run at exit\n";
+  // Reverse of constructor order: last-registered destructor runs first.
+  for (auto it = globalDtorSymbols_.rbegin(); it != globalDtorSymbols_.rend(); ++it)
+    out << "  " << getFunctionOutputName(*it) << "();\n";
 }
 
 bool Mapper::mapGlobal(mlir::Operation *gop, std::ostream &out) {
@@ -1340,6 +1356,31 @@ bool Mapper::mapModule(ModuleOp module, std::ostream &realOut) {
                        return a.order < b.order;
                      });
     for (auto &c : ctors) globalCtorSymbols_.push_back(c.sym);
+
+    // Collect explicit `__attribute__((destructor))` functions (marked
+    // global_dtor in CIR). Like constructors they are emitted as ordinary
+    // functions; we call them explicitly at each return from main() instead of
+    // relying on the destructor attribute (ignored by SV-COMP verifiers).
+    // Sorted in the SAME order as constructors here; they are executed in the
+    // reverse of this order (see emitGlobalDtorsAtMainReturn), matching the
+    // loader running .fini_array entries back-to-front.
+    globalDtorSymbols_.clear();
+    std::vector<Ctor> dtors;
+    unsigned dorder = 0;
+    module->walk([&](cir::FuncOp f) {
+      auto sym = f->getAttrOfType<mlir::StringAttr>(
+          mlir::SymbolTable::getSymbolAttrName());
+      if (!sym) return;
+      std::optional<uint32_t> prio = f.getGlobalDtorPriority();
+      if (!prio) return;
+      dtors.push_back({prio.value_or(65535), dorder++, sym.getValue().str()});
+    });
+    std::stable_sort(dtors.begin(), dtors.end(),
+                     [](const Ctor &a, const Ctor &b) {
+                       if (a.priority != b.priority) return a.priority < b.priority;
+                       return a.order < b.order;
+                     });
+    for (auto &d : dtors) globalDtorSymbols_.push_back(d.sym);
   }
 
   // Pre-scan: detect _Atomic and volatile qualifiers on global variables and

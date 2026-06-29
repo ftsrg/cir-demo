@@ -349,8 +349,9 @@ private:
     // C++ standard: destructors of locals run after the return expression is
     // evaluated but before control leaves the function.
     if (o->getNumOperands() == 0) {
-      // No return value — emit cleanups then return.
+      // No return value — emit cleanups, run global destructors, then return.
       m.emitPendingCleanups(out, 0);
+      m.emitGlobalDtorsAtMainReturn(out);
       out << "  return;\n";
       return true;
     }
@@ -364,10 +365,12 @@ private:
       std::string ctype = m.mapTypeToC(o->getOperand(0).getType());
       out << "  " << ctype << " " << retTmp << " = " << rv << ";\n";
       m.emitPendingCleanups(out, 0);
+      m.emitGlobalDtorsAtMainReturn(out);
       out << "  return " << retTmp << ";\n";
     } else {
       // No cleanups pending — direct return.
       m.emitPendingCleanups(out, 0);
+      m.emitGlobalDtorsAtMainReturn(out);
       out << "  return " << rv << ";\n";
     }
     return true;
