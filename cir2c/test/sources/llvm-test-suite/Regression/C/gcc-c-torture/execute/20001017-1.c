@@ -1,0 +1,32 @@
+/*
+ * Copyright 2026 LLVM Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+void bug (double *Cref, char transb, int m, int n, int k,
+	  double a, double *A, int fdA, double *B, int fdB,
+	  double b, double *C, int fdC)
+{
+  if (C != Cref) abort ();
+}
+
+int main (void)
+{
+  double A[1], B[1], C[1];
+
+  bug (C, 'B', 1, 2, 3, 4.0, A, 5, B, 6, 7.0, C, 8);
+
+  return 0;
+}

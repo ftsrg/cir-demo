@@ -1,0 +1,90 @@
+/*
+ * Copyright 2026 LLVM Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// -*- mode: c++ -*-
+// $Id$
+// http://www.bagley.org/~doug/shootout/
+// from Bill Lear
+
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+
+using namespace std;
+
+size_t HI = 0;
+size_t LO = 0;
+
+class Hi_exception {
+public:
+    explicit Hi_exception(size_t _n) : n(_n) {}
+    const char* what() { sprintf(N, "%d", n); return N; }
+private:
+    size_t n; char N[8];
+};
+
+class Lo_exception {
+public:
+    explicit Lo_exception(size_t _n) : n(_n) {}
+    const char* what() { sprintf(N, "%d", n); return N; }
+private:
+    size_t n; char N[8];
+};
+
+void blowup(size_t num) {
+    if (num % 2) {
+        throw Lo_exception(num);
+    }
+    throw Hi_exception(num);
+}
+
+void lo_function(size_t num) {
+    try {
+        blowup(num);
+    } catch(const Lo_exception& ex) {
+        ++LO;
+    }
+}
+
+void hi_function(size_t num) {
+    try {
+        lo_function(num);
+    } catch(const Hi_exception& ex) {
+        ++HI;
+    }
+}
+
+void some_function(size_t num) {
+    try {
+        hi_function(num);
+    } catch (...) {
+        cerr << "We shouldn't get here\n"; exit(1);
+    }
+}
+
+int
+main(int argc, char* argv[]) {
+#ifdef SMALL_PROBLEM_SIZE
+#define LENGTH 10000
+#else
+#define LENGTH 100000
+#endif
+    size_t NUM = (argc == 2 ? (atoi(argv[1]) < 1 ? 1 : atoi(argv[1])): LENGTH);
+    while (NUM--) {
+        some_function(NUM);
+    }
+    cout << "Exceptions: HI=" << HI << " / " << "LO=" << LO << endl;
+}

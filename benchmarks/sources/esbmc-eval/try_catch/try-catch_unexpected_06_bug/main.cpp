@@ -1,0 +1,22 @@
+/*
+ * Source: https://doi.org/10.5281/zenodo.14824495
+ *
+ * This work is licensed under Creative Commons Attribution 4.0 International.
+ * To view a copy of this license, visit https://creativecommons.org/licenses/by/4.0/
+ */
+
+#include<exception>
+#include<cassert>
+using namespace std;
+
+void myunexpected()
+{
+  assert(0);
+}
+
+int main() throw(char)
+{
+  set_unexpected(myunexpected);
+  throw 5;
+  return 0;
+}

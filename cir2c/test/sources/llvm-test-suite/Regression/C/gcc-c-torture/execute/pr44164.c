@@ -1,0 +1,40 @@
+/*
+ * Copyright 2026 LLVM Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+struct X {
+    struct Y {
+	struct YY {
+	    struct Z {
+		int i;
+	    } c;
+	} bb;
+    } b;
+} a;
+int __attribute__((noinline, noclone))
+foo (struct Z *p)
+{
+  int i = p->i;
+  a.b = (struct Y){};
+  return p->i + i;
+}
+extern void abort (void);
+int main()
+{
+  a.b.bb.c.i = 1;
+  if (foo (&a.b.bb.c) != 1)
+    abort ();
+  return 0;
+}

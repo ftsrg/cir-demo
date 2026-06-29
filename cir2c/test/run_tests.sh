@@ -78,13 +78,13 @@ blocklisted_op_in() {
 export -f blocklisted_op_in
 
 # Directories for E2E tests
-LLVM_EVAL_DIR="$PROJECT_DIR/../backend/examples/llvm-test-suite/"
+LLVM_EVAL_DIR="$SCRIPT_DIR/sources/llvm-test-suite/"
 LLVM_EVAL_OUTPUT_DIR="$SCRIPT_DIR/llvm-eval/output"
 
 # ESBMC-eval coverage corpus (C++ programs, no reference outputs). The pass
 # condition is just that the mapper produced C that COMPILES (linking optional).
 # Run by default; set RUN_ESBMC=0 to skip this step.
-ESBMC_EVAL_DIR="$PROJECT_DIR/../backend/examples/esbmc-eval/"
+ESBMC_EVAL_DIR="$PROJECT_DIR/../verification_analysis/sources/esbmc-eval/"
 ESBMC_EVAL_OUTPUT_DIR="$SCRIPT_DIR/esbmc-eval/output"
 RUN_ESBMC=${RUN_ESBMC:-0}
 RUN_LLVM=${RUN_LLVM:-0}

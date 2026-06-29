@@ -1,0 +1,39 @@
+/*
+ * Copyright 2026 LLVM Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* -*- mode: c -*-
+ * $Id$
+ * http://www.bagley.org/~doug/shootout/
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int 
+Ack(int M, int N) {
+    if (M == 0) return( N + 1 );
+    if (N == 0) return( Ack(M - 1, 1) );
+    return( Ack(M - 1, Ack(M, (N - 1))) );
+}
+
+int
+main(int argc, char *argv[]) {
+    int n = ((argc == 2) ? atoi(argv[1]) : 8);
+
+    printf("Ack(3,%d): %d\n", n, Ack(3, n));
+    return(0);
+}
+

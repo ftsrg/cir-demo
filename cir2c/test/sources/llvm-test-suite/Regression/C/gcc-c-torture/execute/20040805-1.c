@@ -1,0 +1,49 @@
+/*
+ * Copyright 2026 LLVM Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* { dg-require-stack-size "0x12000" } */
+
+#if __INT_MAX__ < 32768
+int main () { exit (0); }
+#else
+int a[2] = { 2, 3 };
+
+static int __attribute__((noinline))
+bar (int x, void *b)
+{
+  a[0]++;
+  return x;
+}
+
+static int __attribute__((noinline))
+foo (int x)
+{
+  char buf[0x10000];
+  int y = a[0];
+  a[1] = y;
+  x = bar (x, buf);
+  y = bar (y, buf);
+  return x + y;
+}
+
+int
+main ()
+{
+  if (foo (100) != 102)
+    abort ();
+  exit (0);
+}
+#endif
